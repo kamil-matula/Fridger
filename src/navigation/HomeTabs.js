@@ -12,16 +12,24 @@ const HomeTabs = () => {
       activeColor={colors.activeTab}
       barStyle={{ backgroundColor: colors.primary }}
       inactiveColor={colors.inactiveTab}
-      shifting={true}
+      shifting={false}
       backBehavior='none'
       initialRouteName='Menu'
     >
-      <Tab.Screen name='Menu' component={Menu} options={{ tabBarIcon: 'widgets' }} />
-      <Tab.Screen name='Fridges' component={Fridges} options={{ tabBarIcon: 'fridge' }} />
+      <Tab.Screen
+        name='Menu'
+        component={Menu}
+        options={{ tabBarIcon: 'widgets', tabBarLabel: 'MENU' }}
+      />
+      <Tab.Screen
+        name='Fridges'
+        component={Fridges}
+        options={{ tabBarIcon: 'fridge', tabBarLabel: 'FRIDGES' }}
+      />
       <Tab.Screen
         name='Shopping Lists'
         component={ShoppingLists}
-        options={{ tabBarIcon: 'basket' }}
+        options={{ tabBarIcon: 'basket', tabBarLabel: 'SHOPPING LISTS' }}
       />
     </Tab.Navigator>
   );
