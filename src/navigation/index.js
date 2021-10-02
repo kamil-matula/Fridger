@@ -13,7 +13,7 @@ const Navigation = () => {
 
 const MainStack = createStackNavigator();
 const MainNavigator = () => (
-  <MainStack.Navigator headerMode='none'>
+  <MainStack.Navigator screenOptions={{ headerShown: false }}>
     <MainStack.Screen name='HomeTabs' component={HomeTabs} />
   </MainStack.Navigator>
 );
