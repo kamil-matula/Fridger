@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme, Avatar, Text, Divider } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrawerRow, EmptyButton } from '../components';
 
 export function DrawerContent({ navigation }) {
   const colors = useTheme().colors;
 
   return (
-    <View style={[styles.drawerContent, { backgroundColor: colors.primary }]}>
+    <SafeAreaView style={[styles.drawerContent, { backgroundColor: colors.primary }]}>
       <View style={styles.userInfoSection}>
         <Avatar.Image
           source={{
@@ -58,7 +59,7 @@ export function DrawerContent({ navigation }) {
           // TODO: Add logging out
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

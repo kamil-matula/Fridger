@@ -17,13 +17,21 @@ const DrawerNavigator = () => {
         headerTintColor: colors.text,
         headerTitleStyle: { color: 'transparent' },
       }}
-      drawerContent={({ navigation }) => <DrawerContent navigation={navigation}/>}
+      drawerContent={({ navigation }) => <DrawerContent navigation={navigation} />}
     >
       <Drawer.Screen name='Home' component={BottomNavigator} />
-      <Drawer.Screen name='EditProfile' component={EditProfile} />
-      <Drawer.Screen name='ChangePassword' component={ChangePassword} />
-      <Drawer.Screen name='Friends' component={Friends} />
-      <Drawer.Screen name='DeleteAccount' component={DeleteAccount} />
+      <Drawer.Screen name='EditProfile' component={EditProfile} options={{ headerShown: false }} />
+      <Drawer.Screen
+        name='ChangePassword'
+        component={ChangePassword}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen name='Friends' component={Friends} options={{ headerShown: false }} />
+      <Drawer.Screen
+        name='DeleteAccount'
+        component={DeleteAccount}
+        options={{ headerShown: false }}
+      />
     </Drawer.Navigator>
   );
 };
