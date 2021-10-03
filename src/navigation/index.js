@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeTabs from './HomeTabs';
+import DrawerNavigation from './DrawerNavigation';
+import { View, Button } from 'react-native';
 
 const Navigation = () => {
   return (
@@ -12,10 +13,12 @@ const Navigation = () => {
 };
 
 const MainStack = createStackNavigator();
-const MainNavigator = () => (
-  <MainStack.Navigator screenOptions={{ headerShown: false }}>
-    <MainStack.Screen name='HomeTabs' component={HomeTabs} />
-  </MainStack.Navigator>
-);
+const MainNavigator = () => {
+  return (
+    <MainStack.Navigator screenOptions={{ headerShown: false }}>
+      <MainStack.Screen name='DrawerNavigation' component={DrawerNavigation} />
+    </MainStack.Navigator>
+  );
+};
 
 export default Navigation;
