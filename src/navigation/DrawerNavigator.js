@@ -3,6 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import BottomNavigator from './BottomNavigator';
 import { useTheme } from 'react-native-paper';
 import { ChangePassword, DeleteAccount, EditProfile, Friends } from '../screens/drawer';
+import { DrawerContent } from './DrawerContent';
 
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
@@ -16,6 +17,7 @@ const DrawerNavigator = () => {
         headerTintColor: colors.text,
         headerTitleStyle: { color: 'transparent' },
       }}
+      drawerContent={({ navigation }) => <DrawerContent navigation={navigation}/>}
     >
       <Drawer.Screen name='Home' component={BottomNavigator} />
       <Drawer.Screen name='EditProfile' component={EditProfile} />
