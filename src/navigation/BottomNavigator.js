@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { useTheme } from 'react-native-paper';
-import { Menu, Fridges, ShoppingLists } from '../screens';
+import { Menu, Fridges, ShoppingLists } from '../screens/home';
 import { Image } from 'react-native';
 
 import menuIcon from '../../assets/images/menu.png'; 

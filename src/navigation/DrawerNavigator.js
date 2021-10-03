@@ -2,7 +2,7 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import BottomNavigator from './BottomNavigator';
 import { useTheme } from 'react-native-paper';
-import { ChangePassword, DeleteAccount, EditProfile, Friends } from '../screens';
+import { ChangePassword, DeleteAccount, EditProfile, Friends } from '../screens/drawer';
 
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
