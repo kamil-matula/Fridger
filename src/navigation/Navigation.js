@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import DrawerNavigation from './DrawerNavigation';
+import DrawerNavigator from './DrawerNavigator';
 
 const Navigation = () => {
   return (
@@ -15,7 +15,7 @@ const MainStack = createStackNavigator();
 const MainNavigator = () => {
   return (
     <MainStack.Navigator screenOptions={{ headerShown: false }}>
-      <MainStack.Screen name='DrawerNavigation' component={DrawerNavigation} />
+      <MainStack.Screen name='DrawerNavigator' component={DrawerNavigator} />
     </MainStack.Navigator>
   );
 };

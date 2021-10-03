@@ -9,7 +9,7 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <PaperProvider theme={CustomTheme}>
-        <StatusBar style='light' backgroundColor={CustomTheme.colors.primaryDark} />
+        <StatusBar style='light' backgroundColor={CustomTheme.colors.richBlack} />
         <Navigation />
       </PaperProvider>
     </SafeAreaProvider>

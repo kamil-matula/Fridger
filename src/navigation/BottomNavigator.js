@@ -4,14 +4,14 @@ import { useTheme } from 'react-native-paper';
 import { Menu, Fridges, ShoppingLists } from '../screens';
 
 const Tab = createMaterialBottomTabNavigator();
-const HomeTabs = () => {
+const BottomNavigator = () => {
   const colors = useTheme().colors;
 
   return (
     <Tab.Navigator
-      activeColor={colors.activeTab}
+      activeColor={colors.cyberYellow}
       barStyle={{ backgroundColor: colors.primary }}
-      inactiveColor={colors.inactiveTab}
+      inactiveColor={colors.silverMetallic}
       shifting={false}
       backBehavior='none'
       initialRouteName='Menu'
@@ -35,4 +35,4 @@ const HomeTabs = () => {
   );
 };
 
-export default HomeTabs;
+export default BottomNavigator;

@@ -1,14 +1,14 @@
-import { DefaultTheme } from 'react-native-paper';
+import { DarkTheme } from 'react-native-paper';
 
 export const CustomTheme = {
-  ...DefaultTheme,
+  ...DarkTheme,
   colors: {
-    ...DefaultTheme.colors,
+    ...DarkTheme.colors,
     primary: '#2A2B2E', // cards, navbar, etc.
-    primaryDark: '#111113', // status bar
+    richBlack: '#111113', // status bar
     background: '#202124', // whole page
     text: '#E8EAED',
-    activeTab: '#FFD300',
-    inactiveTab: '#9AA0A6',
+    cyberYellow: '#FFD300', // active tab
+    silverMetallic: '#9AA0A6', // inactive tab
   },
 };
