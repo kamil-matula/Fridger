@@ -1,8 +1,10 @@
 import React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import BottomNavigator from './BottomNavigator';
+
 import { useTheme } from 'react-native-paper';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
 import { ChangePassword, DeleteAccount, EditProfile, Friends } from '../screens/drawer';
+import BottomNavigator from './BottomNavigator';
 import DrawerContent from './DrawerContent';
 
 const Drawer = createDrawerNavigator();

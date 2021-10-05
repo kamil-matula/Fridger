@@ -1,44 +1,42 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { useTheme, Avatar, Text } from 'react-native-paper';
+
+import { View } from 'react-native';
+import { Avatar, Text } from 'react-native-paper';
+
+import { makeStyles } from '../utils';
 
 const UserInfo = ({ text, subtext, avatarURI }) => {
-    const theme = useTheme();
+  const styles = useStyles();
 
-    return (
-        <View style={styles(theme).container}>
-        <Avatar.Image
-          source={avatarURI}
-          size={64}
-        />
-        <View style={styles(theme).nameAndNickColumn}>
-          <Text style={styles(theme).name}>{text}</Text>
-          <Text style={styles(theme).nick}>{subtext}</Text>
-        </View>
+  return (
+    <View style={styles.container}>
+      <Avatar.Image source={avatarURI} size={64} />
+      <View style={styles.nameAndNickColumn}>
+        <Text style={styles.name}>{text}</Text>
+        <Text style={styles.nick}>{subtext}</Text>
       </View>
-    );
-}
+    </View>
+  );
+};
 
-const styles = (theme) =>
-  StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-      margin: 16,
-    },
-    nameAndNickColumn: {
-      flexDirection: 'column',
-      justifyContent: 'center',
-      marginLeft: 16,
-    },
-    name: {
-      fontSize: 24,
-      color: theme.colors.text,
-    },
-    nick: {
-      fontSize: 18,
-      color: theme.colors.silverMetallic,
-    },
-  });
+const useStyles = makeStyles((theme) => ({
+  container: {
+    flexDirection: 'row',
+    margin: 16,
+  },
+  nameAndNickColumn: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginLeft: 16,
+  },
+  name: {
+    fontSize: 24,
+    color: theme.colors.text,
+  },
+  nick: {
+    fontSize: 18,
+    color: theme.colors.silverMetallic,
+  },
+}));
 
-
-  export default UserInfo;
+export default UserInfo;
