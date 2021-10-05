@@ -1,14 +1,16 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { useTheme, Text, Divider } from 'react-native-paper';
+
+import { View } from 'react-native';
+import { Text, Divider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { DrawerRow, EmptyButton, UserInfo } from '../components';
+import { makeStyles } from '../utils';
 
 const DrawerContent = ({ navigation }) => {
-  const theme = useTheme();
-
+  const styles = useStyles();
   return (
-    <SafeAreaView style={styles(theme).drawerContent}>
+    <SafeAreaView style={styles.drawerContent}>
       <UserInfo
         text='Ardelle Coppage'
         subtext='Minkx'
@@ -18,10 +20,10 @@ const DrawerContent = ({ navigation }) => {
         }}
       />
 
-      <Divider style={styles(theme).divider} />
+      <Divider style={styles.divider} />
 
-      <View style={styles(theme).section}>
-        <Text style={styles(theme).sectionName}>Account</Text>
+      <View style={styles.section}>
+        <Text style={styles.sectionName}>Account</Text>
         <DrawerRow
           label='Edit Profile'
           onPress={() => {
@@ -58,25 +60,24 @@ const DrawerContent = ({ navigation }) => {
   );
 };
 
-const styles = (theme) =>
-  StyleSheet.create({
-    drawerContent: {
-      flex: 1,
-      paddingBottom: 50,
-      backgroundColor: theme.colors.primary,
-    },
-    section: {
-      marginHorizontal: 16,
-      flex: 1,
-    },
-    sectionName: {
-      fontSize: 18,
-      marginVertical: 16,
-      color: theme.colors.silverMetallic,
-    },
-    divider: {
-      backgroundColor: theme.colors.text,
-    },
-  });
+const useStyles = makeStyles((theme) => ({
+  drawerContent: {
+    flex: 1,
+    paddingBottom: 50,
+    backgroundColor: theme.colors.primary,
+  },
+  section: {
+    marginHorizontal: 16,
+    flex: 1,
+  },
+  sectionName: {
+    fontSize: 18,
+    marginVertical: 16,
+    color: theme.colors.silverMetallic,
+  },
+  divider: {
+    backgroundColor: theme.colors.text,
+  },
+}));
 
 export default DrawerContent;

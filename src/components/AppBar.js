@@ -1,38 +1,39 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View, Text, Image } from 'react-native';
-import { useTheme } from 'react-native-paper';
+
+import { TouchableOpacity, View, Text, Image } from 'react-native';
+
 import backIcon from '../../assets/images/back.png';
+import { makeStyles } from '../utils';
 
 const AppBar = ({ onPress, label }) => {
-  const theme = useTheme();
+  const styles = useStyles();
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={styles(theme).rowStyle}>
-        <Image source={backIcon} style={styles(theme).iconStyle} />
-        <Text style={styles(theme).textStyle}>{label}</Text>
+      <View style={styles.rowStyle}>
+        <Image source={backIcon} style={styles.iconStyle} />
+        <Text style={styles.textStyle}>{label}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-const styles = (theme) =>
-  StyleSheet.create({
-    rowStyle: {
-      flexDirection: 'row',
-      marginHorizontal: 16,
-      marginVertical: 12,
-      alignItems: 'center',
-    },
-    textStyle: {
-      fontSize: 20,
-      fontWeight: '500',
-      marginLeft: 32,
-      color: theme.colors.text,
-    },
-    iconStyle: {
-      width: 30,
-    },
-  });
+const useStyles = makeStyles((theme) => ({
+  rowStyle: {
+    flexDirection: 'row',
+    marginHorizontal: 16,
+    marginVertical: 12,
+    alignItems: 'center',
+  },
+  textStyle: {
+    fontSize: 20,
+    fontWeight: '500',
+    marginLeft: 32,
+    color: theme.colors.text,
+  },
+  iconStyle: {
+    width: 30,
+  },
+}));
 
 export default AppBar;
