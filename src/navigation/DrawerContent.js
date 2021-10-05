@@ -1,32 +1,27 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useTheme, Avatar, Text, Divider } from 'react-native-paper';
+import { useTheme, Text, Divider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { DrawerRow, EmptyButton } from '../components';
+import { DrawerRow, EmptyButton, UserInfo } from '../components';
 
-export function DrawerContent({ navigation }) {
-  const colors = useTheme().colors;
+const DrawerContent = ({ navigation }) => {
+  const theme = useTheme();
 
   return (
-    <SafeAreaView style={[styles.drawerContent, { backgroundColor: colors.primary }]}>
-      <View style={styles.userInfoSection}>
-        <Avatar.Image
-          source={{
-            // TODO: Replace with real user image
-            uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
-          }}
-          size={64}
-        />
-        <View style={styles.nameAndNickColumn}>
-          <Text style={[styles.name, { color: colors.text }]}>Ardelle Coppage</Text>
-          <Text style={[styles.nick, { color: colors.silverMetallic }]}>Minkx</Text>
-        </View>
-      </View>
+    <SafeAreaView style={styles(theme).drawerContent}>
+      <UserInfo
+        text='Ardelle Coppage'
+        subtext='Minkx'
+        avatarURI={{
+          // TODO: Replace with real user image
+          uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
+        }}
+      />
 
-      <Divider style={{ backgroundColor: colors.text }} />
+      <Divider style={styles(theme).divider} />
 
-      <View style={{ marginHorizontal: 16, flex: 1 }}>
-        <Text style={[styles.sectionName, { color: colors.silverMetallic }]}>Account</Text>
+      <View style={styles(theme).section}>
+        <Text style={styles(theme).sectionName}>Account</Text>
         <DrawerRow
           label='Edit Profile'
           onPress={() => {
@@ -61,30 +56,27 @@ export function DrawerContent({ navigation }) {
       />
     </SafeAreaView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  drawerContent: {
-    flex: 1,
-    paddingBottom: 50,
-  },
-  userInfoSection: {
-    flexDirection: 'row',
-    margin: 16,
-  },
-  nameAndNickColumn: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    marginLeft: 16,
-  },
-  name: {
-    fontSize: 24,
-  },
-  nick: {
-    fontSize: 18,
-  },
-  sectionName: {
-    fontSize: 18,
-    marginVertical: 16,
-  },
-});
+const styles = (theme) =>
+  StyleSheet.create({
+    drawerContent: {
+      flex: 1,
+      paddingBottom: 50,
+      backgroundColor: theme.colors.primary,
+    },
+    section: {
+      marginHorizontal: 16,
+      flex: 1,
+    },
+    sectionName: {
+      fontSize: 18,
+      marginVertical: 16,
+      color: theme.colors.silverMetallic,
+    },
+    divider: {
+      backgroundColor: theme.colors.text,
+    },
+  });
+
+export default DrawerContent;
