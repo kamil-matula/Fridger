@@ -10,5 +10,6 @@ export const CustomTheme = {
     text: '#E8EAED',
     cyberYellow: '#FFD300', // active tab
     silverMetallic: '#9AA0A6', // inactive tab
+    blueJeans: '#5DADEC', // buttons
   },
 };

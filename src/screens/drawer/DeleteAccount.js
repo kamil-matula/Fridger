@@ -1,22 +1,37 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppBar } from '../../components';
 
-const DeleteAccount = () => {
-  const colors = useTheme().colors;
+const DeleteAccount = ({ navigation }) => {
+  const theme = useTheme();
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: colors.background,
-      }}
-    >
-      <Text style={{ color: colors.text }}>Delete Account</Text>
-    </View>
+    <SafeAreaView style={styles(theme).pageStyle}>
+      <AppBar onPress={() => navigation.goBack()} label='Delete Account' />
+      <View style={styles(theme).contentStyle}>
+        <Text style={styles(theme).textStyle}>Delete Account</Text>
+      </View>
+    </SafeAreaView>
   );
 };
+
+const styles = (theme) =>
+  StyleSheet.create({
+    pageStyle: {
+      flexDirection: 'column',
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    contentStyle: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    textStyle: {
+      color: theme.colors.text,
+    },
+  });
 
 export default DeleteAccount;
