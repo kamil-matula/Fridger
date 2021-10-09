@@ -8,50 +8,41 @@ import { makeStyles } from '../utils';
 import visibility from '../../assets/images/visibility.png';
 import visibilityOff from '../../assets/images/visibility_off.png';
 
-const InputField = ({ label, placeholder, style, textState, reference, returnKeyType = 'done', secure = false }) => {
+const InputField = ({ label, variant = 'account', textInputProps, secure = false }) => {
   const theme = useTheme();
 
-  const [borderColor, setBorderColor] = useState('transparent');
+  const [borderColor, setBorderColor] = useState(variant === 'account' ? 'transparent' : theme.colors.text + '80');
   const styles = useStyles(borderColor);
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-
-  const [text, setText] = textState;
-  const [self, next] = reference;
 
   const handleOnFocus = () => {
     setBorderColor(theme.colors.text);
   };
 
   const handleOnBlur = () => {
-    setBorderColor('transparent');
+    if (variant === 'account') setBorderColor('transparent');
+    else if (variant === 'data') setBorderColor(theme.colors.text + '80');
   };
 
   const handleOnPress = () => {
     setSecureTextEntry((it) => !it);
   };
 
-  console.log(`render input field ${label}`);
-  console.log(`self ${self}`);
-  console.log(`next ${next}`);
-
   return (
     <>
       <Text style={styles.label}>{label}</Text>
 
-      <View style={[styles.inputContainer, style]}>
+      <View
+        style={[styles.inputContainer, { backgroundColor: variant === 'data' ? 'transparent' : theme.colors.primary }]}
+      >
         <TextInput
-          ref={self}
+          {...textInputProps}
           style={styles.input}
-          onChangeText={setText}
-          value={text}
-          placeholder={placeholder}
           placeholderTextColor={theme.colors.silverMetallic}
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
-          returnKeyType={returnKeyType}
           secureTextEntry={secure ? secureTextEntry : false}
-          onSubmitEditing={() => next?.current?.focus()}
         />
         {secure && (
           <TouchableWithoutFeedback onPress={handleOnPress}>
@@ -65,25 +56,8 @@ const InputField = ({ label, placeholder, style, textState, reference, returnKey
 
 InputField.propTypes = {
   label: PropTypes.string,
-  placeholder: PropTypes.string,
-  style: PropTypes.object,
-  textState: PropTypes.array,
-  reference: PropTypes.array,
-  returnKeyType: PropTypes.oneOf([
-    'done',
-    'go',
-    'next',
-    'search',
-    'send',
-    'none',
-    'previous',
-    'default',
-    'emergency-call',
-    'google',
-    'join',
-    'route',
-    'yahoo',
-  ]),
+  variant: PropTypes.oneOf(['account', 'data']),
+  textInputProps: PropTypes.object,
   secure: PropTypes.bool,
 };
 
@@ -101,7 +75,6 @@ const useStyles = makeStyles((theme, borderColor) => ({
     borderRadius: 5,
     alignItems: 'center',
     borderColor: borderColor,
-    backgroundColor: theme.colors.primary,
   },
   input: {
     color: theme.colors.text,

@@ -11,7 +11,6 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const emailRef = useRef();
   const passwordRef = useRef();
 
   return (
@@ -19,18 +18,26 @@ const Login = () => {
       <Text style={styles.header}>Login</Text>
       <InputField
         label='Email'
-        placeholder='Enter your email'
-        textState={[email, setEmail]}
-        reference={[emailRef, passwordRef]}
-        returnKeyType='next'
+        textInputProps={{
+          onChangeText: setEmail,
+          value: email,
+          returnKeyType: 'next',
+          placeholder: 'Enter your email',
+          onSubmitEditing: () => passwordRef?.current?.focus(),
+          autoComplete: 'email',
+          keyboardType: 'email-address',
+        }}
       />
       <View style={styles.separator16} />
       <InputField
         label='Password'
-        placeholder='Enter your password'
-        textState={[password, setPassword]}
-        reference={[passwordRef, null]}
-        returnKeyType='done'
+        textInputProps={{
+          onChangeText: setPassword,
+          value: password,
+          returnKeyType: 'done',
+          placeholder: 'Enter your password',
+          ref: passwordRef,
+        }}
         secure={true}
       />
       <View style={styles.separator40} />
