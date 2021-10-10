@@ -12,5 +12,6 @@ export const CustomTheme = {
     cyberYellow: '#FFD300', // active tab
     silverMetallic: '#9AA0A6', // inactive tab
     blueJeans: '#5DADEC', // buttons
+    darkGreen: '#006400', // green circles
   },
 };

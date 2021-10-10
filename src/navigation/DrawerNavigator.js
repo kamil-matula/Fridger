@@ -21,11 +21,11 @@ const DrawerNavigator = () => {
       }}
       drawerContent={({ navigation }) => <DrawerContent navigation={navigation} />}
     >
-      <Drawer.Screen name='Home' component={BottomNavigator} />
-      <Drawer.Screen name='EditProfile' component={EditProfile} options={{ headerShown: false }} />
-      <Drawer.Screen name='ChangePassword' component={ChangePassword} options={{ headerShown: false }} />
-      <Drawer.Screen name='Friends' component={Friends} options={{ headerShown: false }} />
-      <Drawer.Screen name='DeleteAccount' component={DeleteAccount} options={{ headerShown: false }} />
+      <Drawer.Screen name='Home' component={BottomNavigator} options={{ headerShown: false }} />
+      <Drawer.Screen name='EditProfile' component={EditProfile} options={{ headerShown: false, swipeEnabled: false }} />
+      <Drawer.Screen name='ChangePassword' component={ChangePassword} options={{ headerShown: false, swipeEnabled: false }} />
+      <Drawer.Screen name='Friends' component={Friends} options={{ headerShown: false, swipeEnabled: false }} />
+      <Drawer.Screen name='DeleteAccount' component={DeleteAccount} options={{ headerShown: false, swipeEnabled: false }} />
     </Drawer.Navigator>
   );
 };

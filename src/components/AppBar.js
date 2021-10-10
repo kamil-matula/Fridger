@@ -1,38 +1,45 @@
 import React from 'react';
 
-import { TouchableOpacity, View, Text, Image } from 'react-native';
+import { Appbar, useTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/core';
+import PropTypes from 'prop-types';
 
 import backIcon from '../../assets/images/back.png';
+import drawerIcon from '../../assets/images/navigation/drawer.png';
 import { makeStyles } from '../utils';
 
-const AppBar = ({ onPress, label }) => {
+const AppBar = ({ label = '', isDrawer = false }) => {
   const styles = useStyles();
+  const colors = useTheme().colors;
+  const navigation = useNavigation();
 
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={styles.rowStyle}>
-        <Image source={backIcon} style={styles.iconStyle} />
-        <Text style={styles.textStyle}>{label}</Text>
-      </View>
-    </TouchableOpacity>
+    <Appbar style={styles.bar}>
+      <Appbar.Action
+        icon={isDrawer ? drawerIcon : backIcon}
+        onPress={isDrawer ? () => navigation.openDrawer() : () => navigation.goBack()}
+        color={isDrawer ? colors.silverMetallic : colors.text}
+        size={isDrawer ? 32 : 24}
+      />
+      <Appbar.Content title={label} titleStyle={styles.title} />
+    </Appbar>
   );
 };
 
+AppBar.propTypes = {
+  label: PropTypes.string,
+  isDrawer: PropTypes.bool,
+};
+
 const useStyles = makeStyles((theme) => ({
-  rowStyle: {
-    flexDirection: 'row',
-    marginHorizontal: 16,
-    marginVertical: 12,
-    alignItems: 'center',
+  bar: {
+    elevation: 0,
+    backgroundColor: 'transparent',
   },
-  textStyle: {
+  title: {
     fontSize: 20,
     fontWeight: '500',
-    marginLeft: 32,
     color: theme.colors.text,
-  },
-  iconStyle: {
-    width: 30,
   },
 }));
 

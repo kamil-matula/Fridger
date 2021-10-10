@@ -12,12 +12,10 @@ const DrawerContent = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.drawerContent}>
       <UserInfo
+        // TODO: Replace with real user name, nick and image
         text='Ardelle Coppage'
         subtext='Minkx'
-        avatarURI={{
-          // TODO: Replace with real user image
-          uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
-        }}
+        avatarURI='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
       />
 
       <Divider style={styles.divider} />
@@ -50,12 +48,15 @@ const DrawerContent = ({ navigation }) => {
         />
       </View>
 
+      <View style={styles.buttonContainer}>
       <Button
+        variant='outlined'
         label='LOGOUT'
         onPress={() => {
           // TODO: Add logging out
         }}
       />
+      </View>
     </SafeAreaView>
   );
 };
@@ -63,7 +64,7 @@ const DrawerContent = ({ navigation }) => {
 const useStyles = makeStyles((theme) => ({
   drawerContent: {
     flex: 1,
-    paddingBottom: 50,
+    paddingBottom: 16,
     backgroundColor: theme.colors.primary,
   },
   section: {
@@ -77,6 +78,9 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     backgroundColor: theme.colors.text,
+  },
+  buttonContainer: {
+    margin: 16,
   },
 }));
 
