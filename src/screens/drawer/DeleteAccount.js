@@ -6,12 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { makeStyles } from '../../utils';
 import { AppBar } from '../../components';
 
-const DeleteAccount = ({ navigation }) => {
+const DeleteAccount = () => {
   const styles = useStyles();
 
   return (
     <SafeAreaView style={styles.pageStyle}>
-      <AppBar onPress={() => navigation.goBack()} label='Delete Account' />
+      <AppBar label='Delete Account' />
       <View style={styles.contentStyle}>
         <Text style={styles.textStyle}>Delete Account</Text>
       </View>

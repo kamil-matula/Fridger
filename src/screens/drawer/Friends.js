@@ -6,12 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { makeStyles } from '../../utils';
 import { AppBar } from '../../components';
 
-const Friends = ({ navigation }) => {
+const Friends = () => {
   const styles = useStyles();
 
   return (
     <SafeAreaView style={styles.pageStyle}>
-      <AppBar onPress={() => navigation.goBack()} label='Friends' />
+      <AppBar label='Friends' />
       <View style={styles.contentStyle}>
         <Text style={styles.textStyle}>Friends</Text>
       </View>

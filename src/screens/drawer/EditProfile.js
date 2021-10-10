@@ -6,12 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { makeStyles } from '../../utils';
 import { AppBar } from '../../components';
 
-const EditProfile = ({ navigation }) => {
+const EditProfile = () => {
   const styles = useStyles();
 
   return (
     <SafeAreaView style={styles.pageStyle}>
-      <AppBar onPress={() => navigation.goBack()} label='Edit Profile' />
+      <AppBar label='Edit Profile' />
       <View style={styles.contentStyle}>
         <Text style={styles.textStyle}>Edit Profile</Text>
       </View>

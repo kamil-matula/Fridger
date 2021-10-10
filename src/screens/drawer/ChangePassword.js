@@ -6,12 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { makeStyles } from '../../utils';
 import { AppBar } from '../../components';
 
-const ChangePassword = ({ navigation }) => {
+const ChangePassword = () => {
   const styles = useStyles();
 
   return (
     <SafeAreaView style={styles.pageStyle}>
-      <AppBar onPress={() => navigation.goBack()} label='Change Password' />
+      <AppBar label='Change Password' />
       <View style={styles.contentStyle}>
         <Text style={styles.textStyle}>Change Password</Text>
       </View>

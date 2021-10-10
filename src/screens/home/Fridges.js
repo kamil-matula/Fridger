@@ -4,7 +4,7 @@ import { FlatList } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AppBarWithDrawer, FridgeRow } from '../../components';
+import { AppBar, FridgeRow } from '../../components';
 import { makeStyles } from '../../utils';
 
 const DATA = [
@@ -13,12 +13,12 @@ const DATA = [
   { id: '3', title: 'My fridge' },
 ];
 
-const Fridges = ({ navigation }) => {
+const Fridges = () => {
   const styles = useStyles();
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppBarWithDrawer onPress={() => navigation.openDrawer()} label='Fridges' />
+      <AppBar isDrawer={true} label='Fridges' />
       <Divider style={styles.divider}/>
       <FlatList
         style={styles.list}
