@@ -49,9 +49,7 @@ const Login = ({ navigation }) => {
         secure={true}
       />
       <View style={styles.resetPasswordContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')}>
-          <Text style={styles.resetPassword}>Forgot password?</Text>
-        </TouchableOpacity>
+        <Button label='Forgot password?' variant='pureText' onPress={() => navigation.navigate('ResetPassword')} />
       </View>
       <View style={styles.separator40} />
       <Button label='Login' variant='contained' onPress={login} />

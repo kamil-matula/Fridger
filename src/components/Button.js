@@ -18,62 +18,44 @@ const Button = ({ onPress, label, variant }) => {
 
 Button.propTypes = {
   onPress: PropTypes.func,
-  label: PropTypes.string,
-  variant: PropTypes.oneOf(['outlined', 'contained', 'text']),
+  label: PropTypes.string.isRequired,
+  variant: PropTypes.oneOf(['outlined', 'contained', 'text', 'pureText']),
 };
 
 const useStyles = makeStyles((theme, variant) => {
-  if (variant == 'outlined')
-    return {
-      buttonStyle: {
-        borderWidth: 1,
-        borderColor: theme.colors.blueJeans,
-        borderRadius: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 48,
-      },
-      textStyle: {
-        color: theme.colors.blueJeans,
-        fontSize: 14,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        includeFontPadding: false,
-      },
-    };
-  else if (variant == 'contained')
-    return {
-      buttonStyle: {
-        backgroundColor: theme.colors.blueJeans,
-        borderRadius: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 48,
-      },
-      textStyle: {
-        color: theme.colors.richBlack,
-        fontSize: 14,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        includeFontPadding: false,
-      },
-    };
-  else if (variant == 'text')
-    return {
-      buttonStyle: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 48,
-      },
-      textStyle: {
-        color: theme.colors.blueJeans,
-        fontSize: 14,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        includeFontPadding: false,
-      },
-    };
-  else return {};
+  const obj = {
+    buttonStyle: {
+      borderColor: theme.colors.blueJeans,
+      borderRadius: 5,
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 48,
+    },
+    textStyle: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+      includeFontPadding: false,
+    },
+  };
+  if (variant == 'outlined') {
+    obj.buttonStyle.borderWidth = 1;
+    obj.textStyle.color = theme.colors.blueJeans;
+  }
+  if (variant == 'contained') {
+    obj.textStyle.color = theme.colors.richBlack;
+    obj.buttonStyle.backgroundColor = theme.colors.blueJeans;
+  }
+  if (variant == 'text') {
+    obj.textStyle.color = theme.colors.blueJeans;
+  }
+  if (variant == 'pureText') {
+    obj.buttonStyle.height = 'auto';
+    obj.textStyle.color = theme.colors.blueJeans;
+    obj.textStyle.fontWeight = 'normal';
+    obj.textStyle.textTransform = 'none';
+  }
+  return obj;
 });
 
 export default Button;
