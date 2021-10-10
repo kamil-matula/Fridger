@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { DrawerRow, EmptyButton, UserInfo } from '../components';
+import { DrawerRow, Button, UserInfo } from '../components';
 import { makeStyles } from '../utils';
 
 const DrawerContent = ({ navigation }) => {
@@ -50,7 +50,7 @@ const DrawerContent = ({ navigation }) => {
         />
       </View>
 
-      <EmptyButton
+      <Button
         label='LOGOUT'
         onPress={() => {
           // TODO: Add logging out
