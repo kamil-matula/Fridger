@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import DrawerNavigator from './DrawerNavigator';
-import { Login, ResetPassword, SignUp, SignUpFeedback } from '../screens/login';
+import { Login, ResetPassword, Register, RegisterFeedback } from '../screens/auth';
 
 const Navigation = () => {
   return (
@@ -20,8 +20,8 @@ const StackNavigator = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name='Login' component={Login} />
       <Stack.Screen name='ResetPassword' component={ResetPassword} />
-      <Stack.Screen name='SignUp' component={SignUp} />
-      <Stack.Screen name='SignUpFeedback' component={SignUpFeedback} />
+      <Stack.Screen name='Register' component={Register} />
+      <Stack.Screen name='RegisterFeedback' component={RegisterFeedback} />
       <Stack.Screen name='DrawerNavigator' component={DrawerNavigator} />
     </Stack.Navigator>
   );

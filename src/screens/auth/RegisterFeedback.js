@@ -6,7 +6,7 @@ import { Button } from '../../components';
 import { makeStyles } from '../../utils/makeStyles';
 import pidgeon from '../../../assets/images/pidgeon.png';
 
-const SignUpFeedback = ({ navigation }) => {
+const RegisterFeedback = ({ navigation }) => {
   const styles = useStyles();
 
   return (
@@ -54,4 +54,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default SignUpFeedback;
+export default RegisterFeedback;
