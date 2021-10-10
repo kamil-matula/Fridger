@@ -48,12 +48,15 @@ const DrawerContent = ({ navigation }) => {
         />
       </View>
 
+      <View style={styles.buttonContainer}>
       <Button
+        variant='outlined'
         label='LOGOUT'
         onPress={() => {
           // TODO: Add logging out
         }}
       />
+      </View>
     </SafeAreaView>
   );
 };
@@ -61,7 +64,7 @@ const DrawerContent = ({ navigation }) => {
 const useStyles = makeStyles((theme) => ({
   drawerContent: {
     flex: 1,
-    paddingBottom: 50,
+    paddingBottom: 16,
     backgroundColor: theme.colors.primary,
   },
   section: {
@@ -75,6 +78,9 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     backgroundColor: theme.colors.text,
+  },
+  buttonContainer: {
+    margin: 16,
   },
 }));
 
