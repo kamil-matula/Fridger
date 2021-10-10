@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.background,
   },
   divider: {
-    backgroundColor: 'white',
+    backgroundColor: theme.colors.silverMetallic,
     width: '100%',
   },
   list: {

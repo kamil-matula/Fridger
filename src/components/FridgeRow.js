@@ -4,13 +4,7 @@ import { View, Image } from 'react-native';
 import { Text, Divider, TouchableRipple } from 'react-native-paper';
 
 import { makeStyles } from '../utils';
-import breadIcon from '../../assets/images/food/bread.png';
-import cheeseIcon from '../../assets/images/food/cheese.png';
-import eggsIcon from '../../assets/images/food/eggs.png';
-import fruitsIcon from '../../assets/images/food/fruits.png';
-import hamIcon from '../../assets/images/food/ham.png';
-import milkIcon from '../../assets/images/food/milk.png';
-import vegetablesIcon from '../../assets/images/food/vegetables.png';
+import { breadIcon, cheeseIcon, eggsIcon, fruitsIcon, hamIcon, milkIcon, vegetablesIcon } from '../../assets/images/food';
 
 const FridgeRow = ({ title }) => {
   const styles = useStyles();
@@ -27,7 +21,7 @@ const FridgeRow = ({ title }) => {
           {/* TODO: Create a component for these images and pass some data to it (to render appropriate circles) */}
           <View style={styles.images}>
             {[vegetablesIcon, fruitsIcon, hamIcon, cheeseIcon, breadIcon, eggsIcon, milkIcon].map((item, index) => (
-              <View key={'foodicon-' + index} style={styles.iconContainer}>
+              <View key={'foodicon-' + index}>
                 <Image source={item} style={styles.icon} />
                 <View style={styles.circle} />
               </View>
@@ -43,7 +37,6 @@ const FridgeRow = ({ title }) => {
 const useStyles = makeStyles((theme) => ({
   container: {
     margin: 16,
-    width: '100%',
   },
   text: {
     fontSize: 20,
@@ -51,11 +44,6 @@ const useStyles = makeStyles((theme) => ({
   },
   images: {
     flexDirection: 'row',
-  },
-  iconContainer: {
-    width: 24,
-    height: 24,
-    position: 'relative',
   },
   icon: {
     width: 24,
@@ -73,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
   },
   divider: {
-    backgroundColor: 'white',
+    backgroundColor: theme.colors.silverMetallic,
   },
 }));
 
