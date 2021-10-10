@@ -8,6 +8,7 @@ export const CustomTheme = {
     richBlack: '#111113', // status bar
     background: '#202124', // whole page
     text: '#E8EAED',
+    whiteSemiTransparent: '#E8EAED80',
     cyberYellow: '#FFD300', // active tab
     silverMetallic: '#9AA0A6', // inactive tab
     blueJeans: '#5DADEC', // buttons
