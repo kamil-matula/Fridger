@@ -12,7 +12,7 @@ const InputField = ({ label, variant = 'account', textInputProps, secure = false
   const theme = useTheme();
 
   const [borderColor, setBorderColor] = useState(variant === 'account' ? 'transparent' : theme.colors.text + '80');
-  const styles = useStyles(borderColor);
+  const styles = useStyles({ borderColor, variant });
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
@@ -22,7 +22,7 @@ const InputField = ({ label, variant = 'account', textInputProps, secure = false
 
   const handleOnBlur = () => {
     if (variant === 'account') setBorderColor('transparent');
-    else if (variant === 'data') setBorderColor(theme.colors.text + '80');
+    else if (variant === 'data') setBorderColor(theme.colors.whiteSemiTransparent);
   };
 
   const handleOnPress = () => {
@@ -33,9 +33,7 @@ const InputField = ({ label, variant = 'account', textInputProps, secure = false
     <>
       <Text style={styles.label}>{label}</Text>
 
-      <View
-        style={[styles.inputContainer, { backgroundColor: variant === 'data' ? 'transparent' : theme.colors.primary }]}
-      >
+      <View style={styles.inputContainer}>
         <TextInput
           {...textInputProps}
           style={styles.input}
@@ -61,7 +59,7 @@ InputField.propTypes = {
   secure: PropTypes.bool,
 };
 
-const useStyles = makeStyles((theme, borderColor) => ({
+const useStyles = makeStyles((theme, { borderColor, variant }) => ({
   label: {
     fontSize: 14,
     marginBottom: 8,
@@ -75,6 +73,7 @@ const useStyles = makeStyles((theme, borderColor) => ({
     borderRadius: 5,
     alignItems: 'center',
     borderColor: borderColor,
+    backgroundColor: variant === 'data' ? 'transparent' : theme.colors.primary,
   },
   input: {
     color: theme.colors.text,
