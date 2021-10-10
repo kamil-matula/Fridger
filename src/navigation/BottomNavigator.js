@@ -6,9 +6,9 @@ import { useTheme } from 'react-native-paper';
 import { makeStyles } from '../utils';
 
 import { Menu, Fridges, ShoppingLists } from '../screens/home';
-import menuIcon from '../../assets/images/menu.png';
-import fridgeIcon from '../../assets/images/fridge.png';
-import listIcon from '../../assets/images/list.png';
+import menuIcon from '../../assets/images/navigation/tab_menu.png';
+import fridgeIcon from '../../assets/images/navigation/tab_fridge.png';
+import listIcon from '../../assets/images/navigation/tab_list.png';
 
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {

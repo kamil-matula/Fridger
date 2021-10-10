@@ -8,20 +8,20 @@ const Menu = () => {
   const styles = useStyles();
 
   return (
-    <View style={styles.contentStyle}>
-      <Text style={styles.textStyle}>Menu</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>Menu</Text>
     </View>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
-  contentStyle: {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: theme.colors.background,
   },
-  textStyle: {
+  text: {
     color: theme.colors.text,
   },
 }));

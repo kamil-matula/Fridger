@@ -3,23 +3,24 @@ import React from 'react';
 import { TouchableOpacity, View, Text, Image } from 'react-native';
 import PropTypes from 'prop-types';
 
-import backIcon from '../../assets/images/back.png';
+import drawerIcon from '../../assets/images/navigation/drawer.png';
 import { makeStyles } from '../utils';
 
-const AppBar = ({ onPress, label }) => {
+const AppBarWithDrawer = ({ onPress, label }) => {
   const styles = useStyles();
 
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={styles.row}>
-        <Image source={backIcon} style={styles.icon}/>
-        <Text style={styles.title}>{label}</Text>
-      </View>
-    </TouchableOpacity>
+    <View style={styles.row}>
+      <TouchableOpacity onPress={onPress} style={styles.iconContainer}>
+        <Image source={drawerIcon} style={styles.icon} />
+      </TouchableOpacity>
+      <Text style={styles.title}>{label}</Text>
+      <View style={styles.icon}></View>
+    </View>
   );
 };
 
-AppBar.propTypes = {
+AppBarWithDrawer.propTypes = {
   onPress: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
 };
@@ -30,18 +31,22 @@ const useStyles = makeStyles((theme) => ({
     marginHorizontal: 16,
     marginVertical: 12,
     alignItems: 'center',
+    width: '100%',
   },
   title: {
     fontSize: 20,
     fontWeight: '500',
-    marginLeft: 32,
     color: theme.colors.text,
   },
   icon: {
     width: 32,
     height: 32,
-    tintColor: theme.colors.text,
+    tintColor: theme.colors.silverMetallic,
+  },
+  iconContainer: {
+      marginLeft: 16,
+      marginRight: 32,
   },
 }));
 
-export default AppBar;
+export default AppBarWithDrawer;

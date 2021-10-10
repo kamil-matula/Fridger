@@ -8,20 +8,20 @@ const ShoppingLists = () => {
   const styles = useStyles();
 
   return (
-    <View style={styles.contentStyle}>
-      <Text style={styles.textStyle}>Shopping Lists</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>Shopping Lists</Text>
     </View>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
-  contentStyle: {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: theme.colors.background,
   },
-  textStyle: {
+  text: {
     color: theme.colors.text,
   },
 }));
