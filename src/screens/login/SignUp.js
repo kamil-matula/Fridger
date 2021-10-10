@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
 
 import { ScrollView, Text, View } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 
 import { InputField, Button } from '../../components';
 import { makeStyles } from '../../utils/makeStyles';
 
-const SignUp = () => {
+const SignUp = ({ navigation }) => {
   const styles = useStyles();
 
   const [email, setEmail] = useState('');
@@ -16,6 +17,13 @@ const SignUp = () => {
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
   const nickRef = useRef();
+
+  const signUp = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'SignUpFeedback' }],
+    });
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -70,9 +78,9 @@ const SignUp = () => {
         }}
       />
       <View style={styles.separator40} />
-      <Button label='Sign up' variant='contained' />
+      <Button label='Sign up' variant='contained' onPress={signUp} />
       <Text style={styles.text}>Already have an account?</Text>
-      <Button label='Login' variant='outlined' />
+      <Button label='Login' variant='outlined' onPress={() => navigation.goBack()} />
       <View style={styles.separator16} />
     </ScrollView>
   );

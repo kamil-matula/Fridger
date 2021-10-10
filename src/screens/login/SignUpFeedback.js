@@ -6,7 +6,7 @@ import { Button } from '../../components';
 import { makeStyles } from '../../utils/makeStyles';
 import pidgeon from '../../../assets/images/pidgeon.png';
 
-const SignUpFeedback = () => {
+const SignUpFeedback = ({ navigation }) => {
   const styles = useStyles();
 
   return (
@@ -18,7 +18,7 @@ const SignUpFeedback = () => {
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={pidgeon} />
       </View>
-      <Button label='Next' variant='contained' />
+      <Button label='Next' variant='contained' onPress={() => navigation.replace('DrawerNavigator')} />
     </View>
   );
 };

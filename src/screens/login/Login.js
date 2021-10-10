@@ -1,17 +1,24 @@
 import React, { useState, useRef } from 'react';
 
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
 
 import { InputField, Button } from '../../components';
 import { makeStyles } from '../../utils/makeStyles';
 
-const Login = () => {
+const Login = ({ navigation }) => {
   const styles = useStyles();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const passwordRef = useRef();
+
+  const login = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'DrawerNavigator' }],
+    });
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -36,14 +43,20 @@ const Login = () => {
           value: password,
           returnKeyType: 'done',
           placeholder: 'Enter your password',
+          onSubmitEditing: login,
           ref: passwordRef,
         }}
         secure={true}
       />
+      <View style={styles.resetPasswordContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')}>
+          <Text style={styles.resetPassword}>Forgot password?</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.separator40} />
-      <Button label='Login' variant='contained' />
+      <Button label='Login' variant='contained' onPress={login} />
       <Text style={styles.text}>Don’t have an account?</Text>
-      <Button label='Sign up' variant='outlined' />
+      <Button label='Sign up' variant='outlined' onPress={() => navigation.navigate('SignUp')} />
     </ScrollView>
   );
 };
@@ -60,6 +73,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 36,
     color: theme.colors.text,
     textAlign: 'center',
+  },
+  resetPasswordContainer: {
+    alignItems: 'flex-end',
+    marginTop: 8,
+  },
+  resetPassword: {
+    color: theme.colors.blueJeans,
   },
   text: {
     marginVertical: 16,
