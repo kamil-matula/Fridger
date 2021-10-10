@@ -12,12 +12,10 @@ const DrawerContent = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.drawerContent}>
       <UserInfo
+        // TODO: Replace with real user name, nick and image
         text='Ardelle Coppage'
         subtext='Minkx'
-        avatarURI={{
-          // TODO: Replace with real user image
-          uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
-        }}
+        avatarURI='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
       />
 
       <Divider style={styles.divider} />

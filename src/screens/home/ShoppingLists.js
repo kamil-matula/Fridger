@@ -1,28 +1,29 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+
+import { Text, View } from 'react-native';
+
+import { makeStyles } from '../../utils';
 
 const ShoppingLists = () => {
-  const theme = useTheme();
+  const styles = useStyles();
 
   return (
-    <View style={styles(theme).contentStyle}>
-      <Text style={styles(theme).textStyle}>Shopping Lists</Text>
+    <View style={styles.contentStyle}>
+      <Text style={styles.textStyle}>Shopping Lists</Text>
     </View>
   );
 };
 
-const styles = (theme) =>
-  StyleSheet.create({
-    contentStyle: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: theme.colors.background,
-    },
-    textStyle: {
-      color: theme.colors.text,
-    },
-  });
+const useStyles = makeStyles((theme) => ({
+  contentStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.background,
+  },
+  textStyle: {
+    color: theme.colors.text,
+  },
+}));
 
 export default ShoppingLists;

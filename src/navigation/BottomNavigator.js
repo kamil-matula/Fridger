@@ -1,17 +1,19 @@
 import React from 'react';
 
-import { Image, StyleSheet } from 'react-native';
+import { Image } from 'react-native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { useTheme } from 'react-native-paper';
-import { Menu, Fridges, ShoppingLists } from '../screens/home';
+import { makeStyles } from '../utils';
 
+import { Menu, Fridges, ShoppingLists } from '../screens/home';
 import menuIcon from '../../assets/images/menu.png';
 import fridgeIcon from '../../assets/images/fridge.png';
 import listIcon from '../../assets/images/list.png';
 
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
-  const { colors } = useTheme();
+  const styles = useStyles();
+  const colors = useTheme().colors;
 
   return (
     <Tab.Navigator
@@ -65,11 +67,11 @@ const BottomNavigator = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   icon: {
     width: 20,
     height: 20,
   },
-});
+}));
 
 export default BottomNavigator;
