@@ -14,7 +14,7 @@ const AppBarWithDrawer = ({ onPress, label }) => {
       <TouchableOpacity onPress={onPress} style={styles.iconContainer}>
         <Image source={drawerIcon} style={styles.icon} />
       </TouchableOpacity>
-      <Text style={styles.title}>{label}</Text>
+      <Text style={styles.title}>{label != null ? label : ''}</Text>
       <View style={styles.icon}></View>
     </View>
   );
@@ -22,7 +22,7 @@ const AppBarWithDrawer = ({ onPress, label }) => {
 
 AppBarWithDrawer.propTypes = {
   onPress: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
 };
 
 const useStyles = makeStyles((theme) => ({

@@ -1,16 +1,21 @@
 import React from 'react';
 
 import { Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AppBarWithDrawer } from '../../components';
 import { makeStyles } from '../../utils';
 
-const ShoppingLists = () => {
+const ShoppingLists = ({ navigation }) => {
   const styles = useStyles();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Shopping Lists</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <AppBarWithDrawer onPress={() => navigation.openDrawer()} label='Shopping Lists' />
+      <View style={styles.container}>
+        <Text style={styles.text}>Shopping Lists</Text>
+      </View>
+    </SafeAreaView>
   );
 };
 

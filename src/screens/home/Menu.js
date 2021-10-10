@@ -1,16 +1,21 @@
 import React from 'react';
 
 import { Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AppBarWithDrawer } from '../../components';
 import { makeStyles } from '../../utils';
 
-const Menu = () => {
+const Menu = ({ navigation }) => {
   const styles = useStyles();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Menu</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <AppBarWithDrawer onPress={() => navigation.openDrawer()} />
+      <View style={styles.container}>
+        <Text style={styles.text}>Menu</Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
