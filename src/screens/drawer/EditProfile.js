@@ -1,37 +1,178 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { AppBar } from '../../components';
+import React, { useRef, useState } from 'react';
+
+import { View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { useTheme, Appbar } from 'react-native-paper';
+import * as ImagePicker from 'expo-image-picker';
+
+import { makeStyles } from '../../utils';
+import { InputField, Button } from '../../components';
+import tmpPerson from '../../../assets/images/tmpPerson.jpg';
+import edit from '../../../assets/images/edit.png';
 
 const EditProfile = ({ navigation }) => {
   const theme = useTheme();
+  const styles = useStyles();
+
+  const [avatarUri, setAvatarUri] = useState(null);
+  const [nick, setNick] = useState('');
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [email, setEmail] = useState('');
+
+  const nameRef = useRef();
+  const surnameRef = useRef();
+  const emailRef = useRef();
+
+  const saveChanges = () => {
+    navigation.goBack();
+  };
+
+  const openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert('Permission to access camera roll is required!');
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+
+    setAvatarUri(pickerResult.uri);
+  };
 
   return (
-    <SafeAreaView style={styles(theme).pageStyle}>
-      <AppBar onPress={() => navigation.goBack()} label='Edit Profile' />
-      <View style={styles(theme).contentStyle}>
-        <Text style={styles(theme).textStyle}>Edit Profile</Text>
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Appbar.Header style={styles.AppbarHeader}>
+        <Appbar.BackAction
+          onPress={() => {
+            navigation.goBack();
+          }}
+          color={theme.colors.silverMetallic}
+        />
+        <Appbar.Content title='Edit profile' titleStyle={styles.AppbarTitleStyle} />
+      </Appbar.Header>
+      <ScrollView style={styles.SVcontainer}>
+        <View style={styles.imageContainer}>
+          <View style={styles.avatarContainer}>
+            <TouchableOpacity onPress={openImagePickerAsync}>
+              <Image style={styles.avatar} source={avatarUri !== null ? { uri: avatarUri } : tmpPerson} />
+              <View style={styles.badgeContainer}>
+                <Image style={styles.badge} source={edit} />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <InputField
+          label='Nick'
+          textInputProps={{
+            onChangeText: setNick,
+            value: nick,
+            returnKeyType: 'next',
+            placeholder: 'Enter your nick',
+            onSubmitEditing: () => nameRef?.current?.focus(),
+          }}
+        />
+        <View style={styles.separator16}></View>
+        <InputField
+          label='Name'
+          textInputProps={{
+            onChangeText: setName,
+            value: name,
+            returnKeyType: 'next',
+            placeholder: 'Enter your name',
+            onSubmitEditing: () => surnameRef?.current?.focus(),
+            ref: nameRef,
+          }}
+        />
+        <View style={styles.separator16}></View>
+        <InputField
+          label='Surname'
+          textInputProps={{
+            onChangeText: setSurname,
+            value: surname,
+            returnKeyType: 'next',
+            placeholder: 'Enter your surname',
+            onSubmitEditing: () => emailRef?.current?.focus(),
+            ref: surnameRef,
+          }}
+        />
+        <View style={styles.separator16}></View>
+        <InputField
+          label='Email'
+          textInputProps={{
+            onChangeText: setEmail,
+            value: email,
+            returnKeyType: 'done',
+            placeholder: 'Enter your email',
+            autoComplete: 'email',
+            keyboardType: 'email-address',
+            onSubmitEditing: () => buttonRef?.current?.focus(),
+            ref: emailRef,
+          }}
+        />
+        <View style={styles.separator40}></View>
+        <Button label='save changes' variant='contained' onPress={saveChanges} />
+        <View style={styles.separator16} />
+      </ScrollView>
+    </View>
   );
 };
 
-const styles = (theme) =>
-  StyleSheet.create({
-    pageStyle: {
-      flexDirection: 'column',
-      flex: 1,
-      backgroundColor: theme.colors.background,
-    },
-    contentStyle: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    textStyle: {
-      color: theme.colors.text,
-    },
-  });
+const useStyles = makeStyles((theme) => ({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  SVcontainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  AppbarHeader: {
+    elevation: 0,
+    backgroundColor: 'transparent',
+  },
+  AppbarTitleStyle: {
+    color: theme.colors.text,
+    textTransform: 'capitalize',
+  },
+  imageContainer: {
+    paddingVertical: 32,
+    alignItems: 'center',
+  },
+  avatarContainer: {
+    borderRadius: 9999,
+  },
+  avatar: {
+    width: 160,
+    height: 160,
+    borderRadius: 9999,
+    borderWidth: 2,
+    borderColor: theme.colors.silverMetallic,
+  },
+  badgeContainer: {
+    backgroundColor: theme.colors.blueJeans,
+    borderRadius: 9999,
+    padding: 8,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+  },
+  badge: {
+    width: 32,
+    height: 32,
+    borderRadius: 9999,
+    tintColor: theme.colors.text,
+  },
+  separator16: {
+    marginVertical: 8,
+  },
+  separator40: {
+    marginVertical: 20,
+  },
+}));
 
 export default EditProfile;
