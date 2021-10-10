@@ -4,7 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { CustomTheme } from './src/theme';
 import { StatusBar } from 'expo-status-bar';
-import Login from './src/screens/login/Login';
+import SignUpFeedback from './src/screens/login/SignUpFeedback';
 
 const App = () => {
   return (
@@ -12,7 +12,7 @@ const App = () => {
       <PaperProvider theme={CustomTheme}>
         {/* <StatusBar style='light' backgroundColor={CustomTheme.colors.richBlack} /> */}
         {/* <Navigation /> */}
-        <Login />
+        <SignUpFeedback />
       </PaperProvider>
     </SafeAreaProvider>
   );
