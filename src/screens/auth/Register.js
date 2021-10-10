@@ -1,28 +1,32 @@
 import React, { useState, useRef } from 'react';
 
-import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { InputField, Button } from '../../components';
 import { makeStyles } from '../../utils/makeStyles';
 
-const Login = ({ navigation }) => {
+const Register = ({ navigation }) => {
   const styles = useStyles();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [nick, setNick] = useState('');
 
   const passwordRef = useRef();
+  const confirmPasswordRef = useRef();
+  const nickRef = useRef();
 
-  const login = () => {
+  const register = () => {
     navigation.reset({
       index: 0,
-      routes: [{ name: 'DrawerNavigator' }],
+      routes: [{ name: 'RegisterFeedback' }],
     });
   };
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Login</Text>
+      <Text style={styles.header}>Register</Text>
       <InputField
         label='Email'
         textInputProps={{
@@ -41,20 +45,42 @@ const Login = ({ navigation }) => {
         textInputProps={{
           onChangeText: setPassword,
           value: password,
-          returnKeyType: 'done',
+          returnKeyType: 'next',
           placeholder: 'Enter your password',
-          onSubmitEditing: login,
+          onSubmitEditing: () => confirmPasswordRef?.current?.focus(),
           ref: passwordRef,
         }}
         secure={true}
       />
-      <View style={styles.resetPasswordContainer}>
-        <Button label='Forgot password?' variant='pureText' onPress={() => navigation.navigate('ResetPassword')} />
-      </View>
+      <View style={styles.separator16} />
+      <InputField
+        label='Confirm password'
+        textInputProps={{
+          onChangeText: setConfirmPassword,
+          value: confirmPassword,
+          returnKeyType: 'next',
+          placeholder: 'Confirm your password',
+          onSubmitEditing: () => nickRef?.current?.focus(),
+          ref: confirmPasswordRef,
+        }}
+        secure={true}
+      />
+      <View style={styles.separator16} />
+      <InputField
+        label='Nick'
+        textInputProps={{
+          onChangeText: setNick,
+          value: nick,
+          returnKeyType: 'done',
+          placeholder: 'Enter your nick',
+          ref: nickRef,
+        }}
+      />
       <View style={styles.separator40} />
-      <Button label='Login' variant='contained' onPress={login} />
-      <Text style={styles.text}>Don’t have an account?</Text>
-      <Button label='Sign up' variant='outlined' onPress={() => navigation.navigate('SignUp')} />
+      <Button label='Register' variant='contained' onPress={register} />
+      <Text style={styles.text}>Already have an account?</Text>
+      <Button label='Login' variant='outlined' onPress={() => navigation.goBack()} />
+      <View style={styles.separator16} />
     </ScrollView>
   );
 };
@@ -63,7 +89,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingBottom: 16,
     backgroundColor: theme.colors.background,
   },
   header: {
@@ -71,13 +96,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 36,
     color: theme.colors.text,
     textAlign: 'center',
-  },
-  resetPasswordContainer: {
-    alignItems: 'flex-end',
-    marginTop: 8,
-  },
-  resetPassword: {
-    color: theme.colors.blueJeans,
   },
   text: {
     marginVertical: 16,
@@ -93,4 +111,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default Login;
+export default Register;
