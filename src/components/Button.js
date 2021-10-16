@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from '../utils';
 
-const Button = ({ onPress, label, variant }) => {
-  const styles = useStyles(variant);
+const Button = ({ onPress, label, variant, color = 'blue' }) => {
+  const styles = useStyles({ variant, color });
 
   return (
     <TouchableOpacity style={styles.buttonStyle} onPress={onPress}>
@@ -19,17 +19,18 @@ const Button = ({ onPress, label, variant }) => {
 Button.propTypes = {
   onPress: PropTypes.func,
   label: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['outlined', 'contained', 'text', 'pureText']),
+  variant: PropTypes.oneOf(['outlined', 'contained', 'pureText']),
+  color: PropTypes.oneOf(['blue', 'red']),
 };
 
-const useStyles = makeStyles((theme, variant) => {
+const useStyles = makeStyles((theme, { variant, color }) => {
   const obj = {
     buttonStyle: {
-      borderColor: theme.colors.blueJeans,
       borderRadius: 5,
       justifyContent: 'center',
       alignItems: 'center',
       height: 48,
+      paddingHorizontal: 8,
     },
     textStyle: {
       fontSize: 14,
@@ -38,20 +39,28 @@ const useStyles = makeStyles((theme, variant) => {
       includeFontPadding: false,
     },
   };
+  if (color == 'blue') {
+    obj.textStyle.color = theme.colors.blueJeans;
+    obj.buttonStyle.borderColor = theme.colors.blueJeans;
+  }
+  if (color == 'red') {
+    obj.textStyle.color = theme.colors.tartOrange;
+    obj.buttonStyle.borderColor = theme.colors.tartOrange;
+  }
   if (variant == 'outlined') {
     obj.buttonStyle.borderWidth = 1;
-    obj.textStyle.color = theme.colors.blueJeans;
   }
   if (variant == 'contained') {
     obj.textStyle.color = theme.colors.richBlack;
-    obj.buttonStyle.backgroundColor = theme.colors.blueJeans;
-  }
-  if (variant == 'text') {
-    obj.textStyle.color = theme.colors.blueJeans;
+    if (color == 'blue') {
+      obj.buttonStyle.backgroundColor = theme.colors.blueJeans;
+    }
+    if (color == 'red') {
+      obj.buttonStyle.backgroundColor = theme.colors.tartOrange;
+    }
   }
   if (variant == 'pureText') {
     obj.buttonStyle.height = 'auto';
-    obj.textStyle.color = theme.colors.blueJeans;
     obj.textStyle.fontWeight = 'normal';
     obj.textStyle.textTransform = 'none';
   }
