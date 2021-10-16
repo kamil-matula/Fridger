@@ -119,14 +119,6 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  AppbarHeader: {
-    elevation: 0,
-    backgroundColor: 'transparent',
-  },
-  AppbarTitleStyle: {
-    color: theme.colors.text,
-    textTransform: 'capitalize',
-  },
   SVcontainer: {
     paddingHorizontal: 16,
     paddingBottom: 16,
