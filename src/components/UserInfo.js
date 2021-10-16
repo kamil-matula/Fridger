@@ -2,6 +2,7 @@ import React from 'react';
 
 import { View } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
+import PropTypes from 'prop-types';
 
 import { makeStyles } from '../utils';
 
@@ -10,13 +11,19 @@ const UserInfo = ({ text, subtext, avatarURI }) => {
 
   return (
     <View style={styles.container}>
-      <Avatar.Image source={avatarURI} size={64} />
-      <View style={styles.nameAndNickColumn}>
-        <Text style={styles.name}>{text}</Text>
-        <Text style={styles.nick}>{subtext}</Text>
+      <Avatar.Image source={{uri: avatarURI}} size={64} />
+      <View style={styles.column}>
+        <Text style={styles.title}>{text}</Text>
+        <Text style={styles.subtitle}>{subtext}</Text>
       </View>
     </View>
   );
+};
+
+UserInfo.propTypes = {
+  text: PropTypes.string.isRequired,
+  subtext: PropTypes.string.isRequired,
+  avatarURI: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -24,16 +31,16 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     margin: 16,
   },
-  nameAndNickColumn: {
+  column: {
     flexDirection: 'column',
     justifyContent: 'center',
     marginLeft: 16,
   },
-  name: {
+  title: {
     fontSize: 24,
     color: theme.colors.text,
   },
-  nick: {
+  subtitle: {
     fontSize: 18,
     color: theme.colors.silverMetallic,
   },

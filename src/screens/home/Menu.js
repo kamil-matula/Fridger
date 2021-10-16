@@ -1,28 +1,34 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+
+import { Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { AppBar } from '../../components';
+import { makeStyles } from '../../utils';
 
 const Menu = () => {
-  const theme = useTheme();
+  const styles = useStyles();
 
   return (
-    <View style={styles(theme).contentStyle}>
-      <Text style={styles(theme).textStyle}>Menu</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <AppBar isDrawer={true}/>
+      <View style={styles.container}>
+        <Text style={styles.text}>Menu</Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
-const styles = (theme) =>
-  StyleSheet.create({
-    contentStyle: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: theme.colors.background,
-    },
-    textStyle: {
-      color: theme.colors.text,
-    },
-  });
+const useStyles = makeStyles((theme) => ({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.background,
+  },
+  text: {
+    color: theme.colors.text,
+  },
+}));
 
 export default Menu;

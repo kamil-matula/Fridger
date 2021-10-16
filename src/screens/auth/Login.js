@@ -1,33 +1,28 @@
 import React, { useState, useRef } from 'react';
 
 import { ScrollView, Text, View } from 'react-native';
-import { CommonActions } from '@react-navigation/native';
 
 import { InputField, Button } from '../../components';
 import { makeStyles } from '../../utils/makeStyles';
 
-const SignUp = ({ navigation }) => {
+const Login = ({ navigation }) => {
   const styles = useStyles();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [nick, setNick] = useState('');
 
   const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
-  const nickRef = useRef();
 
-  const signUp = () => {
+  const login = () => {
     navigation.reset({
       index: 0,
-      routes: [{ name: 'SignUpFeedback' }],
+      routes: [{ name: 'DrawerNavigator' }],
     });
   };
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Sign Up</Text>
+      <Text style={styles.header}>Login</Text>
       <InputField
         label='Email'
         textInputProps={{
@@ -46,42 +41,20 @@ const SignUp = ({ navigation }) => {
         textInputProps={{
           onChangeText: setPassword,
           value: password,
-          returnKeyType: 'next',
+          returnKeyType: 'done',
           placeholder: 'Enter your password',
-          onSubmitEditing: () => confirmPasswordRef?.current?.focus(),
+          onSubmitEditing: login,
           ref: passwordRef,
         }}
         secure={true}
       />
-      <View style={styles.separator16} />
-      <InputField
-        label='Confirm password'
-        textInputProps={{
-          onChangeText: setConfirmPassword,
-          value: confirmPassword,
-          returnKeyType: 'next',
-          placeholder: 'Confirm your password',
-          onSubmitEditing: () => nickRef?.current?.focus(),
-          ref: confirmPasswordRef,
-        }}
-        secure={true}
-      />
-      <View style={styles.separator16} />
-      <InputField
-        label='Nick'
-        textInputProps={{
-          onChangeText: setNick,
-          value: nick,
-          returnKeyType: 'done',
-          placeholder: 'Enter your nick',
-          ref: nickRef,
-        }}
-      />
+      <View style={styles.resetPasswordContainer}>
+        <Button label='Forgot password?' variant='pureText' onPress={() => navigation.navigate('ResetPassword')} />
+      </View>
       <View style={styles.separator40} />
-      <Button label='Sign up' variant='contained' onPress={signUp} />
-      <Text style={styles.text}>Already have an account?</Text>
-      <Button label='Login' variant='outlined' onPress={() => navigation.goBack()} />
-      <View style={styles.separator16} />
+      <Button label='Login' variant='contained' onPress={login} />
+      <Text style={styles.text}>Don’t have an account?</Text>
+      <Button label='Register' variant='outlined' onPress={() => navigation.navigate('Register')} />
     </ScrollView>
   );
 };
@@ -90,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingBottom: 16,
     backgroundColor: theme.colors.background,
   },
   header: {
@@ -97,6 +71,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 36,
     color: theme.colors.text,
     textAlign: 'center',
+  },
+  resetPasswordContainer: {
+    alignItems: 'flex-end',
+    marginTop: 8,
+  },
+  resetPassword: {
+    color: theme.colors.blueJeans,
   },
   text: {
     marginVertical: 16,
@@ -112,4 +93,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default SignUp;
+export default Login;
