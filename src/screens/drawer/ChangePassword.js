@@ -12,11 +12,56 @@ const ChangePassword = ({ navigation }) => {
   const [newPassword, setNewPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
 
+  const [oldPasswordError, setOldPasswordError] = useState('');
+  const [newPasswordError, setNewPasswordError] = useState('');
+  const [repeatPasswordError, setRepeatPasswordError] = useState('');
+
   const newPasswordRef = useRef();
   const repeatPasswordRef = useRef();
 
   const changePassword = () => {
-    navigation.goBack();
+    let isError = false;
+
+    isError |= validateLength([
+      [oldPassword, setOldPasswordError],
+      [newPassword, setNewPasswordError],
+      [repeatPassword, setRepeatPasswordError],
+    ]);
+
+    isError |= validateRepeat(newPassword, repeatPassword, setRepeatPasswordError);
+
+    if (!isError) {
+      console.log(isError);
+      navigation.goBack();
+    }
+  };
+
+  const validateLength = (states) => {
+    let error = false;
+
+    states.forEach(([text, setError]) => {
+      if (text.length < 8) {
+        setError('Password must have at least 8 characters');
+        error = true;
+      } else {
+        setError('');
+      }
+    });
+
+    return error;
+  };
+
+  const validateRepeat = (newPassword, repeatPassword, setRepeatPasswordError) => {
+    let error = false;
+
+    if (newPassword != repeatPassword) {
+      setRepeatPasswordError('Password and repeated password must be identical');
+      error = true;
+    } else {
+      setRepeatPasswordError('');
+    }
+
+    return error;
   };
 
   return (
@@ -25,10 +70,11 @@ const ChangePassword = ({ navigation }) => {
       <ScrollView style={styles.SVcontainer}>
         <InputField
           label='Old password'
+          errorMessage={oldPasswordError}
           secure={true}
           textInputProps={{
-            onChangeText: setNewPassword,
-            value: newPassword,
+            onChangeText: setOldPassword,
+            value: oldPassword,
             returnKeyType: 'next',
             placeholder: 'Enter your old password',
             onSubmitEditing: () => newPasswordRef?.current?.focus(),
@@ -37,10 +83,11 @@ const ChangePassword = ({ navigation }) => {
         <View style={styles.separator16} />
         <InputField
           label='New password'
+          errorMessage={newPasswordError}
           secure={true}
           textInputProps={{
-            onChangeText: setOldPassword,
-            value: oldPassword,
+            onChangeText: setNewPassword,
+            value: newPassword,
             returnKeyType: 'next',
             placeholder: 'Enter your new password',
             onSubmitEditing: () => repeatPasswordRef?.current?.focus(),
@@ -50,6 +97,7 @@ const ChangePassword = ({ navigation }) => {
         <View style={styles.separator16} />
         <InputField
           label='Confirm new password'
+          errorMessage={repeatPasswordError}
           secure={true}
           textInputProps={{
             onChangeText: setRepeatPassword,
