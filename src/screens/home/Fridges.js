@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { Divider } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppBar, FridgeRow } from '../../components';
 import { makeStyles } from '../../utils';
@@ -17,24 +16,22 @@ const Fridges = () => {
   const styles = useStyles();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <AppBar isDrawer={true} label='Fridges' />
-      <Divider style={styles.divider}/>
+      <Divider style={styles.divider} />
       <FlatList
         style={styles.list}
         data={DATA}
         renderItem={({ item }) => <FridgeRow title={item.title} />}
         keyExtractor={(item) => item.id}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: theme.colors.background,
   },
   divider: {

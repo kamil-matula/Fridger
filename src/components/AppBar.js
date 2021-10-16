@@ -14,7 +14,7 @@ const AppBar = ({ label = '', isDrawer = false }) => {
   const navigation = useNavigation();
 
   return (
-    <Appbar style={styles.bar}>
+    <Appbar.Header style={styles.bar}>
       <Appbar.Action
         icon={isDrawer ? drawerIcon : backIcon}
         onPress={isDrawer ? () => navigation.openDrawer() : () => navigation.goBack()}
@@ -22,7 +22,7 @@ const AppBar = ({ label = '', isDrawer = false }) => {
         size={isDrawer ? 32 : 24}
       />
       <Appbar.Content title={label} titleStyle={styles.title} />
-    </Appbar>
+    </Appbar.Header>
   );
 };
 
@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
     fontWeight: '500',
     color: theme.colors.text,
+    textTransform: 'capitalize',
   },
 }));
 

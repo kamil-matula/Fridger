@@ -1,16 +1,14 @@
 import React, { useRef, useState } from 'react';
 
 import { View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { useTheme, Appbar } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 
 import { makeStyles } from '../../utils';
-import { InputField, Button } from '../../components';
+import { InputField, Button, AppBar } from '../../components';
 import tmpPerson from '../../../assets/images/tmpPerson.jpg';
 import edit from '../../../assets/images/edit.png';
 
 const EditProfile = ({ navigation }) => {
-  const theme = useTheme();
   const styles = useStyles();
 
   const [avatarUri, setAvatarUri] = useState(null);
@@ -46,15 +44,7 @@ const EditProfile = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header style={styles.AppbarHeader}>
-        <Appbar.BackAction
-          onPress={() => {
-            navigation.goBack();
-          }}
-          color={theme.colors.silverMetallic}
-        />
-        <Appbar.Content title='Edit profile' titleStyle={styles.AppbarTitleStyle} />
-      </Appbar.Header>
+      <AppBar label='Edit profile' />
       <ScrollView style={styles.SVcontainer}>
         <View style={styles.imageContainer}>
           <View style={styles.avatarContainer}>
@@ -130,14 +120,6 @@ const useStyles = makeStyles((theme) => ({
   SVcontainer: {
     paddingHorizontal: 16,
     paddingBottom: 16,
-  },
-  AppbarHeader: {
-    elevation: 0,
-    backgroundColor: 'transparent',
-  },
-  AppbarTitleStyle: {
-    color: theme.colors.text,
-    textTransform: 'capitalize',
   },
   imageContainer: {
     paddingVertical: 32,
