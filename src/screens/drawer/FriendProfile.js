@@ -58,7 +58,7 @@ const FriendProfile = ({ navigation }) => {
           <Dialog.Actions>
             <Button label='remove' color='red' onPress={removeFriend} />
             <View style={styles.separatorHorizontal8} />
-            <Button label='cancle' onPress={() => setDialogVisible(false)} />
+            <Button label='cancel' onPress={() => setDialogVisible(false)} />
           </Dialog.Actions>
         </Dialog>
       </Portal>
