@@ -45,7 +45,12 @@ const DeleteAccount = ({ navigation }) => {
           }}
         />
         <View style={styles.separator40} />
-        <Button label='delete account' variant='containedRed' onPress={deleteAccount} />
+        <Button
+          label='delete account'
+          variant='contained'
+          color='red'
+          onPress={deleteAccount}
+        />
       </ScrollView>
     </View>
   );
