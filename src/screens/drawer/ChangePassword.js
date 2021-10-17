@@ -77,7 +77,7 @@ const ChangePassword = ({ navigation }) => {
   // Calculating height of space between last input field and the button:
   const spaceHeight = calculateSpace({
     inputFieldsAmount: 3,
-    contentHeightBottom: 48 + 16,
+    contentHeightBottom: 48 + 16 + 2, // bug
     isAppBar: true,
   });
 
