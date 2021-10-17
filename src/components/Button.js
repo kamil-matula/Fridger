@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme, { variant, color }) => {
   }
   if (variant == 'pureText') {
     obj.buttonStyle.height = 'auto';
+    obj.buttonStyle.paddingHorizontal = 0;
     obj.textStyle.fontWeight = 'normal';
     obj.textStyle.textTransform = 'none';
   }
