@@ -8,20 +8,49 @@ import backIcon from '../../assets/images/back.png';
 import drawerIcon from '../../assets/images/navigation/drawer.png';
 import { makeStyles } from '../utils';
 
-const AppBar = ({ label = '', isDrawer = false }) => {
+const AppBar = ({
+  label = '',
+  isDrawer = false,
+  icon1 = null,
+  onPressIcon1 = null,
+  icon2 = null,
+  onPressIcon2 = null,
+}) => {
   const styles = useStyles();
   const colors = useTheme().colors;
   const navigation = useNavigation();
 
   return (
     <Appbar style={styles.bar}>
-      <Appbar.Action
-        icon={isDrawer ? drawerIcon : backIcon}
-        onPress={isDrawer ? () => navigation.openDrawer() : () => navigation.goBack()}
-        color={isDrawer ? colors.silverMetallic : colors.text}
-        size={isDrawer ? 32 : 24}
-      />
+      {isDrawer && (
+        <Appbar.Action
+          icon={drawerIcon}
+          onPress={() => navigation.openDrawer()}
+          color={colors.text}
+        />
+      )}
+      {!isDrawer && (
+        <Appbar.Action
+          icon={backIcon}
+          onPress={() => navigation.goBack()}
+          color={colors.text}
+        />
+      )}
       <Appbar.Content title={label} titleStyle={styles.title} />
+      {icon1 && (
+        <Appbar.Action
+          icon={icon1}
+          color={colors.text}
+          onPress={onPressIcon1}
+        />
+      )}
+      {icon2 && (
+        <Appbar.Action
+          icon={icon2}
+          color={colors.text}
+          onPress={onPressIcon2}
+        />
+      )}
     </Appbar>
   );
 };
@@ -29,6 +58,10 @@ const AppBar = ({ label = '', isDrawer = false }) => {
 AppBar.propTypes = {
   label: PropTypes.string,
   isDrawer: PropTypes.bool,
+  icon1: PropTypes.object,
+  onPressIcon1: PropTypes.func,
+  icon2: PropTypes.object,
+  onPressIcon2: PropTypes.func,
 };
 
 const useStyles = makeStyles((theme) => ({

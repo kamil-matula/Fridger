@@ -1,21 +1,14 @@
 import React, { useState } from 'react';
 
 import { View, Image, ScrollView } from 'react-native';
-import {
-  useTheme,
-  Appbar,
-  Dialog,
-  Portal,
-  Paragraph,
-} from 'react-native-paper';
+import { Dialog, Portal, Paragraph } from 'react-native-paper';
 
 import { makeStyles } from '../../utils';
-import { UserDataRow, Button } from '../../components';
+import { UserDataRow, Button, AppBar } from '../../components';
 import deleteIcon from '../../../assets/images/delete.png';
 import tmpPerson from '../../../assets/images/tmpPerson.jpg';
 
 const FriendProfile = ({ navigation }) => {
-  const theme = useTheme();
   const styles = useStyles();
 
   const [avatarUri, setAvatarUri] = useState(null);
@@ -32,21 +25,7 @@ const FriendProfile = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header style={styles.AppbarHeader}>
-        <Appbar.BackAction
-          onPress={() => {
-            navigation.goBack();
-          }}
-          color={theme.colors.silverMetallic}
-        />
-        <Appbar.Action
-          icon={deleteIcon}
-          color={theme.colors.silverMetallic}
-          onPress={() => {
-            setDialogVisible(true);
-          }}
-        />
-      </Appbar.Header>
+      <AppBar icon1={deleteIcon} onPressIcon1={() => setDialogVisible(true)} />
       <ScrollView style={styles.SVcontainer}>
         <View style={styles.imageContainer}>
           <Image
@@ -95,11 +74,6 @@ const useStyles = makeStyles((theme) => ({
   SVcontainer: {
     paddingHorizontal: 16,
     paddingBottom: 16,
-  },
-  AppbarHeader: {
-    elevation: 0,
-    backgroundColor: 'transparent',
-    justifyContent: 'space-between',
   },
   imageContainer: {
     paddingVertical: 32,
