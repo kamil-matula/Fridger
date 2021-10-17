@@ -1,37 +1,70 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 
-import { Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, View } from 'react-native';
 
-import { makeStyles } from '../../utils';
-import { AppBar } from '../../components';
+import { InputField, Button, AppBar } from '../../components';
+import { makeStyles } from '../../utils/makeStyles';
 
-const DeleteAccount = () => {
+const DeleteAccount = ({ navigation }) => {
   const styles = useStyles();
 
+  const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
+
+  const repeatPasswordRef = useRef();
+
+  const deleteAccount = () => {
+    navigation.goBack();
+  };
+
   return (
-    <SafeAreaView style={styles.pageStyle}>
-      <AppBar label='Delete Account' />
-      <View style={styles.contentStyle}>
-        <Text style={styles.textStyle}>Delete Account</Text>
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <AppBar label='Delete account' />
+      <ScrollView style={styles.SVcontainer}>
+        <InputField
+          label='Password'
+          secure={true}
+          textInputProps={{
+            onChangeText: setPassword,
+            value: password,
+            returnKeyType: 'next',
+            placeholder: 'Enter your password',
+            onSubmitEditing: () => repeatPasswordRef?.current?.focus(),
+          }}
+        />
+        <View style={styles.separator16} />
+        <InputField
+          label='Confirm password'
+          secure={true}
+          textInputProps={{
+            onChangeText: setRepeatPassword,
+            value: repeatPassword,
+            returnKeyType: 'done',
+            placeholder: 'Confirm your password',
+            ref: repeatPasswordRef,
+          }}
+        />
+        <View style={styles.separator40} />
+        <Button label='delete account' variant='containedRed' onPress={deleteAccount} />
+      </ScrollView>
+    </View>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
-  pageStyle: {
-    flexDirection: 'column',
+  container: {
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  contentStyle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  SVcontainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
-  textStyle: {
-    color: theme.colors.text,
+  separator16: {
+    marginVertical: 8,
+  },
+  separator40: {
+    marginVertical: 20,
   },
 }));
 

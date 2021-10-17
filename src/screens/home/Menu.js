@@ -10,21 +10,24 @@ const Menu = () => {
   const styles = useStyles();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <AppBar isDrawer={true}/>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <AppBar isDrawer={true} />
+      <View style={styles.container2}>
         <Text style={styles.text}>Menu</Text>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  container2: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.colors.background,
+    flex: 1,
   },
   text: {
     color: theme.colors.text,

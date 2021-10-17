@@ -21,7 +21,7 @@ const AppBar = ({
   const navigation = useNavigation();
 
   return (
-    <Appbar style={styles.bar}>
+    <Appbar.Header style={styles.bar}>
       {isDrawer && (
         <Appbar.Action
           icon={drawerIcon}
@@ -51,7 +51,7 @@ const AppBar = ({
           onPress={onPressIcon2}
         />
       )}
-    </Appbar>
+    </Appbar.Header>
   );
 };
 
@@ -73,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
     fontWeight: '500',
     color: theme.colors.text,
+    textTransform: 'capitalize',
   },
 }));
 
