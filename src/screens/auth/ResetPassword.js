@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 
 import { ScrollView, Text, View } from 'react-native';
-import { Appbar, useTheme } from 'react-native-paper';
 
-import { InputField, Button } from '../../components';
-import { makeStyles } from '../../utils/makeStyles';
+import { InputField, Button, AppBar } from '../../components';
+import { makeStyles, calculateSpace } from '../../utils';
 
 const ResetPassword = ({ navigation }) => {
   const styles = useStyles();
-  const theme = useTheme();
 
   const [email, setEmail] = useState('');
 
@@ -16,16 +14,16 @@ const ResetPassword = ({ navigation }) => {
     navigation.goBack();
   };
 
+  // Calculating height of space between last input field and the button:
+  const spaceHeight = calculateSpace({
+    contentHeightTop: 240 + 56 + 20,
+    inputFieldsAmount: 1,
+    contentHeightBottom: 48,
+  });
+
   return (
     <View style={styles.container}>
-      <Appbar.Header style={styles.AppbarHeader}>
-        <Appbar.BackAction
-          onPress={() => {
-            navigation.goBack();
-          }}
-          color={theme.colors.silverMetallic}
-        />
-      </Appbar.Header>
+      <AppBar/>
       <ScrollView style={styles.SVcontainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Reset Password</Text>
@@ -44,7 +42,7 @@ const ResetPassword = ({ navigation }) => {
             keyboardType: 'email-address',
           }}
         />
-        <View style={styles.separator40} />
+        <View style={{height: spaceHeight}} />
         <Button label='Submit' variant='contained' onPress={resetPassword} />
       </ScrollView>
     </View>
@@ -56,13 +54,8 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  AppbarHeader: {
-    elevation: 0,
-    backgroundColor: 'transparent',
-  },
   SVcontainer: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
   },
   headerContainer: {
     marginVertical: 64,
@@ -77,9 +70,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     color: theme.colors.text,
     textAlign: 'center',
-  },
-  separator40: {
-    marginVertical: 20,
   },
 }));
 

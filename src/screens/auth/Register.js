@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import { InputField, Button } from '../../components';
-import { makeStyles } from '../../utils/makeStyles';
+import { makeStyles, calculateSpace } from '../../utils';
 
 const Register = ({ navigation }) => {
   const styles = useStyles();
@@ -23,6 +23,13 @@ const Register = ({ navigation }) => {
       routes: [{ name: 'RegisterFeedback' }],
     });
   };
+
+  // Calculating height of space between last input field and the button:
+  const spaceHeight = calculateSpace({
+    contentHeightTop: 176,
+    inputFieldsAmount: 4,
+    contentHeightBottom: 48 + 51 + 48,
+  });
 
   return (
     <ScrollView style={styles.container}>
@@ -76,7 +83,7 @@ const Register = ({ navigation }) => {
           ref: nickRef,
         }}
       />
-      <View style={styles.separator40} />
+      <View style={{height: spaceHeight}} />
       <Button label='Register' variant='contained' onPress={register} />
       <Text style={styles.text}>Already have an account?</Text>
       <Button label='Login' variant='outlined' onPress={() => navigation.goBack()} />
@@ -104,10 +111,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
   },
   separator16: {
-    marginVertical: 8,
-  },
-  separator40: {
-    marginVertical: 20,
+    height: 16,
   },
 }));
 

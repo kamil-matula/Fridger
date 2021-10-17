@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import { InputField, Button } from '../../components';
-import { makeStyles } from '../../utils/makeStyles';
+import { makeStyles, calculateSpace } from '../../utils';
 
 const Login = ({ navigation }) => {
   const styles = useStyles();
@@ -19,6 +19,13 @@ const Login = ({ navigation }) => {
       routes: [{ name: 'DrawerNavigator' }],
     });
   };
+
+  // Calculating height of space between last input field and the button:
+  const spaceHeight = calculateSpace({
+    contentHeightTop: 176,
+    inputFieldsAmount: 2,
+    contentHeightBottom: 24 + 48 + 51 + 48,
+  });
 
   return (
     <ScrollView style={styles.container}>
@@ -49,12 +56,20 @@ const Login = ({ navigation }) => {
         secure={true}
       />
       <View style={styles.resetPasswordContainer}>
-        <Button label='Forgot password?' variant='pureText' onPress={() => navigation.navigate('ResetPassword')} />
+        <Button
+          label='Forgot password?'
+          variant='pureText'
+          onPress={() => navigation.navigate('ResetPassword')}
+        />
       </View>
-      <View style={styles.separator40} />
+      <View style={{ height: spaceHeight }} />
       <Button label='Login' variant='contained' onPress={login} />
       <Text style={styles.text}>Don’t have an account?</Text>
-      <Button label='Register' variant='outlined' onPress={() => navigation.navigate('Register')} />
+      <Button
+        label='Register'
+        variant='outlined'
+        onPress={() => navigation.navigate('Register')}
+      />
     </ScrollView>
   );
 };
@@ -63,7 +78,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingBottom: 16,
     backgroundColor: theme.colors.background,
   },
   header: {
@@ -86,10 +100,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
   },
   separator16: {
-    marginVertical: 8,
-  },
-  separator40: {
-    marginVertical: 20,
+    height: 16,
   },
 }));
 
