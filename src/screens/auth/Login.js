@@ -24,7 +24,7 @@ const Login = ({ navigation }) => {
   const spaceHeight = calculateSpace({
     contentHeightTop: 176,
     inputFieldsAmount: 2,
-    contentHeightBottom: 24 + 48 + 51 + 48,
+    contentHeightBottom: 24 + 48 + 51 + 48 + 16,
   });
 
   return (
@@ -70,6 +70,7 @@ const Login = ({ navigation }) => {
         variant='outlined'
         onPress={() => navigation.navigate('Register')}
       />
+      <View style={styles.separator16} />
     </ScrollView>
   );
 };

@@ -28,7 +28,7 @@ const Register = ({ navigation }) => {
   const spaceHeight = calculateSpace({
     contentHeightTop: 176,
     inputFieldsAmount: 4,
-    contentHeightBottom: 48 + 51 + 48,
+    contentHeightBottom: 48 + 51 + 48 + 16,
   });
 
   return (
@@ -83,10 +83,14 @@ const Register = ({ navigation }) => {
           ref: nickRef,
         }}
       />
-      <View style={{height: spaceHeight}} />
+      <View style={{ height: spaceHeight }} />
       <Button label='Register' variant='contained' onPress={register} />
       <Text style={styles.text}>Already have an account?</Text>
-      <Button label='Login' variant='outlined' onPress={() => navigation.goBack()} />
+      <Button
+        label='Login'
+        variant='outlined'
+        onPress={() => navigation.goBack()}
+      />
       <View style={styles.separator16} />
     </ScrollView>
   );

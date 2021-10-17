@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { InputField, Button, AppBar } from '../../components';
-import { makeStyles } from '../../utils/makeStyles';
+import { makeStyles, calculateSpace } from '../../utils';
 
 const DeleteAccount = ({ navigation }) => {
   const styles = useStyles();
@@ -16,6 +16,13 @@ const DeleteAccount = ({ navigation }) => {
   const deleteAccount = () => {
     navigation.goBack();
   };
+
+  // Calculating height of space between last input field and the button:
+  const spaceHeight = calculateSpace({
+    inputFieldsAmount: 2,
+    contentHeightBottom: 48 + 16,
+    isAppBar: true,
+  });
 
   return (
     <View style={styles.container}>
@@ -44,7 +51,7 @@ const DeleteAccount = ({ navigation }) => {
             ref: repeatPasswordRef,
           }}
         />
-        <View style={styles.separator40} />
+        <View style={{ height: spaceHeight }} />
         <Button
           label='delete account'
           variant='contained'
@@ -63,13 +70,9 @@ const useStyles = makeStyles((theme) => ({
   },
   SVcontainer: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
   },
   separator16: {
-    marginVertical: 8,
-  },
-  separator40: {
-    marginVertical: 20,
+    height: 16,
   },
 }));
 

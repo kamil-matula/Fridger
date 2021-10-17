@@ -16,19 +16,21 @@ const ResetPassword = ({ navigation }) => {
 
   // Calculating height of space between last input field and the button:
   const spaceHeight = calculateSpace({
-    contentHeightTop: 240 + 56 + 20,
+    contentHeightTop: 240,
     inputFieldsAmount: 1,
-    contentHeightBottom: 48,
+    contentHeightBottom: 48 + 16,
+    isAppBar: true,
   });
 
   return (
     <View style={styles.container}>
-      <AppBar/>
+      <AppBar />
       <ScrollView style={styles.SVcontainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Reset Password</Text>
           <Text style={styles.text}>
-            Enter email associated with your account.{'\n'}We will send you a new password.
+            Enter email associated with your account.{'\n'}We will send you a
+            new password.
           </Text>
         </View>
         <InputField
@@ -42,8 +44,9 @@ const ResetPassword = ({ navigation }) => {
             keyboardType: 'email-address',
           }}
         />
-        <View style={{height: spaceHeight}} />
+        <View style={{ height: spaceHeight }} />
         <Button label='Submit' variant='contained' onPress={resetPassword} />
+        <View style={styles.separator16} />
       </ScrollView>
     </View>
   );
@@ -70,6 +73,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     color: theme.colors.text,
     textAlign: 'center',
+  },
+  separator16: {
+    height: 16,
   },
 }));
 

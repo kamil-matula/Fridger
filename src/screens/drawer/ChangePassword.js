@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { InputField, Button, AppBar } from '../../components';
-import { makeStyles } from '../../utils/makeStyles';
+import { makeStyles, calculateSpace } from '../../utils';
 
 const ChangePassword = ({ navigation }) => {
   const styles = useStyles();
@@ -28,7 +28,11 @@ const ChangePassword = ({ navigation }) => {
       [repeatPassword, setRepeatPasswordError],
     ]);
 
-    isError |= validateRepeat(newPassword, repeatPassword, setRepeatPasswordError);
+    isError |= validateRepeat(
+      newPassword,
+      repeatPassword,
+      setRepeatPasswordError
+    );
 
     if (!isError) {
       console.log(isError);
@@ -51,11 +55,17 @@ const ChangePassword = ({ navigation }) => {
     return error;
   };
 
-  const validateRepeat = (newPassword, repeatPassword, setRepeatPasswordError) => {
+  const validateRepeat = (
+    newPassword,
+    repeatPassword,
+    setRepeatPasswordError
+  ) => {
     let error = false;
 
     if (newPassword != repeatPassword) {
-      setRepeatPasswordError('Password and repeated password must be identical');
+      setRepeatPasswordError(
+        'Password and repeated password must be identical'
+      );
       error = true;
     } else {
       setRepeatPasswordError('');
@@ -63,6 +73,13 @@ const ChangePassword = ({ navigation }) => {
 
     return error;
   };
+
+  // Calculating height of space between last input field and the button:
+  const spaceHeight = calculateSpace({
+    inputFieldsAmount: 3,
+    contentHeightBottom: 48 + 16,
+    isAppBar: true,
+  });
 
   return (
     <View style={styles.container}>
@@ -107,8 +124,9 @@ const ChangePassword = ({ navigation }) => {
             ref: repeatPasswordRef,
           }}
         />
-        <View style={styles.separator40} />
+        <View style={{ height: spaceHeight }} />
         <Button label='Submit' variant='contained' onPress={changePassword} />
+        <View style={styles.separator16} />
       </ScrollView>
     </View>
   );
@@ -121,13 +139,9 @@ const useStyles = makeStyles((theme) => ({
   },
   SVcontainer: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
   },
   separator16: {
-    marginVertical: 8,
-  },
-  separator40: {
-    marginVertical: 20,
+    height: 16,
   },
 }));
 
