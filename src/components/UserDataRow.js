@@ -16,7 +16,7 @@ const UserDataRow = ({ label, data }) => {
   );
 };
 
-Button.propTypes = {
+UserDataRow.propTypes = {
   label: PropTypes.string.isRequired,
   data: PropTypes.string.isRequired,
 };
