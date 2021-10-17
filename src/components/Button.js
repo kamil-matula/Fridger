@@ -19,7 +19,7 @@ const Button = ({ onPress, label, variant }) => {
 Button.propTypes = {
   onPress: PropTypes.func,
   label: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['outlined', 'contained', 'text', 'pureText']),
+  variant: PropTypes.oneOf(['outlined', 'contained', 'text', 'pureText', 'containedRed']),
 };
 
 const useStyles = makeStyles((theme, variant) => {
@@ -45,6 +45,10 @@ const useStyles = makeStyles((theme, variant) => {
   if (variant == 'contained') {
     obj.textStyle.color = theme.colors.richBlack;
     obj.buttonStyle.backgroundColor = theme.colors.blueJeans;
+  }
+  if (variant == 'containedRed') {
+    obj.textStyle.color = theme.colors.richBlack;
+    obj.buttonStyle.backgroundColor = theme.colors.tartOrange;
   }
   if (variant == 'text') {
     obj.textStyle.color = theme.colors.blueJeans;
