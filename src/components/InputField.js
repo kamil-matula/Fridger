@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { View, TextInput, Text, TouchableWithoutFeedback, Image } from 'react-native';
 import { useTheme } from 'react-native-paper';
@@ -8,13 +8,23 @@ import { makeStyles } from '../utils';
 import visibility from '../../assets/images/visibility.png';
 import visibilityOff from '../../assets/images/visibility_off.png';
 
-const InputField = ({ label, variant = 'account', textInputProps, secure = false }) => {
+const InputField = ({ label, errorMessage = '', variant = 'account', textInputProps, secure = false }) => {
   const theme = useTheme();
 
-  const [borderColor, setBorderColor] = useState(variant === 'account' ? 'transparent' : theme.colors.text + '80');
+  const [borderColor, setBorderColor] = useState(null);
   const styles = useStyles({ borderColor, variant });
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+
+  useEffect(() => {
+    if (errorMessage != '') {
+      setBorderColor(theme.colors.tartOrange);
+    } else if (variant === 'account') {
+      setBorderColor('transparent');
+    } else {
+      setBorderColor(theme.colors.whiteSemiTransparent);
+    }
+  }, [errorMessage]);
 
   const handleOnFocus = () => {
     setBorderColor(theme.colors.text);
@@ -48,12 +58,15 @@ const InputField = ({ label, variant = 'account', textInputProps, secure = false
           </TouchableWithoutFeedback>
         )}
       </View>
+
+      {errorMessage != '' && <Text style={styles.errorText}>{errorMessage}</Text>}
     </>
   );
 };
 
 InputField.propTypes = {
-  label: PropTypes.string,
+  label: PropTypes.string.isRequired,
+  errorMessage: PropTypes.string,
   variant: PropTypes.oneOf(['account', 'data']),
   textInputProps: PropTypes.object,
   secure: PropTypes.bool,
@@ -86,6 +99,12 @@ const useStyles = makeStyles((theme, { borderColor, variant }) => ({
     width: 32,
     marginHorizontal: 12,
     tintColor: theme.colors.silverMetallic,
+  },
+  errorText: {
+    fontSize: 12,
+    marginTop: 4,
+    paddingLeft: 16,
+    color: theme.colors.tartOrange,
   },
 }));
 

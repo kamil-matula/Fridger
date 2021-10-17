@@ -13,5 +13,6 @@ export const CustomTheme = {
     silverMetallic: '#9AA0A6', // inactive tab
     blueJeans: '#5DADEC', // buttons
     darkGreen: '#006400', // green circles
+    tartOrange: '#FF4D4D', // buttons
   },
 };
