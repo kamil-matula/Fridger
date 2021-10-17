@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
-import { InputField, Button, AppBar } from '../../components';
-import { makeStyles, calculateSpace } from '../../utils';
+import { InputField, Button, AppBar, ScrollViewLayout } from '../../components';
+import { makeStyles } from '../../utils';
 
 const DeleteAccount = ({ navigation }) => {
   const styles = useStyles();
@@ -17,48 +17,46 @@ const DeleteAccount = ({ navigation }) => {
     navigation.goBack();
   };
 
-  // Calculating height of space between last input field and the button:
-  const spaceHeight = calculateSpace({
-    inputFieldsAmount: 2,
-    contentHeightBottom: 48 + 16,
-    isAppBar: true,
-  });
-
   return (
     <View style={styles.container}>
       <AppBar label='Delete account' />
-      <ScrollView style={styles.SVcontainer}>
-        <InputField
-          label='Password'
-          secure={true}
-          textInputProps={{
-            onChangeText: setPassword,
-            value: password,
-            returnKeyType: 'next',
-            placeholder: 'Enter your password',
-            onSubmitEditing: () => repeatPasswordRef?.current?.focus(),
-          }}
-        />
-        <View style={styles.separator16} />
-        <InputField
-          label='Confirm password'
-          secure={true}
-          textInputProps={{
-            onChangeText: setRepeatPassword,
-            value: repeatPassword,
-            returnKeyType: 'done',
-            placeholder: 'Confirm your password',
-            ref: repeatPasswordRef,
-          }}
-        />
-        <View style={{ height: spaceHeight }} />
-        <Button
-          label='delete account'
-          variant='contained'
-          color='red'
-          onPress={deleteAccount}
-        />
-      </ScrollView>
+      <ScrollViewLayout>
+        <View>
+          <InputField
+            label='Password'
+            secure={true}
+            textInputProps={{
+              onChangeText: setPassword,
+              value: password,
+              returnKeyType: 'next',
+              placeholder: 'Enter your password',
+              onSubmitEditing: () => repeatPasswordRef?.current?.focus(),
+            }}
+          />
+          <View style={styles.separator16} />
+          <InputField
+            label='Confirm password'
+            secure={true}
+            textInputProps={{
+              onChangeText: setRepeatPassword,
+              value: repeatPassword,
+              returnKeyType: 'done',
+              placeholder: 'Confirm your password',
+              ref: repeatPasswordRef,
+            }}
+          />
+          <View style={styles.separator32} />
+        </View>
+        <View>
+          <Button
+            label='delete account'
+            variant='contained'
+            color='red'
+            onPress={deleteAccount}
+          />
+          <View style={styles.separator16} />
+        </View>
+      </ScrollViewLayout>
     </View>
   );
 };
@@ -67,12 +65,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  SVcontainer: {
-    paddingHorizontal: 16,
-  },
-  separator16: {
-    height: 16,
   },
 }));
 

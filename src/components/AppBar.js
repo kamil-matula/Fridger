@@ -58,9 +58,9 @@ const AppBar = ({
 AppBar.propTypes = {
   label: PropTypes.string,
   isDrawer: PropTypes.bool,
-  icon1: PropTypes.object,
+  icon1: PropTypes.number,
   onPressIcon1: PropTypes.func,
-  icon2: PropTypes.object,
+  icon2: PropTypes.number,
   onPressIcon2: PropTypes.func,
 };
 

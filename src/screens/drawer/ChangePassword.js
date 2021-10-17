@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
-import { InputField, Button, AppBar } from '../../components';
-import { makeStyles, calculateSpace } from '../../utils';
+import { InputField, Button, AppBar, ScrollViewLayout } from '../../components';
+import { makeStyles } from '../../utils';
 
 const ChangePassword = ({ navigation }) => {
   const styles = useStyles();
@@ -74,60 +74,57 @@ const ChangePassword = ({ navigation }) => {
     return error;
   };
 
-  // Calculating height of space between last input field and the button:
-  const spaceHeight = calculateSpace({
-    inputFieldsAmount: 3,
-    contentHeightBottom: 48 + 16 + 2, // bug
-    isAppBar: true,
-  });
-
   return (
     <View style={styles.container}>
       <AppBar label='change password' />
-      <ScrollView style={styles.SVcontainer}>
-        <InputField
-          label='Old password'
-          errorMessage={oldPasswordError}
-          secure={true}
-          textInputProps={{
-            onChangeText: setOldPassword,
-            value: oldPassword,
-            returnKeyType: 'next',
-            placeholder: 'Enter your old password',
-            onSubmitEditing: () => newPasswordRef?.current?.focus(),
-          }}
-        />
-        <View style={styles.separator16} />
-        <InputField
-          label='New password'
-          errorMessage={newPasswordError}
-          secure={true}
-          textInputProps={{
-            onChangeText: setNewPassword,
-            value: newPassword,
-            returnKeyType: 'next',
-            placeholder: 'Enter your new password',
-            onSubmitEditing: () => repeatPasswordRef?.current?.focus(),
-            ref: newPasswordRef,
-          }}
-        />
-        <View style={styles.separator16} />
-        <InputField
-          label='Confirm new password'
-          errorMessage={repeatPasswordError}
-          secure={true}
-          textInputProps={{
-            onChangeText: setRepeatPassword,
-            value: repeatPassword,
-            returnKeyType: 'done',
-            placeholder: 'Confirm your new password',
-            ref: repeatPasswordRef,
-          }}
-        />
-        <View style={{ height: spaceHeight }} />
-        <Button label='Submit' variant='contained' onPress={changePassword} />
-        <View style={styles.separator16} />
-      </ScrollView>
+      <ScrollViewLayout>
+        <View>
+          <InputField
+            label='Old password'
+            errorMessage={oldPasswordError}
+            secure={true}
+            textInputProps={{
+              onChangeText: setOldPassword,
+              value: oldPassword,
+              returnKeyType: 'next',
+              placeholder: 'Enter your old password',
+              onSubmitEditing: () => newPasswordRef?.current?.focus(),
+            }}
+          />
+          <View style={styles.separator16} />
+          <InputField
+            label='New password'
+            errorMessage={newPasswordError}
+            secure={true}
+            textInputProps={{
+              onChangeText: setNewPassword,
+              value: newPassword,
+              returnKeyType: 'next',
+              placeholder: 'Enter your new password',
+              onSubmitEditing: () => repeatPasswordRef?.current?.focus(),
+              ref: newPasswordRef,
+            }}
+          />
+          <View style={styles.separator16} />
+          <InputField
+            label='Confirm new password'
+            errorMessage={repeatPasswordError}
+            secure={true}
+            textInputProps={{
+              onChangeText: setRepeatPassword,
+              value: repeatPassword,
+              returnKeyType: 'done',
+              placeholder: 'Confirm your new password',
+              ref: repeatPasswordRef,
+            }}
+          />
+          <View style={styles.separator32} />
+        </View>
+        <View>
+          <Button label='Submit' variant='contained' onPress={changePassword} />
+          <View style={styles.separator16} />
+        </View>
+      </ScrollViewLayout>
     </View>
   );
 };
@@ -136,12 +133,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  SVcontainer: {
-    paddingHorizontal: 16,
-  },
-  separator16: {
-    height: 16,
   },
 }));
 

@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react';
 
-import { View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-import { makeStyles, calculateSpace } from '../../utils';
-import { InputField, Button, AppBar } from '../../components';
+import { makeStyles } from '../../utils';
+import { InputField, Button, AppBar, ScrollViewLayout } from '../../components';
 import tmpPerson from '../../../assets/images/tmpPerson.jpg';
 import edit from '../../../assets/images/edit.png';
 
@@ -43,85 +43,81 @@ const EditProfile = ({ navigation }) => {
     setAvatarUri(pickerResult.uri);
   };
 
-  // Calculating height of space between last input field and the button:
-  const spaceHeight = calculateSpace({
-    contentHeightTop: 224,
-    inputFieldsAmount: 4,
-    contentHeightBottom: 48 + 16,
-    isAppBar: true,
-  });
-
   return (
     <View style={styles.container}>
       <AppBar label='Edit profile' />
-      <ScrollView style={styles.SVcontainer}>
-        <View style={styles.imageContainer}>
-          <TouchableOpacity onPress={openImagePickerAsync}>
-            <Image
-              style={styles.avatar}
-              source={avatarUri !== null ? { uri: avatarUri } : tmpPerson}
-            />
-            <View style={styles.badgeContainer}>
-              <Image style={styles.badge} source={edit} />
-            </View>
-          </TouchableOpacity>
+      <ScrollViewLayout>
+        <View>
+          <View style={styles.imageContainer}>
+            <TouchableOpacity onPress={openImagePickerAsync}>
+              <Image
+                style={styles.avatar}
+                source={avatarUri !== null ? { uri: avatarUri } : tmpPerson}
+              />
+              <View style={styles.badgeContainer}>
+                <Image style={styles.badge} source={edit} />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <InputField
+            label='Nick'
+            textInputProps={{
+              onChangeText: setNick,
+              value: nick,
+              returnKeyType: 'next',
+              placeholder: 'Enter your nick',
+              onSubmitEditing: () => nameRef?.current?.focus(),
+            }}
+          />
+          <View style={styles.separator16}></View>
+          <InputField
+            label='Name'
+            textInputProps={{
+              onChangeText: setName,
+              value: name,
+              returnKeyType: 'next',
+              placeholder: 'Enter your name',
+              onSubmitEditing: () => surnameRef?.current?.focus(),
+              ref: nameRef,
+            }}
+          />
+          <View style={styles.separator16}></View>
+          <InputField
+            label='Surname'
+            textInputProps={{
+              onChangeText: setSurname,
+              value: surname,
+              returnKeyType: 'next',
+              placeholder: 'Enter your surname',
+              onSubmitEditing: () => emailRef?.current?.focus(),
+              ref: surnameRef,
+            }}
+          />
+          <View style={styles.separator16}></View>
+          <InputField
+            label='Email'
+            textInputProps={{
+              onChangeText: setEmail,
+              value: email,
+              returnKeyType: 'done',
+              placeholder: 'Enter your email',
+              autoComplete: 'email',
+              keyboardType: 'email-address',
+              onSubmitEditing: () => buttonRef?.current?.focus(),
+              ref: emailRef,
+            }}
+          />
+          <View style={styles.separator32} />
         </View>
-        <InputField
-          label='Nick'
-          textInputProps={{
-            onChangeText: setNick,
-            value: nick,
-            returnKeyType: 'next',
-            placeholder: 'Enter your nick',
-            onSubmitEditing: () => nameRef?.current?.focus(),
-          }}
-        />
-        <View style={styles.separator16}></View>
-        <InputField
-          label='Name'
-          textInputProps={{
-            onChangeText: setName,
-            value: name,
-            returnKeyType: 'next',
-            placeholder: 'Enter your name',
-            onSubmitEditing: () => surnameRef?.current?.focus(),
-            ref: nameRef,
-          }}
-        />
-        <View style={styles.separator16}></View>
-        <InputField
-          label='Surname'
-          textInputProps={{
-            onChangeText: setSurname,
-            value: surname,
-            returnKeyType: 'next',
-            placeholder: 'Enter your surname',
-            onSubmitEditing: () => emailRef?.current?.focus(),
-            ref: surnameRef,
-          }}
-        />
-        <View style={styles.separator16}></View>
-        <InputField
-          label='Email'
-          textInputProps={{
-            onChangeText: setEmail,
-            value: email,
-            returnKeyType: 'done',
-            placeholder: 'Enter your email',
-            autoComplete: 'email',
-            keyboardType: 'email-address',
-            onSubmitEditing: () => buttonRef?.current?.focus(),
-            ref: emailRef,
-          }}
-        />
-        <View style={{ height: spaceHeight }} />
-        <Button
-          label='save changes'
-          variant='contained'
-          onPress={saveChanges}
-        />
-        <View style={styles.separator16} />
-      </ScrollView>
+        <View>
+          <Button
+            label='save changes'
+            variant='contained'
+            onPress={saveChanges}
+          />
+          <View style={styles.separator16} />
+        </View>
+      </ScrollViewLayout>
     </View>
   );
 };
@@ -130,9 +126,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  SVcontainer: {
-    paddingHorizontal: 16,
   },
   imageContainer: {
     paddingVertical: 32,
@@ -157,9 +150,6 @@ const useStyles = makeStyles((theme) => ({
     width: 32,
     height: 32,
     tintColor: theme.colors.text,
-  },
-  separator16: {
-    height: 16,
   },
 }));
 

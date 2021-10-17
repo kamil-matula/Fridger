@@ -5,3 +5,4 @@ export { default as UserInfo } from './UserInfo';
 export { default as FridgeRow } from './FridgeRow';
 export { default as InputField } from './InputField';
 export { default as UserDataRow } from './UserDataRow';
+export { default as ScrollViewLayout } from './ScrollViewLayout';

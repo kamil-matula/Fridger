@@ -8,7 +8,7 @@ import { UserDataRow, Button, AppBar } from '../../components';
 import deleteIcon from '../../../assets/images/delete.png';
 import tmpPerson from '../../../assets/images/tmpPerson.jpg';
 
-const FriendProfile = ({ navigation }) => {
+const FriendProfile = () => {
   const styles = useStyles();
 
   const [avatarUri, setAvatarUri] = useState(null);
@@ -34,9 +34,9 @@ const FriendProfile = ({ navigation }) => {
           />
         </View>
         <UserDataRow label='Nick' data={nick} />
-        <View style={styles.separatorVertical32} />
+        <View style={styles.separator32} />
         <UserDataRow label='Name' data={name} />
-        <View style={styles.separatorVertical32} />
+        <View style={styles.separator32} />
         <UserDataRow label='Surname' data={surname} />
       </ScrollView>
 
@@ -82,15 +82,12 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     width: 160,
     height: 160,
-    borderRadius: 9999,
+    borderRadius: 80,
     borderWidth: 2,
     borderColor: theme.colors.silverMetallic,
   },
   dialog: {
     elevation: 0,
-  },
-  separatorVertical32: {
-    marginVertical: 16,
   },
   separatorHorizontal8: {
     marginHorizontal: 4,
