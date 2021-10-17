@@ -3,16 +3,14 @@ import { useTheme } from 'react-native-paper';
 
 /**
  * @template T
- * @extends StyleSheet.NamedStyles<T>
  * @callback styles<T>
  * @param {ReactNativePaper.Theme} [theme]
  * @param {object} [props]
- * @returns {T}
+ * @returns {StyleSheet.NamedStyles<T>}
  */
 
 /**
  * @template T
- * @extends StyleSheet.NamedStyles<T>
  * @callback useStyles<T>
  * @param {object} [props]
  * @returns {T}
@@ -20,7 +18,6 @@ import { useTheme } from 'react-native-paper';
 
 /**
  * @template T
- * @extends StyleSheet.NamedStyles<T>
  * @param {styles<T>} styles
  * @returns {useStyles<T>}
  */
