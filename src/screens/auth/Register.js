@@ -1,9 +1,14 @@
 import React, { useState, useRef } from 'react';
 
-import { ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { InputField, Button } from '../../components';
-import { makeStyles } from '../../utils/makeStyles';
+import {
+  InputField,
+  Button,
+  ScrollViewLayout,
+  Separator,
+} from '../../components';
+import { makeStyles } from '../../utils';
 
 const Register = ({ navigation }) => {
   const styles = useStyles();
@@ -25,72 +30,75 @@ const Register = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Register</Text>
-      <InputField
-        label='Email'
-        textInputProps={{
-          onChangeText: setEmail,
-          value: email,
-          returnKeyType: 'next',
-          placeholder: 'Enter your email',
-          onSubmitEditing: () => passwordRef?.current?.focus(),
-          autoComplete: 'email',
-          keyboardType: 'email-address',
-        }}
-      />
-      <View style={styles.separator16} />
-      <InputField
-        label='Password'
-        textInputProps={{
-          onChangeText: setPassword,
-          value: password,
-          returnKeyType: 'next',
-          placeholder: 'Enter your password',
-          onSubmitEditing: () => confirmPasswordRef?.current?.focus(),
-          ref: passwordRef,
-        }}
-        secure={true}
-      />
-      <View style={styles.separator16} />
-      <InputField
-        label='Confirm password'
-        textInputProps={{
-          onChangeText: setConfirmPassword,
-          value: confirmPassword,
-          returnKeyType: 'next',
-          placeholder: 'Confirm your password',
-          onSubmitEditing: () => nickRef?.current?.focus(),
-          ref: confirmPasswordRef,
-        }}
-        secure={true}
-      />
-      <View style={styles.separator16} />
-      <InputField
-        label='Nick'
-        textInputProps={{
-          onChangeText: setNick,
-          value: nick,
-          returnKeyType: 'done',
-          placeholder: 'Enter your nick',
-          ref: nickRef,
-        }}
-      />
-      <View style={styles.separator40} />
-      <Button label='Register' variant='contained' onPress={register} />
-      <Text style={styles.text}>Already have an account?</Text>
-      <Button label='Login' variant='outlined' onPress={() => navigation.goBack()} />
-      <View style={styles.separator16} />
-    </ScrollView>
+    <ScrollViewLayout>
+      <View>
+        <Text style={styles.header}>Register</Text>
+        <InputField
+          label='Email'
+          textInputProps={{
+            onChangeText: setEmail,
+            value: email,
+            returnKeyType: 'next',
+            placeholder: 'Enter your email',
+            onSubmitEditing: () => passwordRef?.current?.focus(),
+            autoComplete: 'email',
+            keyboardType: 'email-address',
+          }}
+        />
+        <Separator />
+        <InputField
+          label='Password'
+          textInputProps={{
+            onChangeText: setPassword,
+            value: password,
+            returnKeyType: 'next',
+            placeholder: 'Enter your password',
+            onSubmitEditing: () => confirmPasswordRef?.current?.focus(),
+            ref: passwordRef,
+          }}
+          secure={true}
+        />
+        <Separator />
+        <InputField
+          label='Confirm password'
+          textInputProps={{
+            onChangeText: setConfirmPassword,
+            value: confirmPassword,
+            returnKeyType: 'next',
+            placeholder: 'Confirm your password',
+            onSubmitEditing: () => nickRef?.current?.focus(),
+            ref: confirmPasswordRef,
+          }}
+          secure={true}
+        />
+        <Separator />
+        <InputField
+          label='Nick'
+          textInputProps={{
+            onChangeText: setNick,
+            value: nick,
+            returnKeyType: 'done',
+            placeholder: 'Enter your nick',
+            ref: nickRef,
+          }}
+        />
+        <Separator height={32} />
+      </View>
+      <View>
+        <Button label='Register' variant='contained' onPress={register} />
+        <Text style={styles.text}>Already have an account?</Text>
+        <Button
+          label='Login'
+          variant='outlined'
+          onPress={() => navigation.goBack()}
+        />
+        <Separator />
+      </View>
+    </ScrollViewLayout>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-    backgroundColor: theme.colors.background,
-  },
   header: {
     marginVertical: 64,
     fontSize: 36,
@@ -102,12 +110,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     color: theme.colors.text,
     textAlign: 'center',
-  },
-  separator16: {
-    marginVertical: 8,
-  },
-  separator40: {
-    marginVertical: 20,
   },
 }));
 

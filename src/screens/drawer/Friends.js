@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { makeStyles } from '../../utils';
 import { AppBar } from '../../components';
@@ -10,12 +9,12 @@ const Friends = () => {
   const styles = useStyles();
 
   return (
-    <SafeAreaView style={styles.pageStyle}>
+    <View style={styles.pageStyle}>
       <AppBar label='Friends' />
       <View style={styles.contentStyle}>
         <Text style={styles.textStyle}>Friends</Text>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

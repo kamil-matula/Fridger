@@ -64,7 +64,6 @@ const DrawerContent = ({ navigation }) => {
 const useStyles = makeStyles((theme) => ({
   drawerContent: {
     flex: 1,
-    paddingBottom: 16,
     backgroundColor: theme.colors.primary,
   },
   section: {
