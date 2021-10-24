@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 
 import { Text, View } from 'react-native';
+import { useForm } from 'react-hook-form';
 
 import {
   InputField,
@@ -13,12 +14,32 @@ import { makeStyles } from '../../utils';
 const Login = ({ navigation }) => {
   const styles = useStyles();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { control, handleSubmit, setFocus } = useForm({
+    defaultValues: {
+      email: 'testowy email',
+      password: 'haslo',
+    },
+  });
 
-  const passwordRef = useRef();
+  const rules = {
+    email: {
+      required: 'Email jest wymagany',
+      pattern: {
+        value: /^\S+@\S+\.\S+$/,
+        message: 'Nieprawidłowy format email',
+      },
+    },
+    password: {
+      required: 'Hasło jest wymagane',
+      minLength: {
+        value: 8,
+        message: 'Hasło musi się składać z co najmniej 8 znaków',
+      },
+    },
+  };
 
-  const login = () => {
+  const login = (data) => {
+    console.log(data);
     navigation.reset({
       index: 0,
       routes: [{ name: 'DrawerNavigator' }],
@@ -30,29 +51,26 @@ const Login = ({ navigation }) => {
       <View>
         <Text style={styles.header}>Login</Text>
         <InputField
+          control={control}
+          rules={rules.email}
+          onSubmitEditing={() => setFocus('password')}
+          name='email'
           label='Email'
-          textInputProps={{
-            onChangeText: setEmail,
-            value: email,
-            returnKeyType: 'next',
-            placeholder: 'Enter your email',
-            onSubmitEditing: () => passwordRef?.current?.focus(),
-            autoComplete: 'email',
-            keyboardType: 'email-address',
-          }}
+          returnKeyType='next'
+          placeholder='Enter your email'
+          autoComplete='email'
+          keyboardType='email-address'
         />
         <Separator />
         <InputField
+          control={control}
+          rules={rules.password}
+          onSubmitEditing={() => handleSubmit(login)}
+          name='password'
           label='Password'
-          textInputProps={{
-            onChangeText: setPassword,
-            value: password,
-            returnKeyType: 'done',
-            placeholder: 'Enter your password',
-            onSubmitEditing: login,
-            ref: passwordRef,
-          }}
-          secure={true}
+          returnKeyType='done'
+          placeholder='Enter your password'
+          secure
         />
         <View style={styles.resetPasswordContainer}>
           <Button
@@ -64,7 +82,11 @@ const Login = ({ navigation }) => {
         <Separator height={32} />
       </View>
       <View>
-        <Button label='Login' variant='contained' onPress={login} />
+        <Button
+          label='Login'
+          variant='contained'
+          onPress={handleSubmit(login)}
+        />
         <Text style={styles.text}>Don’t have an account?</Text>
         <Button
           label='Register'
