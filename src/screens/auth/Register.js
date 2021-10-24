@@ -1,28 +1,49 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 
 import { Text, View } from 'react-native';
+import { useForm } from 'react-hook-form';
 
-import {
-  InputField,
-  Button,
-  ScrollViewLayout,
-  Separator,
-} from '../../components';
-import { makeStyles } from '../../utils';
+import { InputField, Button, ScrollViewLayout, Separator } from 'components';
+import { makeStyles } from 'utils';
 
 const Register = ({ navigation }) => {
   const styles = useStyles();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [nick, setNick] = useState('');
+  const { control, handleSubmit, setFocus, getValues } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+      password2: '',
+      nick: '',
+    },
+  });
 
-  const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
-  const nickRef = useRef();
+  const rules = {
+    email: {
+      required: 'Email is required',
+      pattern: {
+        value: /^\S+@\S+\.\S+$/,
+        message: "Invalid email's format",
+      },
+    },
+    password: {
+      required: 'Password is required',
+      minLength: {
+        value: 8,
+        message: 'Password must contain at least 8 characters',
+      },
+    },
+    password2: {
+      validate: (password2) =>
+        getValues('password') === password2 || "Passwords don't match",
+    },
+    nick: {
+      required: 'Nick is required',
+    },
+  };
 
-  const register = () => {
+  const register = (data) => {
+    console.log('register', data);
     navigation.reset({
       index: 0,
       routes: [{ name: 'RegisterFeedback' }],
@@ -34,58 +55,55 @@ const Register = ({ navigation }) => {
       <View>
         <Text style={styles.header}>Register</Text>
         <InputField
+          control={control}
+          rules={rules.email}
+          onSubmitEditing={() => setFocus('password')}
+          name='email'
           label='Email'
-          textInputProps={{
-            onChangeText: setEmail,
-            value: email,
-            returnKeyType: 'next',
-            placeholder: 'Enter your email',
-            onSubmitEditing: () => passwordRef?.current?.focus(),
-            autoComplete: 'email',
-            keyboardType: 'email-address',
-          }}
+          returnKeyType='next'
+          placeholder='Enter your email'
+          autoComplete='email'
+          keyboardType='email-address'
         />
         <Separator />
         <InputField
+          control={control}
+          rules={rules.password}
+          onSubmitEditing={() => setFocus('password2')}
+          secure
+          name='password'
           label='Password'
-          textInputProps={{
-            onChangeText: setPassword,
-            value: password,
-            returnKeyType: 'next',
-            placeholder: 'Enter your password',
-            onSubmitEditing: () => confirmPasswordRef?.current?.focus(),
-            ref: passwordRef,
-          }}
-          secure={true}
+          returnKeyType='next'
+          placeholder='Enter your password'
         />
         <Separator />
         <InputField
+          control={control}
+          rules={rules.password2}
+          onSubmitEditing={() => setFocus('nick')}
+          secure
+          name='password2'
           label='Confirm password'
-          textInputProps={{
-            onChangeText: setConfirmPassword,
-            value: confirmPassword,
-            returnKeyType: 'next',
-            placeholder: 'Confirm your password',
-            onSubmitEditing: () => nickRef?.current?.focus(),
-            ref: confirmPasswordRef,
-          }}
-          secure={true}
+          returnKeyType='next'
+          placeholder='Confirm your password'
         />
         <Separator />
         <InputField
+          control={control}
+          rules={rules.nick}
           label='Nick'
-          textInputProps={{
-            onChangeText: setNick,
-            value: nick,
-            returnKeyType: 'done',
-            placeholder: 'Enter your nick',
-            ref: nickRef,
-          }}
+          name='nick'
+          returnKeyType='done'
+          placeholder='Enter your nick'
         />
         <Separator height={32} />
       </View>
       <View>
-        <Button label='Register' variant='contained' onPress={register} />
+        <Button
+          label='Register'
+          variant='contained'
+          onPress={handleSubmit(register)}
+        />
         <Text style={styles.text}>Already have an account?</Text>
         <Button
           label='Login'

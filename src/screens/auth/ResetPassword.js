@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Text, View } from 'react-native';
+import { useForm } from 'react-hook-form';
 
 import {
   InputField,
@@ -8,15 +9,30 @@ import {
   AppBar,
   ScrollViewLayout,
   Separator,
-} from '../../components';
-import { makeStyles } from '../../utils';
+} from 'components';
+import { makeStyles } from 'utils';
 
 const ResetPassword = ({ navigation }) => {
   const styles = useStyles();
 
-  const [email, setEmail] = useState('');
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      email: '',
+    },
+  });
 
-  const resetPassword = () => {
+  const rules = {
+    email: {
+      required: 'Email is required',
+      pattern: {
+        value: /^\S+@\S+\.\S+$/,
+        message: "Invalid email's format",
+      },
+    },
+  };
+
+  const resetPassword = (data) => {
+    console.log('reset password', data);
     navigation.goBack();
   };
 
@@ -33,20 +49,23 @@ const ResetPassword = ({ navigation }) => {
             </Text>
           </View>
           <InputField
+            control={control}
+            rules={rules.email}
+            name='email'
             label='Email'
-            textInputProps={{
-              onChangeText: setEmail,
-              value: email,
-              returnKeyType: 'done',
-              placeholder: 'Enter your email',
-              autoComplete: 'email',
-              keyboardType: 'email-address',
-            }}
+            returnKeyType='done'
+            placeholder='Enter your email'
+            autoComplete='email'
+            keyboardType='email-address'
           />
           <Separator height={32} />
         </View>
         <View>
-          <Button label='Submit' variant='contained' onPress={resetPassword} />
+          <Button
+            label='Submit'
+            variant='contained'
+            onPress={handleSubmit(resetPassword)}
+          />
           <Separator />
         </View>
       </ScrollViewLayout>

@@ -3,43 +3,38 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useForm } from 'react-hook-form';
 
-import {
-  InputField,
-  Button,
-  ScrollViewLayout,
-  Separator,
-} from '../../components';
-import { makeStyles } from '../../utils';
+import { InputField, Button, ScrollViewLayout, Separator } from 'components';
+import { makeStyles } from 'utils';
 
 const Login = ({ navigation }) => {
   const styles = useStyles();
 
   const { control, handleSubmit, setFocus } = useForm({
     defaultValues: {
-      email: 'testowy email',
-      password: 'haslo',
+      email: '',
+      password: '',
     },
   });
 
   const rules = {
     email: {
-      required: 'Email jest wymagany',
+      required: 'Email is required',
       pattern: {
         value: /^\S+@\S+\.\S+$/,
-        message: 'Nieprawidłowy format email',
+        message: "Invalid email's format",
       },
     },
     password: {
-      required: 'Hasło jest wymagane',
+      required: 'Password is required',
       minLength: {
         value: 8,
-        message: 'Hasło musi się składać z co najmniej 8 znaków',
+        message: 'Password must contain at least 8 characters',
       },
     },
   };
 
   const login = (data) => {
-    console.log(data);
+    console.log('login', data);
     navigation.reset({
       index: 0,
       routes: [{ name: 'DrawerNavigator' }],
@@ -65,12 +60,12 @@ const Login = ({ navigation }) => {
         <InputField
           control={control}
           rules={rules.password}
-          onSubmitEditing={() => handleSubmit(login)}
+          onSubmitEditing={handleSubmit(login)}
+          secure
           name='password'
           label='Password'
           returnKeyType='done'
           placeholder='Enter your password'
-          secure
         />
         <View style={styles.resetPasswordContainer}>
           <Button

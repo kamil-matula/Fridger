@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   View,
@@ -6,15 +7,13 @@ import {
   Text,
   TouchableWithoutFeedback,
   Image,
-  TextInputProps,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import PropTypes from 'prop-types';
-import { useController, Control, RegisterOptions } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
-import { makeStyles } from '../utils';
-import visibility from '../../assets/images/visibility.png';
-import visibilityOff from '../../assets/images/visibility_off.png';
+import visibility from 'assets/images/visibility.png';
+import visibilityOff from 'assets/images/visibility_off.png';
+import { makeStyles } from 'utils';
 
 const InputField = ({
   label,
@@ -23,6 +22,7 @@ const InputField = ({
   rules,
   variant = 'account',
   secure = false,
+  onSubmitEditing,
   ...props
 }) => {
   const theme = useTheme();
@@ -44,7 +44,7 @@ const InputField = ({
   };
 
   const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
-  console.log(props);
+
   return (
     <>
       <Text style={styles.label}>{label}</Text>
@@ -57,8 +57,9 @@ const InputField = ({
           onChangeText={field.onChange}
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
-          blurOnSubmit={false}
-          secureTextEntry={true}
+          blurOnSubmit={!onSubmitEditing}
+          onSubmitEditing={onSubmitEditing}
+          secureTextEntry={secure ? secureTextEntry : false}
           style={styles.input}
           placeholderTextColor={theme.colors.silverMetallic}
           {...props}

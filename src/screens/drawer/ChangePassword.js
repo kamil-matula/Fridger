@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 
 import { View } from 'react-native';
+import { useForm } from 'react-hook-form';
 
 import {
   InputField,
@@ -8,76 +9,37 @@ import {
   AppBar,
   ScrollViewLayout,
   Separator,
-} from '../../components';
-import { makeStyles } from '../../utils';
+} from 'components';
+import { makeStyles } from 'utils';
 
 const ChangePassword = ({ navigation }) => {
   const styles = useStyles();
 
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
+  const { control, handleSubmit, setFocus, getValues } = useForm({
+    defaultValues: {
+      oldPassword: '',
+      password: '',
+      password2: '',
+    },
+  });
 
-  const [oldPasswordError, setOldPasswordError] = useState('');
-  const [newPasswordError, setNewPasswordError] = useState('');
-  const [repeatPasswordError, setRepeatPasswordError] = useState('');
-
-  const newPasswordRef = useRef();
-  const repeatPasswordRef = useRef();
-
-  const changePassword = () => {
-    let isError = false;
-
-    isError |= validateLength([
-      [oldPassword, setOldPasswordError],
-      [newPassword, setNewPasswordError],
-      [repeatPassword, setRepeatPasswordError],
-    ]);
-
-    isError |= validateRepeat(
-      newPassword,
-      repeatPassword,
-      setRepeatPasswordError
-    );
-
-    if (!isError) {
-      console.log(isError);
-      navigation.goBack();
-    }
+  const rules = {
+    password: {
+      required: 'Password is required',
+      minLength: {
+        value: 8,
+        message: 'Password must contain at least 8 characters',
+      },
+    },
+    password2: {
+      validate: (password2) =>
+        getValues('password') === password2 || "Passwords don't match",
+    },
   };
 
-  const validateLength = (states) => {
-    let error = false;
-
-    states.forEach(([text, setError]) => {
-      if (text.length < 8) {
-        setError('Password must have at least 8 characters');
-        error = true;
-      } else {
-        setError('');
-      }
-    });
-
-    return error;
-  };
-
-  const validateRepeat = (
-    newPassword,
-    repeatPassword,
-    setRepeatPasswordError
-  ) => {
-    let error = false;
-
-    if (newPassword != repeatPassword) {
-      setRepeatPasswordError(
-        'Password and repeated password must be identical'
-      );
-      error = true;
-    } else {
-      setRepeatPasswordError('');
-    }
-
-    return error;
+  const changePassword = (data) => {
+    console.log('change password', data);
+    navigation.goBack();
   };
 
   return (
@@ -86,48 +48,44 @@ const ChangePassword = ({ navigation }) => {
       <ScrollViewLayout>
         <View>
           <InputField
+            control={control}
+            rules={rules.password}
+            onSubmitEditing={() => setFocus('password')}
+            secure
+            name='oldPassword'
             label='Old password'
-            errorMessage={oldPasswordError}
-            secure={true}
-            textInputProps={{
-              onChangeText: setOldPassword,
-              value: oldPassword,
-              returnKeyType: 'next',
-              placeholder: 'Enter your old password',
-              onSubmitEditing: () => newPasswordRef?.current?.focus(),
-            }}
+            returnKeyType='next'
+            placeholder='Enter your old password'
           />
           <Separator />
           <InputField
+            control={control}
+            rules={rules.password}
+            onSubmitEditing={() => setFocus('password2')}
+            secure
+            name='password'
             label='New password'
-            errorMessage={newPasswordError}
-            secure={true}
-            textInputProps={{
-              onChangeText: setNewPassword,
-              value: newPassword,
-              returnKeyType: 'next',
-              placeholder: 'Enter your new password',
-              onSubmitEditing: () => repeatPasswordRef?.current?.focus(),
-              ref: newPasswordRef,
-            }}
+            returnKeyType='next'
+            placeholder='Enter your new password'
           />
           <Separator />
           <InputField
+            control={control}
+            rules={rules.password2}
+            secure
+            name='password2'
             label='Confirm new password'
-            errorMessage={repeatPasswordError}
-            secure={true}
-            textInputProps={{
-              onChangeText: setRepeatPassword,
-              value: repeatPassword,
-              returnKeyType: 'done',
-              placeholder: 'Confirm your new password',
-              ref: repeatPasswordRef,
-            }}
+            returnKeyType='next'
+            placeholder='Confirm your new password'
           />
           <Separator height={32} />
         </View>
         <View>
-          <Button label='Submit' variant='contained' onPress={changePassword} />
+          <Button
+            label='Submit'
+            variant='contained'
+            onPress={handleSubmit(changePassword)}
+          />
           <Separator />
         </View>
       </ScrollViewLayout>
