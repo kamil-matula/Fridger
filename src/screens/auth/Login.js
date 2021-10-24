@@ -2,7 +2,12 @@ import React, { useState, useRef } from 'react';
 
 import { Text, View } from 'react-native';
 
-import { InputField, Button, ScrollViewLayout } from '../../components';
+import {
+  InputField,
+  Button,
+  ScrollViewLayout,
+  Separator,
+} from '../../components';
 import { makeStyles } from '../../utils';
 
 const Login = ({ navigation }) => {
@@ -36,7 +41,7 @@ const Login = ({ navigation }) => {
             keyboardType: 'email-address',
           }}
         />
-        <View style={styles.separator16} />
+        <Separator />
         <InputField
           label='Password'
           textInputProps={{
@@ -56,7 +61,7 @@ const Login = ({ navigation }) => {
             onPress={() => navigation.navigate('ResetPassword')}
           />
         </View>
-        <View style={styles.separator32} />
+        <Separator height={32} />
       </View>
       <View>
         <Button label='Login' variant='contained' onPress={login} />
@@ -66,7 +71,7 @@ const Login = ({ navigation }) => {
           variant='outlined'
           onPress={() => navigation.navigate('Register')}
         />
-        <View style={styles.separator16} />
+        <Separator />
       </View>
     </ScrollViewLayout>
   );

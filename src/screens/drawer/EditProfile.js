@@ -4,7 +4,13 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 import { makeStyles } from '../../utils';
-import { InputField, Button, AppBar, ScrollViewLayout } from '../../components';
+import {
+  InputField,
+  Button,
+  AppBar,
+  ScrollViewLayout,
+  Separator,
+} from '../../components';
 import tmpPerson from '../../../assets/images/tmpPerson.jpg';
 import edit from '../../../assets/images/edit.png';
 
@@ -69,7 +75,7 @@ const EditProfile = ({ navigation }) => {
               onSubmitEditing: () => nameRef?.current?.focus(),
             }}
           />
-          <View style={styles.separator16}></View>
+          <Separator />
           <InputField
             label='Name'
             textInputProps={{
@@ -81,7 +87,7 @@ const EditProfile = ({ navigation }) => {
               ref: nameRef,
             }}
           />
-          <View style={styles.separator16}></View>
+          <Separator />
           <InputField
             label='Surname'
             textInputProps={{
@@ -93,7 +99,7 @@ const EditProfile = ({ navigation }) => {
               ref: surnameRef,
             }}
           />
-          <View style={styles.separator16}></View>
+          <Separator />
           <InputField
             label='Email'
             textInputProps={{
@@ -107,7 +113,7 @@ const EditProfile = ({ navigation }) => {
               ref: emailRef,
             }}
           />
-          <View style={styles.separator32} />
+          <Separator height={32} />
         </View>
         <View>
           <Button
@@ -115,7 +121,7 @@ const EditProfile = ({ navigation }) => {
             variant='contained'
             onPress={saveChanges}
           />
-          <View style={styles.separator16} />
+          <Separator />
         </View>
       </ScrollViewLayout>
     </View>

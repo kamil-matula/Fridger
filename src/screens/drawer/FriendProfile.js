@@ -4,7 +4,7 @@ import { View, Image, ScrollView } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 
 import { makeStyles } from '../../utils';
-import { UserDataRow, Button, AppBar } from '../../components';
+import { UserDataRow, Button, AppBar, Separator } from '../../components';
 import deleteIcon from '../../../assets/images/delete.png';
 import tmpPerson from '../../../assets/images/tmpPerson.jpg';
 
@@ -34,9 +34,9 @@ const FriendProfile = () => {
           />
         </View>
         <UserDataRow label='Nick' data={nick} />
-        <View style={styles.separator32} />
+        <Separator height={32} />
         <UserDataRow label='Name' data={name} />
-        <View style={styles.separator32} />
+        <Separator height={32} />
         <UserDataRow label='Surname' data={surname} />
       </ScrollView>
 

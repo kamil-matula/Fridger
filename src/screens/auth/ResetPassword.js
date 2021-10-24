@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 
 import { Text, View } from 'react-native';
 
-import { InputField, Button, AppBar, ScrollViewLayout } from '../../components';
+import {
+  InputField,
+  Button,
+  AppBar,
+  ScrollViewLayout,
+  Separator,
+} from '../../components';
 import { makeStyles } from '../../utils';
 
 const ResetPassword = ({ navigation }) => {
@@ -37,11 +43,11 @@ const ResetPassword = ({ navigation }) => {
               keyboardType: 'email-address',
             }}
           />
-          <View style={styles.separator32} />
+          <Separator height={32} />
         </View>
         <View>
           <Button label='Submit' variant='contained' onPress={resetPassword} />
-          <View style={styles.separator16} />
+          <Separator />
         </View>
       </ScrollViewLayout>
     </View>

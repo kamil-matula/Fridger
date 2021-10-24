@@ -2,7 +2,13 @@ import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
 
-import { InputField, Button, AppBar, ScrollViewLayout } from '../../components';
+import {
+  InputField,
+  Button,
+  AppBar,
+  ScrollViewLayout,
+  Separator,
+} from '../../components';
 import { makeStyles } from '../../utils';
 
 const ChangePassword = ({ navigation }) => {
@@ -91,7 +97,7 @@ const ChangePassword = ({ navigation }) => {
               onSubmitEditing: () => newPasswordRef?.current?.focus(),
             }}
           />
-          <View style={styles.separator16} />
+          <Separator />
           <InputField
             label='New password'
             errorMessage={newPasswordError}
@@ -105,7 +111,7 @@ const ChangePassword = ({ navigation }) => {
               ref: newPasswordRef,
             }}
           />
-          <View style={styles.separator16} />
+          <Separator />
           <InputField
             label='Confirm new password'
             errorMessage={repeatPasswordError}
@@ -118,11 +124,11 @@ const ChangePassword = ({ navigation }) => {
               ref: repeatPasswordRef,
             }}
           />
-          <View style={styles.separator32} />
+          <Separator height={32} />
         </View>
         <View>
           <Button label='Submit' variant='contained' onPress={changePassword} />
-          <View style={styles.separator16} />
+          <Separator />
         </View>
       </ScrollViewLayout>
     </View>

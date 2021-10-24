@@ -2,7 +2,13 @@ import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
 
-import { InputField, Button, AppBar, ScrollViewLayout } from '../../components';
+import {
+  InputField,
+  Button,
+  AppBar,
+  ScrollViewLayout,
+  Separator,
+} from '../../components';
 import { makeStyles } from '../../utils';
 
 const DeleteAccount = ({ navigation }) => {
@@ -33,7 +39,7 @@ const DeleteAccount = ({ navigation }) => {
               onSubmitEditing: () => repeatPasswordRef?.current?.focus(),
             }}
           />
-          <View style={styles.separator16} />
+          <Separator />
           <InputField
             label='Confirm password'
             secure={true}
@@ -45,7 +51,7 @@ const DeleteAccount = ({ navigation }) => {
               ref: repeatPasswordRef,
             }}
           />
-          <View style={styles.separator32} />
+          <Separator height={32} />
         </View>
         <View>
           <Button
@@ -54,7 +60,7 @@ const DeleteAccount = ({ navigation }) => {
             color='red'
             onPress={deleteAccount}
           />
-          <View style={styles.separator16} />
+          <Separator />
         </View>
       </ScrollViewLayout>
     </View>
