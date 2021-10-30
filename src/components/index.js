@@ -8,3 +8,4 @@ export { default as UserDataRow } from './UserDataRow';
 export { default as ScrollViewLayout } from './ScrollViewLayout';
 export { default as Separator } from './Separator';
 export { default as FridgeDetailsRow } from './FridgeDetailsRow';
+export { default as FloatingActionButton } from './FloatingActionButton';

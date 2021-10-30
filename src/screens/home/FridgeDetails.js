@@ -3,7 +3,7 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { AppBar, FridgeDetailsRow } from 'components';
+import { AppBar, FloatingActionButton, FridgeDetailsRow } from 'components';
 import { makeStyles } from 'utils';
 
 const DATA = [
@@ -56,6 +56,9 @@ const FridgeDetails = () => {
         renderItem={({ item }) => <FridgeDetailsRow product={item} />}
         keyExtractor={(item) => item.id.toString()}
       />
+      <FloatingActionButton onPress={() => {
+        // TODO: Add navigating to "ADD PRODUCT PAGE"
+      }} />
     </View>
   );
 };

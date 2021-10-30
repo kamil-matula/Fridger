@@ -2,6 +2,7 @@ import React from 'react';
 
 import { View, Text, Image } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
+import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 import reduce from 'assets/images/reduce.png';
@@ -12,7 +13,7 @@ const FridgeDetailsRow = ({ product }) => {
   return (
     <TouchableRipple
       onPress={() => {
-        // TODO: Add navigating to Product Details
+        // TODO: Add navigating to "Product Details Page"
       }}
     >
       <View style={styles.container}>
@@ -43,6 +44,10 @@ const FridgeDetailsRow = ({ product }) => {
     </TouchableRipple>
   );
 };
+
+FridgeDetailsRow.propTypes = {
+  product: PropTypes.object,
+}
 
 const useStyles = makeStyles((theme) => ({
   container: {
