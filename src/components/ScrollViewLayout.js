@@ -21,7 +21,7 @@ const ScrollViewLayout = ({ children }) => {
 };
 
 ScrollViewLayout.propTypes = {
-  children: PropTypes.array,
+  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };
 
 const useStyles = makeStyles((theme) => ({
