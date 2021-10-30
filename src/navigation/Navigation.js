@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import DrawerNavigator from './DrawerNavigator';
-import { Login, ResetPassword, Register, RegisterFeedback } from '../screens/auth';
+import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
 
 const Navigation = () => {
   return (

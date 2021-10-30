@@ -29,7 +29,14 @@ const BottomNavigator = () => {
           tabBarIcon: ({ focused }) => (
             <Image
               source={menuIcon}
-              style={[styles.icon, { tintColor: focused ? colors.cyberYellow : colors.silverMetallic }]}
+              style={[
+                styles.icon,
+                {
+                  tintColor: focused
+                    ? colors.cyberYellow
+                    : colors.silverMetallic,
+                },
+              ]}
             />
           ),
           tabBarLabel: 'MENU',
@@ -42,7 +49,14 @@ const BottomNavigator = () => {
           tabBarIcon: ({ focused }) => (
             <Image
               source={fridgeIcon}
-              style={[styles.icon, { tintColor: focused ? colors.cyberYellow : colors.silverMetallic }]}
+              style={[
+                styles.icon,
+                {
+                  tintColor: focused
+                    ? colors.cyberYellow
+                    : colors.silverMetallic,
+                },
+              ]}
             />
           ),
           tabBarLabel: 'FRIDGES',
@@ -55,7 +69,14 @@ const BottomNavigator = () => {
           tabBarIcon: ({ focused }) => (
             <Image
               source={listIcon}
-              style={[styles.icon, { tintColor: focused ? colors.cyberYellow : colors.silverMetallic }]}
+              style={[
+                styles.icon,
+                {
+                  tintColor: focused
+                    ? colors.cyberYellow
+                    : colors.silverMetallic,
+                },
+              ]}
             />
           ),
           tabBarLabel: 'SHOPPING LISTS',

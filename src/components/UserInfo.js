@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '../utils';
+import { makeStyles } from 'utils';
 
 const UserInfo = ({ text, subtext, avatarURI }) => {
   const styles = useStyles();
