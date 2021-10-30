@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 
 import { View } from 'react-native';
+import { useForm } from 'react-hook-form';
 
 import {
   InputField,
@@ -8,18 +9,35 @@ import {
   AppBar,
   ScrollViewLayout,
   Separator,
-} from '../../components';
-import { makeStyles } from '../../utils';
+} from 'components';
+import { makeStyles } from 'utils';
 
 const DeleteAccount = ({ navigation }) => {
   const styles = useStyles();
 
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
+  const { control, handleSubmit, setFocus, getValues } = useForm({
+    defaultValues: {
+      password: '',
+      password2: '',
+    },
+  });
 
-  const repeatPasswordRef = useRef();
+  const rules = {
+    password: {
+      required: 'Password is required',
+      minLength: {
+        value: 8,
+        message: 'Password must contain at least 8 characters',
+      },
+    },
+    password2: {
+      validate: (password2) =>
+        getValues('password') === password2 || "Passwords don't match",
+    },
+  };
 
-  const deleteAccount = () => {
+  const deleteAccount = (data) => {
+    console.log('delete account', data);
     navigation.goBack();
   };
 
@@ -29,27 +47,24 @@ const DeleteAccount = ({ navigation }) => {
       <ScrollViewLayout>
         <View>
           <InputField
+            control={control}
+            rules={rules.password}
+            onSubmitEditing={() => setFocus('password2')}
+            secure
+            name='password'
             label='Password'
-            secure={true}
-            textInputProps={{
-              onChangeText: setPassword,
-              value: password,
-              returnKeyType: 'next',
-              placeholder: 'Enter your password',
-              onSubmitEditing: () => repeatPasswordRef?.current?.focus(),
-            }}
+            returnKeyType='next'
+            placeholder='Enter your password'
           />
           <Separator />
           <InputField
+            control={control}
+            rules={rules.password2}
+            secure
+            name='password2'
             label='Confirm password'
-            secure={true}
-            textInputProps={{
-              onChangeText: setRepeatPassword,
-              value: repeatPassword,
-              returnKeyType: 'done',
-              placeholder: 'Confirm your password',
-              ref: repeatPasswordRef,
-            }}
+            returnKeyType='next'
+            placeholder='Confirm your password'
           />
           <Separator height={32} />
         </View>
@@ -58,7 +73,7 @@ const DeleteAccount = ({ navigation }) => {
             label='delete account'
             variant='contained'
             color='red'
-            onPress={deleteAccount}
+            onPress={handleSubmit(deleteAccount)}
           />
           <Separator />
         </View>

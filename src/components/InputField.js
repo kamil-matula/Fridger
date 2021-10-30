@@ -1,43 +1,49 @@
-import React, { useState, useEffect } from 'react';
-
-import { View, TextInput, Text, TouchableWithoutFeedback, Image } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '../utils';
-import visibility from '../../assets/images/visibility.png';
-import visibilityOff from '../../assets/images/visibility_off.png';
+import {
+  View,
+  TextInput,
+  Text,
+  TouchableWithoutFeedback,
+  Image,
+} from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { useController } from 'react-hook-form';
 
-const InputField = ({ label, errorMessage = '', variant = 'account', textInputProps, secure = false }) => {
+import visibility from 'assets/images/visibility.png';
+import visibilityOff from 'assets/images/visibility_off.png';
+import { makeStyles } from 'utils';
+
+const InputField = ({
+  label,
+  name,
+  control,
+  rules,
+  variant = 'account',
+  secure = false,
+  onSubmitEditing,
+  ...props
+}) => {
   const theme = useTheme();
-
-  const [borderColor, setBorderColor] = useState(null);
-  const styles = useStyles({ borderColor, variant });
+  const {
+    field,
+    fieldState: { invalid, error },
+  } = useController({ name, control, rules });
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [isFocused, setIsFocused] = useState(false);
 
-  useEffect(() => {
-    if (errorMessage != '') {
-      setBorderColor(theme.colors.tartOrange);
-    } else if (variant === 'account') {
-      setBorderColor('transparent');
-    } else {
-      setBorderColor(theme.colors.whiteSemiTransparent);
-    }
-  }, [errorMessage]);
+  const styles = useStyles({ invalid, isFocused, variant });
 
-  const handleOnFocus = () => {
-    setBorderColor(theme.colors.text);
-  };
+  const handleOnFocus = () => setIsFocused(true);
 
   const handleOnBlur = () => {
-    if (variant === 'account') setBorderColor('transparent');
-    else if (variant === 'data') setBorderColor(theme.colors.whiteSemiTransparent);
+    setIsFocused(false);
+    field.onBlur();
   };
 
-  const handleOnPress = () => {
-    setSecureTextEntry((it) => !it);
-  };
+  const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
 
   return (
     <>
@@ -45,67 +51,87 @@ const InputField = ({ label, errorMessage = '', variant = 'account', textInputPr
 
       <View style={styles.inputContainer}>
         <TextInput
-          {...textInputProps}
-          style={styles.input}
-          placeholderTextColor={theme.colors.silverMetallic}
+          name={field.name}
+          ref={field.ref}
+          value={field.value}
+          onChangeText={field.onChange}
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
+          blurOnSubmit={!onSubmitEditing}
+          onSubmitEditing={onSubmitEditing}
           secureTextEntry={secure ? secureTextEntry : false}
+          style={styles.input}
+          placeholderTextColor={theme.colors.silverMetallic}
+          {...props}
         />
         {secure && (
-          <TouchableWithoutFeedback onPress={handleOnPress}>
-            <Image source={secureTextEntry ? visibilityOff : visibility} style={styles.icon} />
+          <TouchableWithoutFeedback onPress={passwordVisibilityOnPress}>
+            <Image
+              source={secureTextEntry ? visibilityOff : visibility}
+              style={styles.icon}
+            />
           </TouchableWithoutFeedback>
         )}
       </View>
 
-      {errorMessage != '' && <Text style={styles.errorText}>{errorMessage}</Text>}
+      {invalid && <Text style={styles.errorText}>{error.message}</Text>}
     </>
   );
 };
 
 InputField.propTypes = {
   label: PropTypes.string.isRequired,
-  errorMessage: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  control: PropTypes.object,
+  rules: PropTypes.object,
   variant: PropTypes.oneOf(['account', 'data']),
-  textInputProps: PropTypes.object,
   secure: PropTypes.bool,
 };
 
-const useStyles = makeStyles((theme, { borderColor, variant }) => ({
-  label: {
-    fontSize: 14,
-    marginBottom: 8,
-    color: theme.colors.text,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    height: 48,
-    paddingLeft: 16,
-    borderWidth: 1,
-    borderRadius: 5,
-    alignItems: 'center',
-    borderColor: borderColor,
-    backgroundColor: variant === 'data' ? 'transparent' : theme.colors.primary,
-  },
-  input: {
-    color: theme.colors.text,
-    fontSize: 14,
-    includeFontPadding: false,
-    flex: 1,
-  },
-  icon: {
-    height: 32,
-    width: 32,
-    marginHorizontal: 12,
-    tintColor: theme.colors.silverMetallic,
-  },
-  errorText: {
-    fontSize: 12,
-    marginTop: 4,
-    paddingLeft: 16,
-    color: theme.colors.tartOrange,
-  },
-}));
+const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
+  const borderColor = (() => {
+    if (isFocused) return theme.colors.text;
+    if (invalid) return theme.colors.tartOrange;
+    if (variant === 'account') return 'transparent';
+    return theme.colors.whiteSemiTransparent;
+  })();
+
+  return {
+    label: {
+      fontSize: 14,
+      marginBottom: 8,
+      color: theme.colors.text,
+    },
+    inputContainer: {
+      flexDirection: 'row',
+      height: 48,
+      paddingLeft: 16,
+      borderWidth: 1,
+      borderRadius: 5,
+      alignItems: 'center',
+      borderColor: borderColor,
+      backgroundColor:
+        variant === 'data' ? 'transparent' : theme.colors.primary,
+    },
+    input: {
+      color: theme.colors.text,
+      fontSize: 14,
+      includeFontPadding: false,
+      flex: 1,
+    },
+    icon: {
+      height: 32,
+      width: 32,
+      marginHorizontal: 12,
+      tintColor: theme.colors.silverMetallic,
+    },
+    errorText: {
+      fontSize: 12,
+      marginTop: 4,
+      paddingLeft: 16,
+      color: theme.colors.tartOrange,
+    },
+  };
+});
 
 export default InputField;

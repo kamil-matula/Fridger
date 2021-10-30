@@ -1,33 +1,47 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 
 import { View, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { useForm } from 'react-hook-form';
 
-import { makeStyles } from '../../utils';
+import { makeStyles } from 'utils';
 import {
   InputField,
   Button,
   AppBar,
   ScrollViewLayout,
   Separator,
-} from '../../components';
-import tmpPerson from '../../../assets/images/tmpPerson.jpg';
-import edit from '../../../assets/images/edit.png';
+} from 'components';
+import tmpPerson from 'assets/images/tmpPerson.jpg';
+import edit from 'assets/images/edit.png';
 
 const EditProfile = ({ navigation }) => {
   const styles = useStyles();
 
-  const [avatarUri, setAvatarUri] = useState(null);
-  const [nick, setNick] = useState('');
-  const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [email, setEmail] = useState('');
+  const { control, handleSubmit, setFocus, setValue, watch } = useForm({
+    defaultValues: {
+      avatar: null,
+      nick: '',
+      name: '',
+      surname: '',
+      email: '',
+    },
+  });
 
-  const nameRef = useRef();
-  const surnameRef = useRef();
-  const emailRef = useRef();
+  const avatarUri = watch('avatar');
 
-  const saveChanges = () => {
+  const rules = {
+    email: {
+      pattern: {
+        value:
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        message: 'Invalid email format',
+      },
+    },
+  };
+
+  const saveChanges = (data) => {
+    console.log('editProfile', data);
     navigation.goBack();
   };
 
@@ -46,7 +60,7 @@ const EditProfile = ({ navigation }) => {
       return;
     }
 
-    setAvatarUri(pickerResult.uri);
+    setValue('avatar', pickerResult.uri);
   };
 
   return (
@@ -58,7 +72,7 @@ const EditProfile = ({ navigation }) => {
             <TouchableOpacity onPress={openImagePickerAsync}>
               <Image
                 style={styles.avatar}
-                source={avatarUri !== null ? { uri: avatarUri } : tmpPerson}
+                source={avatarUri === null ? tmpPerson : { uri: avatarUri }}
               />
               <View style={styles.badgeContainer}>
                 <Image style={styles.badge} source={edit} />
@@ -66,52 +80,41 @@ const EditProfile = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <InputField
+            control={control}
+            onSubmitEditing={() => setFocus('name')}
+            name='nick'
             label='Nick'
-            textInputProps={{
-              onChangeText: setNick,
-              value: nick,
-              returnKeyType: 'next',
-              placeholder: 'Enter your nick',
-              onSubmitEditing: () => nameRef?.current?.focus(),
-            }}
+            returnKeyType='next'
+            placeholder='Enter your nick'
           />
           <Separator />
           <InputField
+            control={control}
+            onSubmitEditing={() => setFocus('surname')}
+            name='name'
             label='Name'
-            textInputProps={{
-              onChangeText: setName,
-              value: name,
-              returnKeyType: 'next',
-              placeholder: 'Enter your name',
-              onSubmitEditing: () => surnameRef?.current?.focus(),
-              ref: nameRef,
-            }}
+            returnKeyType='next'
+            placeholder='Enter your name'
           />
           <Separator />
           <InputField
+            control={control}
+            onSubmitEditing={() => setFocus('email')}
+            name='surname'
             label='Surname'
-            textInputProps={{
-              onChangeText: setSurname,
-              value: surname,
-              returnKeyType: 'next',
-              placeholder: 'Enter your surname',
-              onSubmitEditing: () => emailRef?.current?.focus(),
-              ref: surnameRef,
-            }}
+            returnKeyType='next'
+            placeholder='Enter your surname'
           />
           <Separator />
           <InputField
+            control={control}
+            rules={rules.email}
+            name='email'
             label='Email'
-            textInputProps={{
-              onChangeText: setEmail,
-              value: email,
-              returnKeyType: 'done',
-              placeholder: 'Enter your email',
-              autoComplete: 'email',
-              keyboardType: 'email-address',
-              onSubmitEditing: () => buttonRef?.current?.focus(),
-              ref: emailRef,
-            }}
+            returnKeyType='done'
+            placeholder='Enter your email'
+            autoComplete='email'
+            keyboardType='email-address'
           />
           <Separator height={32} />
         </View>
@@ -119,7 +122,7 @@ const EditProfile = ({ navigation }) => {
           <Button
             label='save changes'
             variant='contained'
-            onPress={saveChanges}
+            onPress={handleSubmit(saveChanges)}
           />
           <Separator />
         </View>

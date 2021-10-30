@@ -1,24 +1,41 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 
 import { Text, View } from 'react-native';
+import { useForm } from 'react-hook-form';
 
-import {
-  InputField,
-  Button,
-  ScrollViewLayout,
-  Separator,
-} from '../../components';
-import { makeStyles } from '../../utils';
+import { InputField, Button, ScrollViewLayout, Separator } from 'components';
+import { makeStyles } from 'utils';
 
 const Login = ({ navigation }) => {
   const styles = useStyles();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { control, handleSubmit, setFocus } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
-  const passwordRef = useRef();
+  const rules = {
+    email: {
+      required: 'Email is required',
+      pattern: {
+        value:
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        message: 'Invalid email format',
+      },
+    },
+    password: {
+      required: 'Password is required',
+      minLength: {
+        value: 8,
+        message: 'Password must contain at least 8 characters',
+      },
+    },
+  };
 
-  const login = () => {
+  const login = (data) => {
+    console.log('login', data);
     navigation.reset({
       index: 0,
       routes: [{ name: 'DrawerNavigator' }],
@@ -30,29 +47,25 @@ const Login = ({ navigation }) => {
       <View>
         <Text style={styles.header}>Login</Text>
         <InputField
+          control={control}
+          rules={rules.email}
+          onSubmitEditing={() => setFocus('password')}
+          name='email'
           label='Email'
-          textInputProps={{
-            onChangeText: setEmail,
-            value: email,
-            returnKeyType: 'next',
-            placeholder: 'Enter your email',
-            onSubmitEditing: () => passwordRef?.current?.focus(),
-            autoComplete: 'email',
-            keyboardType: 'email-address',
-          }}
+          returnKeyType='next'
+          placeholder='Enter your email'
+          autoComplete='email'
+          keyboardType='email-address'
         />
         <Separator />
         <InputField
+          control={control}
+          rules={rules.password}
+          secure
+          name='password'
           label='Password'
-          textInputProps={{
-            onChangeText: setPassword,
-            value: password,
-            returnKeyType: 'done',
-            placeholder: 'Enter your password',
-            onSubmitEditing: login,
-            ref: passwordRef,
-          }}
-          secure={true}
+          returnKeyType='done'
+          placeholder='Enter your password'
         />
         <View style={styles.resetPasswordContainer}>
           <Button
@@ -64,7 +77,11 @@ const Login = ({ navigation }) => {
         <Separator height={32} />
       </View>
       <View>
-        <Button label='Login' variant='contained' onPress={login} />
+        <Button
+          label='Login'
+          variant='contained'
+          onPress={handleSubmit(login)}
+        />
         <Text style={styles.text}>Don’t have an account?</Text>
         <Button
           label='Register'
