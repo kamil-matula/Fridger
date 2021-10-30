@@ -12,7 +12,6 @@ import {
 } from 'screens/drawer';
 import BottomNavigator from './BottomNavigator';
 import DrawerContent from './DrawerContent';
-import FridgeDetails from 'screens/FridgeDetails';
 
 // TODO: Split it to more navigators? It seems like some of these screens should be grouped
 const Drawer = createDrawerNavigator();
@@ -59,11 +58,6 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name='FriendProfile'
         component={FriendProfile}
-        options={{ headerShown: false, swipeEnabled: false }}
-      />
-      <Drawer.Screen
-        name='FridgeDetails'
-        component={FridgeDetails}
         options={{ headerShown: false, swipeEnabled: false }}
       />
     </Drawer.Navigator>

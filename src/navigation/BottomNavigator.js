@@ -5,8 +5,9 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { Menu, Fridges, ShoppingLists } from 'screens/home';
+import { Menu, ShoppingLists } from 'screens/home';
 import { fridgeIcon, listIcon, menuIcon } from 'assets/images/navigation';
+import FridgeNavigator from './FridgeNavigator';
 
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
@@ -44,7 +45,7 @@ const BottomNavigator = () => {
       />
       <Tab.Screen
         name='Fridges'
-        component={Fridges}
+        component={FridgeNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
