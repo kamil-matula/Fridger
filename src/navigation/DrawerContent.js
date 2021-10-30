@@ -4,8 +4,8 @@ import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { DrawerRow, Button, UserInfo } from '../components';
-import { makeStyles } from '../utils';
+import { DrawerRow, Button, UserInfo } from 'components';
+import { makeStyles } from 'utils';
 
 const DrawerContent = ({ navigation }) => {
   const styles = useStyles();

@@ -1,10 +1,9 @@
 import React from 'react';
 
 import { Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AppBar } from '../../components';
-import { makeStyles } from '../../utils';
+import { AppBar } from 'components';
+import { makeStyles } from 'utils';
 
 const Menu = () => {
   const styles = useStyles();

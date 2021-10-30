@@ -2,8 +2,8 @@ import React from 'react';
 
 import { Text, View } from 'react-native';
 
-import { AppBar } from '../../components';
-import { makeStyles } from '../../utils';
+import { AppBar } from 'components';
+import { makeStyles } from 'utils';
 
 const ShoppingLists = () => {
   const styles = useStyles();

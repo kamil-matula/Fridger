@@ -3,10 +3,10 @@ import React from 'react';
 import { Image } from 'react-native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { useTheme } from 'react-native-paper';
-import { makeStyles } from '../utils';
 
-import { Menu, Fridges, ShoppingLists } from '../screens/home';
-import { fridgeIcon, listIcon, menuIcon } from '../../assets/images/navigation';
+import { makeStyles } from 'utils';
+import { Menu, Fridges, ShoppingLists } from 'screens/home';
+import { fridgeIcon, listIcon, menuIcon } from 'assets/images/navigation';
 
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {

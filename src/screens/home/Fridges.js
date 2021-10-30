@@ -3,8 +3,8 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { AppBar, FridgeRow } from '../../components';
-import { makeStyles } from '../../utils';
+import { AppBar, FridgeRow } from 'components';
+import { makeStyles } from 'utils';
 
 const DATA = [
   { id: '1', title: 'Home' },
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     backgroundColor: theme.colors.silverMetallic,
     width: '100%',
+    height: 1,
   },
   list: {
     width: '100%',
