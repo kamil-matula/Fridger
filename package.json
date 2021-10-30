@@ -5,7 +5,10 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "prepare": "husky install",
+    "format": "prettier --config .prettierrc --write './src/**/*.{json,js,jsx}'",
+    "lint": "eslint --ext .js,.jsx,.json ./src"
   },
   "dependencies": {
     "@react-navigation/drawer": "^6.1.6",
@@ -29,7 +32,24 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
-    "babel-plugin-module-resolver": "^4.1.0"
+    "babel-plugin-module-resolver": "^4.1.0",
+    "eslint": "7.2.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jsx-a11y": "6.4.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "7.21.5",
+    "eslint-plugin-react-hooks": "1.7.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.6",
+    "prettier": "^2.4.1"
   },
-  "private": true
+  "private": true,
+  "lint-staged": {
+    "src/**/*.{js,jsx,json}": [
+      "prettier --config .prettierrc --write",
+      "eslint"
+    ]
+  }
 }
