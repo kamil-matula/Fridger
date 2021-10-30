@@ -17,10 +17,12 @@ const AddFriend = () => {
   const theme = useTheme();
   const styles = useStyles();
 
-  const [avatarUri, setAvatarUri] = useState(null);
-  const [nick, setNick] = useState('Minkx');
-  const [name, setName] = useState('Ardelle');
-  const [surname, setSurname] = useState('Coppage');
+  const [friend, setFriend] = useState({
+    avatarUri: null,
+    nick: 'Minkx',
+    name: 'Ardelle',
+    surname: 'Coppage',
+  });
 
   const [found, setFound] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -28,7 +30,7 @@ const AddFriend = () => {
 
   const find = () => {
     //do stuff
-    userHasBeenFound = true;
+    let userHasBeenFound = true;
 
     setFound(userHasBeenFound);
     if (!userHasBeenFound) {
@@ -55,14 +57,18 @@ const AddFriend = () => {
               <View style={styles.imageContainer}>
                 <Image
                   style={styles.avatar}
-                  source={avatarUri !== null ? { uri: avatarUri } : tmpPerson}
+                  source={
+                    friend.avatarUri !== null
+                      ? { uri: friend.avatarUri }
+                      : tmpPerson
+                  }
                 />
               </View>
-              <UserDataRow label='Nick' data={nick} />
+              <UserDataRow label='Nick' data={friend.nick} />
               <Separator height={16} />
-              <UserDataRow label='Name' data={name} />
+              <UserDataRow label='Name' data={friend.name} />
               <Separator height={16} />
-              <UserDataRow label='Surname' data={surname} />
+              <UserDataRow label='Surname' data={friend.surname} />
               <Separator height={64} />
             </View>
           </ScrollViewLayout>
