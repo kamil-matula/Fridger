@@ -26,28 +26,28 @@ const AppBar = ({
         <Appbar.Action
           icon={drawerIcon}
           onPress={() => navigation.openDrawer()}
-          color={colors.text}
+          color={colors.silverMetallic}
         />
       )}
       {!isDrawer && (
         <Appbar.Action
           icon={backIcon}
           onPress={() => navigation.goBack()}
-          color={colors.text}
+          color={colors.silverMetallic}
         />
       )}
       <Appbar.Content title={label} titleStyle={styles.title} />
       {icon1 && (
         <Appbar.Action
           icon={icon1}
-          color={colors.text}
+          color={colors.silverMetallic}
           onPress={onPressIcon1}
         />
       )}
       {icon2 && (
         <Appbar.Action
           icon={icon2}
-          color={colors.text}
+          color={colors.silverMetallic}
           onPress={onPressIcon2}
         />
       )}

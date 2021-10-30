@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { FlatList, View } from 'react-native';
-import { Divider } from 'react-native-paper';
+import { FlatList, View, Text, Image } from 'react-native';
+import { Divider, TouchableRipple } from 'react-native-paper';
 
 import { AppBar, FloatingActionButton, FridgeDetailsRow } from 'components';
 import { makeStyles } from 'utils';
+import more from 'assets/images/more.png';
+import down from 'assets/images/down.png';
+import up from 'assets/images/up.png';
 
 const DATA = [
   {
@@ -45,20 +48,44 @@ const DATA = [
 const FridgeDetails = () => {
   const styles = useStyles();
 
+  const [sortingCategoryName, setSortingCategoryName] = useState('Name');
+  const [sortingDirection, setSortingDirection] = useState('asc');
+
   return (
     <View style={styles.container}>
       {/* TODO: Use label and items from specific fridge */}
-      <AppBar label='Home' />
+      <AppBar
+        label='Home'
+        icon1={more}
+        onPressIcon1={() => {
+          // TODO: Add displaying modal bottom sheet with fridge actions
+        }}
+      />
       <Divider style={styles.divider} />
+      <TouchableRipple
+        onPress={() => {
+          // TODO: Add displaying modal bottom sheet with sorting actions
+        }}
+      >
+        <View style={styles.sortingLabel}>
+          <Text style={styles.text}>{sortingCategoryName}</Text>
+          <Image
+            source={sortingDirection == 'asc' ? up : down}
+            style={styles.icon}
+          />
+        </View>
+      </TouchableRipple>
       <FlatList
         style={styles.list}
         data={DATA}
         renderItem={({ item }) => <FridgeDetailsRow product={item} />}
         keyExtractor={(item) => item.id.toString()}
       />
-      <FloatingActionButton onPress={() => {
-        // TODO: Add navigating to "ADD PRODUCT PAGE"
-      }} />
+      <FloatingActionButton
+        onPress={() => {
+          // TODO: Add navigating to "ADD PRODUCT PAGE"
+        }}
+      />
     </View>
   );
 };
@@ -76,6 +103,16 @@ const useStyles = makeStyles((theme) => ({
   list: {
     width: '100%',
   },
+  sortingLabel: {
+    flexDirection: 'row',
+    padding: 16,
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 14,
+    color: theme.colors.silverMetallic,
+  },
+  icon: { height: 16, width: 16, marginLeft: 10 },
 }));
 
 export default FridgeDetails;
