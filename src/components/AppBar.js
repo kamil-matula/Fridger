@@ -4,9 +4,9 @@ import { Appbar, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
 import PropTypes from 'prop-types';
 
-import backIcon from '../../assets/images/back.png';
-import drawerIcon from '../../assets/images/navigation/drawer.png';
-import { makeStyles } from '../utils';
+import backIcon from 'assets/images/back.png';
+import drawerIcon from 'assets/images/navigation/drawer.png';
+import { makeStyles } from 'utils';
 
 const AppBar = ({
   label = '',

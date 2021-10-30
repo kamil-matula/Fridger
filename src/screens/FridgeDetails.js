@@ -47,13 +47,14 @@ const FridgeDetails = () => {
 
   return (
     <View style={styles.container}>
-      <AppBar isDrawer={true} label='Home' />
+      {/* TODO: Use label and items from specific fridge */}
+      <AppBar label='Home' />
       <Divider style={styles.divider} />
       <FlatList
         style={styles.list}
         data={DATA}
         renderItem={({ item }) => <FridgeDetailsRow product={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
@@ -67,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     backgroundColor: theme.colors.silverMetallic,
     width: '100%',
+    height: 1,
   },
   list: {
     width: '100%',

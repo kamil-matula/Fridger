@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { View, Text, Image } from 'react-native';
+import { TouchableRipple } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
 import reduce from 'assets/images/reduce.png';
@@ -9,29 +10,44 @@ const FridgeDetailsRow = ({ product }) => {
   const styles = useStyles();
 
   return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: product.image }} style={styles.image} />
+    <TouchableRipple
+      onPress={() => {
+        // TODO: Add navigating to Product Details
+      }}
+    >
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: product.image }} style={styles.image} />
+        </View>
+        <View style={styles.textsContainer}>
+          <Text style={styles.name}>{product.name}</Text>
+          <Text style={styles.producer}>{product.producer}</Text>
+          <Text style={styles.quantity}>
+            {product.currentQuantity} / {product.maxQuantity}{' '}
+            {product.quantityType}
+          </Text>
+          <Text style={styles.expirationDate}>
+            expiration date: {product.expirationDate}
+          </Text>
+        </View>
+        <View style={{ borderRadius: 64, overflow: 'hidden' }}>
+          <TouchableRipple
+            onPress={() => {
+              // TODO: Display "Reduce Quantity Dialog"
+            }}
+          >
+            <Image source={reduce} style={styles.icon} />
+          </TouchableRipple>
+        </View>
       </View>
-      <View style={styles.textsContainer}>
-        <Text style={styles.name}>{product.name}</Text>
-        <Text style={styles.producer}>{product.producer}</Text>
-        <Text style={styles.quantity}>
-          {product.currentQuantity} / {product.maxQuantity}{' '}
-          {product.quantityType}
-        </Text>
-        <Text style={styles.expirationDate}>
-          expiration date: {product.expirationDate}
-        </Text>
-      </View>
-      <Image source={reduce} style={styles.icon} />
-    </View>
+    </TouchableRipple>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
   container: {
     flexDirection: 'row',
+    alignItems: 'center',
     padding: 16,
   },
   imageContainer: {
@@ -62,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
     width: 32,
     height: 32,
     tintColor: theme.colors.silverMetallic,
+    margin: 4,
   },
 }));
 
