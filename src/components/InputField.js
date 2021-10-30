@@ -11,6 +11,7 @@ import {
 import { useTheme } from 'react-native-paper';
 import { useController } from 'react-hook-form';
 
+import Separator from './Separator'
 import visibility from 'assets/images/visibility.png';
 import visibilityOff from 'assets/images/visibility_off.png';
 import { makeStyles } from 'utils';
@@ -74,7 +75,11 @@ const InputField = ({
         )}
       </View>
 
-      {invalid && <Text style={styles.errorText}>{error.message}</Text>}
+      {invalid ? (
+        <Text style={styles.errorText}>{error.message}</Text>
+      ) : (
+        <Separator height={20} />
+      )}
     </>
   );
 };
