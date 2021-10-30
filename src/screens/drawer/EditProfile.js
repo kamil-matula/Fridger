@@ -21,9 +21,10 @@ const EditProfile = ({ navigation }) => {
   const { control, handleSubmit, setFocus, setValue, watch } = useForm({
     defaultValues: {
       avatar: null,
+      nick: '',
       name: '',
       surname: '',
-      nick: '',
+      email: '',
     },
   });
 
@@ -32,8 +33,9 @@ const EditProfile = ({ navigation }) => {
   const rules = {
     email: {
       pattern: {
-        value: /^\S+@\S+\.\S+$/,
-        message: "Invalid email's format",
+        value:
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        message: 'Invalid email format',
       },
     },
   };
@@ -80,7 +82,7 @@ const EditProfile = ({ navigation }) => {
           <InputField
             control={control}
             onSubmitEditing={() => setFocus('name')}
-            name='name'
+            name='nick'
             label='Nick'
             returnKeyType='next'
             placeholder='Enter your nick'
