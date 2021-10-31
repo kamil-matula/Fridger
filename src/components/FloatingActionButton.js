@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 
-const FloatingActionButton = ({ onPress }) => {
-  const styles = useStyles();
-  const colors = useTheme().colors;
+const FloatingActionButton = ({ onPress, label, centered = false }) => {
+  const styles = useStyles({ centered });
+  const { colors } = useTheme();
 
   return (
     <FAB
@@ -15,22 +15,31 @@ const FloatingActionButton = ({ onPress }) => {
       icon='plus'
       onPress={onPress}
       color={colors.richBlack}
+      label={label}
     />
   );
 };
 
 FloatingActionButton.propTypes = {
   onPress: PropTypes.func.isRequired,
+  label: PropTypes.string,
+  centered: PropTypes.bool,
 };
 
-const useStyles = makeStyles((theme) => ({
-  fab: {
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 0,
-    backgroundColor: theme.colors.blueJeans,
-  },
-}));
+const useStyles = makeStyles((theme, { centered }) => {
+  const obj = {
+    fab: {
+      position: 'absolute',
+      margin: 16,
+      bottom: 0,
+      backgroundColor: theme.colors.blueJeans,
+    },
+  };
+
+  if (centered) obj.fab.alignSelf = 'center';
+  else obj.fab.right = 0;
+
+  return obj;
+});
 
 export default FloatingActionButton;

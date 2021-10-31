@@ -12,12 +12,12 @@ const DATA = [
   { id: '3', title: 'My fridge' },
 ];
 
-const Fridges = () => {
+const Fridges = ({ navigation }) => {
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
-      <AppBar isDrawer={true} label='Fridges' />
+      <AppBar isDrawer label='Fridges' />
       <Divider style={styles.divider} />
       <FlatList
         style={styles.list}
@@ -25,9 +25,11 @@ const Fridges = () => {
         renderItem={({ item }) => <FridgeRow title={item.title} />}
         keyExtractor={(item) => item.id}
       />
-      <FloatingActionButton onPress={() => {
-        // TODO: Add navigating to "Add Fridge Page"
-      }}/>
+      <FloatingActionButton
+        onPress={() => {
+          navigation.navigate('AddFridge');
+        }}
+      />
     </View>
   );
 };

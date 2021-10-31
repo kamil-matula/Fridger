@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Image, TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { Text } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
@@ -12,18 +12,14 @@ const Button = ({
   icon = null,
   variant,
   color = 'blue',
-  fab = false,
-  fabPosition,
   rounded = false,
 }) => {
-  const hasLabel = label ? true : false;
-  const hasIcon = icon ? true : false;
+  const hasLabel = !!label;
+  const hasIcon = !!icon;
 
   const styles = useStyles({
     variant,
     color,
-    fab,
-    fabPosition,
     rounded,
     hasLabel,
     hasIcon,
@@ -41,15 +37,15 @@ Button.propTypes = {
   onPress: PropTypes.func.isRequired,
   label: PropTypes.string,
   icon: PropTypes.number,
-  variant: PropTypes.oneOf(['outlined', 'contained', 'text', 'pureText']).isRequired,
+  variant: PropTypes.oneOf(['outlined', 'contained', 'text', 'pureText'])
+    .isRequired,
   color: PropTypes.oneOf(['blue', 'red']),
-  fab: PropTypes.bool,
-  fabPosition: PropTypes.oneOf(['right', 'left', 'center']),
   rounded: PropTypes.bool,
 };
 
 const useStyles = makeStyles(
-  (theme, { variant, color, fab, fabPosition, rounded, hasLabel, hasIcon }) => {
+  (theme, { variant, color, rounded, hasLabel, hasIcon }) => {
+    // Common styles:
     const obj = {
       button: {
         flexDirection: 'row',
@@ -69,6 +65,8 @@ const useStyles = makeStyles(
         includeFontPadding: false,
       },
     };
+
+    // Margins (depend on content):
     if (hasLabel && hasIcon) {
       obj.icon.marginHorizontal = 12;
       obj.text.marginRight = 20;
@@ -80,56 +78,45 @@ const useStyles = makeStyles(
       obj.button.padding = 16;
       obj.button.height = 56;
     }
+
+    // Shape:
     if (rounded) {
       obj.button.borderRadius = 28;
     }
-    if (color == 'blue') {
+
+    // Colors:
+    if (color === 'blue') {
       obj.text.color = theme.colors.blueJeans;
       obj.button.borderColor = theme.colors.blueJeans;
     }
-    if (color == 'red') {
+    if (color === 'red') {
       obj.text.color = theme.colors.tartOrange;
       obj.button.borderColor = theme.colors.tartOrange;
     }
-    if (variant == 'outlined') {
+    if (variant === 'outlined') {
       obj.button.borderWidth = 1;
     }
-    if (variant == 'contained') {
+    if (variant === 'contained') {
       obj.text.color = theme.colors.richBlack;
-      if (color == 'blue') {
+      if (color === 'blue') {
         obj.button.backgroundColor = theme.colors.blueJeans;
       }
-      if (color == 'red') {
+      if (color === 'red') {
         obj.button.backgroundColor = theme.colors.tartOrange;
       }
     }
-    if (variant == 'text') {
+
+    // TextButtons:
+    if (variant === 'text') {
       obj.button.paddingHorizontal = 8;
     }
-    if (variant == 'pureText') {
+    if (variant === 'pureText') {
       obj.button.height = 'auto';
       obj.button.paddingHorizontal = 0;
       obj.text.fontWeight = 'normal';
       obj.text.textTransform = 'none';
     }
-    if (fab) {
-      obj.button.position = 'absolute';
-      obj.button.bottom = 16;
 
-      if (fabPosition == 'right') {
-        obj.button.right = 16;
-      }
-      if (fabPosition == 'left') {
-        obj.button.left = 16;
-      }
-      if (fabPosition == 'center') {
-        obj.button.alignSelf = 'center';
-      }
-      if (fabPosition == undefined) {
-        obj.button.right = 16;
-        obj.button.left = 16;
-      }
-    }
     return obj;
   }
 );

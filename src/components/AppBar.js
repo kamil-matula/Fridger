@@ -17,7 +17,7 @@ const AppBar = ({
   onPressIcon2 = null,
 }) => {
   const styles = useStyles();
-  const colors = useTheme().colors;
+  const { colors } = useTheme();
   const navigation = useNavigation();
 
   return (

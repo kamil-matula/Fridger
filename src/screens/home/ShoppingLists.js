@@ -10,7 +10,7 @@ const ShoppingLists = () => {
 
   return (
     <View style={styles.container}>
-      <AppBar isDrawer={true} label='Shopping Lists' />
+      <AppBar isDrawer label='Shopping Lists' />
       <View style={styles.container2}>
         <Text style={styles.text}>Shopping Lists</Text>
       </View>

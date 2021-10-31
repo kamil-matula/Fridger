@@ -70,7 +70,7 @@ const EditProfile = ({ navigation }) => {
   };
 
   const openImagePickerAsync = async () => {
-    let permissionResult =
+    const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
@@ -78,7 +78,7 @@ const EditProfile = ({ navigation }) => {
       return;
     }
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    const pickerResult = await ImagePicker.launchImageLibraryAsync();
 
     if (pickerResult.cancelled === true) {
       return;

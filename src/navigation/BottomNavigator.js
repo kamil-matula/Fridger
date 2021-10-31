@@ -12,7 +12,7 @@ import FridgeNavigator from './FridgeNavigator';
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
   const styles = useStyles();
-  const colors = useTheme().colors;
+  const { colors } = useTheme();
 
   return (
     <Tab.Navigator
@@ -87,7 +87,7 @@ const BottomNavigator = () => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   icon: {
     width: 20,
     height: 20,

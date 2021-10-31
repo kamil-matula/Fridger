@@ -10,7 +10,7 @@ const Menu = () => {
 
   return (
     <View style={styles.container}>
-      <AppBar isDrawer={true} />
+      <AppBar isDrawer />
       <View style={styles.container2}>
         <Text style={styles.text}>Menu</Text>
       </View>

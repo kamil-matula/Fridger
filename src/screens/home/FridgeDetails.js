@@ -48,7 +48,9 @@ const DATA = [
 const FridgeDetails = () => {
   const styles = useStyles();
 
+  // eslint-disable-next-line no-unused-vars
   const [sortingCategoryName, setSortingCategoryName] = useState('Name');
+  // eslint-disable-next-line no-unused-vars
   const [sortingDirection, setSortingDirection] = useState('asc');
 
   return (
@@ -70,7 +72,7 @@ const FridgeDetails = () => {
         <View style={styles.sortingLabel}>
           <Text style={styles.text}>{sortingCategoryName}</Text>
           <Image
-            source={sortingDirection == 'asc' ? up : down}
+            source={sortingDirection === 'asc' ? up : down}
             style={styles.icon}
           />
         </View>

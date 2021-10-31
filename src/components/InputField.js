@@ -11,10 +11,10 @@ import {
 import { useTheme } from 'react-native-paper';
 import { useController } from 'react-hook-form';
 
-import Separator from './Separator'
 import visibility from 'assets/images/visibility.png';
 import visibilityOff from 'assets/images/visibility_off.png';
 import { makeStyles } from 'utils';
+import Separator from './Separator';
 
 const InputField = ({
   label,
@@ -91,6 +91,7 @@ InputField.propTypes = {
   rules: PropTypes.object,
   variant: PropTypes.oneOf(['account', 'data']),
   secure: PropTypes.bool,
+  onSubmitEditing: PropTypes.func,
 };
 
 const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
@@ -114,7 +115,7 @@ const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
       borderWidth: 1,
       borderRadius: 5,
       alignItems: 'center',
-      borderColor: borderColor,
+      borderColor,
       backgroundColor:
         variant === 'data' ? 'transparent' : theme.colors.primary,
     },

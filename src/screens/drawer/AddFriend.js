@@ -9,14 +9,15 @@ import {
   Button,
   ScrollViewLayout,
   Separator,
-} from '../../components';
-import { makeStyles } from '../../utils';
-import tmpPerson from '../../../assets/images/tmpPerson.jpg';
+} from 'components';
+import { makeStyles } from 'utils';
+import tmpPerson from 'assets/images/tmpPerson.jpg';
 
 const AddFriend = ({ navigation }) => {
   const theme = useTheme();
   const styles = useStyles();
 
+  // eslint-disable-next-line no-unused-vars
   const [friend, setFriend] = useState({
     avatarUri: null,
     nick: 'Minkx',
@@ -36,7 +37,10 @@ const AddFriend = ({ navigation }) => {
   const onDismissSnackBar = () => setVisible(false);
 
   const find = () => {
-    //do stuff
+    // TODO: Add sending request to API to find user with given ID
+    // TODO: Delete eslint-disable-next-line
+
+    // eslint-disable-next-line prefer-const
     let userHasBeenFound = true;
 
     setFound(userHasBeenFound);
@@ -79,7 +83,7 @@ const AddFriend = ({ navigation }) => {
               <Separator height={64} />
             </View>
           </ScrollViewLayout>
-          <Button label='add to friends' variant='contained' fab={true} />
+          <Button label='add to friends' variant='contained' />
         </>
       )}
       <Snackbar

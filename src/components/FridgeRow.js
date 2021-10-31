@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { Text, Divider, TouchableRipple } from 'react-native-paper';
+import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 import {
@@ -39,7 +40,7 @@ const FridgeRow = ({ title }) => {
               eggsIcon,
               milkIcon,
             ].map((item, index) => (
-              <View key={'foodicon-' + index}>
+              <View key={`foodicon-${index}`}>
                 <Image source={item} style={styles.icon} />
                 <View style={styles.circle} />
               </View>
@@ -50,6 +51,10 @@ const FridgeRow = ({ title }) => {
       <Divider style={styles.divider} />
     </View>
   );
+};
+
+FridgeRow.propTypes = {
+  title: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({

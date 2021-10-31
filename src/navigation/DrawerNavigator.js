@@ -17,7 +17,7 @@ import DrawerContent from './DrawerContent';
 // TODO: Split it to more navigators? It seems like some of these screens should be grouped
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
-  const colors = useTheme().colors;
+  const { colors } = useTheme();
 
   return (
     <Drawer.Navigator
