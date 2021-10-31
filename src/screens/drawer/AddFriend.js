@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { View, TextInput, Image, Text } from 'react-native';
 import { Divider, useTheme, Snackbar } from 'react-native-paper';
@@ -28,9 +28,12 @@ const AddFriend = ({ navigation }) => {
   useEffect(() => {
     const blurListener = navigation.addListener('blur', () => {
       setFound(false);
+      textInput.current.clear();
     });
     return blurListener;
   }, [navigation]);
+
+  let textInput = useRef();
 
   const [found, setFound] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -54,6 +57,7 @@ const AddFriend = ({ navigation }) => {
       <AppBar label='Add friend' />
       <Divider style={styles.divider} />
       <TextInput
+        ref={textInput}
         style={styles.input}
         placeholder='Paste friend ID'
         placeholderTextColor={theme.colors.silverMetallic}
@@ -76,14 +80,23 @@ const AddFriend = ({ navigation }) => {
                 />
               </View>
               <UserDataRow label='Nick' data={friend.nick} />
-              <Separator height={16} />
+              <Separator />
               <UserDataRow label='Name' data={friend.name} />
-              <Separator height={16} />
+              <Separator />
               <UserDataRow label='Surname' data={friend.surname} />
-              <Separator height={64} />
+              <Separator height={32} />
+            </View>
+            <View>
+              <Button
+                label='add to friends'
+                variant='contained'
+                onPress={() => {
+                  // TODO: Send request to API to add to friends
+                }}
+              />
+              <Separator />
             </View>
           </ScrollViewLayout>
-          <Button label='add to friends' variant='contained' />
         </>
       )}
       <Snackbar
@@ -115,6 +128,7 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     backgroundColor: theme.colors.silverMetallic,
+    height: 1,
   },
   imageContainer: {
     paddingVertical: 32,
