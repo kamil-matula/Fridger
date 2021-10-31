@@ -1,0 +1,35 @@
+{
+  "env": {
+    "es2020": true,
+    "node": true
+  },
+  "extends": ["airbnb", "airbnb/hooks", "prettier"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "prettier"],
+  "rules": {
+    "prettier/prettier": 0,
+    "import/prefer-default-export": 0,
+    "react/jsx-filename-extension": 0,
+    "react/state-in-constructor": 0,
+    "react/static-property-placement": 0,
+    "react/style-prop-object": 0,
+    "react/prop-types": 1,
+    "no-use-before-define": 0,
+    "no-useless-escape": 0,
+    "no-alert": 0,
+    "no-console": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src", "."]
+      }
+    }
+  }
+}
