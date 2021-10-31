@@ -4,7 +4,7 @@ import { Image, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '../utils';
+import { makeStyles } from 'utils';
 
 const Button = ({
   onPress,
@@ -38,9 +38,10 @@ const Button = ({
 };
 
 Button.propTypes = {
-  onPress: PropTypes.func,
+  onPress: PropTypes.func.isRequired,
   label: PropTypes.string,
-  variant: PropTypes.oneOf(['outlined', 'contained', 'pureText']),
+  icon: PropTypes.number,
+  variant: PropTypes.oneOf(['outlined', 'contained', 'text', 'pureText']).isRequired,
   color: PropTypes.oneOf(['blue', 'red']),
   fab: PropTypes.bool,
   fabPosition: PropTypes.oneOf(['right', 'left', 'center']),

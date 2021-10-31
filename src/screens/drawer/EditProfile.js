@@ -51,7 +51,7 @@ const EditProfile = ({ navigation }) => {
     surname: {
       maxLength: {
         value: 20,
-        message: 'Name cannot contain more than 20 characters',
+        message: 'Surname cannot contain more than 20 characters',
       },
     },
     email: {
