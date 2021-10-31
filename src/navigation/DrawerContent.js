@@ -49,13 +49,14 @@ const DrawerContent = ({ navigation }) => {
       </View>
 
       <View style={styles.buttonContainer}>
-      <Button
-        variant='outlined'
-        label='LOGOUT'
-        onPress={() => {
-          // TODO: Add logging out
-        }}
-      />
+        <Button
+          variant='outlined'
+          label='LOGOUT'
+          onPress={() => {
+            // TODO: Add logging out
+            navigation.navigate('Login');
+          }}
+        />
       </View>
     </SafeAreaView>
   );
