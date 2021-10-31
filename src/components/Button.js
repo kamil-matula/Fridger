@@ -30,12 +30,10 @@ const Button = ({
   });
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={onPress}>
-        {icon && <Image style={styles.icon} source={icon} />}
-        <Text style={styles.text}>{label}</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity style={styles.button} onPress={onPress}>
+      {icon && <Image style={styles.icon} source={icon} />}
+      <Text style={styles.text}>{label}</Text>
+    </TouchableOpacity>
   );
 };
 
@@ -69,7 +67,6 @@ const useStyles = makeStyles(
         textTransform: 'uppercase',
         includeFontPadding: false,
       },
-      container: {},
     };
     if (hasLabel && hasIcon) {
       obj.icon.marginHorizontal = 12;
@@ -115,19 +112,21 @@ const useStyles = makeStyles(
       obj.text.textTransform = 'none';
     }
     if (fab) {
-      obj.container.position = 'absolute';
-      obj.container.bottom = 16;
-      obj.container.right = 16;
-      obj.container.left = 16;
+      obj.button.position = 'absolute';
+      obj.button.bottom = 16;
 
       if (fabPosition == 'right') {
-        obj.container.alignItems = 'flex-end';
+        obj.button.right = 16;
       }
       if (fabPosition == 'left') {
-        obj.container.alignItems = 'flex-start';
+        obj.button.left = 16;
       }
       if (fabPosition == 'center') {
-        obj.container.alignItems = 'center';
+        obj.button.alignSelf = 'center';
+      }
+      if (fabPosition == undefined) {
+        obj.button.right = 16;
+        obj.button.left = 16;
       }
     }
     return obj;
