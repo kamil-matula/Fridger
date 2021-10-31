@@ -4,8 +4,8 @@ import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { DrawerRow, Button, UserInfo } from '../components';
-import { makeStyles } from '../utils';
+import { DrawerRow, Button, UserInfo } from 'components';
+import { makeStyles } from 'utils';
 
 const DrawerContent = ({ navigation }) => {
   const styles = useStyles();
@@ -13,9 +13,10 @@ const DrawerContent = ({ navigation }) => {
     <SafeAreaView style={styles.drawerContent}>
       <UserInfo
         // TODO: Replace with real user name, nick and image
-        text='Ardelle Coppage'
-        subtext='Minkx'
+        title='Ardelle Coppage'
+        subtitle='Minkx'
         avatarURI='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
+        variant='big'
       />
 
       <Divider style={styles.divider} />
@@ -25,37 +26,45 @@ const DrawerContent = ({ navigation }) => {
         <DrawerRow
           label='Edit Profile'
           onPress={() => {
-            navigation.navigate('EditProfile');
+            navigation.push('DrawerNavigator', {
+              screen: 'EditProfile'
+            });
           }}
         />
         <DrawerRow
           label='Change Password'
           onPress={() => {
-            navigation.navigate('ChangePassword');
+            navigation.push('DrawerNavigator', {
+              screen: 'ChangePassword'
+            });
           }}
         />
         <DrawerRow
           label='Friends'
           onPress={() => {
-            navigation.navigate('Friends');
+            navigation.push('DrawerNavigator', {
+              screen: 'Friends'
+            });
           }}
         />
         <DrawerRow
           label='Delete Account'
           onPress={() => {
-            navigation.navigate('DeleteAccount');
+            navigation.push('DrawerNavigator', {
+              screen: 'DeleteAccount'
+            });
           }}
         />
       </View>
 
       <View style={styles.buttonContainer}>
-      <Button
-        variant='outlined'
-        label='LOGOUT'
-        onPress={() => {
-          // TODO: Add logging out
-        }}
-      />
+        <Button
+          variant='outlined'
+          label='LOGOUT'
+          onPress={() => {
+            // TODO: Add logging out
+          }}
+        />
       </View>
     </SafeAreaView>
   );

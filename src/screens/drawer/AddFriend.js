@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { View, TextInput, Image, Text } from 'react-native';
 import { Divider, useTheme, Snackbar } from 'react-native-paper';
@@ -9,9 +9,9 @@ import {
   Button,
   ScrollViewLayout,
   Separator,
-} from '../../components';
-import { makeStyles } from '../../utils';
-import tmpPerson from '../../../assets/images/tmpPerson.jpg';
+} from 'components';
+import { makeStyles } from 'utils';
+import tmpPerson from 'assets/images/tmpPerson.jpg';
 
 const AddFriend = ({ navigation }) => {
   const theme = useTheme();
@@ -23,13 +23,6 @@ const AddFriend = ({ navigation }) => {
     name: 'Ardelle',
     surname: 'Coppage',
   });
-
-  useEffect(() => {
-    const blurListener = navigation.addListener('blur', () => {
-      setFound(false);
-    });
-    return blurListener;
-  }, [navigation]);
 
   const [found, setFound] = useState(false);
   const [visible, setVisible] = useState(false);

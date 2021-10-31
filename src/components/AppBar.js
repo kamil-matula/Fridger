@@ -32,7 +32,7 @@ const AppBar = ({
       {!isDrawer && (
         <Appbar.Action
           icon={backIcon}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop()}
           color={colors.text}
         />
       )}

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { Image, TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { Text } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '../utils';
+import { makeStyles } from 'utils';
 
 const Button = ({
   onPress,
