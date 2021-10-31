@@ -11,7 +11,7 @@ import {
 import { Divider, Snackbar, useTheme } from 'react-native-paper';
 import * as Clipboard from 'expo-clipboard';
 
-import { AppBar, UserInfo, Button, Dialog } from 'components';
+import { AppBar, UserInfo, Button, Dialog, Separator } from 'components';
 import { makeStyles } from 'utils';
 import { copy, done, clear, add, deleteIcon } from 'assets/icons';
 
@@ -131,6 +131,7 @@ const Friends = ({ navigation }) => {
             iconTint1={theme.colors.silverMetallic}
           />
         ))}
+        <Separator height={88} />
       </ScrollView>
       <Button
         icon={add}
