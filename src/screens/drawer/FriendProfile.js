@@ -1,14 +1,15 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 
 import { View, Image, ScrollView } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 
-import { makeStyles } from '../../utils';
-import { UserDataRow, Button, AppBar, Separator } from '../../components';
-import deleteIcon from '../../../assets/images/delete.png';
-import tmpPerson from '../../../assets/images/tmpPerson.jpg';
+import { makeStyles } from 'utils';
+import { UserDataRow, Button, AppBar, Separator } from 'components';
+import deleteIcon from 'assets/images/delete.png';
+import tmpPerson from 'assets/images/tmpPerson.jpg';
 
-const FriendProfile = () => {
+const FriendProfile = ({ navigation }) => {
   const styles = useStyles();
 
   const [avatarUri, setAvatarUri] = useState(null);

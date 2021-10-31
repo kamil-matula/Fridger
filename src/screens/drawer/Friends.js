@@ -2,8 +2,8 @@ import React from 'react';
 
 import { Text, View } from 'react-native';
 
-import { makeStyles } from '../../utils';
-import { AppBar } from '../../components';
+import { makeStyles } from 'utils';
+import { AppBar } from 'components';
 
 const Friends = () => {
   const styles = useStyles();

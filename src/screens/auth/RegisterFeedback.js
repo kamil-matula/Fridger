@@ -2,9 +2,9 @@ import React from 'react';
 
 import { Text, View, Image } from 'react-native';
 
-import { Button } from '../../components';
-import { makeStyles } from '../../utils/makeStyles';
-import pidgeon from '../../../assets/images/pidgeon.png';
+import { Button } from 'components';
+import { makeStyles } from 'utils/makeStyles';
+import pidgeon from 'assets/images/pidgeon.png';
 
 const RegisterFeedback = ({ navigation }) => {
   const styles = useStyles();

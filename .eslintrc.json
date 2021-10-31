@@ -15,15 +15,20 @@
   "rules": {
     "prettier/prettier": 0,
     "import/prefer-default-export": 0,
+    "react/forbid-prop-types": 0, // propTypes.object
     "react/jsx-filename-extension": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/no-array-index-key": 0,
     "react/state-in-constructor": 0,
     "react/static-property-placement": 0,
     "react/style-prop-object": 0,
-    "react/prop-types": 1,
+    "react/prop-types": ["error", { "ignore": ["navigation", "focused"] }],
     "no-use-before-define": 0,
     "no-useless-escape": 0,
     "no-alert": 0,
-    "no-console": 0
+    "no-undef": 0, // eg. "alert"
+    "no-console": 0,
+    "react/require-default-props": 0
   },
   "settings": {
     "import/resolver": {

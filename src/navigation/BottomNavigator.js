@@ -3,15 +3,16 @@ import React from 'react';
 import { Image } from 'react-native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { useTheme } from 'react-native-paper';
-import { makeStyles } from '../utils';
 
-import { Menu, Fridges, ShoppingLists } from '../screens/home';
-import { fridgeIcon, listIcon, menuIcon } from '../../assets/images/navigation';
+import { makeStyles } from 'utils';
+import { Menu, ShoppingLists } from 'screens/home';
+import { fridgeIcon, listIcon, menuIcon } from 'assets/images/navigation';
+import FridgeNavigator from './FridgeNavigator';
 
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
   const styles = useStyles();
-  const colors = useTheme().colors;
+  const { colors } = useTheme();
 
   return (
     <Tab.Navigator
@@ -29,7 +30,14 @@ const BottomNavigator = () => {
           tabBarIcon: ({ focused }) => (
             <Image
               source={menuIcon}
-              style={[styles.icon, { tintColor: focused ? colors.cyberYellow : colors.silverMetallic }]}
+              style={[
+                styles.icon,
+                {
+                  tintColor: focused
+                    ? colors.cyberYellow
+                    : colors.silverMetallic,
+                },
+              ]}
             />
           ),
           tabBarLabel: 'MENU',
@@ -37,12 +45,19 @@ const BottomNavigator = () => {
       />
       <Tab.Screen
         name='Fridges'
-        component={Fridges}
+        component={FridgeNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
               source={fridgeIcon}
-              style={[styles.icon, { tintColor: focused ? colors.cyberYellow : colors.silverMetallic }]}
+              style={[
+                styles.icon,
+                {
+                  tintColor: focused
+                    ? colors.cyberYellow
+                    : colors.silverMetallic,
+                },
+              ]}
             />
           ),
           tabBarLabel: 'FRIDGES',
@@ -55,7 +70,14 @@ const BottomNavigator = () => {
           tabBarIcon: ({ focused }) => (
             <Image
               source={listIcon}
-              style={[styles.icon, { tintColor: focused ? colors.cyberYellow : colors.silverMetallic }]}
+              style={[
+                styles.icon,
+                {
+                  tintColor: focused
+                    ? colors.cyberYellow
+                    : colors.silverMetallic,
+                },
+              ]}
             />
           ),
           tabBarLabel: 'SHOPPING LISTS',
@@ -65,7 +87,7 @@ const BottomNavigator = () => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   icon: {
     width: 20,
     height: 20,

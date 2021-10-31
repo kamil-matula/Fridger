@@ -4,8 +4,8 @@ import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { DrawerRow, Button, UserInfo } from '../components';
-import { makeStyles } from '../utils';
+import { DrawerRow, Button, UserInfo } from 'components';
+import { makeStyles } from 'utils';
 
 const DrawerContent = ({ navigation }) => {
   const styles = useStyles();
@@ -49,13 +49,14 @@ const DrawerContent = ({ navigation }) => {
       </View>
 
       <View style={styles.buttonContainer}>
-      <Button
-        variant='outlined'
-        label='LOGOUT'
-        onPress={() => {
-          // TODO: Add logging out
-        }}
-      />
+        <Button
+          variant='outlined'
+          label='LOGOUT'
+          onPress={() => {
+            // TODO: Add logging out
+            navigation.navigate('Login');
+          }}
+        />
       </View>
     </SafeAreaView>
   );

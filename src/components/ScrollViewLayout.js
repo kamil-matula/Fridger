@@ -3,7 +3,7 @@ import React from 'react';
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '../utils';
+import { makeStyles } from 'utils';
 
 const ScrollViewLayout = ({ children }) => {
   const styles = useStyles();

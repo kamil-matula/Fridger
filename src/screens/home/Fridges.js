@@ -3,8 +3,8 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { AppBar, FridgeRow } from '../../components';
-import { makeStyles } from '../../utils';
+import { AppBar, FridgeRow, FloatingActionButton } from 'components';
+import { makeStyles } from 'utils';
 
 const DATA = [
   { id: '1', title: 'Home' },
@@ -12,18 +12,23 @@ const DATA = [
   { id: '3', title: 'My fridge' },
 ];
 
-const Fridges = () => {
+const Fridges = ({ navigation }) => {
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
-      <AppBar isDrawer={true} label='Fridges' />
+      <AppBar isDrawer label='Fridges' />
       <Divider style={styles.divider} />
       <FlatList
         style={styles.list}
         data={DATA}
         renderItem={({ item }) => <FridgeRow title={item.title} />}
         keyExtractor={(item) => item.id}
+      />
+      <FloatingActionButton
+        onPress={() => {
+          navigation.navigate('AddFridge');
+        }}
       />
     </View>
   );
@@ -37,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     backgroundColor: theme.colors.silverMetallic,
     width: '100%',
+    height: 1,
   },
   list: {
     width: '100%',

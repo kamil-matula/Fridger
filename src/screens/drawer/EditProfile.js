@@ -31,7 +31,31 @@ const EditProfile = ({ navigation }) => {
   const avatarUri = watch('avatar');
 
   const rules = {
+    nick: {
+      required: 'Nick is required',
+      minLength: {
+        value: 5,
+        message: 'Nick must contain at least 5 characters',
+      },
+      maxLength: {
+        value: 20,
+        message: 'Nick cannot contain no more than 20 characters',
+      },
+    },
+    name: {
+      maxLength: {
+        value: 20,
+        message: 'Name cannot contain more than 20 characters',
+      },
+    },
+    surname: {
+      maxLength: {
+        value: 20,
+        message: 'Surname cannot contain more than 20 characters',
+      },
+    },
     email: {
+      required: 'Email is required',
       pattern: {
         value:
           /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -46,7 +70,7 @@ const EditProfile = ({ navigation }) => {
   };
 
   const openImagePickerAsync = async () => {
-    let permissionResult =
+    const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
@@ -54,7 +78,7 @@ const EditProfile = ({ navigation }) => {
       return;
     }
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    const pickerResult = await ImagePicker.launchImageLibraryAsync();
 
     if (pickerResult.cancelled === true) {
       return;
@@ -81,6 +105,7 @@ const EditProfile = ({ navigation }) => {
           </View>
           <InputField
             control={control}
+            rules={rules.nick}
             onSubmitEditing={() => setFocus('name')}
             name='nick'
             label='Nick'
@@ -90,6 +115,7 @@ const EditProfile = ({ navigation }) => {
           <Separator />
           <InputField
             control={control}
+            rules={rules.name}
             onSubmitEditing={() => setFocus('surname')}
             name='name'
             label='Name'
@@ -99,6 +125,7 @@ const EditProfile = ({ navigation }) => {
           <Separator />
           <InputField
             control={control}
+            rules={rules.surname}
             onSubmitEditing={() => setFocus('email')}
             name='surname'
             label='Surname'

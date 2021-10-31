@@ -3,7 +3,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '../utils';
+import { makeStyles } from 'utils';
 
 const UserDataRow = ({ label, data }) => {
   const styles = useStyles();
