@@ -4,9 +4,9 @@ import { Appbar, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
 import PropTypes from 'prop-types';
 
-import backIcon from '../../assets/images/back.png';
-import drawerIcon from '../../assets/images/navigation/drawer.png';
-import { makeStyles } from '../utils';
+import backIcon from 'assets/images/back.png';
+import drawerIcon from 'assets/images/navigation/drawer.png';
+import { makeStyles } from 'utils';
 
 const AppBar = ({
   label = '',
@@ -17,7 +17,7 @@ const AppBar = ({
   onPressIcon2 = null,
 }) => {
   const styles = useStyles();
-  const colors = useTheme().colors;
+  const { colors } = useTheme();
   const navigation = useNavigation();
 
   return (
@@ -26,7 +26,7 @@ const AppBar = ({
         <Appbar.Action
           icon={drawerIcon}
           onPress={() => navigation.openDrawer()}
-          color={colors.text}
+          color={colors.silverMetallic}
         />
       )}
       {!isDrawer && (
@@ -40,14 +40,14 @@ const AppBar = ({
       {icon1 && (
         <Appbar.Action
           icon={icon1}
-          color={colors.text}
+          color={colors.silverMetallic}
           onPress={onPressIcon1}
         />
       )}
       {icon2 && (
         <Appbar.Action
           icon={icon2}
-          color={colors.text}
+          color={colors.silverMetallic}
           onPress={onPressIcon2}
         />
       )}

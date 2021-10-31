@@ -14,6 +14,7 @@ import { useController } from 'react-hook-form';
 import visibility from 'assets/images/visibility.png';
 import visibilityOff from 'assets/images/visibility_off.png';
 import { makeStyles } from 'utils';
+import Separator from './Separator';
 
 const InputField = ({
   label,
@@ -74,7 +75,11 @@ const InputField = ({
         )}
       </View>
 
-      {invalid && <Text style={styles.errorText}>{error.message}</Text>}
+      {invalid ? (
+        <Text style={styles.errorText}>{error.message}</Text>
+      ) : (
+        <Separator height={20} />
+      )}
     </>
   );
 };
@@ -86,6 +91,7 @@ InputField.propTypes = {
   rules: PropTypes.object,
   variant: PropTypes.oneOf(['account', 'data']),
   secure: PropTypes.bool,
+  onSubmitEditing: PropTypes.func,
 };
 
 const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
@@ -109,7 +115,7 @@ const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
       borderWidth: 1,
       borderRadius: 5,
       alignItems: 'center',
-      borderColor: borderColor,
+      borderColor,
       backgroundColor:
         variant === 'data' ? 'transparent' : theme.colors.primary,
     },

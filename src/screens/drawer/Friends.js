@@ -1,26 +1,31 @@
 import React, { useState } from 'react';
 
+import { View, Text, ToastAndroid, ScrollView, Image } from 'react-native';
 import {
-  View,
-  Text,
-  ToastAndroid,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import { Divider, Snackbar, useTheme } from 'react-native-paper';
+  Divider,
+  Snackbar,
+  TouchableRipple,
+  useTheme,
+} from 'react-native-paper';
 import * as Clipboard from 'expo-clipboard';
 
-import { AppBar, UserInfo, Button, Dialog, Separator } from 'components';
+import {
+  AppBar,
+  UserInfo,
+  Dialog,
+  Separator,
+  FloatingActionButton,
+} from 'components';
 import { makeStyles } from 'utils';
-import { copy, done, clear, add, deleteIcon } from 'assets/icons';
+import { copy, done, clear, deleteIcon } from 'assets/icons';
 
-import { requestsList, friendsList } from './tmpData.js';
+import { requestsList, friendsList } from './tmpData';
 
 const Friends = ({ navigation }) => {
   const theme = useTheme();
   const styles = useStyles();
 
+  // eslint-disable-next-line no-unused-vars
   const [userID, setUserID] = useState('497 458 417');
   const [requests, setRequests] = useState(requestsList);
   const [friends, setFriends] = useState(friendsList);
@@ -34,7 +39,7 @@ const Friends = ({ navigation }) => {
     setDialogVisible(true);
   };
   const removeFriend = () => {
-    let idx = friends.findIndex((e) => e.id === toRemove.id);
+    const idx = friends.findIndex((e) => e.id === toRemove.id);
     setFriends([...friends.splice(0, idx), ...friends.splice(idx + 1)]);
     setDialogVisible(false);
   };
@@ -46,13 +51,13 @@ const Friends = ({ navigation }) => {
     navigation.push('DrawerNavigator', {
       screen: 'FriendProfile',
       params: { userID: id },
-    })
-  }
+    });
+  };
   const navigateToAddFriend = () => {
     navigation.push('DrawerNavigator', {
       screen: 'AddFriend',
-    })
-  }
+    });
+  };
 
   const [snackbarVisible, setSnackbarVisible] = useState(null);
   const [dialogVisible, setDialogVisible] = useState(null);
@@ -69,16 +74,16 @@ const Friends = ({ navigation }) => {
   };
 
   const reject = (id) => {
-    let idx = requests.findIndex((e) => e.id === id);
-    let element = requests[idx];
+    const idx = requests.findIndex((e) => e.id === id);
+    const element = requests[idx];
     setRejected(element);
     setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
     setSnackbarVisible(true);
   };
 
   const accept = (id) => {
-    let idx = requests.findIndex((e) => e.id === id);
-    let element = requests[idx];
+    const idx = requests.findIndex((e) => e.id === id);
+    const element = requests[idx];
     setFriends([element, ...friends]);
     setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
   };
@@ -91,11 +96,13 @@ const Friends = ({ navigation }) => {
         <Text style={styles.header}>Your ID</Text>
         <View style={styles.userID}>
           <Text style={styles.text}>{userID}</Text>
-          <TouchableOpacity onPress={copyToClipboard}>
-            <Image style={styles.icon} source={copy} />
-          </TouchableOpacity>
+          <View style={{ borderRadius: 20, overflow: 'hidden' }}>
+            <TouchableRipple onPress={copyToClipboard}>
+              <Image style={styles.icon} source={copy} />
+            </TouchableRipple>
+          </View>
         </View>
-        {requests.length != 0 && (
+        {requests.length !== 0 && (
           <>
             <Divider style={styles.divider} />
             <Text style={styles.header}>Pending requests</Text>
@@ -103,7 +110,7 @@ const Friends = ({ navigation }) => {
               <UserInfo
                 key={id}
                 title={nick}
-                subtitle={name + ' ' + surname}
+                subtitle={`${name} ${surname}`}
                 avatarURI={avatar}
                 onClick={() => navigateToFriendProfile(id)}
                 variant='small'
@@ -122,7 +129,7 @@ const Friends = ({ navigation }) => {
           <UserInfo
             key={e.id}
             title={e.nick}
-            subtitle={e.name + ' ' + e.surname}
+            subtitle={`${e.name} ${e.surname}`}
             avatarURI={e.avatar}
             onClick={() => navigateToFriendProfile(id)}
             variant='small'
@@ -133,14 +140,7 @@ const Friends = ({ navigation }) => {
         ))}
         <Separator height={88} />
       </ScrollView>
-      <Button
-        icon={add}
-        fab={true}
-        fabPosition='right'
-        variant='contained'
-        rounded={true}
-        onPress={navigateToAddFriend}
-      />
+      <FloatingActionButton onPress={navigateToAddFriend} />
       <Dialog
         title='Remove from friends'
         paragraph={`Are you sure you want to remove ${toRemoveNick} from friends? This action cannot be undone.`}
@@ -196,6 +196,7 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     height: 24,
     width: 24,
+    margin: 8,
     tintColor: theme.colors.silverMetallic,
   },
   snackbarWrapper: {

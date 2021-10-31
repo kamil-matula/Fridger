@@ -4,8 +4,7 @@ import { View, Image, StyleSheet } from 'react-native';
 import { Text, TouchableRipple } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '../utils';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { makeStyles } from 'utils';
 
 const UserInfo = ({
   title,
@@ -23,8 +22,8 @@ const UserInfo = ({
   const styles = useStyles({ variant, iconTint1, iconTint2 });
 
   return (
-    <View style={styles.container}>
-      <TouchableRipple style={{ flex: 1 }} onPress={onClick}>
+    <TouchableRipple onPress={onClick}>
+      <View style={styles.container}>
         <View style={styles.dataContainer}>
           <Image style={styles.avatar} source={{ uri: avatarURI }} />
           <View style={styles.textContainer}>
@@ -32,21 +31,25 @@ const UserInfo = ({
             <Text style={styles.subtitle}>{subtitle}</Text>
           </View>
         </View>
-      </TouchableRipple>
-      <View style={styles.iconsContainer}>
-        {icon1 && (
-          <TouchableOpacity onPress={onPressIcon1}>
-            <Image style={styles.icon1} source={icon1} />
-          </TouchableOpacity>
-        )}
-        {icon1 && icon2 && <View style={styles.separatorHorizontal16} />}
-        {icon2 && (
-          <TouchableOpacity onPress={onPressIcon2}>
-            <Image style={styles.icon2} source={icon2} />
-          </TouchableOpacity>
-        )}
+        <View style={styles.iconsContainer}>
+          {icon1 && (
+            <View style={{ borderRadius: 20, overflow: 'hidden' }}>
+              <TouchableRipple onPress={onPressIcon1}>
+                <Image style={styles.icon1} source={icon1} />
+              </TouchableRipple>
+            </View>
+          )}
+          {icon1 && icon2 && <View style={styles.separatorHorizontal16} />}
+          {icon2 && (
+            <View style={{ borderRadius: 20, overflow: 'hidden' }}>
+              <TouchableRipple onPress={onPressIcon2}>
+                <Image style={styles.icon2} source={icon2} />
+              </TouchableRipple>
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </TouchableRipple>
   );
 };
 
@@ -57,15 +60,18 @@ UserInfo.propTypes = {
   onClick: PropTypes.func,
   variant: PropTypes.oneOf(['small', 'big']),
   icon1: PropTypes.number,
+  iconTint1: PropTypes.number,
   onPressIcon1: PropTypes.func,
   icon2: PropTypes.number,
   onPressIcon2: PropTypes.func,
+  iconTint2: PropTypes.number,
 };
 
 const useStyles = makeStyles((theme, { variant, iconTint1, iconTint2 }) => {
   const obj = {
     container: {
       flexDirection: 'row',
+      justifyContent: 'space-between',
       alignItems: 'center',
     },
     dataContainer: {
@@ -94,11 +100,13 @@ const useStyles = makeStyles((theme, { variant, iconTint1, iconTint2 }) => {
     icon1: {
       height: 24,
       width: 24,
+      margin: 8,
       tintColor: iconTint1,
     },
     icon2: {
       height: 24,
       width: 24,
+      margin: 8,
       tintColor: iconTint2,
     },
     separatorHorizontal16: {

@@ -1,17 +1,16 @@
 import React from 'react';
 
 import { Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AppBar } from '../../components';
-import { makeStyles } from '../../utils';
+import { AppBar } from 'components';
+import { makeStyles } from 'utils';
 
 const Menu = () => {
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
-      <AppBar isDrawer={true} />
+      <AppBar isDrawer />
       <View style={styles.container2}>
         <Text style={styles.text}>Menu</Text>
       </View>

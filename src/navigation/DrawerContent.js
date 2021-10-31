@@ -27,7 +27,7 @@ const DrawerContent = ({ navigation }) => {
           label='Edit Profile'
           onPress={() => {
             navigation.push('DrawerNavigator', {
-              screen: 'EditProfile'
+              screen: 'EditProfile',
             });
           }}
         />
@@ -35,7 +35,7 @@ const DrawerContent = ({ navigation }) => {
           label='Change Password'
           onPress={() => {
             navigation.push('DrawerNavigator', {
-              screen: 'ChangePassword'
+              screen: 'ChangePassword',
             });
           }}
         />
@@ -43,7 +43,7 @@ const DrawerContent = ({ navigation }) => {
           label='Friends'
           onPress={() => {
             navigation.push('DrawerNavigator', {
-              screen: 'Friends'
+              screen: 'Friends',
             });
           }}
         />
@@ -51,7 +51,7 @@ const DrawerContent = ({ navigation }) => {
           label='Delete Account'
           onPress={() => {
             navigation.push('DrawerNavigator', {
-              screen: 'DeleteAccount'
+              screen: 'DeleteAccount',
             });
           }}
         />
@@ -63,6 +63,7 @@ const DrawerContent = ({ navigation }) => {
           label='LOGOUT'
           onPress={() => {
             // TODO: Add logging out
+            navigation.navigate('Login');
           }}
         />
       </View>

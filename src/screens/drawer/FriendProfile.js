@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 
 import { View, Image, ScrollView } from 'react-native';
@@ -7,7 +8,7 @@ import { UserDataRow, AppBar, Separator, Dialog } from 'components';
 import { deleteIcon } from 'assets/icons';
 import tmpPerson from 'assets/images/tmpPerson.jpg';
 
-const FriendProfile = ({navigation}) => {
+const FriendProfile = ({ navigation }) => {
   const styles = useStyles();
 
   const [friend, setFriend] = useState({
@@ -34,7 +35,9 @@ const FriendProfile = ({navigation}) => {
         <View style={styles.imageContainer}>
           <Image
             style={styles.avatar}
-            source={friend.avatarUri !== null ? { uri: friend.avatarUri } : tmpPerson}
+            source={
+              friend.avatarUri !== null ? { uri: friend.avatarUri } : tmpPerson
+            }
           />
         </View>
         <UserDataRow label='Nick' data={friend.nick} />
