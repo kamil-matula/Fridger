@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 
-import { View, Text, ToastAndroid, ScrollView, Image } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  ToastAndroid,
+  Platform,
+  AlertIOS,
+} from 'react-native';
 import {
   Divider,
   Snackbar,
@@ -70,7 +78,13 @@ const Friends = ({ navigation }) => {
 
   const copyToClipboard = () => {
     Clipboard.setString(userID);
-    ToastAndroid.show('Copied to clipboard!', ToastAndroid.SHORT);
+
+    const msg = 'Copied to clipboard!';
+    if (Platform.OS === 'android') {
+      ToastAndroid.show(msg, ToastAndroid.SHORT);
+    } else {
+      AlertIOS.alert(msg);
+    }
   };
 
   const reject = (id) => {
