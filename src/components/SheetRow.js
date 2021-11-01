@@ -34,14 +34,13 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     height: 24,
     width: 24,
-    marginHorizontal: 8,
-    tintColor: theme.colors.text,
+    tintColor: theme.colors.silverMetallic,
   },
   text: {
     fontSize: 14,
     fontWeight: 'bold',
     color: theme.colors.text,
-    paddingLeft: 16,
+    paddingLeft: 32,
   },
 }));
 
