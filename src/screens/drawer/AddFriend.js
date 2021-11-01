@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 
 import { View, TextInput, Image, Text } from 'react-native';
 import { Divider, useTheme, Snackbar } from 'react-native-paper';
@@ -13,7 +13,7 @@ import {
 import { makeStyles } from 'utils';
 import tmpPerson from 'assets/images/tmpPerson.jpg';
 
-const AddFriend = ({ navigation }) => {
+const AddFriend = () => {
   const theme = useTheme();
   const styles = useStyles();
 
@@ -24,16 +24,6 @@ const AddFriend = ({ navigation }) => {
     name: 'Ardelle',
     surname: 'Coppage',
   });
-
-  useEffect(() => {
-    const blurListener = navigation.addListener('blur', () => {
-      setFound(false);
-      textInput.current.clear();
-    });
-    return blurListener;
-  }, [navigation]);
-
-  let textInput = useRef();
 
   const [found, setFound] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -57,7 +47,6 @@ const AddFriend = ({ navigation }) => {
       <AppBar label='Add friend' />
       <Divider style={styles.divider} />
       <TextInput
-        ref={textInput}
         style={styles.input}
         placeholder='Paste friend ID'
         placeholderTextColor={theme.colors.silverMetallic}

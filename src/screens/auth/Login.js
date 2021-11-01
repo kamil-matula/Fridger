@@ -17,21 +17,21 @@ const Login = ({ navigation }) => {
   });
 
   const rules = {
-    email: {
-      required: 'Email is required',
-      pattern: {
-        value:
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        message: 'Invalid email format',
-      },
-    },
-    password: {
-      required: 'Password is required',
-      minLength: {
-        value: 8,
-        message: 'Password must contain at least 8 characters',
-      },
-    },
+    // email: {
+    //   required: 'Email is required',
+    //   pattern: {
+    //     value:
+    //       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    //     message: 'Invalid email format',
+    //   },
+    // },
+    // password: {
+    //   required: 'Password is required',
+    //   minLength: {
+    //     value: 8,
+    //     message: 'Password must contain at least 8 characters',
+    //   },
+    // },
   };
 
   const login = (data) => {

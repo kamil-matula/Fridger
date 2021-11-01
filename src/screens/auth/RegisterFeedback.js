@@ -4,7 +4,7 @@ import { Text, View, Image } from 'react-native';
 
 import { Button } from 'components';
 import { makeStyles } from 'utils/makeStyles';
-import pidgeon from 'assets/images/pidgeon.png';
+import pigeon from 'assets/images/pigeon.png';
 
 const RegisterFeedback = ({ navigation }) => {
   const styles = useStyles();
@@ -13,12 +13,18 @@ const RegisterFeedback = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Hurrah!</Text>
-        <Text style={styles.text}>You have created an account.{'\n'}Please confirm your email.</Text>
+        <Text style={styles.text}>
+          You have created an account.{'\n'}Please confirm your email.
+        </Text>
       </View>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={pidgeon} />
+        <Image style={styles.image} source={pigeon} />
       </View>
-      <Button label='Next' variant='contained' onPress={() => navigation.replace('DrawerNavigator')} />
+      <Button
+        label='Next'
+        variant='contained'
+        onPress={() => navigation.replace('DrawerNavigator')}
+      />
     </View>
   );
 };

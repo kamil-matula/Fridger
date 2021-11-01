@@ -17,6 +17,7 @@
     "@react-navigation/native": "^6.0.4",
     "@react-navigation/stack": "^6.0.9",
     "expo": "~42.0.1",
+    "expo-clipboard": "~1.1.0",
     "expo-image-picker": "~10.2.2",
     "expo-status-bar": "~1.0.4",
     "prop-types": "^15.7.2",

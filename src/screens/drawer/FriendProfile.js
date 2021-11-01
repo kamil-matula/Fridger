@@ -2,26 +2,30 @@
 import React, { useState } from 'react';
 
 import { View, Image, ScrollView } from 'react-native';
-import { Dialog, Portal, Paragraph } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { UserDataRow, Button, AppBar, Separator } from 'components';
-import deleteIcon from 'assets/images/delete.png';
+import { UserDataRow, AppBar, Separator, Dialog } from 'components';
+import { deleteIcon } from 'assets/icons';
 import tmpPerson from 'assets/images/tmpPerson.jpg';
 
 const FriendProfile = ({ navigation }) => {
   const styles = useStyles();
 
-  const [avatarUri, setAvatarUri] = useState(null);
-  const [nick, setNick] = useState('Minkx');
-  const [name, setName] = useState('Ardelle');
-  const [surname, setSurname] = useState('Coppage');
+  const [friend, setFriend] = useState({
+    avatarUri: null,
+    nick: 'Minkx',
+    name: 'Ardelle',
+    surname: 'Coppage',
+  });
 
   const [dialogVisible, setDialogVisible] = useState(false);
 
   const removeFriend = () => {
     setDialogVisible(false);
-    navigation.goBack();
+    navigation.pop();
+  };
+  const cancelRemoveFriend = () => {
+    setDialogVisible(false);
   };
 
   return (
@@ -31,38 +35,26 @@ const FriendProfile = ({ navigation }) => {
         <View style={styles.imageContainer}>
           <Image
             style={styles.avatar}
-            source={avatarUri !== null ? { uri: avatarUri } : tmpPerson}
+            source={
+              friend.avatarUri !== null ? { uri: friend.avatarUri } : tmpPerson
+            }
           />
         </View>
-        <UserDataRow label='Nick' data={nick} />
+        <UserDataRow label='Nick' data={friend.nick} />
         <Separator height={32} />
-        <UserDataRow label='Name' data={name} />
+        <UserDataRow label='Name' data={friend.name} />
         <Separator height={32} />
-        <UserDataRow label='Surname' data={surname} />
+        <UserDataRow label='Surname' data={friend.surname} />
       </ScrollView>
-
-      <Portal>
-        <Dialog
-          style={styles.dialog}
-          visible={dialogVisible}
-          onDismiss={() => {
-            setDialogVisible(false);
-          }}
-        >
-          <Dialog.Title>Remove from friends</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>
-              Are you sure you want to remove {nick} from friends? This action
-              cannot be undone.
-            </Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button label='remove' color='red' onPress={removeFriend} />
-            <View style={styles.separatorHorizontal8} />
-            <Button label='cancel' onPress={() => setDialogVisible(false)} />
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+      <Dialog
+        title='Remove from friends'
+        paragraph={`Are you sure you want to remove ${friend.nick} from friends? This action cannot be undone.`}
+        visibilityState={[dialogVisible, setDialogVisible]}
+        label1='remove'
+        onPressLabel1={removeFriend}
+        label2='cancel'
+        onPressLabel2={cancelRemoveFriend}
+      />
     </View>
   );
 };
@@ -86,12 +78,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 80,
     borderWidth: 2,
     borderColor: theme.colors.silverMetallic,
-  },
-  dialog: {
-    elevation: 0,
-  },
-  separatorHorizontal8: {
-    marginHorizontal: 4,
   },
 }));
 

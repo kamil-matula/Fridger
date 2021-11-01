@@ -47,7 +47,7 @@ const FridgeDetailsRow = ({ product }) => {
 
 FridgeDetailsRow.propTypes = {
   product: PropTypes.object,
-}
+};
 
 const useStyles = makeStyles((theme) => ({
   container: {
