@@ -11,9 +11,7 @@ import { Divider } from 'react-native-paper';
 const BottomSheet = ({ reference, title, children }) => {
   const styles = useStyles();
 
-  let height = title ? 56 : 16;
-  height += React.Children.count(children) * 56;
-  height += 16;
+  const height = (title ? 56 : 16) + React.Children.count(children) * 56 + 16;
 
   return (
     <RBSheet
@@ -23,13 +21,14 @@ const BottomSheet = ({ reference, title, children }) => {
       animationType='fade'
       customStyles={styles}
     >
-      {title && (
+      {title ? (
         <>
           <Text style={styles.title}>{title}</Text>
           <Divider style={styles.divider} />
         </>
+      ) : (
+        <Separator />
       )}
-      {!title && <Separator />}
       {children}
     </RBSheet>
   );
