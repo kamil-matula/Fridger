@@ -5,8 +5,8 @@ import { Text } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
-import forwardIcon from '../../assets/images/forward.png';
-import { makeStyles } from '../utils';
+import forwardIcon from 'assets/icons/forward.png';
+import { makeStyles } from 'utils';
 
 const DrawerRow = ({ onPress, label }) => {
   const styles = useStyles();

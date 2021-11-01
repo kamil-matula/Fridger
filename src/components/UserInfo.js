@@ -9,6 +9,7 @@ import { makeStyles } from 'utils';
 const UserInfo = ({
   title,
   subtitle,
+  subtitleTint,
   avatarURI,
   onClick,
   variant = 'small',
@@ -19,7 +20,7 @@ const UserInfo = ({
   onPressIcon2 = null,
   iconTint2,
 }) => {
-  const styles = useStyles({ variant, iconTint1, iconTint2 });
+  const styles = useStyles({ subtitleTint, variant, iconTint1, iconTint2 });
 
   return (
     <TouchableRipple onPress={onClick}>
@@ -56,76 +57,79 @@ const UserInfo = ({
 UserInfo.propTypes = {
   title: PropTypes.string.isRequired,
   subtitle: PropTypes.string.isRequired,
+  subtitleTint: PropTypes.string,
   avatarURI: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   variant: PropTypes.oneOf(['small', 'big']),
   icon1: PropTypes.number,
-  iconTint1: PropTypes.number,
+  iconTint1: PropTypes.string,
   onPressIcon1: PropTypes.func,
   icon2: PropTypes.number,
   onPressIcon2: PropTypes.func,
-  iconTint2: PropTypes.number,
+  iconTint2: PropTypes.string,
 };
 
-const useStyles = makeStyles((theme, { variant, iconTint1, iconTint2 }) => {
-  const obj = {
-    container: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    dataContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 16,
-    },
-    textContainer: {
-      marginLeft: 16,
-    },
-    iconsContainer: {
-      flexDirection: 'row',
-      padding: 16,
-    },
-    title: {
-      color: theme.colors.text,
-    },
-    subtitle: {
-      color: theme.colors.silverMetallic,
-    },
-    avatar: {
-      borderRadius: 32,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.colors.silverMetallic,
-    },
-    icon1: {
-      height: 24,
-      width: 24,
-      margin: 8,
-      tintColor: iconTint1,
-    },
-    icon2: {
-      height: 24,
-      width: 24,
-      margin: 8,
-      tintColor: iconTint2,
-    },
-    separatorHorizontal16: {
-      marginHorizontal: 8,
-    },
-  };
-  if (variant === 'small') {
-    obj.avatar.width = 32;
-    obj.avatar.height = 32;
-    obj.title.fontSize = 14;
-    obj.subtitle.fontSize = 12;
+const useStyles = makeStyles(
+  (theme, { subtitleTint, variant, iconTint1, iconTint2 }) => {
+    const obj = {
+      container: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      },
+      dataContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+      },
+      textContainer: {
+        marginLeft: 16,
+      },
+      iconsContainer: {
+        flexDirection: 'row',
+        padding: 16,
+      },
+      title: {
+        color: theme.colors.text,
+      },
+      subtitle: {
+        color: subtitleTint || theme.colors.silverMetallic,
+      },
+      avatar: {
+        borderRadius: 32,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: theme.colors.silverMetallic,
+      },
+      icon1: {
+        height: 24,
+        width: 24,
+        margin: 8,
+        tintColor: iconTint1,
+      },
+      icon2: {
+        height: 24,
+        width: 24,
+        margin: 8,
+        tintColor: iconTint2,
+      },
+      separatorHorizontal16: {
+        marginHorizontal: 8,
+      },
+    };
+    if (variant === 'small') {
+      obj.avatar.width = 32;
+      obj.avatar.height = 32;
+      obj.title.fontSize = 14;
+      obj.subtitle.fontSize = 12;
+    }
+    if (variant === 'big') {
+      obj.avatar.width = 64;
+      obj.avatar.height = 64;
+      obj.title.fontSize = 24;
+      obj.subtitle.fontSize = 18;
+    }
+    return obj;
   }
-  if (variant === 'big') {
-    obj.avatar.width = 64;
-    obj.avatar.height = 64;
-    obj.title.fontSize = 24;
-    obj.subtitle.fontSize = 18;
-  }
-  return obj;
-});
+);
 
 export default UserInfo;
