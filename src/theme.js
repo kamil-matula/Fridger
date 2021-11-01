@@ -15,5 +15,6 @@ export const CustomTheme = {
     blueJeans: '#5DADEC', // buttons
     darkGreen: '#006400', // green circles
     tartOrange: '#FF4D4D', // buttons
+    blackSemiTransparent: '#00000080',
   },
 };
