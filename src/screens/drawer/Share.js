@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 
-import { View, Image, ScrollView, Text } from 'react-native';
-import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
+import { View, ScrollView } from 'react-native';
+import { Divider, useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { UserInfo, AppBar, Dialog } from 'components';
-import { add, forward } from 'assets/icons';
+import { UserInfo, AppBar } from 'components';
+import { add } from 'assets/icons';
 import { friendsList } from './tmpData';
 
 const Share = () => {
@@ -14,10 +14,9 @@ const Share = () => {
   const theme = useTheme();
 
   const [friends, setFriends] = useState(friendsList);
-  const [friendsCount, setFriendsCount] = useState(4);
 
-  const addFriend = () => {
-    // TODO
+  const addFriend = (friend) => {
+    // TODO: Send request to API to share fridge/shopping list with friend
   };
 
   return (
@@ -25,19 +24,6 @@ const Share = () => {
       <AppBar label='share with friends' />
       <Divider style={styles.divider} />
       <ScrollView>
-        <TouchableRipple
-          onPress={() => {
-            /* TODO */
-          }}
-        >
-          <View style={styles.infoContainer}>
-            <Text
-              style={styles.text}
-            >{`Shared for ${friendsCount} friends`}</Text>
-            <Image style={styles.icon} source={forward} />
-          </View>
-        </TouchableRipple>
-        <Divider style={styles.divider} />
         {friends.map((e) => (
           <UserInfo
             key={e.id}
