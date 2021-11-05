@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { FlatList, View, Text, Image } from 'react-native';
 import { Divider, TouchableRipple } from 'react-native-paper';
 
 import { AppBar, FloatingActionButton, FridgeDetailsRow } from 'components';
 import { makeStyles } from 'utils';
-import more from 'assets/images/more.png';
-import down from 'assets/images/down.png';
-import up from 'assets/images/up.png';
+import {
+  group,
+  groupAdd,
+  deleteIcon,
+  logout,
+  more,
+  down,
+  up,
+} from 'assets/icons';
+import BottomSheet from 'components/BottomSheet';
+import SheetRow from 'components/SheetRow';
 
 const DATA = [
   {
@@ -53,6 +61,8 @@ const FridgeDetails = () => {
   // eslint-disable-next-line no-unused-vars
   const [sortingDirection, setSortingDirection] = useState('asc');
 
+  const refBS = useRef(null);
+
   return (
     <View style={styles.container}>
       {/* TODO: Use label and items from specific fridge */}
@@ -60,7 +70,7 @@ const FridgeDetails = () => {
         label='Home'
         icon1={more}
         onPressIcon1={() => {
-          // TODO: Add displaying modal bottom sheet with fridge actions
+          refBS.current.open();
         }}
       />
       <Divider style={styles.divider} />
@@ -88,6 +98,12 @@ const FridgeDetails = () => {
           // TODO: Add navigating to "ADD PRODUCT PAGE"
         }}
       />
+      <BottomSheet reference={refBS}>
+        <SheetRow icon={groupAdd} text='Share' onPress={() => {}} />
+        <SheetRow icon={group} text='Manage people' onPress={() => {}} />
+        <SheetRow icon={deleteIcon} text='Delete fridge' onPress={() => {}} />
+        <SheetRow icon={logout} text='Quit' onPress={() => {}} />
+      </BottomSheet>
     </View>
   );
 };
