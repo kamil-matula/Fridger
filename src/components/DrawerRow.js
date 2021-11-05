@@ -5,7 +5,7 @@ import { Text } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
-import forwardIcon from 'assets/images/forward.png';
+import { forward } from 'assets/icons';
 import { makeStyles } from 'utils';
 
 const DrawerRow = ({ onPress, label }) => {
@@ -15,7 +15,7 @@ const DrawerRow = ({ onPress, label }) => {
     <TouchableOpacity onPress={onPress}>
       <View style={styles.row}>
         <Text style={styles.title}>{label}</Text>
-        <Image source={forwardIcon} style={styles.icon} />
+        <Image source={forward} style={styles.icon} />
       </View>
     </TouchableOpacity>
   );

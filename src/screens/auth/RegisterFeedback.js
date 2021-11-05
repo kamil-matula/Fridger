@@ -4,7 +4,7 @@ import { Text, View, Image } from 'react-native';
 
 import { Button } from 'components';
 import { makeStyles } from 'utils/makeStyles';
-import pigeon from 'assets/images/pigeon.png';
+import { pigeon } from 'assets/images';
 
 const RegisterFeedback = ({ navigation }) => {
   const styles = useStyles();

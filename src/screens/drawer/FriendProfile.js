@@ -6,7 +6,7 @@ import { View, Image, ScrollView } from 'react-native';
 import { makeStyles } from 'utils';
 import { UserDataRow, AppBar, Separator, Dialog } from 'components';
 import { deleteIcon } from 'assets/icons';
-import tmpPerson from 'assets/images/tmpPerson.jpg';
+import { tmpPerson } from 'assets/images';
 
 const FriendProfile = ({ navigation }) => {
   const styles = useStyles();

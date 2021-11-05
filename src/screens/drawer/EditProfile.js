@@ -12,8 +12,8 @@ import {
   ScrollViewLayout,
   Separator,
 } from 'components';
-import tmpPerson from 'assets/images/tmpPerson.jpg';
-import edit from 'assets/images/edit.png';
+import { tmpPerson } from 'assets/images';
+import { edit } from 'assets/icons';
 
 const EditProfile = ({ navigation }) => {
   const styles = useStyles();

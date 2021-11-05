@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 
 import {
   View,
@@ -10,9 +9,9 @@ import {
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useController } from 'react-hook-form';
+import PropTypes from 'prop-types';
 
-import visibility from 'assets/images/visibility.png';
-import visibilityOff from 'assets/images/visibility_off.png';
+import { visibilityOn, visibilityOff } from 'assets/icons';
 import { makeStyles } from 'utils';
 import Separator from './Separator';
 
@@ -68,7 +67,7 @@ const InputField = ({
         {secure && (
           <TouchableWithoutFeedback onPress={passwordVisibilityOnPress}>
             <Image
-              source={secureTextEntry ? visibilityOff : visibility}
+              source={secureTextEntry ? visibilityOff : visibilityOn}
               style={styles.icon}
             />
           </TouchableWithoutFeedback>

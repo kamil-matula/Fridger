@@ -5,7 +5,7 @@ import { TouchableRipple } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
-import reduce from 'assets/images/reduce.png';
+import { reduce } from 'assets/icons';
 
 const FridgeDetailsRow = ({ product }) => {
   const styles = useStyles();

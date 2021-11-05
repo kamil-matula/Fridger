@@ -4,8 +4,7 @@ import { Appbar, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
 import PropTypes from 'prop-types';
 
-import backIcon from 'assets/images/back.png';
-import drawerIcon from 'assets/images/navigation/drawer.png';
+import { back, drawer } from 'assets/icons';
 import { makeStyles } from 'utils';
 
 const AppBar = ({
@@ -24,14 +23,14 @@ const AppBar = ({
     <Appbar.Header style={styles.bar}>
       {isDrawer && (
         <Appbar.Action
-          icon={drawerIcon}
+          icon={drawer}
           onPress={() => navigation.openDrawer()}
           color={colors.silverMetallic}
         />
       )}
       {!isDrawer && (
         <Appbar.Action
-          icon={backIcon}
+          icon={back}
           onPress={() => navigation.pop()}
           color={colors.text}
         />

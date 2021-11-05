@@ -11,7 +11,7 @@ import {
   Separator,
 } from 'components';
 import { makeStyles } from 'utils';
-import tmpPerson from 'assets/images/tmpPerson.jpg';
+import { tmpPerson } from 'assets/images';
 
 const AddFriend = () => {
   const theme = useTheme();
