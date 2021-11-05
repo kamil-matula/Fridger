@@ -22,7 +22,10 @@
     "react/state-in-constructor": 0,
     "react/static-property-placement": 0,
     "react/style-prop-object": 0,
-    "react/prop-types": ["error", { "ignore": ["navigation", "focused"] }],
+    "react/prop-types": [
+      "error",
+      { "ignore": ["route", "navigation", "focused"] }
+    ],
     "no-use-before-define": 0,
     "no-useless-escape": 0,
     "no-alert": 0,

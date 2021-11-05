@@ -23,8 +23,12 @@ import {
 } from 'assets/icons';
 import { productsInFridgeList } from './tmpData';
 
-const FridgeDetails = ({ navigation }) => {
+const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
+
+  // Params from navigation
+  // (TODO: Replace with more appropriate params):
+  const { title } = route.params;
 
   // Sorting:
   // eslint-disable-next-line no-unused-vars
@@ -52,7 +56,7 @@ const FridgeDetails = ({ navigation }) => {
     <View style={styles.container}>
       {/* MAIN CONTENT: */}
       <AppBar
-        label='Home'
+        label={title}
         icon1={more}
         onPressIcon1={() => {
           // Open dialog with fridge actions:
@@ -104,7 +108,7 @@ const FridgeDetails = ({ navigation }) => {
       {/* DELETING FRIDGE: */}
       <Dialog
         title='Delete fridge'
-        paragraph='Are you sure you want to delete fridge Home? This action cannot be undone.'
+        paragraph={`Are you sure you want to delete fridge ${title}? This action cannot be undone.`}
         visibilityState={[dialogVisible, setDialogVisible]}
         label1='delete'
         onPressLabel1={removeFridge}

@@ -24,7 +24,7 @@ const FridgeRow = ({ title }) => {
     <View>
       <TouchableRipple
         onPress={() => {
-          navigation.navigate('FridgeDetails');
+          navigation.navigate('FridgeDetails', { title });
         }}
       >
         <View style={styles.container}>
