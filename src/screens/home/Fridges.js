@@ -5,12 +5,7 @@ import { Divider } from 'react-native-paper';
 
 import { AppBar, FridgeRow, FloatingActionButton } from 'components';
 import { makeStyles } from 'utils';
-
-const DATA = [
-  { id: '1', title: 'Home' },
-  { id: '2', title: 'Bunker' },
-  { id: '3', title: 'My fridge' },
-];
+import { fridgesList } from './tmpData';
 
 const Fridges = ({ navigation }) => {
   const styles = useStyles();
@@ -21,7 +16,7 @@ const Fridges = ({ navigation }) => {
       <Divider style={styles.divider} />
       <FlatList
         style={styles.list}
-        data={DATA}
+        data={fridgesList}
         renderItem={({ item }) => <FridgeRow title={item.title} />}
         keyExtractor={(item) => item.id}
       />

@@ -12,15 +12,19 @@ const FriendProfile = ({ navigation }) => {
   const styles = useStyles();
 
   const [friend, setFriend] = useState({
+    // TODO: Replace with real data (passed via navigation)
     avatarUri: null,
     nick: 'Minkx',
     name: 'Ardelle',
     surname: 'Coppage',
   });
 
+  // Deleting:
   const [dialogVisible, setDialogVisible] = useState(false);
-
   const removeFriend = () => {
+    // TODO: Send request to API and wait for removing friend from the list
+
+    // Hide dialog and go back:
     setDialogVisible(false);
     navigation.pop();
   };

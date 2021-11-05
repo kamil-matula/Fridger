@@ -2,11 +2,11 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { Text } from 'react-native';
+import { Divider } from 'react-native-paper';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { makeStyles } from 'utils';
-import { Separator } from 'components';
-import { Divider } from 'react-native-paper';
+import Separator from './Separator';
 
 const BottomSheet = ({ reference, title, children }) => {
   const styles = useStyles();
