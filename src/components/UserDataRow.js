@@ -11,14 +11,14 @@ const UserDataRow = ({ label, data }) => {
   return (
     <>
       <Text style={styles.label}>{label}</Text>
-      <Text style={styles.data}>{data}</Text>
+      <Text style={styles.data}>{data ?? '-'}</Text>
     </>
   );
 };
 
 UserDataRow.propTypes = {
   label: PropTypes.string.isRequired,
-  data: PropTypes.string.isRequired,
+  data: PropTypes.string,
 };
 
 const useStyles = makeStyles((theme) => ({

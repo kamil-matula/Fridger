@@ -162,7 +162,9 @@ const Friends = ({ navigation }) => {
               <UserInfo
                 key={e.id}
                 title={e.nick}
-                subtitle={`${e.name} ${e.surname}`}
+                subtitle={
+                  e.name ? `${e.name} ${e.surname ? e.surname : ''}` : null
+                }
                 avatarURI={e.avatar}
                 onClick={() => navigateToFriendProfile(e)}
                 variant='small'
@@ -183,7 +185,7 @@ const Friends = ({ navigation }) => {
           <UserInfo
             key={e.id}
             title={e.nick}
-            subtitle={`${e.name} ${e.surname}`}
+            subtitle={e.name ? `${e.name} ${e.surname ? e.surname : ''}` : null}
             avatarURI={e.avatar}
             onClick={() => navigateToFriendProfile(e)}
             variant='small'

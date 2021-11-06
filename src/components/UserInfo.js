@@ -29,7 +29,7 @@ const UserInfo = ({
           <Image style={styles.avatar} source={{ uri: avatarURI }} />
           <View style={styles.textContainer}>
             <Text style={styles.title}>{title}</Text>
-            <Text style={styles.subtitle}>{subtitle}</Text>
+            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
           </View>
         </View>
         <View style={styles.iconsContainer}>
@@ -56,7 +56,7 @@ const UserInfo = ({
 
 UserInfo.propTypes = {
   title: PropTypes.string.isRequired,
-  subtitle: PropTypes.string.isRequired,
+  subtitle: PropTypes.string,
   subtitleTint: PropTypes.string,
   avatarURI: PropTypes.string.isRequired,
   onClick: PropTypes.func,

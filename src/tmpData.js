@@ -33,8 +33,6 @@ export const friendsList = [
     id: 3,
     avatar: tmp,
     nick: 'Minkx3',
-    name: 'Ardelle',
-    surname: 'Coppage',
     permission: 'administrator',
   },
   {
