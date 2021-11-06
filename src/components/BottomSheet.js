@@ -3,9 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Text } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import Separator from 'components/Separator';
 
 import { makeStyles } from 'utils';
-import { Separator } from 'components';
 import { Divider } from 'react-native-paper';
 
 const BottomSheet = ({ reference, title, children }) => {

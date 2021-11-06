@@ -9,3 +9,5 @@ export { default as logout } from './logout.png';
 export { default as up } from './up.png';
 export { default as down } from './down.png';
 export { default as more } from './more.png';
+export { default as forward } from './forward.png';
+export { default as check } from './check.png';
