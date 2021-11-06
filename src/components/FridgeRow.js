@@ -7,14 +7,14 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 import {
-  breadIcon,
-  cheeseIcon,
-  eggsIcon,
-  fruitsIcon,
-  hamIcon,
-  milkIcon,
-  vegetablesIcon,
-} from 'assets/images/food';
+  bread,
+  cheese,
+  eggs,
+  fruits,
+  ham,
+  milk,
+  vegetables,
+} from 'assets/icons/food';
 
 const FridgeRow = ({ title }) => {
   const styles = useStyles();
@@ -24,27 +24,21 @@ const FridgeRow = ({ title }) => {
     <View>
       <TouchableRipple
         onPress={() => {
-          navigation.navigate('FridgeDetails');
+          navigation.navigate('FridgeDetails', { title });
         }}
       >
         <View style={styles.container}>
           <Text style={styles.text}>{title}</Text>
-          {/* TODO: Create a component for these images and pass some data to it (to render appropriate circles) */}
+          {/* TODO: Replace list of icons with something new as we no longer use Food Supplies */}
           <View style={styles.images}>
-            {[
-              vegetablesIcon,
-              fruitsIcon,
-              hamIcon,
-              cheeseIcon,
-              breadIcon,
-              eggsIcon,
-              milkIcon,
-            ].map((item, index) => (
-              <View key={`foodicon-${index}`}>
-                <Image source={item} style={styles.icon} />
-                <View style={styles.circle} />
-              </View>
-            ))}
+            {[vegetables, fruits, ham, cheese, bread, eggs, milk].map(
+              (item, index) => (
+                <View key={`foodicon-${index}`}>
+                  <Image source={item} style={styles.icon} />
+                  <View style={styles.circle} />
+                </View>
+              )
+            )}
           </View>
         </View>
       </TouchableRipple>

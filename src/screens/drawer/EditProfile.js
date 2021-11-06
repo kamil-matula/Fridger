@@ -12,8 +12,8 @@ import {
   ScrollViewLayout,
   Separator,
 } from 'components';
-import tmpPerson from 'assets/images/tmpPerson.jpg';
-import edit from 'assets/images/edit.png';
+import { tmpPerson } from 'assets/images';
+import { edit } from 'assets/icons';
 
 const EditProfile = ({ navigation }) => {
   const styles = useStyles();
@@ -65,25 +65,30 @@ const EditProfile = ({ navigation }) => {
   };
 
   const saveChanges = (data) => {
+    // TODO: Send request to API to update profile
     console.log('editProfile', data);
+
+    // Go back to Home Page:
     navigation.goBack();
   };
 
+  // Changing avatar:
   const openImagePickerAsync = async () => {
+    // Checking if there are permissions to browse user's images:
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
-
     if (permissionResult.granted === false) {
       alert('Permission to access camera roll is required!');
       return;
     }
 
+    // Opening file browser to choose new image:
     const pickerResult = await ImagePicker.launchImageLibraryAsync();
-
     if (pickerResult.cancelled === true) {
       return;
     }
 
+    // Setting new image:
     setValue('avatar', pickerResult.uri);
   };
 
@@ -91,6 +96,7 @@ const EditProfile = ({ navigation }) => {
     <View style={styles.container}>
       <AppBar label='Edit profile' />
       <ScrollViewLayout>
+        {/* Input fields and image picker */}
         <View>
           <View style={styles.imageContainer}>
             <TouchableOpacity onPress={openImagePickerAsync}>
@@ -145,6 +151,8 @@ const EditProfile = ({ navigation }) => {
           />
           <Separator height={32} />
         </View>
+
+        {/* Button */}
         <View>
           <Button
             label='save changes'
@@ -185,7 +193,7 @@ const useStyles = makeStyles((theme) => ({
   badge: {
     width: 32,
     height: 32,
-    tintColor: theme.colors.text,
+    tintColor: theme.colors.white,
   },
 }));
 

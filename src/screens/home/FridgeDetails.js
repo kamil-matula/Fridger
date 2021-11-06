@@ -9,6 +9,7 @@ import {
   FridgeDetailsRow,
   BottomSheet,
   SheetRow,
+  Dialog,
 } from 'components';
 import { makeStyles } from 'utils';
 import {
@@ -20,60 +21,45 @@ import {
   down,
   up,
 } from 'assets/icons';
+import { productsInFridgeList } from 'tmpData';
 
-const DATA = [
-  {
-    id: 1,
-    name: 'Pain de mie à la farine complète',
-    producer: 'La Boulangère Bio',
-    currentQuantity: 200,
-    maxQuantity: 500,
-    quantityType: 'g',
-    expirationDate: '31.12.2025',
-    image:
-      'https://world.openfoodfacts.org/images/products/376/004/979/0214/front_fr.132.full.jpg',
-  },
-  {
-    id: 2,
-    name: 'Pain de mie à la farine complète',
-    producer: 'La Boulangère Bio',
-    currentQuantity: 200,
-    maxQuantity: 500,
-    quantityType: 'g',
-    expirationDate: '31.12.2025',
-    image:
-      'https://world.openfoodfacts.org/images/products/376/004/979/0214/front_fr.132.full.jpg',
-  },
-  {
-    id: 3,
-    name: 'Pain de mie à la farine complète',
-    producer: 'La Boulangère Bio',
-    currentQuantity: 200,
-    maxQuantity: 500,
-    quantityType: 'g',
-    expirationDate: '31.12.2025',
-    image:
-      'https://world.openfoodfacts.org/images/products/376/004/979/0214/front_fr.132.full.jpg',
-  },
-];
-
-const FridgeDetails = ({ navigation }) => {
+const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
+  // Params from navigation
+  // (TODO: Replace with more appropriate params):
+  const { title } = route.params;
+
+  // Sorting:
   // eslint-disable-next-line no-unused-vars
   const [sortingCategoryName, setSortingCategoryName] = useState('Name');
   // eslint-disable-next-line no-unused-vars
   const [sortingDirection, setSortingDirection] = useState('asc');
 
+  // Deleting:
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const removeFridge = () => {
+    // TODO: Send request to API and wait for removing fridge from the list
+
+    // Hide dialog and go back:
+    setDialogVisible(false);
+    navigation.pop();
+  };
+  const cancelRemoveFridge = () => {
+    setDialogVisible(false);
+  };
+
+  // Other actions:
   const refBS = useRef(null);
 
   return (
     <View style={styles.container}>
-      {/* TODO: Use label and items from specific fridge */}
+      {/* Main content */}
       <AppBar
-        label='Home'
+        label={title}
         icon1={more}
         onPressIcon1={() => {
+          // Open dialog with fridge actions:
           refBS.current.open();
         }}
       />
@@ -93,7 +79,7 @@ const FridgeDetails = ({ navigation }) => {
       </TouchableRipple>
       <FlatList
         style={styles.list}
-        data={DATA}
+        data={productsInFridgeList}
         renderItem={({ item }) => <FridgeDetailsRow product={item} />}
         keyExtractor={(item) => item.id.toString()}
       />
@@ -102,32 +88,49 @@ const FridgeDetails = ({ navigation }) => {
           // TODO: Add navigating to "ADD PRODUCT PAGE"
         }}
       />
+
+      {/* Fridge actions */}
       <BottomSheet reference={refBS}>
         <SheetRow
           icon={groupAdd}
           text='Share'
           onPress={() => {
+            // Hide bottom sheet and change screen:
             refBS.current.close();
-            navigation.push('DrawerNavigator', {
-              screen: 'Share',
-              params: { fridgeID: 1 },
-            });
+            navigation.navigate('Share', { fridgeID: 1 });
           }}
         />
         <SheetRow
           icon={group}
           text='Manage people'
           onPress={() => {
+            // Hide bottom sheet and change screen:
             refBS.current.close();
-            navigation.push('DrawerNavigator', {
-              screen: 'EditPermission',
-              params: { fridgeID: 1 },
-            });
+            navigation.navigate('EditPermissions', { fridgeID: 1 });
           }}
         />
-        <SheetRow icon={deleteIcon} text='Delete fridge' onPress={() => {}} />
+        <SheetRow
+          icon={deleteIcon}
+          text='Delete fridge'
+          onPress={() => {
+            // Hide bottom sheet and show dialog responsible for deleting fridge:
+            refBS.current.close();
+            setDialogVisible(true);
+          }}
+        />
         <SheetRow icon={logout} text='Quit' onPress={() => {}} />
       </BottomSheet>
+
+      {/* Deleting fridge */}
+      <Dialog
+        title='Delete fridge'
+        paragraph={`Are you sure you want to delete fridge ${title}? This action cannot be undone.`}
+        visibilityState={[dialogVisible, setDialogVisible]}
+        label1='delete'
+        onPressLabel1={removeFridge}
+        label2='cancel'
+        onPressLabel2={cancelRemoveFridge}
+      />
     </View>
   );
 };

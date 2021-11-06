@@ -44,7 +44,10 @@ const Register = ({ navigation }) => {
   };
 
   const register = (data) => {
+    // TODO: Send data to API to register, get token and stay logged in
     console.log('register', data);
+
+    // Go to page with confirmation of creating account:
     navigation.reset({
       index: 0,
       routes: [{ name: 'RegisterFeedback' }],
@@ -53,6 +56,7 @@ const Register = ({ navigation }) => {
 
   return (
     <ScrollViewLayout>
+      {/* Input fields */}
       <View>
         <Text style={styles.header}>Register</Text>
         <InputField
@@ -99,6 +103,8 @@ const Register = ({ navigation }) => {
         />
         <Separator height={32} />
       </View>
+
+      {/* Buttons */}
       <View>
         <Button
           label='Register'
@@ -121,13 +127,13 @@ const useStyles = makeStyles((theme) => ({
   header: {
     marginVertical: 64,
     fontSize: 36,
-    color: theme.colors.text,
+    color: theme.colors.white,
     textAlign: 'center',
   },
   text: {
     marginVertical: 16,
     fontSize: 14,
-    color: theme.colors.text,
+    color: theme.colors.white,
     textAlign: 'center',
   },
 }));

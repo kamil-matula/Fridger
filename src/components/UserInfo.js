@@ -2,7 +2,7 @@ import React from 'react';
 
 import { View, Image, StyleSheet } from 'react-native';
 import { Text, TouchableRipple } from 'react-native-paper';
-import PropTypes from 'prop-types';
+import PropTypes, { number, string } from 'prop-types';
 
 import { makeStyles } from 'utils';
 
@@ -29,7 +29,7 @@ const UserInfo = ({
           <Image style={styles.avatar} source={{ uri: avatarURI }} />
           <View style={styles.textContainer}>
             <Text style={styles.title}>{title}</Text>
-            <Text style={styles.subtitle}>{subtitle}</Text>
+            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
           </View>
         </View>
         <View style={styles.iconsContainer}>
@@ -56,21 +56,22 @@ const UserInfo = ({
 
 UserInfo.propTypes = {
   title: PropTypes.string.isRequired,
-  subtitle: PropTypes.string.isRequired,
+  subtitle: PropTypes.string,
   subtitleTint: PropTypes.string,
   avatarURI: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   variant: PropTypes.oneOf(['small', 'big']),
   icon1: PropTypes.number,
-  iconTint1: PropTypes.string,
+  iconTint1: PropTypes.oneOfType([number, string]),
   onPressIcon1: PropTypes.func,
   icon2: PropTypes.number,
+  iconTint2: PropTypes.oneOfType([number, string]),
   onPressIcon2: PropTypes.func,
-  iconTint2: PropTypes.string,
 };
 
 const useStyles = makeStyles(
   (theme, { subtitleTint, variant, iconTint1, iconTint2 }) => {
+    // Common styles:
     const obj = {
       container: {
         flexDirection: 'row',
@@ -90,7 +91,7 @@ const useStyles = makeStyles(
         padding: 16,
       },
       title: {
-        color: theme.colors.text,
+        color: theme.colors.white,
       },
       subtitle: {
         color: subtitleTint || theme.colors.silverMetallic,
@@ -116,6 +117,8 @@ const useStyles = makeStyles(
         marginHorizontal: 8,
       },
     };
+
+    // Different sizings:
     if (variant === 'small') {
       obj.avatar.width = 32;
       obj.avatar.height = 32;

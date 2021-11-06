@@ -2,15 +2,16 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { Text } from 'react-native';
+import { Divider } from 'react-native-paper';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import Separator from 'components/Separator';
 
 import { makeStyles } from 'utils';
-import { Divider } from 'react-native-paper';
+import Separator from './Separator';
 
 const BottomSheet = ({ reference, title, children }) => {
   const styles = useStyles();
 
+  // Height of component depends on number of its children:
   const height = (title ? 56 : 16) + React.Children.count(children) * 56 + 16;
 
   return (
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     textAlignVertical: 'center',
     fontSize: 18,
     fontWeight: 'bold',
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
   wrapper: {
     backgroundColor: theme.colors.blackSemiTransparent,
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
   },
   divider: {
-    backgroundColor: theme.colors.text,
+    backgroundColor: theme.colors.white,
   },
 }));
 

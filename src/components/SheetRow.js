@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   text: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: theme.colors.text,
+    color: theme.colors.white,
     paddingLeft: 32,
   },
 }));

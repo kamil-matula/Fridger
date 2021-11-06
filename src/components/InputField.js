@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 
 import {
   View,
@@ -10,9 +9,9 @@ import {
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useController } from 'react-hook-form';
+import PropTypes from 'prop-types';
 
-import visibility from 'assets/images/visibility.png';
-import visibilityOff from 'assets/images/visibility_off.png';
+import { visibilityOn, visibilityOff } from 'assets/icons';
 import { makeStyles } from 'utils';
 import Separator from './Separator';
 
@@ -26,24 +25,25 @@ const InputField = ({
   onSubmitEditing,
   ...props
 }) => {
+  const styles = useStyles({ invalid, isFocused, variant });
   const theme = useTheme();
+
+  // Validation:
   const {
     field,
     fieldState: { invalid, error },
   } = useController({ name, control, rules });
 
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  // Handle focusing:
   const [isFocused, setIsFocused] = useState(false);
-
-  const styles = useStyles({ invalid, isFocused, variant });
-
   const handleOnFocus = () => setIsFocused(true);
-
   const handleOnBlur = () => {
     setIsFocused(false);
     field.onBlur();
   };
 
+  // Password hiding:
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
 
   return (
@@ -68,7 +68,7 @@ const InputField = ({
         {secure && (
           <TouchableWithoutFeedback onPress={passwordVisibilityOnPress}>
             <Image
-              source={secureTextEntry ? visibilityOff : visibility}
+              source={secureTextEntry ? visibilityOff : visibilityOn}
               style={styles.icon}
             />
           </TouchableWithoutFeedback>
@@ -96,7 +96,7 @@ InputField.propTypes = {
 
 const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
   const borderColor = (() => {
-    if (isFocused) return theme.colors.text;
+    if (isFocused) return theme.colors.white;
     if (invalid) return theme.colors.tartOrange;
     if (variant === 'account') return 'transparent';
     return theme.colors.whiteSemiTransparent;
@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
     label: {
       fontSize: 14,
       marginBottom: 8,
-      color: theme.colors.text,
+      color: theme.colors.white,
     },
     inputContainer: {
       flexDirection: 'row',
@@ -120,7 +120,7 @@ const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
         variant === 'data' ? 'transparent' : theme.colors.primary,
     },
     input: {
-      color: theme.colors.text,
+      color: theme.colors.white,
       fontSize: 14,
       includeFontPadding: false,
       flex: 1,

@@ -5,7 +5,7 @@ import { TouchableRipple } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
-import reduce from 'assets/images/reduce.png';
+import { reduce } from 'assets/icons';
 
 const FridgeDetailsRow = ({ product }) => {
   const styles = useStyles();
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
   name: {
     fontSize: 14,
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
   producer: {
     fontSize: 12,

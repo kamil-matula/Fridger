@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
   },
   text: {
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
 }));
 

@@ -8,15 +8,10 @@ import {
   DeleteAccount,
   EditProfile,
   Friends,
-  FriendProfile,
-  AddFriend,
-  Share,
-  EditPermission,
 } from 'screens/drawer';
 import BottomNavigator from './BottomNavigator';
 import DrawerContent from './DrawerContent';
 
-// TODO: Split it to more navigators? It seems like some of these screens should be grouped
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   const { colors } = useTheme();
@@ -26,10 +21,11 @@ const DrawerNavigator = () => {
       initialRouteName='Home'
       screenOptions={{
         headerTransparent: true,
-        headerTintColor: colors.text,
+        headerTintColor: colors.white,
         headerTitleStyle: { color: 'transparent' },
       }}
       drawerContent={({ navigation }) => (
+        // Custom design for drawer content:
         <DrawerContent navigation={navigation} />
       )}
     >
@@ -56,26 +52,6 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name='DeleteAccount'
         component={DeleteAccount}
-        options={{ headerShown: false, swipeEnabled: false }}
-      />
-      <Drawer.Screen
-        name='FriendProfile'
-        component={FriendProfile}
-        options={{ headerShown: false, swipeEnabled: false }}
-      />
-      <Drawer.Screen
-        name='AddFriend'
-        component={AddFriend}
-        options={{ headerShown: false, swipeEnabled: false }}
-      />
-      <Drawer.Screen
-        name='Share'
-        component={Share}
-        options={{ headerShown: false, swipeEnabled: false }}
-      />
-      <Drawer.Screen
-        name='EditPermission'
-        component={EditPermission}
         options={{ headerShown: false, swipeEnabled: false }}
       />
     </Drawer.Navigator>

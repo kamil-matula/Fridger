@@ -25,6 +25,8 @@ const AddFridge = ({ navigation }) => {
         label='Add fridge'
         onPress={() => {
           // TODO: Send request to API and add fridge to user
+
+          // Go back to Fridges List:
           navigation.goBack();
         }}
       />
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     padding: 16,
-    color: theme.colors.text,
+    color: theme.colors.white,
     fontSize: 20,
   },
   divider: {

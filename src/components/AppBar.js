@@ -4,8 +4,7 @@ import { Appbar, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
 import PropTypes from 'prop-types';
 
-import backIcon from 'assets/images/back.png';
-import drawerIcon from 'assets/images/navigation/drawer.png';
+import { back, drawer } from 'assets/icons';
 import { makeStyles } from 'utils';
 
 const AppBar = ({
@@ -22,21 +21,25 @@ const AppBar = ({
 
   return (
     <Appbar.Header style={styles.bar}>
-      {isDrawer && (
+      {/* Opening drawer or going back */}
+      {isDrawer ? (
         <Appbar.Action
-          icon={drawerIcon}
+          icon={drawer}
           onPress={() => navigation.openDrawer()}
           color={colors.silverMetallic}
         />
-      )}
-      {!isDrawer && (
+      ) : (
         <Appbar.Action
-          icon={backIcon}
-          onPress={() => navigation.pop()}
-          color={colors.text}
+          icon={back}
+          onPress={() => navigation.goBack()}
+          color={colors.white}
         />
       )}
+
+      {/* Name of current page */}
       <Appbar.Content title={label} titleStyle={styles.title} />
+
+      {/* Additional actions */}
       {icon1 && (
         <Appbar.Action
           icon={icon1}
@@ -72,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontSize: 20,
     fontWeight: '500',
-    color: theme.colors.text,
+    color: theme.colors.white,
     textTransform: 'capitalize',
   },
 }));

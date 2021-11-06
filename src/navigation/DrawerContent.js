@@ -26,33 +26,29 @@ const DrawerContent = ({ navigation }) => {
         <DrawerRow
           label='Edit Profile'
           onPress={() => {
-            navigation.push('DrawerNavigator', {
-              screen: 'EditProfile',
-            });
+            navigation.closeDrawer();
+            navigation.navigate('EditProfile');
           }}
         />
         <DrawerRow
           label='Change Password'
           onPress={() => {
-            navigation.push('DrawerNavigator', {
-              screen: 'ChangePassword',
-            });
+            navigation.closeDrawer();
+            navigation.navigate('ChangePassword');
           }}
         />
         <DrawerRow
           label='Friends'
           onPress={() => {
-            navigation.push('DrawerNavigator', {
-              screen: 'Friends',
-            });
+            navigation.closeDrawer();
+            navigation.navigate('Friends');
           }}
         />
         <DrawerRow
           label='Delete Account'
           onPress={() => {
-            navigation.push('DrawerNavigator', {
-              screen: 'DeleteAccount',
-            });
+            navigation.closeDrawer();
+            navigation.navigate('DeleteAccount');
           }}
         />
       </View>
@@ -62,7 +58,7 @@ const DrawerContent = ({ navigation }) => {
           variant='outlined'
           label='LOGOUT'
           onPress={() => {
-            // TODO: Add logging out
+            // TODO: Add logging out (removing token from storage)
             navigation.navigate('Login');
           }}
         />
@@ -86,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.silverMetallic,
   },
   divider: {
-    backgroundColor: theme.colors.text,
+    backgroundColor: theme.colors.white,
   },
   buttonContainer: {
     margin: 16,

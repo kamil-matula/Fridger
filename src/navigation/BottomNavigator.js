@@ -6,7 +6,7 @@ import { useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
 import { Menu, ShoppingLists } from 'screens/home';
-import { fridgeIcon, listIcon, menuIcon } from 'assets/images/navigation';
+import { fridgeTab, listTab, menuTab } from 'assets/icons/navigation';
 import FridgeNavigator from './FridgeNavigator';
 
 const Tab = createMaterialBottomTabNavigator();
@@ -29,7 +29,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
-              source={menuIcon}
+              source={menuTab}
               style={[
                 styles.icon,
                 {
@@ -49,7 +49,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
-              source={fridgeIcon}
+              source={fridgeTab}
               style={[
                 styles.icon,
                 {
@@ -69,7 +69,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
-              source={listIcon}
+              source={listTab}
               style={[
                 styles.icon,
                 {

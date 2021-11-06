@@ -26,8 +26,7 @@ import {
 } from 'components';
 import { makeStyles } from 'utils';
 import { copy, done, clear, deleteIcon } from 'assets/icons';
-
-import { requestsList, friendsList } from './tmpData';
+import { requestsList, friendsList } from 'tmpData';
 
 const Friends = ({ navigation }) => {
   const theme = useTheme();
@@ -39,51 +38,94 @@ const Friends = ({ navigation }) => {
   const [friends, setFriends] = useState(friendsList);
   const [rejected, setRejected] = useState(null);
 
-  // Reject | Accept
-  const [snackbarVisible, setSnackbarVisible] = useState(null);
-  const onDismissSnackBar = () => setSnackbarVisible(false);
-
-  const reject = (id) => {
-    const idx = requests.findIndex((e) => e.id === id);
-    const element = requests[idx];
-    setRejected(element);
-    setRequests([...requests.slice(0, idx), ...requests.slice(idx + 1)]);
-    setSnackbarVisible(true);
-  };
-
-  const accept = (id) => {
-    const idx = requests.findIndex((e) => e.id === id);
-    const element = requests[idx];
-    setFriends([element, ...friends]);
-    setRequests([...requests.slice(0, idx), ...requests.slice(idx + 1)]);
-  };
-
-  const undo = () => {
-    setRequests([...requests, rejected]);
-    setSnackbarVisible(false);
-  };
-
-  // Remove Friend
+  // Removing friend from list - preparation:
   const [toRemove, setToRemove] = useState(null);
   const [toRemoveNick, setToRemoveNick] = useState('');
-  const [dialogVisible, setDialogVisible] = useState(null);
   const prepareToRemove = (friend) => {
+    // Display dialog with appropriate data:
     setToRemove(friend);
     setToRemoveNick(friend.nick);
     setDialogVisible(true);
   };
 
+  // Removing friend from list - main methods:
+  const [dialogVisible, setDialogVisible] = useState(null);
   const removeFriend = () => {
+    // Remove a friend with given id:
     const idx = friends.findIndex((e) => e.id === toRemove.id);
-    setFriends([...friends.slice(0, idx), ...friends.slice(idx + 1)]);
+    setFriends([...friends.splice(0, idx), ...friends.splice(idx + 1)]);
+
+    // TODO: Send request to API to remove friend globally instead of locally
+
+    // Hide dialog:
     setDialogVisible(false);
   };
 
   const cancelRemoveFriend = () => {
+    // Hide dialog:
     setDialogVisible(false);
   };
 
-  // Copy User ID
+  // Navigation:
+  const navigateToFriendProfile = (user) => {
+    navigation.navigate('FriendProfile', {
+      userID: user.id,
+      nick: user.nick,
+      name: user.name,
+      surname: user.surname,
+      avatarUri: user.avatar,
+    });
+  };
+  const navigateToAddFriend = () => {
+    navigation.navigate('AddFriend');
+  };
+
+  // Displaying snackbar with information about removed request:
+  const [snackbarVisible, setSnackbarVisible] = useState(null);
+  const onDismissSnackBar = () => setSnackbarVisible(false);
+  const undo = () => {
+    // Add rejected request back to the list:
+    setRequests([...requests, rejected]);
+
+    // TODO: Send request to API to revert changes
+    // OR send request to API to reject invitation
+    // only after snackbar disappears (in onDismissSnackBar method)
+
+    // Hide snackbar:
+    setSnackbarVisible(false);
+  };
+
+  // Removing invitations:
+  const reject = (id) => {
+    // Remove invitation of a friend with given id:
+    const idx = requests.findIndex((e) => e.id === id);
+    const element = requests[idx];
+    setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
+
+    // Store it in variable for potential UNDO action:
+    setRejected(element);
+
+    // TODO: Send request to API to remove invitation globally instead of locally
+    // (potentially should be done in onDismissSnackBar method)
+
+    // Show snackbar to make this action revertable:
+    setSnackbarVisible(true);
+  };
+
+  // Accepting invitations:
+  const accept = (id) => {
+    // Remove invitation of a friend with given id:
+    const idx = requests.findIndex((e) => e.id === id);
+    const element = requests[idx];
+    setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
+
+    // Add friend with given id to friends list:
+    setFriends([element, ...friends]);
+
+    // TODO: Send request to API to accept invitation globally instead of locally
+  };
+
+  // Saving user ID in clipboard:
   const copyToClipboard = () => {
     Clipboard.setString(userID);
 
@@ -95,25 +137,12 @@ const Friends = ({ navigation }) => {
     }
   };
 
-  // Navigation
-  const navigateToFriendProfile = (id) => {
-    navigation.push('DrawerNavigator', {
-      screen: 'FriendProfile',
-      params: { userID: id },
-    });
-  };
-
-  const navigateToAddFriend = () => {
-    navigation.push('DrawerNavigator', {
-      screen: 'AddFriend',
-    });
-  };
-
   return (
     <View style={styles.container}>
       <AppBar label='friends' />
       <Divider style={styles.divider} />
       <ScrollView>
+        {/* My ID */}
         <Text style={styles.header}>Your ID</Text>
         <View style={styles.userID}>
           <Text style={styles.text}>{userID}</Text>
@@ -123,45 +152,54 @@ const Friends = ({ navigation }) => {
             </TouchableRipple>
           </View>
         </View>
+
+        {/* Invitations */}
         {requests.length !== 0 && (
           <>
             <Divider style={styles.divider} />
             <Text style={styles.header}>Pending requests</Text>
-            {requests.map(({ id, nick, name, surname, avatar }) => (
+            {requests.map((e) => (
               <UserInfo
-                key={id}
-                title={nick}
-                subtitle={`${name} ${surname}`}
-                avatarURI={avatar}
-                onClick={() => navigateToFriendProfile(id)}
+                key={e.id}
+                title={e.nick}
+                subtitle={
+                  e.name ? `${e.name} ${e.surname ? e.surname : ''}` : null
+                }
+                avatarURI={e.avatar}
+                onClick={() => navigateToFriendProfile(e)}
                 variant='small'
                 icon1={clear}
-                onPressIcon1={() => reject(id)}
+                onPressIcon1={() => reject(e.id)}
                 iconTint1={theme.colors.tartOrange}
                 icon2={done}
-                onPressIcon2={() => accept(id)}
+                onPressIcon2={() => accept(e.id)}
                 iconTint2={theme.colors.darkGreen}
               />
             ))}
           </>
         )}
+
+        {/* Existing friends */}
         <Divider style={styles.divider} />
         {friends.map((e) => (
           <UserInfo
             key={e.id}
             title={e.nick}
-            subtitle={`${e.name} ${e.surname}`}
+            subtitle={e.name ? `${e.name} ${e.surname ? e.surname : ''}` : null}
             avatarURI={e.avatar}
-            onClick={() => navigateToFriendProfile(e.id)}
+            onClick={() => navigateToFriendProfile(e)}
             variant='small'
             icon1={deleteIcon}
             onPressIcon1={() => prepareToRemove(e)}
             iconTint1={theme.colors.silverMetallic}
           />
         ))}
+
+        {/* Space for FAB */}
         <Separator height={88} />
       </ScrollView>
-      <FloatingActionButton onPress={navigateToAddFriend} />
+
+      {/* Deleting friend */}
       <Dialog
         title='Remove from friends'
         paragraph={`Are you sure you want to remove ${toRemoveNick} from friends? This action cannot be undone.`}
@@ -171,8 +209,9 @@ const Friends = ({ navigation }) => {
         label2='cancel'
         onPressLabel2={cancelRemoveFriend}
       />
+
+      {/* Undoing request rejection */}
       <Snackbar
-        wrapperStyle={styles.snackbarWrapper}
         style={styles.snackbar}
         duration={5000}
         visible={snackbarVisible}
@@ -184,6 +223,11 @@ const Friends = ({ navigation }) => {
       >
         <Text style={styles.snackbarText}>Friend request rejected</Text>
       </Snackbar>
+
+      {/* Adding new friend */}
+      {!snackbarVisible && (
+        <FloatingActionButton onPress={navigateToAddFriend} />
+      )}
     </View>
   );
 };
@@ -195,16 +239,17 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     backgroundColor: theme.colors.silverMetallic,
+    height: 1,
   },
   header: {
-    color: theme.colors.text,
+    color: theme.colors.white,
     fontSize: 18,
     fontWeight: 'bold',
     paddingHorizontal: 16,
     paddingTop: 16,
   },
   text: {
-    color: theme.colors.text,
+    color: theme.colors.white,
     fontSize: 14,
   },
   userID: {
@@ -220,15 +265,12 @@ const useStyles = makeStyles((theme) => ({
     margin: 8,
     tintColor: theme.colors.silverMetallic,
   },
-  snackbarWrapper: {
-    paddingBottom: 88,
-  },
   snackbar: {
     backgroundColor: theme.colors.primary,
     elevation: 0,
   },
   snackbarText: {
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
 }));
 

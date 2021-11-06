@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 
 import { View, Image, ScrollView } from 'react-native';
@@ -6,21 +5,26 @@ import { View, Image, ScrollView } from 'react-native';
 import { makeStyles } from 'utils';
 import { UserDataRow, AppBar, Separator, Dialog } from 'components';
 import { deleteIcon } from 'assets/icons';
-import tmpPerson from 'assets/images/tmpPerson.jpg';
+import { tmpPerson } from 'assets/images';
 
-const FriendProfile = ({ navigation }) => {
+const FriendProfile = ({ navigation, route }) => {
   const styles = useStyles();
+  const { userID, nick, name, surname, avatarUri } = route.params;
 
-  const [friend, setFriend] = useState({
-    avatarUri: null,
-    nick: 'Minkx',
-    name: 'Ardelle',
-    surname: 'Coppage',
-  });
+  const friend = {
+    avatarUri,
+    nick,
+    name,
+    surname,
+  };
 
+  // Deleting:
   const [dialogVisible, setDialogVisible] = useState(false);
-
   const removeFriend = () => {
+    // TODO: Send request to API and wait for removing friend from the list
+    console.log(`Friend with ID ${userID} has been deleted`);
+
+    // Hide dialog and go back:
     setDialogVisible(false);
     navigation.pop();
   };
@@ -30,6 +34,7 @@ const FriendProfile = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* Main content */}
       <AppBar icon1={deleteIcon} onPressIcon1={() => setDialogVisible(true)} />
       <ScrollView style={styles.SVcontainer}>
         <View style={styles.imageContainer}>
@@ -46,6 +51,8 @@ const FriendProfile = ({ navigation }) => {
         <Separator height={32} />
         <UserDataRow label='Surname' data={friend.surname} />
       </ScrollView>
+
+      {/* Deleting friend */}
       <Dialog
         title='Remove from friends'
         paragraph={`Are you sure you want to remove ${friend.nick} from friends? This action cannot be undone.`}

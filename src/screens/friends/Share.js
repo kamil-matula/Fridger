@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 
 import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
-import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 import { UserInfo, AppBar } from 'components';
 import { add, forward } from 'assets/icons';
-import { friendsList } from './tmpData';
+import { friendsList } from 'tmpData';
 
 const Share = ({ route, navigation }) => {
   const styles = useStyles();
@@ -21,15 +20,12 @@ const Share = ({ route, navigation }) => {
     // TODO: Send request to API to share fridge/shopping list with friend
   };
 
-  const navigateToShare = () => {
-    // prevent loop Share-EditPermission
+  const navigateToEditPermissions = () => {
+    // Prevent loop Share-EditPermissions:
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
-      navigation.push('DrawerNavigator', {
-        screen: 'EditPermission',
-        params: { behavior: 'pop' },
-      });
+      navigation.navigate('EditPermissions', { behavior: 'pop' });
     }
   };
 
@@ -38,7 +34,8 @@ const Share = ({ route, navigation }) => {
       <AppBar label='share with friends' />
       <Divider style={styles.divider} />
       <ScrollView>
-        <TouchableRipple onPress={navigateToShare}>
+        {/* Connection with Edit Permissions Screen */}
+        <TouchableRipple onPress={navigateToEditPermissions}>
           <View style={styles.infoContainer}>
             <Text style={styles.text}>
               {`Shared with ${friendsCount} friends`}
@@ -46,6 +43,8 @@ const Share = ({ route, navigation }) => {
             <Image style={styles.icon} source={forward} />
           </View>
         </TouchableRipple>
+
+        {/* List of friends available to invite */}
         <Divider style={styles.divider} />
         {friends.map((e) => (
           <UserInfo
@@ -64,10 +63,6 @@ const Share = ({ route, navigation }) => {
   );
 };
 
-Share.propTypes = {
-  route: PropTypes.object,
-};
-
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
@@ -83,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     fontWeight: 'bold',
     flex: 1,
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
   icon: {
     height: 32,

@@ -4,7 +4,7 @@ import { Text, View, Image } from 'react-native';
 
 import { Button } from 'components';
 import { makeStyles } from 'utils/makeStyles';
-import pigeon from 'assets/images/pigeon.png';
+import { pigeon } from 'assets/images';
 
 const RegisterFeedback = ({ navigation }) => {
   const styles = useStyles();
@@ -41,13 +41,13 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     fontSize: 36,
-    color: theme.colors.text,
+    color: theme.colors.white,
     textAlign: 'center',
   },
   text: {
     marginTop: 16,
     fontSize: 18,
-    color: theme.colors.text,
+    color: theme.colors.white,
     textAlign: 'center',
   },
   imageContainer: {
