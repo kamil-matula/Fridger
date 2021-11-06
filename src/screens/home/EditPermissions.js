@@ -3,29 +3,31 @@ import React, { useState, useRef } from 'react';
 
 import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, useTheme, TouchableRipple } from 'react-native-paper';
-import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 import { UserInfo, AppBar, BottomSheet, SheetRow, Dialog } from 'components';
 import { forward, deleteIcon, check } from 'assets/icons';
 import { friendsList } from 'tmpData';
 
-const EditPermission = ({ route, navigation }) => {
+const EditPermissions = ({ route, navigation }) => {
   const styles = useStyles();
   const theme = useTheme();
 
   const [creator, setCreator] = useState(friendsList[0]);
   const [friends, setFriends] = useState(friendsList);
 
-  // Change Permission
-  const refBS = useRef(null);
+  // Changing permission - preparation:
   const [toChange, setToChange] = useState(null);
   const prepareToChangePermission = (friend) => {
+    // Display bottom sheet with appropriate target:
     setToChange(friend);
     refBS.current.open();
   };
 
+  // Changing permission - main methods:
+  const refBS = useRef(null);
   const changePermission = (newPermission) => {
+    // Change permissions for a friend with given id:
     const idx = friends.findIndex((e) => e.id === toChange.id);
     const changedFriend = friends[idx];
     changedFriend.permission = newPermission;
@@ -34,34 +36,43 @@ const EditPermission = ({ route, navigation }) => {
       changedFriend,
       ...friends.slice(idx + 1),
     ]);
+
+    // TODO: Send request to API to change permissions globally instead of locally
+
+    // Hide Bottom Sheet:
     refBS.current.close();
   };
 
-  // Remove Friend From List
+  // Removing friend from list - preparation:
   const [dialogVisible, setDialogVisible] = useState(null);
   const [toRemove, setToRemove] = useState(null);
   const [toRemoveNick, setToRemoveNick] = useState('');
   const prepareToRemove = (friend) => {
+    // Display dialog with appropriate data:
     setToRemove(friend);
     setToRemoveNick(friend.nick);
     setDialogVisible(true);
   };
 
+  // Removing friend from list - main methods:
   const removeFriend = () => {
+    // Remove friend with given id:
     const idx = friends.findIndex((e) => e.id === toRemove.id);
-    console.log(`before: ${friends}`);
     setFriends([...friends.slice(0, idx), ...friends.slice(idx + 1)]);
-    console.log(`after: ${friends}`);
+
+    // TODO: Send request to API to remove friend globally instead of locally
+
+    // Hide dialog:
     setDialogVisible(false);
   };
-
   const cancelRemoveFriend = () => {
+    // Hide dialog:
     setDialogVisible(false);
   };
 
-  // Navigation
+  // Navigation:
   const navigateToShare = () => {
-    // prevent loop Share-EditPermission
+    // Prevent loop Share-EditPermissions:
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
@@ -71,9 +82,10 @@ const EditPermission = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <AppBar label='edit permission' />
+      <AppBar label='edit permissions' />
       <Divider style={styles.divider} />
       <ScrollView>
+        {/* Connection with Share Screen */}
         <TouchableRipple onPress={navigateToShare}>
           <View style={styles.infoContainer}>
             <Text style={styles.text}>Add more friends</Text>
@@ -81,12 +93,16 @@ const EditPermission = ({ route, navigation }) => {
           </View>
         </TouchableRipple>
         <Divider style={styles.divider} />
+
+        {/* Creator of this fridge / shopping list */}
         <UserInfo
           title={creator.nick}
           subtitle='creator'
           avatarURI={creator.avatar}
           variant='small'
         />
+
+        {/* List of people who have access to this fridge / shopping list */}
         {friends.map((e) => (
           <TouchableRipple
             key={e.id}
@@ -105,6 +121,8 @@ const EditPermission = ({ route, navigation }) => {
           </TouchableRipple>
         ))}
       </ScrollView>
+
+      {/* Permission actions */}
       <BottomSheet reference={refBS} title='Change permission'>
         <SheetRow
           icon={!!toChange && toChange.permission === 'can view' ? check : null}
@@ -130,6 +148,9 @@ const EditPermission = ({ route, navigation }) => {
           }}
         />
       </BottomSheet>
+
+      {/* Removing friend from list */}
+      {/* TODO: Pass Fridge/List name and display it in the dialog */}
       <Dialog
         title='Remove friend from list'
         paragraph={`Are you sure you want to remove  ${toRemoveNick} from <list name>? This action cannot be undone.`}
@@ -141,10 +162,6 @@ const EditPermission = ({ route, navigation }) => {
       />
     </View>
   );
-};
-
-EditPermission.propTypes = {
-  route: PropTypes.object,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -162,7 +179,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     fontWeight: 'bold',
     flex: 1,
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
   icon: {
     height: 32,
@@ -186,4 +203,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default EditPermission;
+export default EditPermissions;

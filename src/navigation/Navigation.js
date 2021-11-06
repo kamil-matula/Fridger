@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
-import { AddFridge, Share, EditPermission } from 'screens/home';
+import { AddFridge, Share, EditPermissions } from 'screens/home';
 import DrawerNavigator from './DrawerNavigator';
 
 const Navigation = () => (
@@ -23,7 +23,7 @@ const StackNavigator = () => (
     <Stack.Screen name='DrawerNavigator' component={DrawerNavigator} />
     <Stack.Screen name='AddFridge' component={AddFridge} />
     <Stack.Screen name='Share' component={Share} />
-    <Stack.Screen name='EditPermission' component={EditPermission} />
+    <Stack.Screen name='EditPermissions' component={EditPermissions} />
   </Stack.Navigator>
 );
 

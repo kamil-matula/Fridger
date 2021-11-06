@@ -4,4 +4,4 @@ export { default as ShoppingLists } from './ShoppingLists';
 export { default as FridgeDetails } from './FridgeDetails';
 export { default as AddFridge } from './AddFridge';
 export { default as Share } from './Share';
-export { default as EditPermission } from './EditPermission';
+export { default as EditPermissions } from './EditPermissions';

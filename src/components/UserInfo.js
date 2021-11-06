@@ -91,7 +91,7 @@ const useStyles = makeStyles(
         padding: 16,
       },
       title: {
-        color: theme.colors.text,
+        color: theme.colors.white,
       },
       subtitle: {
         color: subtitleTint || theme.colors.silverMetallic,

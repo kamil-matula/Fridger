@@ -5,7 +5,7 @@ import { Divider } from 'react-native-paper';
 
 import { AppBar, FridgeRow, FloatingActionButton } from 'components';
 import { makeStyles } from 'utils';
-import { fridgesList } from './tmpData';
+import { fridgesList } from 'tmpData';
 
 const Fridges = ({ navigation }) => {
   const styles = useStyles();

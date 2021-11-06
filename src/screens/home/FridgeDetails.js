@@ -21,7 +21,7 @@ import {
   down,
   up,
 } from 'assets/icons';
-import { productsInFridgeList } from './tmpData';
+import { productsInFridgeList } from 'tmpData';
 
 const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
@@ -106,7 +106,7 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and change screen:
             refBS.current.close();
-            navigation.navigate('EditPermission', { fridgeID: 1 });
+            navigation.navigate('EditPermissions', { fridgeID: 1 });
           }}
         />
         <SheetRow
