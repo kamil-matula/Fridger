@@ -67,16 +67,17 @@ const Friends = ({ navigation }) => {
   };
 
   // Navigation:
-  const navigateToFriendProfile = (id) => {
-    navigation.push('DrawerNavigator', {
-      screen: 'FriendProfile',
-      params: { userID: id },
+  const navigateToFriendProfile = (user) => {
+    navigation.navigate('FriendProfile', {
+      userID: user.id,
+      nick: user.nick,
+      name: user.name,
+      surname: user.surname,
+      avatarUri: user.avatar,
     });
   };
   const navigateToAddFriend = () => {
-    navigation.push('DrawerNavigator', {
-      screen: 'AddFriend',
-    });
+    navigation.navigate('AddFriend');
   };
 
   // Displaying snackbar with information about removed request:
@@ -157,19 +158,19 @@ const Friends = ({ navigation }) => {
           <>
             <Divider style={styles.divider} />
             <Text style={styles.header}>Pending requests</Text>
-            {requests.map(({ id, nick, name, surname, avatar }) => (
+            {requests.map((e) => (
               <UserInfo
-                key={id}
-                title={nick}
-                subtitle={`${name} ${surname}`}
-                avatarURI={avatar}
-                onClick={() => navigateToFriendProfile(id)}
+                key={e.id}
+                title={e.nick}
+                subtitle={`${e.name} ${e.surname}`}
+                avatarURI={e.avatar}
+                onClick={() => navigateToFriendProfile(e)}
                 variant='small'
                 icon1={clear}
-                onPressIcon1={() => reject(id)}
+                onPressIcon1={() => reject(e.id)}
                 iconTint1={theme.colors.tartOrange}
                 icon2={done}
-                onPressIcon2={() => accept(id)}
+                onPressIcon2={() => accept(e.id)}
                 iconTint2={theme.colors.darkGreen}
               />
             ))}
@@ -184,7 +185,7 @@ const Friends = ({ navigation }) => {
             title={e.nick}
             subtitle={`${e.name} ${e.surname}`}
             avatarURI={e.avatar}
-            onClick={() => navigateToFriendProfile(e.id)}
+            onClick={() => navigateToFriendProfile(e)}
             variant='small'
             icon1={deleteIcon}
             onPressIcon1={() => prepareToRemove(e)}

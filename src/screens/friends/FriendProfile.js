@@ -7,22 +7,22 @@ import { UserDataRow, AppBar, Separator, Dialog } from 'components';
 import { deleteIcon } from 'assets/icons';
 import { tmpPerson } from 'assets/images';
 
-const FriendProfile = ({ navigation }) => {
+const FriendProfile = ({ navigation, route }) => {
   const styles = useStyles();
+  const { userID, nick, name, surname, avatarUri } = route.params;
 
-  // eslint-disable-next-line no-unused-vars
-  const [friend, setFriend] = useState({
-    // TODO: Replace with real data (passed via navigation)
-    avatarUri: null,
-    nick: 'Minkx',
-    name: 'Ardelle',
-    surname: 'Coppage',
-  });
+  const friend = {
+    avatarUri,
+    nick,
+    name,
+    surname,
+  };
 
   // Deleting:
   const [dialogVisible, setDialogVisible] = useState(false);
   const removeFriend = () => {
     // TODO: Send request to API and wait for removing friend from the list
+    console.log(`Friend with ID ${userID} has been deleted`);
 
     // Hide dialog and go back:
     setDialogVisible(false);

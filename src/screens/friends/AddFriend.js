@@ -13,7 +13,7 @@ import {
 import { makeStyles } from 'utils';
 import { tmpPerson } from 'assets/images';
 
-const AddFriend = () => {
+const AddFriend = ({ navigation }) => {
   const theme = useTheme();
   const styles = useStyles();
 
@@ -79,6 +79,9 @@ const AddFriend = () => {
                 variant='contained'
                 onPress={() => {
                   // TODO: Send request to API to add to friends
+
+                  // Return to list of friends:
+                  navigation.goBack();
                 }}
               />
               <Separator />

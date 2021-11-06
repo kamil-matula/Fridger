@@ -8,8 +8,6 @@ import {
   DeleteAccount,
   EditProfile,
   Friends,
-  FriendProfile,
-  AddFriend,
 } from 'screens/drawer';
 import BottomNavigator from './BottomNavigator';
 import DrawerContent from './DrawerContent';
@@ -54,16 +52,6 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name='DeleteAccount'
         component={DeleteAccount}
-        options={{ headerShown: false, swipeEnabled: false }}
-      />
-      <Drawer.Screen
-        name='FriendProfile'
-        component={FriendProfile}
-        options={{ headerShown: false, swipeEnabled: false }}
-      />
-      <Drawer.Screen
-        name='AddFriend'
-        component={AddFriend}
         options={{ headerShown: false, swipeEnabled: false }}
       />
     </Drawer.Navigator>
