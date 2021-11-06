@@ -26,7 +26,7 @@ import {
 } from 'components';
 import { makeStyles } from 'utils';
 import { copy, done, clear, deleteIcon } from 'assets/icons';
-import { requestsList, friendsList } from './tmpData';
+import { requestsList, friendsList } from 'tmpData';
 
 const Friends = ({ navigation }) => {
   const theme = useTheme();

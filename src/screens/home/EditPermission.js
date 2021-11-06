@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from 'utils';
 import { UserInfo, AppBar, BottomSheet, SheetRow, Dialog } from 'components';
 import { forward, deleteIcon, check } from 'assets/icons';
-import { friendsList } from './tmpData';
+import { friendsList } from 'tmpData';
 
 const EditPermission = ({ route, navigation }) => {
   const styles = useStyles();
@@ -65,10 +65,7 @@ const EditPermission = ({ route, navigation }) => {
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
-      navigation.push('DrawerNavigator', {
-        screen: 'Share',
-        params: { behavior: 'pop' },
-      });
+      navigation.navigate('Share', { behavior: 'pop' });
     }
   };
 

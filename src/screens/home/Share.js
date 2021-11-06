@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from 'utils';
 import { UserInfo, AppBar } from 'components';
 import { add, forward } from 'assets/icons';
-import { friendsList } from './tmpData';
+import { friendsList } from 'tmpData';
 
 const Share = ({ route, navigation }) => {
   const styles = useStyles();
@@ -26,10 +26,7 @@ const Share = ({ route, navigation }) => {
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
-      navigation.push('DrawerNavigator', {
-        screen: 'EditPermission',
-        params: { behavior: 'pop' },
-      });
+      navigation.navigate('EditPermission', { behavior: 'pop' });
     }
   };
 

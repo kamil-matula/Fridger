@@ -97,10 +97,7 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and change screen:
             refBS.current.close();
-            navigation.push('DrawerNavigator', {
-              screen: 'Share',
-              params: { fridgeID: 1 },
-            });
+            navigation.navigate('Share', { fridgeID: 1 });
           }}
         />
         <SheetRow
@@ -109,10 +106,7 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and change screen:
             refBS.current.close();
-            navigation.push('DrawerNavigator', {
-              screen: 'EditPermission',
-              params: { fridgeID: 1 },
-            });
+            navigation.navigate('EditPermission', { fridgeID: 1 });
           }}
         />
         <SheetRow
