@@ -26,7 +26,6 @@ import {
 } from 'components';
 import { makeStyles } from 'utils';
 import { copy, done, clear, deleteIcon } from 'assets/icons';
-
 import { requestsList, friendsList } from './tmpData';
 
 const Friends = ({ navigation }) => {
@@ -39,22 +38,34 @@ const Friends = ({ navigation }) => {
   const [friends, setFriends] = useState(friendsList);
   const [rejected, setRejected] = useState(null);
 
+  // Removing friend from list - preparation:
   const [toRemove, setToRemove] = useState(null);
   const [toRemoveNick, setToRemoveNick] = useState('');
   const prepareToRemove = (friend) => {
+    // Display dialog with appropriate data:
     setToRemove(friend);
     setToRemoveNick(friend.nick);
     setDialogVisible(true);
   };
+
+  // Removing friend from list - main methods:
+  const [dialogVisible, setDialogVisible] = useState(null);
   const removeFriend = () => {
+    // Remove a friend with given id:
     const idx = friends.findIndex((e) => e.id === toRemove.id);
     setFriends([...friends.splice(0, idx), ...friends.splice(idx + 1)]);
+
+    // TODO: Send request to API to remove friend globally instead of locally
+
+    // Hide dialog:
     setDialogVisible(false);
   };
   const cancelRemoveFriend = () => {
+    // Hide dialog:
     setDialogVisible(false);
   };
 
+  // Navigation:
   const navigateToFriendProfile = (id) => {
     navigation.push('DrawerNavigator', {
       screen: 'FriendProfile',
@@ -67,15 +78,52 @@ const Friends = ({ navigation }) => {
     });
   };
 
+  // Displaying snackbar with information about removed request:
   const [snackbarVisible, setSnackbarVisible] = useState(null);
-  const [dialogVisible, setDialogVisible] = useState(null);
   const onDismissSnackBar = () => setSnackbarVisible(false);
-
   const undo = () => {
+    // Add rejected request back to the list:
     setRequests([...requests, rejected]);
+
+    // TODO: Send request to API to revert changes
+    // OR send request to API to reject invitation
+    // only after snackbar disappears (in onDismissSnackBar method)
+
+    // Hide snackbar:
     setSnackbarVisible(false);
   };
 
+  // Removing invitations:
+  const reject = (id) => {
+    // Remove invitation of a friend with given id:
+    const idx = requests.findIndex((e) => e.id === id);
+    const element = requests[idx];
+    setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
+
+    // Store it in variable for potential UNDO action:
+    setRejected(element);
+
+    // TODO: Send request to API to remove invitation globally instead of locally
+    // (potentially should be done in onDismissSnackBar method)
+
+    // Show snackbar to make this action revertable:
+    setSnackbarVisible(true);
+  };
+
+  // Accepting invitations:
+  const accept = (id) => {
+    // Remove invitation of a friend with given id:
+    const idx = requests.findIndex((e) => e.id === id);
+    const element = requests[idx];
+    setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
+
+    // Add friend with given id to friends list:
+    setFriends([element, ...friends]);
+
+    // TODO: Send request to API to accept invitation globally instead of locally
+  };
+
+  // Saving user ID in clipboard:
   const copyToClipboard = () => {
     Clipboard.setString(userID);
 
@@ -87,26 +135,12 @@ const Friends = ({ navigation }) => {
     }
   };
 
-  const reject = (id) => {
-    const idx = requests.findIndex((e) => e.id === id);
-    const element = requests[idx];
-    setRejected(element);
-    setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
-    setSnackbarVisible(true);
-  };
-
-  const accept = (id) => {
-    const idx = requests.findIndex((e) => e.id === id);
-    const element = requests[idx];
-    setFriends([element, ...friends]);
-    setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
-  };
-
   return (
     <View style={styles.container}>
       <AppBar label='friends' />
       <Divider style={styles.divider} />
       <ScrollView>
+        {/* My ID */}
         <Text style={styles.header}>Your ID</Text>
         <View style={styles.userID}>
           <Text style={styles.text}>{userID}</Text>
@@ -116,6 +150,8 @@ const Friends = ({ navigation }) => {
             </TouchableRipple>
           </View>
         </View>
+
+        {/* Invitations */}
         {requests.length !== 0 && (
           <>
             <Divider style={styles.divider} />
@@ -138,6 +174,8 @@ const Friends = ({ navigation }) => {
             ))}
           </>
         )}
+
+        {/* Existing friends */}
         <Divider style={styles.divider} />
         {friends.map((e) => (
           <UserInfo
@@ -152,9 +190,12 @@ const Friends = ({ navigation }) => {
             iconTint1={theme.colors.silverMetallic}
           />
         ))}
+
+        {/* Space for FAB */}
         <Separator height={88} />
       </ScrollView>
-      <FloatingActionButton onPress={navigateToAddFriend} />
+
+      {/* Deleting friend */}
       <Dialog
         title='Remove from friends'
         paragraph={`Are you sure you want to remove ${toRemoveNick} from friends? This action cannot be undone.`}
@@ -164,8 +205,9 @@ const Friends = ({ navigation }) => {
         label2='cancel'
         onPressLabel2={cancelRemoveFriend}
       />
+
+      {/* Undoing request rejection */}
       <Snackbar
-        wrapperStyle={styles.snackbarWrapper}
         style={styles.snackbar}
         duration={5000}
         visible={snackbarVisible}
@@ -177,6 +219,11 @@ const Friends = ({ navigation }) => {
       >
         <Text style={styles.snackbarText}>Friend request rejected</Text>
       </Snackbar>
+
+      {/* Adding new friend */}
+      {!snackbarVisible && (
+        <FloatingActionButton onPress={navigateToAddFriend} />
+      )}
     </View>
   );
 };
@@ -188,6 +235,7 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     backgroundColor: theme.colors.silverMetallic,
+    height: 1,
   },
   header: {
     color: theme.colors.text,
@@ -212,9 +260,6 @@ const useStyles = makeStyles((theme) => ({
     width: 24,
     margin: 8,
     tintColor: theme.colors.silverMetallic,
-  },
-  snackbarWrapper: {
-    paddingBottom: 88,
   },
   snackbar: {
     backgroundColor: theme.colors.primary,

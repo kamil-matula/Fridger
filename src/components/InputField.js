@@ -25,24 +25,25 @@ const InputField = ({
   onSubmitEditing,
   ...props
 }) => {
+  const styles = useStyles({ invalid, isFocused, variant });
   const theme = useTheme();
+
+  // Validation:
   const {
     field,
     fieldState: { invalid, error },
   } = useController({ name, control, rules });
 
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  // Handle focusing:
   const [isFocused, setIsFocused] = useState(false);
-
-  const styles = useStyles({ invalid, isFocused, variant });
-
   const handleOnFocus = () => setIsFocused(true);
-
   const handleOnBlur = () => {
     setIsFocused(false);
     field.onBlur();
   };
 
+  // Password hiding:
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
 
   return (

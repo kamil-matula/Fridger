@@ -14,7 +14,6 @@ import {
 import BottomNavigator from './BottomNavigator';
 import DrawerContent from './DrawerContent';
 
-// TODO: Split it to more navigators? It seems like some of these screens should be grouped
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   const { colors } = useTheme();
@@ -28,6 +27,7 @@ const DrawerNavigator = () => {
         headerTitleStyle: { color: 'transparent' },
       }}
       drawerContent={({ navigation }) => (
+        // Custom design for drawer content:
         <DrawerContent navigation={navigation} />
       )}
     >

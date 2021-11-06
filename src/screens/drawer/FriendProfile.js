@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 
 import { View, Image, ScrollView } from 'react-native';
@@ -11,6 +10,7 @@ import { tmpPerson } from 'assets/images';
 const FriendProfile = ({ navigation }) => {
   const styles = useStyles();
 
+  // eslint-disable-next-line no-unused-vars
   const [friend, setFriend] = useState({
     // TODO: Replace with real data (passed via navigation)
     avatarUri: null,
@@ -34,6 +34,7 @@ const FriendProfile = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* Main content */}
       <AppBar icon1={deleteIcon} onPressIcon1={() => setDialogVisible(true)} />
       <ScrollView style={styles.SVcontainer}>
         <View style={styles.imageContainer}>
@@ -50,6 +51,8 @@ const FriendProfile = ({ navigation }) => {
         <Separator height={32} />
         <UserDataRow label='Surname' data={friend.surname} />
       </ScrollView>
+
+      {/* Deleting friend */}
       <Dialog
         title='Remove from friends'
         paragraph={`Are you sure you want to remove ${friend.nick} from friends? This action cannot be undone.`}

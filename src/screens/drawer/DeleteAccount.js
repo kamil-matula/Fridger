@@ -37,7 +37,10 @@ const DeleteAccount = ({ navigation }) => {
   };
 
   const deleteAccount = (data) => {
+    // TODO: Send request to API to delete account
     console.log('delete account', data);
+
+    // Go back to Home Page:
     navigation.goBack();
   };
 
@@ -45,6 +48,7 @@ const DeleteAccount = ({ navigation }) => {
     <View style={styles.container}>
       <AppBar label='Delete account' />
       <ScrollViewLayout>
+        {/* Input fields */}
         <View>
           <InputField
             control={control}
@@ -68,6 +72,8 @@ const DeleteAccount = ({ navigation }) => {
           />
           <Separator height={32} />
         </View>
+
+        {/* Button */}
         <View>
           <Button
             label='delete account'

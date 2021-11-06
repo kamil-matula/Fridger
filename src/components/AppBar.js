@@ -21,21 +21,25 @@ const AppBar = ({
 
   return (
     <Appbar.Header style={styles.bar}>
-      {isDrawer && (
+      {/* Opening drawer or going back */}
+      {isDrawer ? (
         <Appbar.Action
           icon={drawer}
           onPress={() => navigation.openDrawer()}
           color={colors.silverMetallic}
         />
-      )}
-      {!isDrawer && (
+      ) : (
         <Appbar.Action
           icon={back}
           onPress={() => navigation.pop()}
           color={colors.text}
         />
       )}
+
+      {/* Name of current page */}
       <Appbar.Content title={label} titleStyle={styles.title} />
+
+      {/* Additional actions */}
       {icon1 && (
         <Appbar.Action
           icon={icon1}

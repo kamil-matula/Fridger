@@ -35,7 +35,10 @@ const Login = ({ navigation }) => {
   };
 
   const login = (data) => {
+    // TODO: Send data to API to get token and stay logged in
     console.log('login', data);
+
+    // Go to Home Pages:
     navigation.reset({
       index: 0,
       routes: [{ name: 'DrawerNavigator' }],
@@ -44,6 +47,7 @@ const Login = ({ navigation }) => {
 
   return (
     <ScrollViewLayout>
+      {/* Input fields */}
       <View>
         <Text style={styles.header}>Login</Text>
         <InputField
@@ -76,6 +80,8 @@ const Login = ({ navigation }) => {
         </View>
         <Separator height={32} />
       </View>
+
+      {/* Buttons */}
       <View>
         <Button
           label='Login'

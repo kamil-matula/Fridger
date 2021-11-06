@@ -17,25 +17,22 @@ const AddFriend = () => {
   const theme = useTheme();
   const styles = useStyles();
 
-  // eslint-disable-next-line no-unused-vars
-  const [friend, setFriend] = useState({
-    avatarUri: null,
-    nick: 'Minkx',
-    name: 'Ardelle',
-    surname: 'Coppage',
-  });
-
+  const [friend, setFriend] = useState(null);
   const [found, setFound] = useState(false);
   const [visible, setVisible] = useState(false);
   const onDismissSnackBar = () => setVisible(false);
 
   const find = () => {
     // TODO: Add sending request to API to find user with given ID
-    // TODO: Delete eslint-disable-next-line
 
-    // eslint-disable-next-line prefer-const
-    let userHasBeenFound = true;
-
+    // Update UI:
+    const userHasBeenFound = true;
+    setFriend({
+      avatarUri: null,
+      nick: 'Minkx',
+      name: 'Ardelle',
+      surname: 'Coppage',
+    });
     setFound(userHasBeenFound);
     if (!userHasBeenFound) {
       setVisible(true);
@@ -44,6 +41,7 @@ const AddFriend = () => {
 
   return (
     <View style={styles.container}>
+      {/* Main content */}
       <AppBar label='Add friend' />
       <Divider style={styles.divider} />
       <TextInput
@@ -88,6 +86,8 @@ const AddFriend = () => {
           </ScrollViewLayout>
         </>
       )}
+
+      {/* Displaying negative result of searching */}
       <Snackbar
         style={styles.snackbar}
         visible={visible}

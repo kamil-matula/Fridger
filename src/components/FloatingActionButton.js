@@ -27,6 +27,7 @@ FloatingActionButton.propTypes = {
 };
 
 const useStyles = makeStyles((theme, { centered }) => {
+  // Common styles:
   const obj = {
     fab: {
       position: 'absolute',
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme, { centered }) => {
     },
   };
 
+  // Rendering on the right or in the middle:
   if (centered) obj.fab.alignSelf = 'center';
   else obj.fab.right = 0;
 

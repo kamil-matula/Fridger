@@ -38,7 +38,10 @@ const ChangePassword = ({ navigation }) => {
   };
 
   const changePassword = (data) => {
+    // TODO: Send request to API to change password
     console.log('change password', data);
+
+    // Go back to Home Page:
     navigation.goBack();
   };
 
@@ -46,6 +49,7 @@ const ChangePassword = ({ navigation }) => {
     <View style={styles.container}>
       <AppBar label='change password' />
       <ScrollViewLayout>
+        {/* Input fields */}
         <View>
           <InputField
             control={control}
@@ -80,6 +84,8 @@ const ChangePassword = ({ navigation }) => {
           />
           <Separator height={32} />
         </View>
+
+        {/* Button */}
         <View>
           <Button
             label='Submit'

@@ -33,7 +33,10 @@ const ResetPassword = ({ navigation }) => {
   };
 
   const resetPassword = (data) => {
+    // TODO: Send request to API to get mail with new password
     console.log('reset password', data);
+
+    // Go to Login Page:
     navigation.goBack();
   };
 
@@ -41,6 +44,7 @@ const ResetPassword = ({ navigation }) => {
     <View style={styles.container}>
       <AppBar />
       <ScrollViewLayout>
+        {/* Input field with header */}
         <View>
           <View style={styles.headerContainer}>
             <Text style={styles.header}>Reset Password</Text>
@@ -61,6 +65,8 @@ const ResetPassword = ({ navigation }) => {
           />
           <Separator height={32} />
         </View>
+
+        {/* Button */}
         <View>
           <Button
             label='Submit'

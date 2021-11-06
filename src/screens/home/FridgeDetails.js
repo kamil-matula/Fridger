@@ -54,7 +54,7 @@ const FridgeDetails = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* MAIN CONTENT: */}
+      {/* Main content */}
       <AppBar
         label={title}
         icon1={more}
@@ -89,7 +89,7 @@ const FridgeDetails = ({ route, navigation }) => {
         }}
       />
 
-      {/* FRIDGE ACTIONS: */}
+      {/* Fridge actions */}
       <BottomSheet reference={refBS}>
         <SheetRow icon={groupAdd} text='Share' onPress={() => {}} />
         <SheetRow icon={group} text='Manage people' onPress={() => {}} />
@@ -105,7 +105,7 @@ const FridgeDetails = ({ route, navigation }) => {
         <SheetRow icon={logout} text='Quit' onPress={() => {}} />
       </BottomSheet>
 
-      {/* DELETING FRIDGE: */}
+      {/* Deleting fridge */}
       <Dialog
         title='Delete fridge'
         paragraph={`Are you sure you want to delete fridge ${title}? This action cannot be undone.`}

@@ -68,6 +68,7 @@ UserInfo.propTypes = {
 };
 
 const useStyles = makeStyles((theme, { variant, iconTint1, iconTint2 }) => {
+  // Common styles:
   const obj = {
     container: {
       flexDirection: 'row',
@@ -113,6 +114,8 @@ const useStyles = makeStyles((theme, { variant, iconTint1, iconTint2 }) => {
       marginHorizontal: 8,
     },
   };
+
+  // Different sizings:
   if (variant === 'small') {
     obj.avatar.width = 32;
     obj.avatar.height = 32;

@@ -29,7 +29,7 @@ const FridgeRow = ({ title }) => {
       >
         <View style={styles.container}>
           <Text style={styles.text}>{title}</Text>
-          {/* TODO: Create a component for these images and pass some data to it (to render appropriate circles) */}
+          {/* TODO: Replace list of icons with something new as we no longer use Food Supplies */}
           <View style={styles.images}>
             {[vegetables, fruits, ham, cheese, bread, eggs, milk].map(
               (item, index) => (

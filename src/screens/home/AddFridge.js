@@ -25,6 +25,8 @@ const AddFridge = ({ navigation }) => {
         label='Add fridge'
         onPress={() => {
           // TODO: Send request to API and add fridge to user
+
+          // Go back to Fridges List:
           navigation.goBack();
         }}
       />

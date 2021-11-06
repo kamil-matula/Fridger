@@ -11,6 +11,7 @@ import Separator from './Separator';
 const BottomSheet = ({ reference, title, children }) => {
   const styles = useStyles();
 
+  // Height of component depends on number of its children:
   const height = (title ? 56 : 16) + React.Children.count(children) * 56 + 16;
 
   return (
