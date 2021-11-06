@@ -39,43 +39,51 @@ const Friends = ({ navigation }) => {
   const [friends, setFriends] = useState(friendsList);
   const [rejected, setRejected] = useState(null);
 
-  const [toRemove, setToRemove] = useState(null);
-  const [toRemoveNick, setToRemoveNick] = useState('');
-  const prepareToRemove = (friend) => {
-    setToRemove(friend);
-    setToRemoveNick(friend.nick);
-    setDialogVisible(true);
-  };
-  const removeFriend = () => {
-    const idx = friends.findIndex((e) => e.id === toRemove.id);
-    setFriends([...friends.splice(0, idx), ...friends.splice(idx + 1)]);
-    setDialogVisible(false);
-  };
-  const cancelRemoveFriend = () => {
-    setDialogVisible(false);
-  };
-
-  const navigateToFriendProfile = (id) => {
-    navigation.push('DrawerNavigator', {
-      screen: 'FriendProfile',
-      params: { userID: id },
-    });
-  };
-  const navigateToAddFriend = () => {
-    navigation.push('DrawerNavigator', {
-      screen: 'AddFriend',
-    });
-  };
-
+  // Reject | Accept
   const [snackbarVisible, setSnackbarVisible] = useState(null);
-  const [dialogVisible, setDialogVisible] = useState(null);
   const onDismissSnackBar = () => setSnackbarVisible(false);
+
+  const reject = (id) => {
+    const idx = requests.findIndex((e) => e.id === id);
+    const element = requests[idx];
+    setRejected(element);
+    setRequests([...requests.slice(0, idx), ...requests.slice(idx + 1)]);
+    setSnackbarVisible(true);
+  };
+
+  const accept = (id) => {
+    const idx = requests.findIndex((e) => e.id === id);
+    const element = requests[idx];
+    setFriends([element, ...friends]);
+    setRequests([...requests.slice(0, idx), ...requests.slice(idx + 1)]);
+  };
 
   const undo = () => {
     setRequests([...requests, rejected]);
     setSnackbarVisible(false);
   };
 
+  // Remove Friend
+  const [toRemove, setToRemove] = useState(null);
+  const [toRemoveNick, setToRemoveNick] = useState('');
+  const [dialogVisible, setDialogVisible] = useState(null);
+  const prepareToRemove = (friend) => {
+    setToRemove(friend);
+    setToRemoveNick(friend.nick);
+    setDialogVisible(true);
+  };
+
+  const removeFriend = () => {
+    const idx = friends.findIndex((e) => e.id === toRemove.id);
+    setFriends([...friends.slice(0, idx), ...friends.slice(idx + 1)]);
+    setDialogVisible(false);
+  };
+
+  const cancelRemoveFriend = () => {
+    setDialogVisible(false);
+  };
+
+  // Copy User ID
   const copyToClipboard = () => {
     Clipboard.setString(userID);
 
@@ -87,19 +95,18 @@ const Friends = ({ navigation }) => {
     }
   };
 
-  const reject = (id) => {
-    const idx = requests.findIndex((e) => e.id === id);
-    const element = requests[idx];
-    setRejected(element);
-    setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
-    setSnackbarVisible(true);
+  // Navigation
+  const navigateToFriendProfile = (id) => {
+    navigation.push('DrawerNavigator', {
+      screen: 'FriendProfile',
+      params: { userID: id },
+    });
   };
 
-  const accept = (id) => {
-    const idx = requests.findIndex((e) => e.id === id);
-    const element = requests[idx];
-    setFriends([element, ...friends]);
-    setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
+  const navigateToAddFriend = () => {
+    navigation.push('DrawerNavigator', {
+      screen: 'AddFriend',
+    });
   };
 
   return (
@@ -145,7 +152,7 @@ const Friends = ({ navigation }) => {
             title={e.nick}
             subtitle={`${e.name} ${e.surname}`}
             avatarURI={e.avatar}
-            onClick={() => navigateToFriendProfile(id)}
+            onClick={() => navigateToFriendProfile(e.id)}
             variant='small'
             icon1={deleteIcon}
             onPressIcon1={() => prepareToRemove(e)}

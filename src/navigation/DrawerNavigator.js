@@ -10,6 +10,8 @@ import {
   Friends,
   FriendProfile,
   AddFriend,
+  Share,
+  EditPermission,
 } from 'screens/drawer';
 import BottomNavigator from './BottomNavigator';
 import DrawerContent from './DrawerContent';
@@ -64,6 +66,16 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name='AddFriend'
         component={AddFriend}
+        options={{ headerShown: false, swipeEnabled: false }}
+      />
+      <Drawer.Screen
+        name='Share'
+        component={Share}
+        options={{ headerShown: false, swipeEnabled: false }}
+      />
+      <Drawer.Screen
+        name='EditPermission'
+        component={EditPermission}
         options={{ headerShown: false, swipeEnabled: false }}
       />
     </Drawer.Navigator>

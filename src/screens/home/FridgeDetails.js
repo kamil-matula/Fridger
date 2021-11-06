@@ -3,7 +3,13 @@ import React, { useRef, useState } from 'react';
 import { FlatList, View, Text, Image } from 'react-native';
 import { Divider, TouchableRipple } from 'react-native-paper';
 
-import { AppBar, FloatingActionButton, FridgeDetailsRow } from 'components';
+import {
+  AppBar,
+  FloatingActionButton,
+  FridgeDetailsRow,
+  BottomSheet,
+  SheetRow,
+} from 'components';
 import { makeStyles } from 'utils';
 import {
   group,
@@ -14,8 +20,6 @@ import {
   down,
   up,
 } from 'assets/icons';
-import BottomSheet from 'components/BottomSheet';
-import SheetRow from 'components/SheetRow';
 
 const DATA = [
   {
@@ -53,7 +57,7 @@ const DATA = [
   },
 ];
 
-const FridgeDetails = () => {
+const FridgeDetails = ({ navigation }) => {
   const styles = useStyles();
 
   // eslint-disable-next-line no-unused-vars
@@ -99,8 +103,28 @@ const FridgeDetails = () => {
         }}
       />
       <BottomSheet reference={refBS}>
-        <SheetRow icon={groupAdd} text='Share' onPress={() => {}} />
-        <SheetRow icon={group} text='Manage people' onPress={() => {}} />
+        <SheetRow
+          icon={groupAdd}
+          text='Share'
+          onPress={() => {
+            refBS.current.close();
+            navigation.push('DrawerNavigator', {
+              screen: 'Share',
+              params: { fridgeID: 1 },
+            });
+          }}
+        />
+        <SheetRow
+          icon={group}
+          text='Manage people'
+          onPress={() => {
+            refBS.current.close();
+            navigation.push('DrawerNavigator', {
+              screen: 'EditPermission',
+              params: { fridgeID: 1 },
+            });
+          }}
+        />
         <SheetRow icon={deleteIcon} text='Delete fridge' onPress={() => {}} />
         <SheetRow icon={logout} text='Quit' onPress={() => {}} />
       </BottomSheet>
