@@ -60,6 +60,7 @@ const Friends = ({ navigation }) => {
     // Hide dialog:
     setDialogVisible(false);
   };
+
   const cancelRemoveFriend = () => {
     // Hide dialog:
     setDialogVisible(false);
@@ -183,7 +184,7 @@ const Friends = ({ navigation }) => {
             title={e.nick}
             subtitle={`${e.name} ${e.surname}`}
             avatarURI={e.avatar}
-            onClick={() => navigateToFriendProfile(id)}
+            onClick={() => navigateToFriendProfile(e.id)}
             variant='small'
             icon1={deleteIcon}
             onPressIcon1={() => prepareToRemove(e)}

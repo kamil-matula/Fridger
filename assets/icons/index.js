@@ -1,5 +1,6 @@
 export { default as add } from './add.png';
 export { default as back } from './back.png';
+export { default as check } from './check.png';
 export { default as clear } from './clear.png';
 export { default as copy } from './copy.png';
 export { default as deleteIcon } from './deleteIcon.png';
@@ -7,6 +8,7 @@ export { default as done } from './done.png';
 export { default as down } from './down.png';
 export { default as drawer } from './drawer.png';
 export { default as edit } from './edit.png';
+export { default as forward } from './forward.png';
 export { default as group } from './group.png';
 export { default as groupAdd } from './group_add.png';
 export { default as logout } from './logout.png';

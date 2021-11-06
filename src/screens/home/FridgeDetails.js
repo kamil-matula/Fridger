@@ -91,8 +91,30 @@ const FridgeDetails = ({ route, navigation }) => {
 
       {/* Fridge actions */}
       <BottomSheet reference={refBS}>
-        <SheetRow icon={groupAdd} text='Share' onPress={() => {}} />
-        <SheetRow icon={group} text='Manage people' onPress={() => {}} />
+        <SheetRow
+          icon={groupAdd}
+          text='Share'
+          onPress={() => {
+            // Hide bottom sheet and change screen:
+            refBS.current.close();
+            navigation.push('DrawerNavigator', {
+              screen: 'Share',
+              params: { fridgeID: 1 },
+            });
+          }}
+        />
+        <SheetRow
+          icon={group}
+          text='Manage people'
+          onPress={() => {
+            // Hide bottom sheet and change screen:
+            refBS.current.close();
+            navigation.push('DrawerNavigator', {
+              screen: 'EditPermission',
+              params: { fridgeID: 1 },
+            });
+          }}
+        />
         <SheetRow
           icon={deleteIcon}
           text='Delete fridge'
