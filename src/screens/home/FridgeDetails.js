@@ -58,6 +58,7 @@ const FridgeDetails = ({ route, navigation }) => {
       <AppBar
         label={title}
         icon1={more}
+        editable
         onPressIcon1={() => {
           // Open dialog with fridge actions:
           refBS.current.open();

@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Appbar, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
+import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
 import { back, drawer } from 'assets/icons';
 import { makeStyles } from 'utils';
+import { InputField } from 'components';
 
 const AppBar = ({
   label = '',
@@ -14,10 +16,27 @@ const AppBar = ({
   onPressIcon1 = null,
   icon2 = null,
   onPressIcon2 = null,
+  editable = false,
 }) => {
   const styles = useStyles();
   const { colors } = useTheme();
   const navigation = useNavigation();
+
+  // Editing fridge / shopping list's name:
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      name: label,
+    },
+  });
+  const confirmNewName = (data) => {
+    // TODO: Send request to API to change fridge/list's name
+    console.log(`New name: ${data.name}`);
+
+    // Hide input field:
+    setIsEditMode(false);
+    reset();
+  };
 
   return (
     <Appbar.Header style={styles.bar}>
@@ -36,8 +55,29 @@ const AppBar = ({
         />
       )}
 
+      {/* Input field responsible for changing name */}
+      {isEditMode && (
+        <InputField
+          control={control}
+          name='name'
+          returnKeyType='done'
+          placeholder={label}
+          onSubmitEditing={handleSubmit(confirmNewName)}
+          confirmable
+        />
+      )}
+
       {/* Name of current page */}
-      <Appbar.Content title={label} titleStyle={styles.title} />
+      {!isEditMode && (
+        <Appbar.Content
+          title={label}
+          titleStyle={styles.title}
+          onPress={() => {
+            // Display input field to change name:
+            if (editable) setIsEditMode(true);
+          }}
+        />
+      )}
 
       {/* Additional actions */}
       {icon1 && (
@@ -65,6 +105,7 @@ AppBar.propTypes = {
   onPressIcon1: PropTypes.func,
   icon2: PropTypes.number,
   onPressIcon2: PropTypes.func,
+  editable: PropTypes.bool,
 };
 
 const useStyles = makeStyles((theme) => ({

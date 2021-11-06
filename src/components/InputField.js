@@ -7,11 +7,11 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { TouchableRipple, useTheme } from 'react-native-paper';
 import { useController } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
-import { visibilityOn, visibilityOff } from 'assets/icons';
+import { check, visibilityOn, visibilityOff } from 'assets/icons';
 import { makeStyles } from 'utils';
 import Separator from './Separator';
 
@@ -22,6 +22,7 @@ const InputField = ({
   rules,
   variant = 'account',
   secure = false,
+  confirmable = false,
   onSubmitEditing,
   ...props
 }) => {
@@ -49,7 +50,7 @@ const InputField = ({
 
   return (
     <>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -74,6 +75,11 @@ const InputField = ({
             />
           </TouchableWithoutFeedback>
         )}
+        {confirmable && (
+          <TouchableRipple onPress={onSubmitEditing}>
+            <Image source={check} style={styles.icon} />
+          </TouchableRipple>
+        )}
       </View>
 
       {invalid ? (
@@ -86,12 +92,13 @@ const InputField = ({
 };
 
 InputField.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   name: PropTypes.string.isRequired,
   control: PropTypes.object,
   rules: PropTypes.object,
   variant: PropTypes.oneOf(['account', 'data']),
   secure: PropTypes.bool,
+  confirmable: PropTypes.bool,
   onSubmitEditing: PropTypes.func,
 };
 
@@ -110,6 +117,7 @@ const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
       color: theme.colors.white,
     },
     inputContainer: {
+      flex: 1,
       flexDirection: 'row',
       height: 48,
       paddingLeft: 16,
