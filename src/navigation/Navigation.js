@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
+import { AddFridge } from 'screens/home';
 import DrawerNavigator from './DrawerNavigator';
 
 const Navigation = () => (
@@ -20,6 +21,7 @@ const StackNavigator = () => (
     <Stack.Screen name='Register' component={Register} />
     <Stack.Screen name='RegisterFeedback' component={RegisterFeedback} />
     <Stack.Screen name='DrawerNavigator' component={DrawerNavigator} />
+    <Stack.Screen name='AddFridge' component={AddFridge} />
   </Stack.Navigator>
 );
 
