@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import { back, drawer } from 'assets/icons';
 import { makeStyles } from 'utils';
-import { InputField } from 'components';
+import InputField from './InputField';
 
 const AppBar = ({
   label = '',
