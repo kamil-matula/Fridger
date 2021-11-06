@@ -25,9 +25,6 @@ const InputField = ({
   onSubmitEditing,
   ...props
 }) => {
-  const styles = useStyles({ invalid, isFocused, variant });
-  const theme = useTheme();
-
   // Validation:
   const {
     field,
@@ -45,6 +42,10 @@ const InputField = ({
   // Password hiding:
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
+
+  // Styling:
+  const styles = useStyles({ invalid, isFocused, variant });
+  const theme = useTheme();
 
   return (
     <>
