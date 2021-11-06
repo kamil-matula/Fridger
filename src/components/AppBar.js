@@ -31,7 +31,7 @@ const AppBar = ({
       ) : (
         <Appbar.Action
           icon={back}
-          onPress={() => navigation.pop()}
+          onPress={() => navigation.goBack()}
           color={colors.white}
         />
       )}

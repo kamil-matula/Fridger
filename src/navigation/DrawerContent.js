@@ -27,36 +27,28 @@ const DrawerContent = ({ navigation }) => {
           label='Edit Profile'
           onPress={() => {
             navigation.closeDrawer();
-            navigation.push('DrawerNavigator', {
-              screen: 'EditProfile',
-            });
+            navigation.navigate('EditProfile');
           }}
         />
         <DrawerRow
           label='Change Password'
           onPress={() => {
             navigation.closeDrawer();
-            navigation.push('DrawerNavigator', {
-              screen: 'ChangePassword',
-            });
+            navigation.navigate('ChangePassword');
           }}
         />
         <DrawerRow
           label='Friends'
           onPress={() => {
             navigation.closeDrawer();
-            navigation.push('DrawerNavigator', {
-              screen: 'Friends',
-            });
+            navigation.navigate('Friends');
           }}
         />
         <DrawerRow
           label='Delete Account'
           onPress={() => {
             navigation.closeDrawer();
-            navigation.push('DrawerNavigator', {
-              screen: 'DeleteAccount',
-            });
+            navigation.navigate('DeleteAccount');
           }}
         />
       </View>
