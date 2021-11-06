@@ -17,6 +17,7 @@ const AppBar = ({
   icon2 = null,
   onPressIcon2 = null,
   editable = false,
+  onSubmitEditing = null,
 }) => {
   const styles = useStyles();
   const { colors } = useTheme();
@@ -29,9 +30,9 @@ const AppBar = ({
       name: label,
     },
   });
-  const confirmNewName = (data) => {
-    // TODO: Send request to API to change fridge/list's name
-    console.log(`New name: ${data.name}`);
+  const stopEditing = (data) => {
+    // Update name (but only if it has changed for real):
+    if (data.name !== label) onSubmitEditing(data.name);
 
     // Hide input field:
     setIsEditMode(false);
@@ -62,7 +63,7 @@ const AppBar = ({
           name='name'
           returnKeyType='done'
           placeholder={label}
-          onSubmitEditing={handleSubmit(confirmNewName)}
+          onSubmitEditing={handleSubmit(stopEditing)}
           confirmable
         />
       )}
@@ -106,6 +107,7 @@ AppBar.propTypes = {
   icon2: PropTypes.number,
   onPressIcon2: PropTypes.func,
   editable: PropTypes.bool,
+  onSubmitEditing: PropTypes.func,
 };
 
 const useStyles = makeStyles((theme) => ({

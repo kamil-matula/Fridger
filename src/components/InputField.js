@@ -45,7 +45,7 @@ const InputField = ({
   const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
 
   // Styling:
-  const styles = useStyles({ invalid, isFocused, variant });
+  const styles = useStyles({ invalid, isFocused, variant, confirmable });
   const theme = useTheme();
 
   return (
@@ -53,6 +53,7 @@ const InputField = ({
       {label && <Text style={styles.label}>{label}</Text>}
 
       <View style={styles.inputContainer}>
+        {/* Data providing */}
         <TextInput
           name={field.name}
           ref={field.ref}
@@ -67,6 +68,8 @@ const InputField = ({
           placeholderTextColor={theme.colors.silverMetallic}
           {...props}
         />
+
+        {/* Password hiding */}
         {secure && (
           <TouchableWithoutFeedback onPress={passwordVisibilityOnPress}>
             <Image
@@ -75,10 +78,14 @@ const InputField = ({
             />
           </TouchableWithoutFeedback>
         )}
+
+        {/* Confirming changes */}
         {confirmable && (
-          <TouchableRipple onPress={onSubmitEditing}>
-            <Image source={check} style={styles.icon} />
-          </TouchableRipple>
+          <View style={styles.iconContainer}>
+            <TouchableRipple onPress={onSubmitEditing}>
+              <Image source={check} style={styles.icon} />
+            </TouchableRipple>
+          </View>
         )}
       </View>
 
@@ -102,51 +109,58 @@ InputField.propTypes = {
   onSubmitEditing: PropTypes.func,
 };
 
-const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
-  const borderColor = (() => {
-    if (isFocused) return theme.colors.white;
-    if (invalid) return theme.colors.tartOrange;
-    if (variant === 'account') return 'transparent';
-    return theme.colors.whiteSemiTransparent;
-  })();
+const useStyles = makeStyles(
+  (theme, { invalid, isFocused, variant, confirmable }) => {
+    const borderColor = (() => {
+      if (isFocused) return theme.colors.white;
+      if (invalid) return theme.colors.tartOrange;
+      if (variant === 'account') return 'transparent';
+      return theme.colors.whiteSemiTransparent;
+    })();
 
-  return {
-    label: {
-      fontSize: 14,
-      marginBottom: 8,
-      color: theme.colors.white,
-    },
-    inputContainer: {
-      flex: 1,
-      flexDirection: 'row',
-      height: 48,
-      paddingLeft: 16,
-      borderWidth: 1,
-      borderRadius: 5,
-      alignItems: 'center',
-      borderColor,
-      backgroundColor:
-        variant === 'data' ? 'transparent' : theme.colors.primary,
-    },
-    input: {
-      color: theme.colors.white,
-      fontSize: 14,
-      includeFontPadding: false,
-      flex: 1,
-    },
-    icon: {
-      height: 32,
-      width: 32,
-      marginHorizontal: 12,
-      tintColor: theme.colors.silverMetallic,
-    },
-    errorText: {
-      fontSize: 12,
-      marginTop: 4,
-      paddingLeft: 16,
-      color: theme.colors.tartOrange,
-    },
-  };
-});
+    return {
+      label: {
+        fontSize: 14,
+        marginBottom: 8,
+        color: theme.colors.white,
+      },
+      inputContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        height: 48,
+        paddingLeft: 16,
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: 'center',
+        borderColor,
+        backgroundColor:
+          variant === 'data' ? 'transparent' : theme.colors.primary,
+      },
+      input: {
+        color: theme.colors.white,
+        fontSize: 14,
+        includeFontPadding: false,
+        flex: 1,
+      },
+      iconContainer: {
+        borderRadius: 64,
+        overflow: 'hidden',
+        marginHorizontal: confirmable ? 12 : 0,
+      },
+      icon: {
+        height: 24,
+        width: 24,
+        marginHorizontal: confirmable ? 0 : 12,
+        tintColor: theme.colors.silverMetallic,
+      },
+      errorText: {
+        fontSize: 12,
+        marginTop: 4,
+        paddingLeft: 16,
+        color: theme.colors.tartOrange,
+      },
+    };
+  }
+);
 
 export default InputField;

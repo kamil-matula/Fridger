@@ -31,7 +31,7 @@ const FridgeDetailsRow = ({ product }) => {
             expiration date: {product.expirationDate}
           </Text>
         </View>
-        <View style={{ borderRadius: 64, overflow: 'hidden' }}>
+        <View style={styles.iconContainer}>
           <TouchableRipple
             onPress={() => {
               // TODO: Display "Reduce Quantity Dialog"
@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 10,
     color: theme.colors.tartOrange,
   },
+  iconContainer: { borderRadius: 64, overflow: 'hidden' },
   icon: {
     width: 32,
     height: 32,
