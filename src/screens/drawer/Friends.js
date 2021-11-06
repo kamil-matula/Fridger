@@ -238,14 +238,14 @@ const useStyles = makeStyles((theme) => ({
     height: 1,
   },
   header: {
-    color: theme.colors.text,
+    color: theme.colors.white,
     fontSize: 18,
     fontWeight: 'bold',
     paddingHorizontal: 16,
     paddingTop: 16,
   },
   text: {
-    color: theme.colors.text,
+    color: theme.colors.white,
     fontSize: 14,
   },
   userID: {
@@ -266,7 +266,7 @@ const useStyles = makeStyles((theme) => ({
     elevation: 0,
   },
   snackbarText: {
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
 }));
 

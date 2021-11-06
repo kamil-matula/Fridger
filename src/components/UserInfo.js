@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme, { variant, iconTint1, iconTint2 }) => {
       padding: 16,
     },
     title: {
-      color: theme.colors.text,
+      color: theme.colors.white,
     },
     subtitle: {
       color: theme.colors.silverMetallic,

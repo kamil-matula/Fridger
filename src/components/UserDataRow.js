@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   data: {
     fontSize: 20,
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
 }));
 

@@ -32,7 +32,7 @@ const AppBar = ({
         <Appbar.Action
           icon={back}
           onPress={() => navigation.pop()}
-          color={colors.text}
+          color={colors.white}
         />
       )}
 
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontSize: 20,
     fontWeight: '500',
-    color: theme.colors.text,
+    color: theme.colors.white,
     textTransform: 'capitalize',
   },
 }));

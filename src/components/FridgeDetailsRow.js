@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
   name: {
     fontSize: 14,
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
   producer: {
     fontSize: 12,

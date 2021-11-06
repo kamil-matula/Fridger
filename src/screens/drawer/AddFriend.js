@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     padding: 16,
-    color: theme.colors.text,
+    color: theme.colors.white,
     fontSize: 20,
   },
   divider: {
@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.primary,
   },
   snackbarText: {
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
 }));
 

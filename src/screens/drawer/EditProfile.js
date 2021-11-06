@@ -193,7 +193,7 @@ const useStyles = makeStyles((theme) => ({
   badge: {
     width: 32,
     height: 32,
-    tintColor: theme.colors.text,
+    tintColor: theme.colors.white,
   },
 }));
 

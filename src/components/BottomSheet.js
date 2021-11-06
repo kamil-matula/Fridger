@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     textAlignVertical: 'center',
     fontSize: 18,
     fontWeight: 'bold',
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
   wrapper: {
     backgroundColor: theme.colors.blackSemiTransparent,
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
   },
   divider: {
-    backgroundColor: theme.colors.text,
+    backgroundColor: theme.colors.white,
   },
 }));
 

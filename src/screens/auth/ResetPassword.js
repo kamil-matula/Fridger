@@ -90,13 +90,13 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     fontSize: 36,
-    color: theme.colors.text,
+    color: theme.colors.white,
     textAlign: 'center',
   },
   text: {
     marginTop: 16,
     fontSize: 18,
-    color: theme.colors.text,
+    color: theme.colors.white,
     textAlign: 'center',
   },
 }));

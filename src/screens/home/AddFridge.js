@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     padding: 16,
-    color: theme.colors.text,
+    color: theme.colors.white,
     fontSize: 20,
   },
   divider: {

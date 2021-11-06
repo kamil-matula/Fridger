@@ -127,13 +127,13 @@ const useStyles = makeStyles((theme) => ({
   header: {
     marginVertical: 64,
     fontSize: 36,
-    color: theme.colors.text,
+    color: theme.colors.white,
     textAlign: 'center',
   },
   text: {
     marginVertical: 16,
     fontSize: 14,
-    color: theme.colors.text,
+    color: theme.colors.white,
     textAlign: 'center',
   },
 }));

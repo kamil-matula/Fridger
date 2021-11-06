@@ -23,7 +23,7 @@ const DrawerNavigator = () => {
       initialRouteName='Home'
       screenOptions={{
         headerTransparent: true,
-        headerTintColor: colors.text,
+        headerTintColor: colors.white,
         headerTitleStyle: { color: 'transparent' },
       }}
       drawerContent={({ navigation }) => (

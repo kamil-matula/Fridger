@@ -8,7 +8,7 @@ export const CustomTheme = {
     richBlack: '#111113', // status bar
     background: '#202124', // whole page
     accent: '#5DADEC', // snackbar action
-    text: '#E8EAED',
+    white: '#E8EAED', // labels
     whiteSemiTransparent: '#E8EAED80',
     cyberYellow: '#FFD300', // active tab
     silverMetallic: '#9AA0A6', // inactive tab

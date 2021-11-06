@@ -96,7 +96,7 @@ InputField.propTypes = {
 
 const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
   const borderColor = (() => {
-    if (isFocused) return theme.colors.text;
+    if (isFocused) return theme.colors.white;
     if (invalid) return theme.colors.tartOrange;
     if (variant === 'account') return 'transparent';
     return theme.colors.whiteSemiTransparent;
@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
     label: {
       fontSize: 14,
       marginBottom: 8,
-      color: theme.colors.text,
+      color: theme.colors.white,
     },
     inputContainer: {
       flexDirection: 'row',
@@ -120,7 +120,7 @@ const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
         variant === 'data' ? 'transparent' : theme.colors.primary,
     },
     input: {
-      color: theme.colors.text,
+      color: theme.colors.white,
       fontSize: 14,
       includeFontPadding: false,
       flex: 1,

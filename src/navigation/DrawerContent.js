@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.silverMetallic,
   },
   divider: {
-    backgroundColor: theme.colors.text,
+    backgroundColor: theme.colors.white,
   },
   buttonContainer: {
     margin: 16,
