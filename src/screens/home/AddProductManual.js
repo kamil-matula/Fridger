@@ -98,7 +98,7 @@ const AddProductManual = ({ navigation }) => {
         label='Add product'
         icon1={scanner}
         onPressIcon1={() => {
-          navigation.navigate('AddProductAutomat');
+          navigation.replace('AddProductAutomat');
         }}
       />
       <ScrollViewLayout>

@@ -101,7 +101,7 @@ const AddProductAutomat = ({ navigation }) => {
         label='Add product'
         icon1={edit}
         onPressIcon1={() => {
-          navigation.navigate('AddProductManual');
+          navigation.replace('AddProductManual');
         }}
       />
       <View style={styles.scannerContainer}>
