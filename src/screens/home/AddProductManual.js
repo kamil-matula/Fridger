@@ -18,13 +18,7 @@ import { scanner, calendar, expand, check } from 'assets/icons';
 const AddProductManual = ({ navigation }) => {
   const styles = useStyles();
 
-  // Bottom Sheet
-  const refBS = useRef(null);
-  const showBottomSheet = () => {
-    refBS.current.open();
-  };
-
-  // Form
+  // Form states:
   const { control, handleSubmit, setFocus, setValue, reset, watch } = useForm({
     defaultValues: {
       name: '',
@@ -34,7 +28,6 @@ const AddProductManual = ({ navigation }) => {
       unit: 'pcs',
     },
   });
-
   const rules = {
     name: {
       required: 'Name is required',
@@ -53,14 +46,23 @@ const AddProductManual = ({ navigation }) => {
     },
   };
 
-  const unit = watch('unit');
+  // Bottom sheet with quantity types:
+  const refBS = useRef(null);
+  const showBottomSheet = () => {
+    refBS.current.open();
+  };
 
+  // Quantity type:
+  const unit = watch('unit');
   const changeUnit = (value) => {
+    // Update state:
     setValue('unit', value);
+
+    // Hide bottom sheet:
     refBS.current.close();
   };
 
-  // Date picker
+  // Date picker states:
   const [date, setDate] = useState(new Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
 
@@ -76,17 +78,21 @@ const AddProductManual = ({ navigation }) => {
     // TODO: Make sure that it works on iOS devices
   };
 
+  // Helper function for retrieving friendly date from datePicker:
   const dateToString = (numDate) =>
     `${numDate.getDate()}.${numDate.getMonth()}.${numDate.getFullYear()}`;
 
+  // Display calendar:
   const showDatepicker = () => {
     setDatepickerVisible(true);
   };
 
-  // Submit
-  // eslint-disable-next-line no-unused-vars
+  // Submitting form:
   const addProduct = (data) => {
-    // TODO: Add product to fridge
+    // TODO: Send request to API to add product to fridge
+    console.log(`Product ${JSON.stringify(data)} added to fridge`);
+
+    // Reset states:
     reset({
       name: '',
       producer: '',
@@ -94,6 +100,9 @@ const AddProductManual = ({ navigation }) => {
       quantity: '',
       unit: 'pcs',
     });
+
+    // Go back:
+    navigation.goBack();
   };
 
   return (
@@ -105,6 +114,8 @@ const AddProductManual = ({ navigation }) => {
           navigation.replace('AddProductAutomat');
         }}
       />
+
+      {/* Providing data */}
       <ScrollViewLayout>
         <View>
           <InputField
@@ -171,9 +182,13 @@ const AddProductManual = ({ navigation }) => {
           </View>
         </View>
       </ScrollViewLayout>
+
+      {/* Calendar */}
       {datepickerVisible && (
         <DateTimePicker value={date} mode='date' onChange={onChange} />
       )}
+
+      {/* Quantity types */}
       <BottomSheet reference={refBS} title='Choose unit'>
         <SheetRow
           icon={unit === 'kg' ? check : null}
@@ -211,9 +226,12 @@ const AddProductManual = ({ navigation }) => {
           }}
         />
       </BottomSheet>
+
+      {/* Button at the bottom */}
       <FloatingActionButton
         label='Add product'
         onPress={() => {
+          // TODO: Fix executing the method below:
           handleSubmit(addProduct);
         }}
         centered
