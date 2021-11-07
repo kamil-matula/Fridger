@@ -5,9 +5,10 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { Menu, ShoppingLists } from 'screens/home';
+import { Menu } from 'screens/home';
 import { fridgeTab, listTab, menuTab } from 'assets/icons/navigation';
 import FridgeNavigator from './FridgeNavigator';
+import ShoppingListNavigator from './ShoppingListNavigator';
 
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
@@ -23,6 +24,7 @@ const BottomNavigator = () => {
       backBehavior='none'
       initialRouteName='Menu'
     >
+      {/* MENU */}
       <Tab.Screen
         name='Menu'
         component={Menu}
@@ -43,6 +45,8 @@ const BottomNavigator = () => {
           tabBarLabel: 'MENU',
         }}
       />
+
+      {/* FRIDGES, FRIDGE DETAILS */}
       <Tab.Screen
         name='Fridges'
         component={FridgeNavigator}
@@ -63,9 +67,11 @@ const BottomNavigator = () => {
           tabBarLabel: 'FRIDGES',
         }}
       />
+
+      {/* SHOPPING LISTS, SHOPPING LIST DETAILS */}
       <Tab.Screen
         name='Shopping Lists'
-        component={ShoppingLists}
+        component={ShoppingListNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image

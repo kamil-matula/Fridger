@@ -29,11 +29,14 @@ const DrawerNavigator = () => {
         <DrawerContent navigation={navigation} />
       )}
     >
+      {/* MAIN SCREEN: MENU, FRIDGES, SHOPPING LISTS (+ DETAILS) */}
       <Drawer.Screen
         name='Home'
         component={BottomNavigator}
         options={{ headerShown: false }}
       />
+
+      {/* SCREENS FROM THE DRAWER: ACCOUNT MANAGEMENT */}
       <Drawer.Screen
         name='EditProfile'
         component={EditProfile}

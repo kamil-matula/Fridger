@@ -22,19 +22,19 @@ const Navigation = () => (
 const Stack = createStackNavigator();
 const StackNavigator = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    {/* PRE-HOME */}
+    {/* BEFORE AUTHENTICATION */}
     <Stack.Screen name='Login' component={Login} />
     <Stack.Screen name='ResetPassword' component={ResetPassword} />
     <Stack.Screen name='Register' component={Register} />
     <Stack.Screen name='RegisterFeedback' component={RegisterFeedback} />
 
-    {/* LEVEL 1 */}
+    {/* LEVEL 1 (BOTTOM TABS) & LEVEL 2 (ACCOUNT MANAGEMENT, FRIDGE/LIST DETAILS) */}
     <Stack.Screen name='DrawerNavigator' component={DrawerNavigator} />
 
     {/* LEVEL 2 */}
     <Stack.Screen name='AddFridge' component={AddFridge} />
-    <Stack.Screen name='FriendProfile' component={FriendProfile} />
     <Stack.Screen name='AddFriend' component={AddFriend} />
+    <Stack.Screen name='FriendProfile' component={FriendProfile} />
 
     {/* LEVEL 3 */}
     <Stack.Screen name='Share' component={Share} />
