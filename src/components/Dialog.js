@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { View } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 import Button from './Button';
 import RadioButtonGroup from './RadioButtonGroup';
 import InputField from './InputField';
+import Separator from './Separator';
 
 const DialogBox = ({
   title,
@@ -18,18 +18,13 @@ const DialogBox = ({
   onPressLabel1 = null,
   label2 = null,
   onPressLabel2 = null,
-  quantities,
+  control,
+  checkedState,
+  reduceQuantityItem,
+  dialogHeight,
 }) => {
   const styles = useStyles();
   const [visible, setVisible] = visibilityState;
-
-  // Reducing quantity:
-  const [checked, setChecked] = useState(null);
-  const { control } = useForm({
-    defaultValues: {
-      quantity: '',
-    },
-  });
 
   return (
     <Portal>
@@ -41,26 +36,32 @@ const DialogBox = ({
         }}
       >
         <Dialog.Title style={styles.title}>{title}</Dialog.Title>
-        <Dialog.Content>
-          {!quantities ? (
+
+        {/* Question or radio buttons with input field */}
+        <Dialog.Content height={dialogHeight}>
+          {!reduceQuantityItem ? (
             <Paragraph>{paragraph}</Paragraph>
           ) : (
             <>
               <RadioButtonGroup
                 items={['eaten', 'wasted', 'disappeared']}
-                checkedState={[checked, setChecked]}
+                checkedState={checkedState}
               />
+              <Separator />
               <InputField
                 control={control}
                 name='quantity'
                 returnKeyType='done'
-                placeholder='placeholder'
-                variant='data'
+                variant='quantity'
+                postfix={`/ ${reduceQuantityItem.maxQuantity} ${reduceQuantityItem.quantityType}`}
+                keyboardType='numeric'
               />
             </>
           )}
         </Dialog.Content>
-        <Dialog.Actions>
+
+        {/* Buttons */}
+        <Dialog.Actions style={{ margin: 0, padding: 0 }}>
           <View style={styles.buttonContainer}>
             <Button
               label={label1}
@@ -85,6 +86,7 @@ const DialogBox = ({
 };
 
 DialogBox.propTypes = {
+  // Main properties
   title: PropTypes.string.isRequired,
   paragraph: PropTypes.string,
   visibilityState: PropTypes.array.isRequired,
@@ -92,7 +94,12 @@ DialogBox.propTypes = {
   onPressLabel1: PropTypes.func.isRequired,
   label2: PropTypes.string.isRequired,
   onPressLabel2: PropTypes.func.isRequired,
-  quantities: PropTypes.array,
+
+  // Properties needed in ReduceQuantity dialog:
+  control: PropTypes.object,
+  checkedState: PropTypes.array,
+  reduceQuantityItem: PropTypes.object,
+  dialogHeight: PropTypes.number,
 };
 
 const useStyles = makeStyles(() => ({

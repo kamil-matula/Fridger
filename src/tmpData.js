@@ -80,7 +80,7 @@ export const friendsList = [
 export const productsInFridgeList = [
   {
     id: 1,
-    name: 'Pain de mie à la farine complète',
+    name: 'Pain de mie à la farine complète 1',
     producer: 'La Boulangère Bio',
     currentQuantity: 200,
     maxQuantity: 500,
@@ -91,9 +91,9 @@ export const productsInFridgeList = [
   },
   {
     id: 2,
-    name: 'Pain de mie à la farine complète',
+    name: 'Pain de mie à la farine complète 2',
     producer: 'La Boulangère Bio',
-    currentQuantity: 200,
+    currentQuantity: 450,
     maxQuantity: 500,
     quantityType: 'g',
     expirationDate: '31.12.2025',
@@ -102,9 +102,9 @@ export const productsInFridgeList = [
   },
   {
     id: 3,
-    name: 'Pain de mie à la farine complète',
+    name: 'Pain de mie à la farine complète 3',
     producer: 'La Boulangère Bio',
-    currentQuantity: 200,
+    currentQuantity: 300,
     maxQuantity: 500,
     quantityType: 'g',
     expirationDate: '31.12.2025',

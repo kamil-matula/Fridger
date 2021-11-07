@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 
 import { FlatList, View, Text, Image } from 'react-native';
 import { Divider, TouchableRipple } from 'react-native-paper';
+import { useForm } from 'react-hook-form';
 
 import {
   AppBar,
@@ -51,19 +52,47 @@ const FridgeDetails = ({ route, navigation }) => {
     setDeleteFridgeDialogVisible(false);
   };
 
-  // Reducing quantity:
-  const [reduceQuantityDialogVisible, setReduceQuantityDialogVisible] =
-    useState(false);
-  const confirmReduceQuantity = () => {
-    // TODO: Send request to API and wait for reducing product's quantity
-    console.log('Quanity of product [name] has been reduced');
+  // Reducing quantity - states:
+  const [reduceQuantityVisible, setReduceQuantityVisible] = useState(false);
+  const [reduceQuantityReason, setReduceQuantityReason] = useState(null);
+  const [reduceQuantityItem, setReduceQuantityItem] = useState(null);
+  const { control, reset, setValue, getValues } = useForm({
+    defaultValues: {
+      quantity: '',
+    },
+  });
 
-    // Hide dialog:
-    setReduceQuantityDialogVisible(false);
+  // Reducing quantity - dialog actions:
+  const confirmReduceQuantity = () => {
+    const newValue = getValues('quantity');
+    // TODO: Validate the input on the frontend and display snackbar or error.
+    // 1. Quantity should be lower than previous value.
+    // 2. Reason shouldn't be null.
+
+    // TODO: Send request to API and wait for reducing product's quantity
+    console.log(
+      `Quanity of product ${reduceQuantityItem.name} has been reduced due to: ${reduceQuantityReason}.` +
+        `\nPrevious value: ${reduceQuantityItem.currentQuantity} ${reduceQuantityItem.quantityType}.` +
+        `\nCurrent value: ${newValue} ${reduceQuantityItem.quantityType}.`
+    );
+
+    // Reset states:
+    setReduceQuantityVisible(false);
+    setReduceQuantityReason(null);
+    setReduceQuantityItem(null);
+    reset();
   };
   const cancelReduceQuantity = () => {
     // Hide dialog:
-    setReduceQuantityDialogVisible(false);
+    setReduceQuantityVisible(false);
+  };
+  const reduceQuantityOpen = (item) => {
+    // Set item:
+    setReduceQuantityItem(item);
+    setValue('quantity', item.currentQuantity.toString());
+
+    // Display dialog:
+    setReduceQuantityVisible(true);
   };
 
   // Other actions:
@@ -105,9 +134,7 @@ const FridgeDetails = ({ route, navigation }) => {
         renderItem={({ item }) => (
           <FridgeDetailsRow
             product={item}
-            onPressIcon={() => {
-              setReduceQuantityDialogVisible(true);
-            }}
+            onPressIcon={() => reduceQuantityOpen(item)}
           />
         )}
         keyExtractor={(item) => item.id.toString()}
@@ -167,15 +194,15 @@ const FridgeDetails = ({ route, navigation }) => {
       {/* Reducing quantity */}
       <Dialog
         title='Reduce quantity'
-        visibilityState={[
-          reduceQuantityDialogVisible,
-          setReduceQuantityDialogVisible,
-        ]}
+        visibilityState={[reduceQuantityVisible, setReduceQuantityVisible]}
         label1='cancel'
         onPressLabel1={cancelReduceQuantity}
         label2='ok'
         onPressLabel2={confirmReduceQuantity}
-        quantities={[250, 400, 'g']}
+        checkedState={[reduceQuantityReason, setReduceQuantityReason]}
+        reduceQuantityItem={reduceQuantityItem}
+        dialogHeight={160}
+        control={control}
       />
     </View>
   );

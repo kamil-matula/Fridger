@@ -25,6 +25,7 @@ const InputField = ({
   confirmable = false,
   onSubmitEditing,
   flex,
+  postfix,
   ...props
 }) => {
   // Validation:
@@ -66,9 +67,18 @@ const InputField = ({
           onSubmitEditing={onSubmitEditing}
           secureTextEntry={secure ? secureTextEntry : false}
           style={styles.input}
-          placeholderTextColor={theme.colors.silverMetallic}
+          placeholderTextColor={
+            variant === 'quantity'
+              ? theme.colors.white
+              : theme.colors.silverMetallic
+          }
           {...props}
         />
+
+        {/* Maximum quantity */}
+        {variant === 'quantity' && (
+          <Text style={styles.inputPostfix}>{postfix}</Text>
+        )}
 
         {/* Password hiding */}
         {secure && (
@@ -90,10 +100,11 @@ const InputField = ({
         )}
       </View>
 
+      {/* Current error */}
       {invalid ? (
         <Text style={styles.errorText}>{error.message}</Text>
       ) : (
-        <Separator height={20} />
+        <Separator height={variant === 'quantity' ? 0 : 20} />
       )}
     </>
   );
@@ -104,11 +115,12 @@ InputField.propTypes = {
   name: PropTypes.string.isRequired,
   control: PropTypes.object,
   rules: PropTypes.object,
-  variant: PropTypes.oneOf(['account', 'data']),
+  variant: PropTypes.oneOf(['account', 'data', 'quantity']),
   secure: PropTypes.bool,
   confirmable: PropTypes.bool,
   onSubmitEditing: PropTypes.func,
-  flex: PropTypes.number,
+  flex: PropTypes.number, // needed in AppBar
+  postfix: PropTypes.string, // needed in ReduceQuantity dialog
 };
 
 const useStyles = makeStyles(
@@ -117,33 +129,50 @@ const useStyles = makeStyles(
       if (isFocused) return theme.colors.white;
       if (invalid) return theme.colors.tartOrange;
       if (variant === 'account') return 'transparent';
+      if (variant === 'quantity') return theme.colors.white;
       return theme.colors.whiteSemiTransparent;
     })();
 
     return {
+      // Text above input field:
       label: {
         fontSize: 14,
         marginBottom: 8,
         color: theme.colors.white,
       },
+
+      // Input field:
       inputContainer: {
         flex,
         flexDirection: 'row',
-        height: 48,
+        height: variant === 'quantity' ? 37 : 48,
         paddingLeft: 16,
         borderWidth: 1,
         borderRadius: 5,
         alignItems: 'center',
         borderColor,
         backgroundColor:
-          variant === 'data' ? 'transparent' : theme.colors.primary,
+          variant === 'account' ? theme.colors.primary : 'transparent',
       },
+
+      // Text in input field:
       input: {
         color: theme.colors.white,
-        fontSize: 14,
+        fontSize: variant === 'quantity' ? 18 : 14,
         includeFontPadding: false,
+        textAlign: variant === 'quantity' ? 'right' : null,
+        paddingRight: 8,
         flex: 1,
       },
+
+      // Maximum quantity:
+      inputPostfix: {
+        color: theme.colors.silverMetallic,
+        fontSize: 18,
+        paddingRight: 8,
+      },
+
+      // Hiding password or submitting icons:
       iconContainer: {
         borderRadius: 64,
         overflow: 'hidden',
@@ -155,6 +184,8 @@ const useStyles = makeStyles(
         marginHorizontal: confirmable ? 0 : 12,
         tintColor: theme.colors.silverMetallic,
       },
+
+      // Error below input field:
       errorText: {
         fontSize: 12,
         marginTop: 4,
