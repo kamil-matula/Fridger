@@ -27,23 +27,22 @@ FloatingActionButton.propTypes = {
 };
 
 const useStyles = makeStyles((theme, { centered }) => {
-  // Common styles:
+  // Default styles:
   const obj = {
     fab: {
       position: 'absolute',
       margin: 16,
       bottom: 0,
+      right: 0,
       backgroundColor: theme.colors.blueJeans,
     },
   };
 
-  // Rendering on the right or in the middle:
+  // Rendering in the middle:
   if (centered) {
+    obj.fab.right = null;
     obj.fab.alignSelf = 'center';
     obj.fab.height = 48;
-  } else {
-    obj.fab.right = 0;
-    obj.fab.height = 56;
   }
 
   return obj;

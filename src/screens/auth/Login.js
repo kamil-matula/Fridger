@@ -39,10 +39,7 @@ const Login = ({ navigation }) => {
     console.log('login', data);
 
     // Go to Home Pages:
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'DrawerNavigator' }],
-    });
+    navigation.replace('DrawerNavigator');
   };
 
   return (

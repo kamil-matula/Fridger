@@ -16,7 +16,7 @@ import {
   vegetables,
 } from 'assets/icons/food';
 
-const FridgeRow = ({ title }) => {
+const FridgeRow = ({ fridgeID, title }) => {
   const styles = useStyles();
   const navigation = useNavigation();
 
@@ -24,7 +24,7 @@ const FridgeRow = ({ title }) => {
     <View>
       <TouchableRipple
         onPress={() => {
-          navigation.navigate('FridgeDetails', { title });
+          navigation.navigate('FridgeDetails', { fridgeID, title });
         }}
       >
         <View style={styles.container}>
@@ -48,6 +48,7 @@ const FridgeRow = ({ title }) => {
 };
 
 FridgeRow.propTypes = {
+  fridgeID: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
 };
 

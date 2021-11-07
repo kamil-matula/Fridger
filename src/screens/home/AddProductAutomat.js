@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { View, Platform, Text } from 'react-native';
+import { View, Text } from 'react-native';
+import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -16,15 +17,15 @@ import {
 } from 'components';
 import { makeStyles } from 'utils';
 import { edit, calendar } from 'assets/icons';
-import { Divider } from 'react-native-paper';
 
 const AddProductAutomat = ({ navigation }) => {
   const styles = useStyles();
 
-  // Scanner
+  // Scanner states:
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
+  // Requesting camera permission on launch:
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -32,30 +33,23 @@ const AddProductAutomat = ({ navigation }) => {
     })();
   }, []);
 
+  // Handling with data from barcode:
   const handleBarCodeScanned = ({ type, data }) => {
+    // Update state:
     setScanned(true);
+
+    // TODO: Send data to OpenFoodFacts API to retrieve information about product + update UI
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
-  // Bottom Sheet
-  const refBS = useRef(null);
-
-  const showBottomSheet = () => {
-    refBS.current.open();
-  };
-
-  // Form
+  // Form states:
   const { control, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
       expiration: '',
-      quantity: '',
+      quantity: '1',
     },
   });
-
   const rules = {
-    name: {
-      required: 'Name is required',
-    },
     quantity: {
       required: 'Quantity is required',
     },
@@ -67,32 +61,39 @@ const AddProductAutomat = ({ navigation }) => {
     },
   };
 
-  // Date picker
-  const [date, setDate] = useState(new Date());
+  // Date picker states:
+  const [date, setDate] = useState(Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
 
   const onChange = (event, selectedDate) => {
+    // Retrieve date:
     const currentDate = selectedDate || date;
-    setDatepickerVisible(Platform.OS === 'ios');
     setDate(currentDate);
     setValue('expiration', dateToString(currentDate));
+
+    // Hide calendar:
+    setDatepickerVisible(false);
+
+    // TODO: Make sure that it works on iOS devices
   };
 
+  // Helper function for retrieving friendly date from datePicker:
   const dateToString = (numDate) =>
     `${numDate.getDate()}.${numDate.getMonth()}.${numDate.getFullYear()}`;
 
-  const showDatepicker = () => {
-    setDatepickerVisible(true);
-  };
-
-  // Submit
-  // eslint-disable-next-line no-unused-vars
+  // Submitting form:
   const addProduct = (data) => {
-    // TODO: Add product to fridge
+    // TODO: Send request to API to add product to fridge
+    console.log(`Product ${JSON.stringify(data)} added to fridge`);
+
+    // Reset states:
     reset({
-      quantity: '',
+      quantity: '1',
       expiration: '',
     });
+
+    // Go back:
+    navigation.goBack();
   };
 
   return (
@@ -104,6 +105,9 @@ const AddProductAutomat = ({ navigation }) => {
           navigation.replace('AddProductManual');
         }}
       />
+
+      {/* TODO: Add possibility to request permissions once again by clicking the label */}
+      {/* Scanning barcode */}
       <View style={styles.scannerContainer}>
         {hasPermission && (
           <>
@@ -130,6 +134,9 @@ const AddProductAutomat = ({ navigation }) => {
           <Text style={styles.accessText}>No access to camera</Text>
         )}
       </View>
+
+      {/* TODO: Display data from API instead of hardcoded one */}
+      {/* Product data from API */}
       <ProductInfo
         text='Orzeszki ziemne smażone w chrupiącej posypce'
         subtext1='La Boulangère Bio'
@@ -138,20 +145,21 @@ const AddProductAutomat = ({ navigation }) => {
         nova='N1'
       />
       <Divider style={styles.divider} />
+
+      {/* Providing data */}
       <ScrollViewLayout>
         <View>
           <Separator height={16} />
           <View style={{ width: '50%' }}>
             <InputField
               control={control}
-              rules={rules.expiration}
-              onSubmitEditing={showBottomSheet}
+              rules={rules.quantity}
               name='quantity'
               label='Quantity'
               keyboardType='numeric'
               variant='data'
               returnKeyType='done'
-              placeholder='Enter quantity'
+              textAlign='right'
             />
           </View>
           <View style={{ width: '50%' }}>
@@ -162,21 +170,31 @@ const AddProductAutomat = ({ navigation }) => {
               label='Expiration date'
               variant='data'
               editable={false}
-              icon={calendar}
-              onIconPress={showDatepicker}
               returnKeyType='next'
               placeholder='dd.MM.rrrr'
+              icon={calendar}
+              onIconPress={() => {
+                // Display calendar:
+                setDatepickerVisible(true);
+
+                // TODO: Fix displaying calendar (Pixel 4a crashes here)
+              }}
             />
           </View>
         </View>
         <Separator height={60} />
       </ScrollViewLayout>
+
+      {/* Calendar */}
       {datepickerVisible && (
         <DateTimePicker value={date} mode='date' onChange={onChange} />
       )}
+
+      {/* Button at the bottom */}
       <FloatingActionButton
         label='Add product'
         onPress={() => {
+          // TODO: Fix executing the method below:
           handleSubmit(addProduct);
         }}
         centered
@@ -211,7 +229,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 24,
     color: theme.colors.tartOrange,
   },
-
   divider: {
     backgroundColor: theme.colors.silverMetallic,
   },

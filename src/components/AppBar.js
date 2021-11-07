@@ -51,7 +51,7 @@ const AppBar = ({
         />
       )}
 
-      {/* Input field responsible for changing name */}
+      {/* Name of current page / input field responsible for changing name */}
       <Controller
         control={control}
         name='label'

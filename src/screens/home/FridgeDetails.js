@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 
 import { FlatList, View, Text, Image } from 'react-native';
 import { Divider, TouchableRipple } from 'react-native-paper';
+import { useForm } from 'react-hook-form';
 
 import {
   AppBar,
@@ -28,7 +29,7 @@ const FridgeDetails = ({ route, navigation }) => {
 
   // Params from navigation
   // (TODO: Replace with more appropriate params):
-  const { title } = route.params;
+  const { fridgeID, title } = route.params;
 
   // Sorting:
   // eslint-disable-next-line no-unused-vars
@@ -37,16 +38,61 @@ const FridgeDetails = ({ route, navigation }) => {
   const [sortingDirection, setSortingDirection] = useState('asc');
 
   // Deleting:
-  const [dialogVisible, setDialogVisible] = useState(false);
+  const [deleteFridgeDialogVisible, setDeleteFridgeDialogVisible] =
+    useState(false);
   const removeFridge = () => {
     // TODO: Send request to API and wait for removing fridge from the list
 
     // Hide dialog and go back:
-    setDialogVisible(false);
+    setDeleteFridgeDialogVisible(false);
     navigation.pop();
   };
   const cancelRemoveFridge = () => {
-    setDialogVisible(false);
+    // Hide dialog:
+    setDeleteFridgeDialogVisible(false);
+  };
+
+  // Reducing quantity - states:
+  const [reduceQuantityVisible, setReduceQuantityVisible] = useState(false);
+  const [reduceQuantityReason, setReduceQuantityReason] = useState(null);
+  const [reduceQuantityItem, setReduceQuantityItem] = useState(null);
+  const { control, reset, setValue, getValues } = useForm({
+    defaultValues: {
+      quantity: '',
+    },
+  });
+
+  // Reducing quantity - dialog actions:
+  const confirmReduceQuantity = () => {
+    const newValue = getValues('quantity');
+    // TODO: Validate the input on the frontend and display snackbar or error.
+    // 1. Quantity should be lower than previous value.
+    // 2. Reason shouldn't be null.
+
+    // TODO: Send request to API and wait for reducing product's quantity
+    console.log(
+      `Quanity of product ${reduceQuantityItem.name} has been reduced due to: ${reduceQuantityReason}.` +
+        `\nPrevious value: ${reduceQuantityItem.currentQuantity} ${reduceQuantityItem.quantityType}.` +
+        `\nCurrent value: ${newValue} ${reduceQuantityItem.quantityType}.`
+    );
+
+    // Reset states:
+    setReduceQuantityVisible(false);
+    setReduceQuantityReason(null);
+    setReduceQuantityItem(null);
+    reset();
+  };
+  const cancelReduceQuantity = () => {
+    // Hide dialog:
+    setReduceQuantityVisible(false);
+  };
+  const reduceQuantityOpen = (item) => {
+    // Set item:
+    setReduceQuantityItem(item);
+    setValue('quantity', item.currentQuantity.toString());
+
+    // Display dialog:
+    setReduceQuantityVisible(true);
   };
 
   // Other actions:
@@ -85,7 +131,12 @@ const FridgeDetails = ({ route, navigation }) => {
       <FlatList
         style={styles.list}
         data={productsInFridgeList}
-        renderItem={({ item }) => <FridgeDetailsRow product={item} />}
+        renderItem={({ item }) => (
+          <FridgeDetailsRow
+            product={item}
+            onPressIcon={() => reduceQuantityOpen(item)}
+          />
+        )}
         keyExtractor={(item) => item.id.toString()}
       />
       <FloatingActionButton
@@ -102,7 +153,7 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and change screen:
             refBS.current.close();
-            navigation.navigate('Share', { fridgeID: 1 });
+            navigation.navigate('Share', { fridgeID });
           }}
         />
         <SheetRow
@@ -111,7 +162,7 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and change screen:
             refBS.current.close();
-            navigation.navigate('EditPermissions', { fridgeID: 1 });
+            navigation.navigate('EditPermissions', { fridgeID });
           }}
         />
         <SheetRow
@@ -120,7 +171,7 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and show dialog responsible for deleting fridge:
             refBS.current.close();
-            setDialogVisible(true);
+            setDeleteFridgeDialogVisible(true);
           }}
         />
         <SheetRow icon={logout} text='Quit' onPress={() => {}} />
@@ -130,11 +181,28 @@ const FridgeDetails = ({ route, navigation }) => {
       <Dialog
         title='Delete fridge'
         paragraph={`Are you sure you want to delete fridge ${title}? This action cannot be undone.`}
-        visibilityState={[dialogVisible, setDialogVisible]}
+        visibilityState={[
+          deleteFridgeDialogVisible,
+          setDeleteFridgeDialogVisible,
+        ]}
         label1='delete'
         onPressLabel1={removeFridge}
         label2='cancel'
         onPressLabel2={cancelRemoveFridge}
+      />
+
+      {/* Reducing quantity */}
+      <Dialog
+        title='Reduce quantity'
+        visibilityState={[reduceQuantityVisible, setReduceQuantityVisible]}
+        label1='cancel'
+        onPressLabel1={cancelReduceQuantity}
+        label2='ok'
+        onPressLabel2={confirmReduceQuantity}
+        checkedState={[reduceQuantityReason, setReduceQuantityReason]}
+        reduceQuantityItem={reduceQuantityItem}
+        dialogHeight={160}
+        control={control}
       />
     </View>
   );

@@ -9,6 +9,7 @@ import { N1, N2, N3, N4, A, B, C, D, E } from 'assets/icons/nova-nutri';
 const ProductInfo = ({ text, subtext1, subtext2, nova, nutri }) => {
   const styles = useStyles();
 
+  // Nova-Score icon:
   const novaIcon = (() => {
     if (nova === 'N1') return N1;
     if (nova === 'N2') return N2;
@@ -17,6 +18,7 @@ const ProductInfo = ({ text, subtext1, subtext2, nova, nutri }) => {
     return null;
   })();
 
+  // Nutri-Score icon:
   const nutriIcon = (() => {
     if (nutri === 'A') return A;
     if (nutri === 'B') return B;

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from 'utils';
 import { reduce } from 'assets/icons';
 
-const FridgeDetailsRow = ({ product }) => {
+const FridgeDetailsRow = ({ product, onPressIcon }) => {
   const styles = useStyles();
 
   return (
@@ -32,11 +32,7 @@ const FridgeDetailsRow = ({ product }) => {
           </Text>
         </View>
         <View style={styles.iconContainer}>
-          <TouchableRipple
-            onPress={() => {
-              // TODO: Display "Reduce Quantity Dialog"
-            }}
-          >
+          <TouchableRipple onPress={onPressIcon}>
             <Image source={reduce} style={styles.icon} />
           </TouchableRipple>
         </View>
@@ -46,7 +42,8 @@ const FridgeDetailsRow = ({ product }) => {
 };
 
 FridgeDetailsRow.propTypes = {
-  product: PropTypes.object,
+  product: PropTypes.object.isRequired,
+  onPressIcon: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
