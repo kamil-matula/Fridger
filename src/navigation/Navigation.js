@@ -11,6 +11,12 @@ import {
   Share,
   EditPermissions,
 } from 'screens/friends';
+import {
+  EditProfile,
+  ChangePassword,
+  Friends,
+  DeleteAccount,
+} from 'screens/drawer';
 import DrawerNavigator from './DrawerNavigator';
 
 const Navigation = () => (
@@ -22,19 +28,23 @@ const Navigation = () => (
 const Stack = createStackNavigator();
 const StackNavigator = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    {/* PRE-HOME */}
+    {/* BEFORE AUTHENTICATION */}
     <Stack.Screen name='Login' component={Login} />
     <Stack.Screen name='ResetPassword' component={ResetPassword} />
     <Stack.Screen name='Register' component={Register} />
     <Stack.Screen name='RegisterFeedback' component={RegisterFeedback} />
 
-    {/* LEVEL 1 */}
+    {/* LEVEL 1 (BOTTOM TABS) & LEVEL 2 (FRIDGE/LIST DETAILS) */}
     <Stack.Screen name='DrawerNavigator' component={DrawerNavigator} />
 
-    {/* LEVEL 2 */}
+    {/* LEVEL 2 (DRAWER + ADDING NEW STUFF) */}
+    <Stack.Screen name='EditProfile' component={EditProfile} />
+    <Stack.Screen name='ChangePassword' component={ChangePassword} />
+    <Stack.Screen name='Friends' component={Friends} />
+    <Stack.Screen name='DeleteAccount' component={DeleteAccount} />
     <Stack.Screen name='AddFridge' component={AddFridge} />
-    <Stack.Screen name='FriendProfile' component={FriendProfile} />
     <Stack.Screen name='AddFriend' component={AddFriend} />
+    <Stack.Screen name='FriendProfile' component={FriendProfile} />
 
     {/* LEVEL 3 */}
     <Stack.Screen name='Share' component={Share} />

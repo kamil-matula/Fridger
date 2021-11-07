@@ -50,7 +50,7 @@ const Share = ({ route, navigation }) => {
           <UserInfo
             key={e.id}
             title={e.nick}
-            subtitle={`${e.name} ${e.surname}`}
+            subtitle={e.name ? `${e.name} ${e.surname ? e.surname : ''}` : null}
             avatarURI={e.avatar}
             variant='small'
             icon1={add}

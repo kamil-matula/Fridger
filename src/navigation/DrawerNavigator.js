@@ -3,12 +3,6 @@ import React from 'react';
 import { useTheme } from 'react-native-paper';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import {
-  ChangePassword,
-  DeleteAccount,
-  EditProfile,
-  Friends,
-} from 'screens/drawer';
 import BottomNavigator from './BottomNavigator';
 import DrawerContent from './DrawerContent';
 
@@ -25,34 +19,16 @@ const DrawerNavigator = () => {
         headerTitleStyle: { color: 'transparent' },
       }}
       drawerContent={({ navigation }) => (
-        // Custom design for drawer content:
+        // Custom design for drawer content
+        // (contains connections with drawer screens like EditProfile):
         <DrawerContent navigation={navigation} />
       )}
     >
+      {/* MAIN SCREEN: MENU, FRIDGES, SHOPPING LISTS (+ DETAILS) */}
       <Drawer.Screen
         name='Home'
         component={BottomNavigator}
         options={{ headerShown: false }}
-      />
-      <Drawer.Screen
-        name='EditProfile'
-        component={EditProfile}
-        options={{ headerShown: false, swipeEnabled: false }}
-      />
-      <Drawer.Screen
-        name='ChangePassword'
-        component={ChangePassword}
-        options={{ headerShown: false, swipeEnabled: false }}
-      />
-      <Drawer.Screen
-        name='Friends'
-        component={Friends}
-        options={{ headerShown: false, swipeEnabled: false }}
-      />
-      <Drawer.Screen
-        name='DeleteAccount'
-        component={DeleteAccount}
-        options={{ headerShown: false, swipeEnabled: false }}
       />
     </Drawer.Navigator>
   );
