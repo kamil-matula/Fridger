@@ -64,6 +64,7 @@ const AppBar = ({
           returnKeyType='done'
           placeholder={label}
           onSubmitEditing={handleSubmit(stopEditing)}
+          flex={1}
           confirmable
         />
       )}

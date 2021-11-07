@@ -24,6 +24,7 @@ const InputField = ({
   secure = false,
   confirmable = false,
   onSubmitEditing,
+  flex,
   ...props
 }) => {
   // Validation:
@@ -45,7 +46,7 @@ const InputField = ({
   const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
 
   // Styling:
-  const styles = useStyles({ invalid, isFocused, variant, confirmable });
+  const styles = useStyles({ invalid, isFocused, variant, confirmable, flex });
   const theme = useTheme();
 
   return (
@@ -107,10 +108,11 @@ InputField.propTypes = {
   secure: PropTypes.bool,
   confirmable: PropTypes.bool,
   onSubmitEditing: PropTypes.func,
+  flex: PropTypes.number,
 };
 
 const useStyles = makeStyles(
-  (theme, { invalid, isFocused, variant, confirmable }) => {
+  (theme, { invalid, isFocused, variant, confirmable, flex }) => {
     const borderColor = (() => {
       if (isFocused) return theme.colors.white;
       if (invalid) return theme.colors.tartOrange;
@@ -125,7 +127,7 @@ const useStyles = makeStyles(
         color: theme.colors.white,
       },
       inputContainer: {
-        flex: 1,
+        flex,
         flexDirection: 'row',
         height: 48,
         paddingLeft: 16,

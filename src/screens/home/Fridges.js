@@ -17,7 +17,9 @@ const Fridges = ({ navigation }) => {
       <FlatList
         style={styles.list}
         data={fridgesList}
-        renderItem={({ item }) => <FridgeRow title={item.title} />}
+        renderItem={({ item }) => (
+          <FridgeRow fridgeID={item.id} title={item.title} />
+        )}
         keyExtractor={(item) => item.id}
       />
       <FloatingActionButton

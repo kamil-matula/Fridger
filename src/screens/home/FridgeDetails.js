@@ -28,7 +28,7 @@ const FridgeDetails = ({ route, navigation }) => {
 
   // Params from navigation
   // (TODO: Replace with more appropriate params):
-  const { title } = route.params;
+  const { fridgeID, title } = route.params;
 
   // Sorting:
   // eslint-disable-next-line no-unused-vars
@@ -37,16 +37,33 @@ const FridgeDetails = ({ route, navigation }) => {
   const [sortingDirection, setSortingDirection] = useState('asc');
 
   // Deleting:
-  const [dialogVisible, setDialogVisible] = useState(false);
+  const [deleteFridgeDialogVisible, setDeleteFridgeDialogVisible] =
+    useState(false);
   const removeFridge = () => {
     // TODO: Send request to API and wait for removing fridge from the list
 
     // Hide dialog and go back:
-    setDialogVisible(false);
+    setDeleteFridgeDialogVisible(false);
     navigation.pop();
   };
   const cancelRemoveFridge = () => {
-    setDialogVisible(false);
+    // Hide dialog:
+    setDeleteFridgeDialogVisible(false);
+  };
+
+  // Reducing quantity:
+  const [reduceQuantityDialogVisible, setReduceQuantityDialogVisible] =
+    useState(false);
+  const confirmReduceQuantity = () => {
+    // TODO: Send request to API and wait for reducing product's quantity
+    console.log('Quanity of product [name] has been reduced');
+
+    // Hide dialog:
+    setReduceQuantityDialogVisible(false);
+  };
+  const cancelReduceQuantity = () => {
+    // Hide dialog:
+    setReduceQuantityDialogVisible(false);
   };
 
   // Other actions:
@@ -85,7 +102,14 @@ const FridgeDetails = ({ route, navigation }) => {
       <FlatList
         style={styles.list}
         data={productsInFridgeList}
-        renderItem={({ item }) => <FridgeDetailsRow product={item} />}
+        renderItem={({ item }) => (
+          <FridgeDetailsRow
+            product={item}
+            onPressIcon={() => {
+              setReduceQuantityDialogVisible(true);
+            }}
+          />
+        )}
         keyExtractor={(item) => item.id.toString()}
       />
       <FloatingActionButton
@@ -102,7 +126,7 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and change screen:
             refBS.current.close();
-            navigation.navigate('Share', { fridgeID: 1 });
+            navigation.navigate('Share', { fridgeID });
           }}
         />
         <SheetRow
@@ -111,7 +135,7 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and change screen:
             refBS.current.close();
-            navigation.navigate('EditPermissions', { fridgeID: 1 });
+            navigation.navigate('EditPermissions', { fridgeID });
           }}
         />
         <SheetRow
@@ -120,7 +144,7 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and show dialog responsible for deleting fridge:
             refBS.current.close();
-            setDialogVisible(true);
+            setDeleteFridgeDialogVisible(true);
           }}
         />
         <SheetRow icon={logout} text='Quit' onPress={() => {}} />
@@ -130,11 +154,28 @@ const FridgeDetails = ({ route, navigation }) => {
       <Dialog
         title='Delete fridge'
         paragraph={`Are you sure you want to delete fridge ${title}? This action cannot be undone.`}
-        visibilityState={[dialogVisible, setDialogVisible]}
+        visibilityState={[
+          deleteFridgeDialogVisible,
+          setDeleteFridgeDialogVisible,
+        ]}
         label1='delete'
         onPressLabel1={removeFridge}
         label2='cancel'
         onPressLabel2={cancelRemoveFridge}
+      />
+
+      {/* Reducing quantity */}
+      <Dialog
+        title='Reduce quantity'
+        visibilityState={[
+          reduceQuantityDialogVisible,
+          setReduceQuantityDialogVisible,
+        ]}
+        label1='cancel'
+        onPressLabel1={cancelReduceQuantity}
+        label2='ok'
+        onPressLabel2={confirmReduceQuantity}
+        quantities={[250, 400, 'g']}
       />
     </View>
   );
