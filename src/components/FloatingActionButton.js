@@ -38,8 +38,13 @@ const useStyles = makeStyles((theme, { centered }) => {
   };
 
   // Rendering on the right or in the middle:
-  if (centered) obj.fab.alignSelf = 'center';
-  else obj.fab.right = 0;
+  if (centered) {
+    obj.fab.alignSelf = 'center';
+    obj.fab.height = 48;
+  } else {
+    obj.fab.right = 0;
+    obj.fab.height = 56;
+  }
 
   return obj;
 });
