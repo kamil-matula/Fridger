@@ -7,11 +7,11 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from 'react-native';
-import { TouchableRipple, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import { useController } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
-import { check, visibilityOn, visibilityOff } from 'assets/icons';
+import { visibilityOn, visibilityOff } from 'assets/icons';
 import { makeStyles } from 'utils';
 import Separator from './Separator';
 
@@ -20,11 +20,12 @@ const InputField = ({
   name,
   control,
   rules,
+  icon,
+  onIconPress,
   variant = 'account',
   secure = false,
-  confirmable = false,
   onSubmitEditing,
-  flex,
+  blurOnSubmit = false,
   postfix,
   ...props
 }) => {
@@ -47,7 +48,7 @@ const InputField = ({
   const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
 
   // Styling:
-  const styles = useStyles({ invalid, isFocused, variant, confirmable, flex });
+  const styles = useStyles({ invalid, isFocused, variant });
   const theme = useTheme();
 
   return (
@@ -63,15 +64,11 @@ const InputField = ({
           onChangeText={field.onChange}
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
-          blurOnSubmit={!onSubmitEditing}
+          blurOnSubmit={!onSubmitEditing || blurOnSubmit}
           onSubmitEditing={onSubmitEditing}
           secureTextEntry={secure ? secureTextEntry : false}
           style={styles.input}
-          placeholderTextColor={
-            variant === 'quantity'
-              ? theme.colors.white
-              : theme.colors.silverMetallic
-          }
+          placeholderTextColor={theme.colors.silverMetallic}
           {...props}
         />
 
@@ -89,14 +86,10 @@ const InputField = ({
             />
           </TouchableWithoutFeedback>
         )}
-
-        {/* Confirming changes */}
-        {confirmable && (
-          <View style={styles.iconContainer}>
-            <TouchableRipple onPress={onSubmitEditing}>
-              <Image source={check} style={styles.icon} />
-            </TouchableRipple>
-          </View>
+        {icon && (
+          <TouchableWithoutFeedback onPress={onIconPress}>
+            <Image source={icon} style={styles.icon} />
+          </TouchableWithoutFeedback>
         )}
       </View>
 
@@ -115,85 +108,82 @@ InputField.propTypes = {
   name: PropTypes.string.isRequired,
   control: PropTypes.object,
   rules: PropTypes.object,
+  icon: PropTypes.number,
+  onIconPress: PropTypes.func,
   variant: PropTypes.oneOf(['account', 'data', 'quantity']),
   secure: PropTypes.bool,
-  confirmable: PropTypes.bool,
   onSubmitEditing: PropTypes.func,
-  flex: PropTypes.number, // needed in AppBar
+  blurOnSubmit: PropTypes.bool,
   postfix: PropTypes.string, // needed in ReduceQuantity dialog
 };
 
-const useStyles = makeStyles(
-  (theme, { invalid, isFocused, variant, confirmable, flex }) => {
-    const borderColor = (() => {
-      if (isFocused) return theme.colors.white;
-      if (invalid) return theme.colors.tartOrange;
-      if (variant === 'account') return 'transparent';
-      if (variant === 'quantity') return theme.colors.white;
-      return theme.colors.whiteSemiTransparent;
-    })();
+const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
+  // Common styles:
+  const obj = {
+    // Text above input field:
+    label: {
+      marginBottom: variant === 'data' ? 16 : 8,
+      fontWeight: variant === 'data' ? 'bold' : null,
+      fontSize: variant === 'data' ? 18 : 14,
+      color: theme.colors.white,
+    },
 
-    return {
-      // Text above input field:
-      label: {
-        fontSize: 14,
-        marginBottom: 8,
-        color: theme.colors.white,
-      },
+    // Input field:
+    inputContainer: {
+      backgroundColor:
+        variant === 'account' ? theme.colors.primary : 'transparent',
+      height: variant === 'quantity' ? 37 : 48,
+      flexDirection: 'row',
+      paddingLeft: 16,
+      borderWidth: 1,
+      borderRadius: 5,
+      alignItems: 'center',
+    },
 
-      // Input field:
-      inputContainer: {
-        flex,
-        flexDirection: 'row',
-        height: variant === 'quantity' ? 37 : 48,
-        paddingLeft: 16,
-        borderWidth: 1,
-        borderRadius: 5,
-        alignItems: 'center',
-        borderColor,
-        backgroundColor:
-          variant === 'account' ? theme.colors.primary : 'transparent',
-      },
+    // Text in input field:
+    input: {
+      textAlign: variant === 'quantity' ? 'right' : null,
+      fontSize: variant === 'quantity' ? 18 : 14,
+      color: theme.colors.white,
+      includeFontPadding: false,
+      paddingRight: 8,
+      flex: 1,
+    },
 
-      // Text in input field:
-      input: {
-        color: theme.colors.white,
-        fontSize: variant === 'quantity' ? 18 : 14,
-        includeFontPadding: false,
-        textAlign: variant === 'quantity' ? 'right' : null,
-        paddingRight: 8,
-        flex: 1,
-      },
+    // Maximum quantity:
+    inputPostfix: {
+      color: theme.colors.silverMetallic,
+      fontSize: 18,
+      paddingRight: 8,
+    },
 
-      // Maximum quantity:
-      inputPostfix: {
-        color: theme.colors.silverMetallic,
-        fontSize: 18,
-        paddingRight: 8,
-      },
+    // Hiding password:
+    icon: {
+      height: 24,
+      width: 24,
+      marginHorizontal: 12,
+      tintColor: theme.colors.silverMetallic,
+    },
 
-      // Hiding password or submitting icons:
-      iconContainer: {
-        borderRadius: 64,
-        overflow: 'hidden',
-        marginHorizontal: confirmable ? 12 : 0,
-      },
-      icon: {
-        height: 24,
-        width: 24,
-        marginHorizontal: confirmable ? 0 : 12,
-        tintColor: theme.colors.silverMetallic,
-      },
+    // Error below input field:
+    errorText: {
+      fontSize: 12,
+      marginTop: 4,
+      paddingLeft: 16,
+      color: theme.colors.tartOrange,
+    },
+  };
 
-      // Error below input field:
-      errorText: {
-        fontSize: 12,
-        marginTop: 4,
-        paddingLeft: 16,
-        color: theme.colors.tartOrange,
-      },
-    };
-  }
-);
+  // Specific borders:
+  if (variant === 'account') obj.inputContainer.borderColor = 'transparent';
+  if (variant === 'data')
+    obj.inputContainer.borderColor = theme.colors.whiteSemiTransparent;
+  if (variant === 'quantity')
+    obj.inputContainer.borderColor = theme.colors.white;
+  if (invalid) obj.inputContainer.borderColor = theme.colors.tartOrange;
+  if (isFocused) obj.inputContainer.borderColor = theme.colors.white;
+
+  return obj;
+});
 
 export default InputField;
