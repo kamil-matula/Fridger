@@ -7,11 +7,11 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { TouchableRipple, useTheme } from 'react-native-paper';
 import { useController } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
-import { visibilityOn, visibilityOff } from 'assets/icons';
+import { check, visibilityOn, visibilityOff } from 'assets/icons';
 import { makeStyles } from 'utils';
 import Separator from './Separator';
 
@@ -22,12 +22,10 @@ const InputField = ({
   rules,
   variant = 'account',
   secure = false,
+  confirmable = false,
   onSubmitEditing,
   ...props
 }) => {
-  const styles = useStyles({ invalid, isFocused, variant });
-  const theme = useTheme();
-
   // Validation:
   const {
     field,
@@ -46,11 +44,16 @@ const InputField = ({
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
 
+  // Styling:
+  const styles = useStyles({ invalid, isFocused, variant, confirmable });
+  const theme = useTheme();
+
   return (
     <>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
 
       <View style={styles.inputContainer}>
+        {/* Data providing */}
         <TextInput
           name={field.name}
           ref={field.ref}
@@ -65,6 +68,8 @@ const InputField = ({
           placeholderTextColor={theme.colors.silverMetallic}
           {...props}
         />
+
+        {/* Password hiding */}
         {secure && (
           <TouchableWithoutFeedback onPress={passwordVisibilityOnPress}>
             <Image
@@ -72,6 +77,15 @@ const InputField = ({
               style={styles.icon}
             />
           </TouchableWithoutFeedback>
+        )}
+
+        {/* Confirming changes */}
+        {confirmable && (
+          <View style={styles.iconContainer}>
+            <TouchableRipple onPress={onSubmitEditing}>
+              <Image source={check} style={styles.icon} />
+            </TouchableRipple>
+          </View>
         )}
       </View>
 
@@ -85,59 +99,68 @@ const InputField = ({
 };
 
 InputField.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   name: PropTypes.string.isRequired,
   control: PropTypes.object,
   rules: PropTypes.object,
   variant: PropTypes.oneOf(['account', 'data']),
   secure: PropTypes.bool,
+  confirmable: PropTypes.bool,
   onSubmitEditing: PropTypes.func,
 };
 
-const useStyles = makeStyles((theme, { invalid, isFocused, variant }) => {
-  const borderColor = (() => {
-    if (isFocused) return theme.colors.white;
-    if (invalid) return theme.colors.tartOrange;
-    if (variant === 'account') return 'transparent';
-    return theme.colors.whiteSemiTransparent;
-  })();
+const useStyles = makeStyles(
+  (theme, { invalid, isFocused, variant, confirmable }) => {
+    const borderColor = (() => {
+      if (isFocused) return theme.colors.white;
+      if (invalid) return theme.colors.tartOrange;
+      if (variant === 'account') return 'transparent';
+      return theme.colors.whiteSemiTransparent;
+    })();
 
-  return {
-    label: {
-      fontSize: 14,
-      marginBottom: 8,
-      color: theme.colors.white,
-    },
-    inputContainer: {
-      flexDirection: 'row',
-      height: 48,
-      paddingLeft: 16,
-      borderWidth: 1,
-      borderRadius: 5,
-      alignItems: 'center',
-      borderColor,
-      backgroundColor:
-        variant === 'data' ? 'transparent' : theme.colors.primary,
-    },
-    input: {
-      color: theme.colors.white,
-      fontSize: 14,
-      includeFontPadding: false,
-      flex: 1,
-    },
-    icon: {
-      height: 32,
-      width: 32,
-      marginHorizontal: 12,
-      tintColor: theme.colors.silverMetallic,
-    },
-    errorText: {
-      fontSize: 12,
-      marginTop: 4,
-      paddingLeft: 16,
-      color: theme.colors.tartOrange,
-    },
-  };
-});
+    return {
+      label: {
+        fontSize: 14,
+        marginBottom: 8,
+        color: theme.colors.white,
+      },
+      inputContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        height: 48,
+        paddingLeft: 16,
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: 'center',
+        borderColor,
+        backgroundColor:
+          variant === 'data' ? 'transparent' : theme.colors.primary,
+      },
+      input: {
+        color: theme.colors.white,
+        fontSize: 14,
+        includeFontPadding: false,
+        flex: 1,
+      },
+      iconContainer: {
+        borderRadius: 64,
+        overflow: 'hidden',
+        marginHorizontal: confirmable ? 12 : 0,
+      },
+      icon: {
+        height: 24,
+        width: 24,
+        marginHorizontal: confirmable ? 0 : 12,
+        tintColor: theme.colors.silverMetallic,
+      },
+      errorText: {
+        fontSize: 12,
+        marginTop: 4,
+        paddingLeft: 16,
+        color: theme.colors.tartOrange,
+      },
+    };
+  }
+);
 
 export default InputField;

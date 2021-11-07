@@ -58,9 +58,14 @@ const FridgeDetails = ({ route, navigation }) => {
       <AppBar
         label={title}
         icon1={more}
+        editable
         onPressIcon1={() => {
           // Open dialog with fridge actions:
           refBS.current.open();
+        }}
+        onSubmitEditing={(newName) => {
+          // TODO: Send request to API to change fridge/list's name
+          console.log(`Fridge ${title} has been renamed to ${newName}`);
         }}
       />
       <Divider style={styles.divider} />

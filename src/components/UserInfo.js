@@ -2,7 +2,7 @@ import React from 'react';
 
 import { View, Image, StyleSheet } from 'react-native';
 import { Text, TouchableRipple } from 'react-native-paper';
-import PropTypes, { number, string } from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 
@@ -62,10 +62,10 @@ UserInfo.propTypes = {
   onClick: PropTypes.func,
   variant: PropTypes.oneOf(['small', 'big']),
   icon1: PropTypes.number,
-  iconTint1: PropTypes.oneOfType([number, string]),
+  iconTint1: PropTypes.string,
   onPressIcon1: PropTypes.func,
   icon2: PropTypes.number,
-  iconTint2: PropTypes.oneOfType([number, string]),
+  iconTint2: PropTypes.string,
   onPressIcon2: PropTypes.func,
 };
 
