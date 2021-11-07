@@ -11,6 +11,12 @@ import {
   Share,
   EditPermissions,
 } from 'screens/friends';
+import {
+  EditProfile,
+  ChangePassword,
+  Friends,
+  DeleteAccount,
+} from 'screens/drawer';
 import DrawerNavigator from './DrawerNavigator';
 
 const Navigation = () => (
@@ -28,10 +34,14 @@ const StackNavigator = () => (
     <Stack.Screen name='Register' component={Register} />
     <Stack.Screen name='RegisterFeedback' component={RegisterFeedback} />
 
-    {/* LEVEL 1 (BOTTOM TABS) & LEVEL 2 (ACCOUNT MANAGEMENT, FRIDGE/LIST DETAILS) */}
+    {/* LEVEL 1 (BOTTOM TABS) & LEVEL 2 (FRIDGE/LIST DETAILS) */}
     <Stack.Screen name='DrawerNavigator' component={DrawerNavigator} />
 
-    {/* LEVEL 2 */}
+    {/* LEVEL 2 (DRAWER + ADDING NEW STUFF) */}
+    <Stack.Screen name='EditProfile' component={EditProfile} />
+    <Stack.Screen name='ChangePassword' component={ChangePassword} />
+    <Stack.Screen name='Friends' component={Friends} />
+    <Stack.Screen name='DeleteAccount' component={DeleteAccount} />
     <Stack.Screen name='AddFridge' component={AddFridge} />
     <Stack.Screen name='AddFriend' component={AddFriend} />
     <Stack.Screen name='FriendProfile' component={FriendProfile} />
