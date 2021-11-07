@@ -53,7 +53,7 @@ const InputField = ({
 
   return (
     <>
-      {label && <Text style={styles.label}>{label}</Text>}
+      <Text style={styles.label}>{label}</Text>
 
       <View style={styles.inputContainer}>
         {/* Data providing */}
