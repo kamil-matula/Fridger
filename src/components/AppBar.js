@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Appbar, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
 import { back, drawer } from 'assets/icons';
 import { makeStyles } from 'utils';
-import InputField from './InputField';
+import { TextInput } from 'react-native';
 
 const AppBar = ({
   label = '',
@@ -24,19 +24,14 @@ const AppBar = ({
   const navigation = useNavigation();
 
   // Editing fridge / shopping list's name:
-  const [isEditMode, setIsEditMode] = useState(false);
-  const { control, handleSubmit, reset } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: {
-      name: label,
+      label,
     },
   });
-  const stopEditing = (data) => {
-    // Update name (but only if it has changed for real):
-    if (data.name !== label) onSubmitEditing(data.name);
-
-    // Hide input field:
-    setIsEditMode(false);
-    reset();
+  const submit = (data) => {
+    // Update name:
+    onSubmitEditing(data);
   };
 
   return (
@@ -57,28 +52,20 @@ const AppBar = ({
       )}
 
       {/* Input field responsible for changing name */}
-      {isEditMode && (
-        <InputField
-          control={control}
-          name='name'
-          returnKeyType='done'
-          placeholder={label}
-          onSubmitEditing={handleSubmit(stopEditing)}
-          confirmable
-        />
-      )}
-
-      {/* Name of current page */}
-      {!isEditMode && (
-        <Appbar.Content
-          title={label}
-          titleStyle={styles.title}
-          onPress={() => {
-            // Display input field to change name:
-            if (editable) setIsEditMode(true);
-          }}
-        />
-      )}
+      <Controller
+        control={control}
+        name='label'
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            style={styles.title}
+            editable={editable}
+            value={value}
+            onChangeText={onChange}
+            returnKeyType='done'
+            onEndEditing={() => handleSubmit(submit(value))}
+          />
+        )}
+      />
 
       {/* Additional actions */}
       {icon1 && (
@@ -116,6 +103,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'transparent',
   },
   title: {
+    flex: 1,
+    marginLeft: 32,
     fontSize: 20,
     fontWeight: '500',
     color: theme.colors.white,

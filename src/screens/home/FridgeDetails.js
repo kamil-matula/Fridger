@@ -90,7 +90,7 @@ const FridgeDetails = ({ route, navigation }) => {
       />
       <FloatingActionButton
         onPress={() => {
-          // TODO: Add navigating to "ADD PRODUCT PAGE"
+          navigation.navigate('AddProductManual', { fridgeID: 1 });
         }}
       />
 

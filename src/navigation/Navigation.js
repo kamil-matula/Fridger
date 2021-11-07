@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
-import { AddFridge } from 'screens/home';
+import { AddFridge, AddProductAutomat, AddProductManual } from 'screens/home';
 import {
   FriendProfile,
   AddFriend,
@@ -49,6 +49,8 @@ const StackNavigator = () => (
     {/* LEVEL 3 */}
     <Stack.Screen name='Share' component={Share} />
     <Stack.Screen name='EditPermissions' component={EditPermissions} />
+    <Stack.Screen name='AddProductManual' component={AddProductManual} />
+    <Stack.Screen name='AddProductAutomat' component={AddProductAutomat} />
   </Stack.Navigator>
 );
 

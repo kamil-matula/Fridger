@@ -17,3 +17,6 @@ export { default as reduce } from './reduce.png';
 export { default as up } from './up.png';
 export { default as visibilityOff } from './visibility_off.png';
 export { default as visibilityOn } from './visibility_on.png';
+export { default as scanner } from './scanner.png';
+export { default as calendar } from './calendar.png';
+export { default as expand } from './expand.png';
