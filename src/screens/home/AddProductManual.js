@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -20,7 +20,6 @@ const AddProductManual = ({ navigation }) => {
 
   // Bottom Sheet
   const refBS = useRef(null);
-
   const showBottomSheet = () => {
     refBS.current.open();
   };
@@ -66,10 +65,15 @@ const AddProductManual = ({ navigation }) => {
   const [datepickerVisible, setDatepickerVisible] = useState(false);
 
   const onChange = (event, selectedDate) => {
+    // Retrieve date:
     const currentDate = selectedDate || date;
-    setDatepickerVisible(Platform.OS === 'ios');
     setDate(currentDate);
     setValue('expiration', dateToString(currentDate));
+
+    // Hide calendar:
+    setDatepickerVisible(false);
+
+    // TODO: Make sure that it works on iOS devices
   };
 
   const dateToString = (numDate) =>

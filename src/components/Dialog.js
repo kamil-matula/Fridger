@@ -55,6 +55,7 @@ const DialogBox = ({
                 variant='quantity'
                 postfix={`/ ${reduceQuantityItem.maxQuantity} ${reduceQuantityItem.quantityType}`}
                 keyboardType='numeric'
+                textAlign='right'
               />
             </>
           )}
