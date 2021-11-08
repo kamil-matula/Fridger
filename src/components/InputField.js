@@ -126,6 +126,9 @@ const useStyles = makeStyles(
       // Text above input field:
       label: {
         color: theme.colors.white,
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginBottom: 8,
       },
 
       // Input field:
@@ -153,6 +156,8 @@ const useStyles = makeStyles(
 
       icon: {
         tintColor: theme.colors.silverMetallic,
+        height: 24,
+        width: 24,
       },
 
       // Error below input field:
@@ -169,10 +174,7 @@ const useStyles = makeStyles(
       obj.inputContainer.backgroundColor = theme.colors.primary;
       obj.inputContainer.height = 48;
       obj.inputContainer.paddingLeft = 16;
-      obj.label.fontSize = 14;
-      obj.label.marginBottom = 8;
-      obj.icon.height = 32;
-      obj.icon.width = 32;
+      obj.input.fontSize = 14;
       if (hasIcon) {
         obj.icon.marginHorizontal = 12;
       } else {
@@ -184,11 +186,7 @@ const useStyles = makeStyles(
       obj.inputContainer.backgroundColor = 'transparent';
       obj.inputContainer.height = 37;
       obj.inputContainer.paddingLeft = 8;
-      obj.label.fontSize = 18;
-      obj.label.fontWeight = 'bold';
-      obj.label.marginBottom = 16;
-      obj.icon.height = 24;
-      obj.icon.width = 24;
+      obj.input.fontSize = 14;
       if (hasIcon) {
         obj.icon.marginHorizontal = 8;
       } else {
@@ -200,7 +198,7 @@ const useStyles = makeStyles(
       obj.inputContainer.backgroundColor = 'transparent';
       obj.inputContainer.height = 37;
       obj.inputContainer.paddingHorizontal = 8;
-      obj.label.fontSize = 18;
+      obj.input.fontSize = 18;
     }
     if (invalid) {
       obj.inputContainer.borderColor = theme.colors.tartOrange;

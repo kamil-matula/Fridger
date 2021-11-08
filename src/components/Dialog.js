@@ -53,7 +53,7 @@ const DialogBox = ({
                 name='quantity'
                 returnKeyType='done'
                 variant='quantity'
-                postfix={`/ ${reduceQuantityItem.maxQuantity} ${reduceQuantityItem.quantityType}`}
+                postfix={` / ${reduceQuantityItem.maxQuantity} ${reduceQuantityItem.quantityType}`}
                 keyboardType='numeric'
                 textAlign='right'
               />
