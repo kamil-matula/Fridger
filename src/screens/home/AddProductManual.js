@@ -67,13 +67,17 @@ const AddProductManual = ({ navigation }) => {
   const [datepickerVisible, setDatepickerVisible] = useState(false);
 
   const onChange = (event, selectedDate) => {
-    // Retrieve date:
-    const currentDate = selectedDate || date;
-    setDate(currentDate);
-    setValue('expiration', dateToString(currentDate));
-
     // Hide calendar:
     setDatepickerVisible(false);
+
+    // Retrieve date:
+    if (selectedDate !== undefined) {
+      setDate(selectedDate);
+      setValue('expiration', dateToString(selectedDate));
+    } else {
+      setDate(new Date());
+      setValue('expiration', '');
+    }
 
     // TODO: Make sure that it works on iOS devices
   };
