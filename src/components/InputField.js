@@ -49,7 +49,8 @@ const InputField = ({
   const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
 
   // Styling:
-  const styles = useStyles({ invalid, isFocused, variant, textAlign });
+  const hasIcon = !!icon || secure;
+  const styles = useStyles({ invalid, isFocused, variant, textAlign, hasIcon });
   const theme = useTheme();
 
   return (
@@ -120,7 +121,7 @@ InputField.propTypes = {
 };
 
 const useStyles = makeStyles(
-  (theme, { invalid, isFocused, variant, textAlign }) => {
+  (theme, { invalid, isFocused, variant, textAlign, hasIcon }) => {
     const obj = {
       // Text above input field:
       label: {
@@ -151,7 +152,6 @@ const useStyles = makeStyles(
       },
 
       icon: {
-        marginHorizontal: 12,
         tintColor: theme.colors.silverMetallic,
       },
 
@@ -169,22 +169,31 @@ const useStyles = makeStyles(
       obj.inputContainer.backgroundColor = theme.colors.primary;
       obj.inputContainer.height = 48;
       obj.inputContainer.paddingLeft = 16;
-      obj.inputContainer.paddingRight = 12;
       obj.label.fontSize = 14;
       obj.label.marginBottom = 8;
       obj.icon.height = 32;
       obj.icon.width = 32;
+      if (hasIcon) {
+        obj.icon.marginHorizontal = 12;
+      } else {
+        obj.inputContainer.paddingRight = 16;
+      }
     }
     if (variant === 'data') {
       obj.inputContainer.borderColor = theme.colors.whiteSemiTransparent;
       obj.inputContainer.backgroundColor = 'transparent';
       obj.inputContainer.height = 37;
-      obj.inputContainer.paddingHorizontal = 8;
+      obj.inputContainer.paddingLeft = 8;
       obj.label.fontSize = 18;
       obj.label.fontWeight = 'bold';
       obj.label.marginBottom = 16;
       obj.icon.height = 24;
       obj.icon.width = 24;
+      if (hasIcon) {
+        obj.icon.marginHorizontal = 8;
+      } else {
+        obj.inputContainer.paddingRight = 8;
+      }
     }
     if (variant === 'quantity') {
       obj.inputContainer.borderColor = theme.colors.whiteSemiTransparent;
