@@ -136,7 +136,7 @@ const AddProductManual = ({ navigation }) => {
             <View style={{ width: '50%' }}>
               <InputField
                 control={control}
-                rules={rules.expiration}
+                rules={rules.quantity}
                 onSubmitEditing={showBottomSheet}
                 blurOnSubmit
                 name='quantity'
@@ -234,10 +234,7 @@ const AddProductManual = ({ navigation }) => {
       {/* Button at the bottom */}
       <FloatingActionButton
         label='Add product'
-        onPress={() => {
-          // TODO: Fix executing the method below:
-          handleSubmit(addProduct);
-        }}
+        onPress={handleSubmit(addProduct)}
         centered
       />
     </View>

@@ -197,10 +197,7 @@ const AddProductAutomat = ({ navigation }) => {
       {/* Button at the bottom */}
       <FloatingActionButton
         label='Add product'
-        onPress={() => {
-          // TODO: Fix executing the method below:
-          handleSubmit(addProduct);
-        }}
+        onPress={handleSubmit(addProduct)}
         centered
       />
     </View>
