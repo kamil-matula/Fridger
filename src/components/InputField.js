@@ -49,7 +49,8 @@ const InputField = ({
   const passwordVisibilityOnPress = () => setSecureTextEntry((it) => !it);
 
   // Styling:
-  const styles = useStyles({ invalid, isFocused, variant, textAlign });
+  const hasIcon = !!icon || secure;
+  const styles = useStyles({ invalid, isFocused, variant, textAlign, hasIcon });
   const theme = useTheme();
 
   return (
@@ -120,24 +121,19 @@ InputField.propTypes = {
 };
 
 const useStyles = makeStyles(
-  (theme, { invalid, isFocused, variant, textAlign }) => {
-    // Common styles:
+  (theme, { invalid, isFocused, variant, textAlign, hasIcon }) => {
     const obj = {
       // Text above input field:
       label: {
-        marginBottom: variant === 'data' ? 16 : 8,
-        fontWeight: variant === 'data' ? 'bold' : null,
-        fontSize: variant === 'data' ? 18 : 14,
         color: theme.colors.white,
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginBottom: 8,
       },
 
       // Input field:
       inputContainer: {
-        backgroundColor:
-          variant === 'account' ? theme.colors.primary : 'transparent',
-        height: variant === 'quantity' ? 37 : 48,
         flexDirection: 'row',
-        paddingLeft: 16,
         borderWidth: 1,
         borderRadius: 5,
         alignItems: 'center',
@@ -145,10 +141,8 @@ const useStyles = makeStyles(
 
       // Text in input field:
       input: {
-        fontSize: variant === 'quantity' ? 18 : 14,
         color: theme.colors.white,
         includeFontPadding: false,
-        paddingRight: 8,
         flex: 1,
         textAlign,
       },
@@ -160,12 +154,10 @@ const useStyles = makeStyles(
         paddingRight: 8,
       },
 
-      // Hiding password:
       icon: {
+        tintColor: theme.colors.silverMetallic,
         height: 24,
         width: 24,
-        marginHorizontal: 12,
-        tintColor: theme.colors.silverMetallic,
       },
 
       // Error below input field:
@@ -177,14 +169,43 @@ const useStyles = makeStyles(
       },
     };
 
-    // Specific borders:
-    if (variant === 'account') obj.inputContainer.borderColor = 'transparent';
-    if (variant === 'data')
+    if (variant === 'account') {
+      obj.inputContainer.borderColor = 'transparent';
+      obj.inputContainer.backgroundColor = theme.colors.primary;
+      obj.inputContainer.height = 48;
+      obj.inputContainer.paddingLeft = 16;
+      obj.input.fontSize = 14;
+      if (hasIcon) {
+        obj.icon.marginHorizontal = 12;
+      } else {
+        obj.inputContainer.paddingRight = 16;
+      }
+    }
+    if (variant === 'data') {
       obj.inputContainer.borderColor = theme.colors.whiteSemiTransparent;
-    if (variant === 'quantity')
+      obj.inputContainer.backgroundColor = 'transparent';
+      obj.inputContainer.height = 37;
+      obj.inputContainer.paddingLeft = 8;
+      obj.input.fontSize = 14;
+      if (hasIcon) {
+        obj.icon.marginHorizontal = 8;
+      } else {
+        obj.inputContainer.paddingRight = 8;
+      }
+    }
+    if (variant === 'quantity') {
+      obj.inputContainer.borderColor = theme.colors.whiteSemiTransparent;
+      obj.inputContainer.backgroundColor = 'transparent';
+      obj.inputContainer.height = 37;
+      obj.inputContainer.paddingHorizontal = 8;
+      obj.input.fontSize = 18;
+    }
+    if (invalid) {
+      obj.inputContainer.borderColor = theme.colors.tartOrange;
+    }
+    if (isFocused) {
       obj.inputContainer.borderColor = theme.colors.white;
-    if (invalid) obj.inputContainer.borderColor = theme.colors.tartOrange;
-    if (isFocused) obj.inputContainer.borderColor = theme.colors.white;
+    }
 
     return obj;
   }
