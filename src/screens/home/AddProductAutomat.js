@@ -62,7 +62,7 @@ const AddProductAutomat = ({ navigation }) => {
   };
 
   // Date picker states:
-  const [date, setDate] = useState(Date());
+  const [date, setDate] = useState(new Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
 
   const onChange = (event, selectedDate) => {
