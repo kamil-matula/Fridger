@@ -88,6 +88,8 @@ export const productsInFridgeList = [
     expirationDate: '31.12.2025',
     image:
       'https://world.openfoodfacts.org/images/products/376/004/979/0214/front_fr.132.full.jpg',
+    nutri: 'A',
+    nova: 'N1',
   },
   {
     id: 2,
@@ -99,6 +101,8 @@ export const productsInFridgeList = [
     expirationDate: '31.12.2025',
     image:
       'https://world.openfoodfacts.org/images/products/376/004/979/0214/front_fr.132.full.jpg',
+    nutri: 'A',
+    nova: 'N1',
   },
   {
     id: 3,
@@ -110,6 +114,8 @@ export const productsInFridgeList = [
     expirationDate: '31.12.2025',
     image:
       'https://world.openfoodfacts.org/images/products/376/004/979/0214/front_fr.132.full.jpg',
+    nutri: 'A',
+    nova: 'N1',
   },
 ];
 
