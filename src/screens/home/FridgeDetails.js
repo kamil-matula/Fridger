@@ -135,6 +135,10 @@ const FridgeDetails = ({ route, navigation }) => {
           <FridgeDetailsRow
             product={item}
             onPressIcon={() => reduceQuantityOpen(item)}
+            onPressRow={() => {
+              // Go to appropriate page:
+              navigation.navigate('ProductDetails');
+            }}
           />
         )}
         keyExtractor={(item) => item.id.toString()}

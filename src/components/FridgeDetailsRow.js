@@ -7,15 +7,11 @@ import PropTypes from 'prop-types';
 import { makeStyles } from 'utils';
 import { reduce } from 'assets/icons';
 
-const FridgeDetailsRow = ({ product, onPressIcon }) => {
+const FridgeDetailsRow = ({ product, onPressIcon, onPressRow }) => {
   const styles = useStyles();
 
   return (
-    <TouchableRipple
-      onPress={() => {
-        // TODO: Add navigating to "Product Details Page"
-      }}
-    >
+    <TouchableRipple onPress={onPressRow}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <Image source={{ uri: product.image }} style={styles.image} />
@@ -44,6 +40,7 @@ const FridgeDetailsRow = ({ product, onPressIcon }) => {
 FridgeDetailsRow.propTypes = {
   product: PropTypes.object.isRequired,
   onPressIcon: PropTypes.func.isRequired,
+  onPressRow: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({

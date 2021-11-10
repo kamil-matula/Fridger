@@ -4,7 +4,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
-import { AddFridge, AddProductAutomat, AddProductManual } from 'screens/home';
+import {
+  AddFridge,
+  AddProductAutomat,
+  AddProductManual,
+  ProductDetails,
+} from 'screens/home';
 import {
   FriendProfile,
   AddFriend,
@@ -51,6 +56,7 @@ const StackNavigator = () => (
     <Stack.Screen name='EditPermissions' component={EditPermissions} />
     <Stack.Screen name='AddProductManual' component={AddProductManual} />
     <Stack.Screen name='AddProductAutomat' component={AddProductAutomat} />
+    <Stack.Screen name='ProductDetails' component={ProductDetails} />
   </Stack.Navigator>
 );
 
