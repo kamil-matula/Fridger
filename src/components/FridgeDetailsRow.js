@@ -18,14 +18,18 @@ const FridgeDetailsRow = ({ product, onPressIcon, onPressRow }) => {
         </View>
         <View style={styles.textsContainer}>
           <Text style={styles.name}>{product.name}</Text>
-          <Text style={styles.producer}>{product.producer}</Text>
+          {product.producer && (
+            <Text style={styles.producer}>{product.producer}</Text>
+          )}
           <Text style={styles.quantity}>
             {product.currentQuantity} / {product.maxQuantity}{' '}
             {product.quantityType}
           </Text>
-          <Text style={styles.expirationDate}>
-            expiration date: {product.expirationDate}
-          </Text>
+          {product.expirationDate && (
+            <Text style={styles.expirationDate}>
+              expiration date: {product.expirationDate}
+            </Text>
+          )}
         </View>
         <View style={styles.iconContainer}>
           <TouchableRipple onPress={onPressIcon}>
