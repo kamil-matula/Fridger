@@ -8,7 +8,7 @@ import { makeStyles } from 'utils';
 const IconAndBadge = ({ icon, number }) => {
   const styles = useStyles();
 
-  const num = number > 10 ? '+9' : number;
+  const num = number >= 10 ? '+9' : number;
 
   return (
     <View style={styles.iconContainer}>
