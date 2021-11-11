@@ -2,8 +2,17 @@ import React, { useState } from 'react';
 
 import { View, Image, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
+import { useForm } from 'react-hook-form';
 
-import { AppBar, ScoresContainer, ScrollViewLayout, Dialog } from 'components';
+import {
+  AppBar,
+  ScoresContainer,
+  ScrollViewLayout,
+  Dialog,
+  FloatingActionButton,
+  InputField,
+  Separator,
+} from 'components';
 import { makeStyles } from 'utils';
 import { deleteIcon, time } from 'assets/icons';
 import { productsInFridgeList } from 'tmpData';
@@ -33,6 +42,37 @@ const ProductDetails = ({ route, navigation }) => {
     setDeleteProductDialogVisible(false);
   };
 
+  // Form states:
+  const { control, handleSubmit, setFocus } = useForm({
+    defaultValues: {
+      name: product.name,
+      producer: product.producer,
+    },
+  });
+  const rules = {
+    name: {
+      required: 'Name is required',
+    },
+  };
+
+  // Submitting form:
+  const editProduct = (data) => {
+    // TODO: Send request to API to edit product
+    if (data.name !== product.name || data.producer !== product.producer)
+      console.log(
+        `Product ${JSON.stringify({
+          name: product.name,
+          producer: product.producer,
+        })} has been updated to ${JSON.stringify({
+          name: data.name,
+          producer: data.producer,
+        })}`
+      );
+
+    // Go back:
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.container}>
       <AppBar
@@ -47,74 +87,108 @@ const ProductDetails = ({ route, navigation }) => {
         }}
       />
 
-      {/* Main content */}
-      <ScrollViewLayout addPadding={false}>
-        {/* Basic information */}
-        <View style={styles.basicInfoContainer}>
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: product.image }} style={styles.image} />
-          </View>
-          <View style={styles.textsContainer}>
-            <Text style={styles.name}>{product.name}</Text>
-            <Text style={styles.producer}>{product.producer}</Text>
-            <Text style={styles.quantity}>
-              {product.maxQuantity} {product.quantityType}
-            </Text>
-          </View>
-        </View>
-        <Divider style={styles.divider} />
-
-        {/* Rating */}
-        <ScoresContainer
-          novaScore={product.nova}
-          nutriScore={product.nutri}
-          containerStyle={styles.ratingContainer}
-          iconStyle={styles.icon}
-        />
-        <Divider style={styles.divider} />
-
-        {/* Additives */}
-        <View style={styles.additivesContainer}>
-          <Text style={styles.additivesTitle}>Additives</Text>
-          {product.additives.map((element) => (
-            <Text key={element.code} style={styles.additivesRow}>
-              {'   '}•{'   '}
-              {element.code} - {element.description}
-            </Text>
-          ))}
-        </View>
-        <Divider style={styles.divider} />
-
-        {/* Nutrients */}
-        <View style={styles.nutrientsContainer}>
-          <View style={styles.nutrientRow}>
-            <Text style={styles.nutrientHeader}>Nutrition facts</Text>
-            <Text style={styles.nutrientHeader}>100 g / 100 ml</Text>
+      {/* Rendering appropriate content: details for products with barcodes, 
+          editable input fields for other ones */}
+      {product.barcode ? (
+        <ScrollViewLayout addPadding={false}>
+          {/* Basic information */}
+          <View style={styles.basicInfoContainer}>
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: product.image }} style={styles.image} />
+            </View>
+            <View style={styles.textsContainer}>
+              <Text style={styles.name}>{product.name}</Text>
+              <Text style={styles.producer}>{product.producer}</Text>
+              <Text style={styles.quantity}>
+                {product.maxQuantity} {product.quantityType}
+              </Text>
+            </View>
           </View>
           <Divider style={styles.divider} />
-          {[
-            ['Energy (kJ)', `${product.nutritions.energy} kJ`],
-            ['Fat', `${product.nutritions.fat} g`],
-            [
-              '   •   Saturated fat',
-              `${product.nutritions['saturated-fat']} g`,
-            ],
-            ['Carbohydrates', `${product.nutritions.carbohydrates} g`],
-            ['   •   Sugars', `${product.nutritions.sugars} g`],
-            ['Proteins', `${product.nutritions['saturated-fat']} g`],
-            ['Salt', `${product.nutritions.salt} g`],
-            ['   •   Sodium', `${product.nutritions.sodium} g`],
-          ].map((element) => (
-            <View key={element[0]}>
-              <View style={styles.nutrientRow}>
-                <Text style={styles.nutrientText}>{element[0]}</Text>
-                <Text style={styles.nutrientText}>{element[1]}</Text>
-              </View>
-              <Divider style={styles.divider} />
+
+          {/* Rating */}
+          <ScoresContainer
+            novaScore={product.nova}
+            nutriScore={product.nutri}
+            containerStyle={styles.ratingContainer}
+            iconStyle={styles.icon}
+          />
+          <Divider style={styles.divider} />
+
+          {/* Additives */}
+          <View style={styles.additivesContainer}>
+            <Text style={styles.additivesTitle}>Additives</Text>
+            {product.additives.map((element) => (
+              <Text key={element.code} style={styles.additivesRow}>
+                {'   '}•{'   '}
+                {element.code} - {element.description}
+              </Text>
+            ))}
+          </View>
+          <Divider style={styles.divider} />
+
+          {/* Nutrients */}
+          <View style={styles.nutrientsContainer}>
+            <View style={styles.nutrientRow}>
+              <Text style={styles.nutrientHeader}>Nutrition facts</Text>
+              <Text style={styles.nutrientHeader}>100 g / 100 ml</Text>
             </View>
-          ))}
+            <Divider style={styles.divider} />
+            {[
+              ['Energy (kJ)', `${product.nutritions.energy} kJ`],
+              ['Fat', `${product.nutritions.fat} g`],
+              [
+                '   •   Saturated fat',
+                `${product.nutritions['saturated-fat']} g`,
+              ],
+              ['Carbohydrates', `${product.nutritions.carbohydrates} g`],
+              ['   •   Sugars', `${product.nutritions.sugars} g`],
+              ['Proteins', `${product.nutritions['saturated-fat']} g`],
+              ['Salt', `${product.nutritions.salt} g`],
+              ['   •   Sodium', `${product.nutritions.sodium} g`],
+            ].map((element) => (
+              <View key={element[0]}>
+                <View style={styles.nutrientRow}>
+                  <Text style={styles.nutrientText}>{element[0]}</Text>
+                  <Text style={styles.nutrientText}>{element[1]}</Text>
+                </View>
+                <Divider style={styles.divider} />
+              </View>
+            ))}
+          </View>
+        </ScrollViewLayout>
+      ) : (
+        <View style={styles.noBarcodeContainer}>
+          {/* Providing data */}
+          <InputField
+            control={control}
+            rules={rules.name}
+            onSubmitEditing={() => setFocus('producer')}
+            name='name'
+            label='Name'
+            variant='data'
+            returnKeyType='next'
+            placeholder='Enter product name'
+          />
+          <Separator height={8} />
+          <InputField
+            control={control}
+            rules={rules.producer}
+            name='producer'
+            label='Producer'
+            variant='data'
+            returnKeyType='next'
+            placeholder='Enter producer name'
+          />
+
+          {/* Button at the bottom */}
+          <FloatingActionButton
+            label='Confirm'
+            onPress={handleSubmit(editProduct)}
+            centered
+          />
         </View>
-      </ScrollViewLayout>
+      )}
 
       {/* Deleting product from fridge */}
       <Dialog
@@ -215,6 +289,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     color: theme.colors.white,
   },
+
+  // No-barcode variant's container:
+  noBarcodeContainer: { marginHorizontal: 16, flex: 1 },
 }));
 
 export default ProductDetails;

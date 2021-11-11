@@ -14,7 +14,11 @@ const FridgeDetailsRow = ({ product, onPressIcon, onPressRow }) => {
     <TouchableRipple onPress={onPressRow}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: product.image }} style={styles.image} />
+          {product.image ? (
+            <Image source={{ uri: product.image }} style={styles.image} />
+          ) : (
+            <View style={styles.image} />
+          )}
         </View>
         <View style={styles.textsContainer}>
           <Text style={styles.name}>{product.name}</Text>
@@ -56,7 +60,12 @@ const useStyles = makeStyles((theme) => ({
   imageContainer: {
     width: 64,
   },
-  image: { height: 64, resizeMode: 'contain' },
+  image: {
+    // TODO: Add better placeholder
+    backgroundColor: theme.colors.blueJeans,
+    height: 80,
+    width: 64,
+  },
   textsContainer: {
     paddingLeft: 16,
     flex: 1,

@@ -126,7 +126,6 @@ const useStyles = makeStyles(
       // Text above input field:
       label: {
         color: theme.colors.white,
-        fontSize: 14,
         fontWeight: 'bold',
         marginBottom: 8,
       },
@@ -180,25 +179,27 @@ const useStyles = makeStyles(
       } else {
         obj.inputContainer.paddingRight = 16;
       }
+      obj.label.fontSize = 14;
     }
     if (variant === 'data') {
       obj.inputContainer.borderColor = theme.colors.whiteSemiTransparent;
       obj.inputContainer.backgroundColor = 'transparent';
       obj.inputContainer.height = 37;
       obj.inputContainer.paddingLeft = 8;
-      obj.input.fontSize = 14;
+      obj.input.fontSize = 16;
       if (hasIcon) {
         obj.icon.marginHorizontal = 8;
       } else {
         obj.inputContainer.paddingRight = 8;
       }
+      obj.label.fontSize = 16;
     }
     if (variant === 'quantity') {
       obj.inputContainer.borderColor = theme.colors.whiteSemiTransparent;
       obj.inputContainer.backgroundColor = 'transparent';
       obj.inputContainer.height = 37;
       obj.inputContainer.paddingHorizontal = 8;
-      obj.input.fontSize = 18;
+      obj.input.fontSize = 16;
     }
     if (invalid) {
       obj.inputContainer.borderColor = theme.colors.tartOrange;
