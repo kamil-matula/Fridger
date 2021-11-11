@@ -1,14 +1,11 @@
 import React from 'react';
 
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 import Button from './Button';
-import RadioButtonGroup from './RadioButtonGroup';
-import InputField from './InputField';
-import Separator from './Separator';
 
 const DialogBox = ({
   title,
@@ -18,10 +15,7 @@ const DialogBox = ({
   onPressLabel1 = null,
   label2 = null,
   onPressLabel2 = null,
-  control,
-  checkedState,
-  reduceQuantityItem,
-  dialogHeight,
+  children,
 }) => {
   const styles = useStyles();
   const [visible, setVisible] = visibilityState;
@@ -35,35 +29,17 @@ const DialogBox = ({
           setVisible(false);
         }}
       >
-        <Dialog.Title style={styles.title}>{title}</Dialog.Title>
+        {/* Title */}
+        <Text style={styles.title}>{title}</Text>
 
-        {/* Question or radio buttons with input field */}
-        <Dialog.Content height={dialogHeight}>
-          {!reduceQuantityItem ? (
-            <Paragraph>{paragraph}</Paragraph>
-          ) : (
-            <>
-              <RadioButtonGroup
-                items={['eaten', 'wasted', 'disappeared']}
-                checkedState={checkedState}
-              />
-              <Separator />
-              <InputField
-                control={control}
-                name='quantity'
-                returnKeyType='done'
-                variant='quantity'
-                postfix={` / ${reduceQuantityItem.maxQuantity} ${reduceQuantityItem.quantityType}`}
-                keyboardType='numeric'
-                textAlign='right'
-              />
-            </>
-          )}
-        </Dialog.Content>
+        {/* Content */}
+        {children ?? (
+          <Paragraph style={styles.paragraph}>{paragraph}</Paragraph>
+        )}
 
-        {/* Buttons */}
-        <Dialog.Actions style={{ margin: 0, padding: 0 }}>
-          <View style={styles.buttonContainer}>
+        {/* Actions */}
+        <View style={styles.actions}>
+          <View style={styles.singleButtonContainer}>
             <Button
               label={label1}
               color='red'
@@ -71,8 +47,7 @@ const DialogBox = ({
               onPress={onPressLabel1}
             />
           </View>
-          <View style={styles.separatorHorizontal8} />
-          <View style={styles.buttonContainer}>
+          <View style={styles.singleButtonContainer}>
             <Button
               label={label2}
               color='blue'
@@ -80,14 +55,13 @@ const DialogBox = ({
               onPress={onPressLabel2}
             />
           </View>
-        </Dialog.Actions>
+        </View>
       </Dialog>
     </Portal>
   );
 };
 
 DialogBox.propTypes = {
-  // Main properties
   title: PropTypes.string.isRequired,
   paragraph: PropTypes.string,
   visibilityState: PropTypes.array.isRequired,
@@ -95,24 +69,34 @@ DialogBox.propTypes = {
   onPressLabel1: PropTypes.func.isRequired,
   label2: PropTypes.string.isRequired,
   onPressLabel2: PropTypes.func.isRequired,
-
-  // Properties needed in ReduceQuantity dialog:
-  control: PropTypes.object,
-  checkedState: PropTypes.array,
-  reduceQuantityItem: PropTypes.object,
-  dialogHeight: PropTypes.number,
+  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   dialog: {
     elevation: 0,
   },
-  title: { fontSize: 16 },
-  separatorHorizontal8: {
-    marginHorizontal: 4,
+  title: {
+    fontSize: 18,
+    color: theme.colors.white,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
-  buttonContainer: {
+  paragraph: {
+    paddingHorizontal: 24,
+    paddingBottom: 16,
+    fontSize: 14,
+  },
+  actions: {
+    margin: 0,
+    padding: 0,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  singleButtonContainer: {
     width: 75,
+    marginRight: 8,
+    marginTop: 8,
   },
 }));
 

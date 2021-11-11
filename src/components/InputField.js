@@ -199,7 +199,7 @@ const useStyles = makeStyles(
       obj.inputContainer.backgroundColor = 'transparent';
       obj.inputContainer.height = 37;
       obj.inputContainer.paddingHorizontal = 8;
-      obj.input.fontSize = 16;
+      obj.input.fontSize = 18;
     }
     if (invalid) {
       obj.inputContainer.borderColor = theme.colors.tartOrange;

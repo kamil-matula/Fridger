@@ -11,6 +11,9 @@ import {
   BottomSheet,
   SheetRow,
   Dialog,
+  RadioButtonGroup,
+  Separator,
+  InputField,
 } from 'components';
 import { makeStyles } from 'utils';
 import {
@@ -212,11 +215,28 @@ const FridgeDetails = ({ route, navigation }) => {
         onPressLabel1={cancelReduceQuantity}
         label2='ok'
         onPressLabel2={confirmReduceQuantity}
-        checkedState={[reduceQuantityReason, setReduceQuantityReason]}
-        reduceQuantityItem={reduceQuantityItem}
-        dialogHeight={160}
-        control={control}
-      />
+      >
+        <View style={styles.reduceQuantityContent}>
+          <RadioButtonGroup
+            items={['eaten', 'wasted', 'disappeared']}
+            checkedState={[reduceQuantityReason, setReduceQuantityReason]}
+          />
+          <Separator />
+          <InputField
+            control={control}
+            name='quantity'
+            returnKeyType='done'
+            variant='quantity'
+            // postfix={
+            //   reduceQuantityItem.maxQuantity
+            //     ? ` / ${reduceQuantityItem.maxQuantity} ${reduceQuantityItem.quantityType}`
+            //     : null
+            // }
+            keyboardType='numeric'
+            textAlign='right'
+          />
+        </View>
+      </Dialog>
     </View>
   );
 };
@@ -244,6 +264,9 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.silverMetallic,
   },
   icon: { height: 16, width: 16, marginLeft: 10 },
+  reduceQuantityContent: {
+    paddingHorizontal: 24,
+  },
 }));
 
 export default FridgeDetails;

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { View, Image, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {
   AppBar,
@@ -14,7 +15,7 @@ import {
   Separator,
 } from 'components';
 import { makeStyles } from 'utils';
-import { deleteIcon, time } from 'assets/icons';
+import { deleteIcon, time, calendar } from 'assets/icons';
 import { productsInFridgeList } from 'tmpData';
 
 const ProductDetails = ({ route, navigation }) => {
@@ -24,7 +25,7 @@ const ProductDetails = ({ route, navigation }) => {
   const { productID, fridgeID, fridgeName } = route.params;
   const product = productsInFridgeList.find((e) => e.id === productID);
 
-  // Deleting:
+  // Deleting fridge:
   const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
     useState(false);
   const confirmRemoveProduct = () => {
@@ -42,16 +43,41 @@ const ProductDetails = ({ route, navigation }) => {
     setDeleteProductDialogVisible(false);
   };
 
+  // Changing product's expiration date:
+  const [changeExpDateDialogVisible, setChangeExpDateDialogVisible] =
+    useState(false);
+  const confirmChangeExpDate = (data) => {
+    // TODO: Send request to API and wait for changing expiration date
+    console.log(
+      `Product #${productID}'s expiration date has been changed from ${product.expirationDate} to ${data.expirationDate}`
+    );
+
+    // Hide dialog and go back:
+    setChangeExpDateDialogVisible(false);
+    navigation.pop();
+  };
+  const cancelChangeExpDate = () => {
+    // Hide dialog:
+    setChangeExpDateDialogVisible(false);
+  };
+
   // Form states:
-  const { control, handleSubmit, setFocus } = useForm({
+  const { control, handleSubmit, setFocus, setValue } = useForm({
     defaultValues: {
       name: product.name,
       producer: product.producer,
+      expiration: '',
     },
   });
   const rules = {
     name: {
       required: 'Name is required',
+    },
+    expiration: {
+      pattern: {
+        value: /^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.\d{4}$/,
+        message: 'Invalid date format',
+      },
     },
   };
 
@@ -73,13 +99,33 @@ const ProductDetails = ({ route, navigation }) => {
     navigation.goBack();
   };
 
+  // Changing expiration date:
+  const [date, setDate] = useState(new Date());
+  const [datepickerVisible, setDatepickerVisible] = useState(false);
+  const onDateChange = (event, selectedDate) => {
+    // Hide calendar:
+    setDatepickerVisible(false);
+
+    // Retrieve date:
+    if (selectedDate !== undefined) {
+      setDate(selectedDate);
+      setValue('expiration', dateToString(selectedDate));
+    } else {
+      setDate(new Date());
+      setValue('expiration', '');
+    }
+
+    // TODO: Make sure that it works on iOS devices
+  };
+
   return (
     <View style={styles.container}>
       <AppBar
         icon1={time}
         icon2={deleteIcon}
         onPressIcon1={() => {
-          // TODO: Open dialog responsible for changing expiration date
+          // Open dialog responsible for changing expiration date
+          setChangeExpDateDialogVisible(true);
         }}
         onPressIcon2={() => {
           // Open dialog responsible for deleting product
@@ -186,6 +232,7 @@ const ProductDetails = ({ route, navigation }) => {
             label='Confirm'
             onPress={handleSubmit(editProduct)}
             centered
+            confirm
           />
         </View>
       )}
@@ -203,6 +250,39 @@ const ProductDetails = ({ route, navigation }) => {
         label2='cancel'
         onPressLabel2={cancelRemoveProduct}
       />
+
+      {/* Changing expiration date */}
+      <Dialog
+        title='Set expiration date'
+        visibilityState={[
+          changeExpDateDialogVisible,
+          setChangeExpDateDialogVisible,
+        ]}
+        label1='cancel'
+        onPressLabel1={cancelChangeExpDate}
+        label2='ok'
+        onPressLabel2={confirmChangeExpDate}
+      >
+        <View style={styles.calendarFieldContainer}>
+          <InputField
+            control={control}
+            rules={rules.expiration}
+            name='expiration'
+            variant='data'
+            editable={false}
+            icon={calendar}
+            onIconPress={() => {
+              setDatepickerVisible(true);
+            }}
+            placeholder='dd.MM.rrrr'
+          />
+        </View>
+      </Dialog>
+
+      {/* Calendar */}
+      {datepickerVisible && (
+        <DateTimePicker value={date} mode='date' onChange={onDateChange} />
+      )}
     </View>
   );
 };
@@ -289,6 +369,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     color: theme.colors.white,
   },
+
+  // Changing expiration date:
+  calendarFieldContainer: { paddingHorizontal: 16, height: 60 },
 
   // No-barcode variant's container:
   noBarcodeContainer: { marginHorizontal: 16, flex: 1 },
