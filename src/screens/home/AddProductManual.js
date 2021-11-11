@@ -143,7 +143,7 @@ const AddProductManual = ({ navigation }) => {
                 label='Quantity'
                 keyboardType='numeric'
                 variant='data'
-                returnKeyType='done'
+                returnKeyType='next'
                 placeholder='Enter quantity'
               />
             </View>
@@ -177,10 +177,10 @@ const AddProductManual = ({ navigation }) => {
               name='expiration'
               label='Expiration date'
               variant='data'
-              editable={false}
               icon={calendar}
               onIconPress={showDatepicker}
-              returnKeyType='next'
+              returnKeyType='done'
+              keyboardType='numeric'
               placeholder='dd.MM.rrrr'
             />
           </View>

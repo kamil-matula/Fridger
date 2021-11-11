@@ -25,6 +25,26 @@ const ProductDetails = ({ route, navigation }) => {
   const { productID, fridgeID, fridgeName } = route.params;
   const product = productsInFridgeList.find((e) => e.id === productID);
 
+  // Form states:
+  const { control, handleSubmit, setFocus, setValue, reset } = useForm({
+    defaultValues: {
+      name: product.name,
+      producer: product.producer,
+      expirationDate: product.expirationDate,
+    },
+  });
+  const rules = {
+    name: {
+      required: 'Name is required',
+    },
+    expirationDate: {
+      pattern: {
+        value: /^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.\d{4}$/,
+        message: 'Invalid date format',
+      },
+    },
+  };
+
   // Deleting fridge:
   const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
     useState(false);
@@ -59,26 +79,7 @@ const ProductDetails = ({ route, navigation }) => {
   const cancelChangeExpDate = () => {
     // Hide dialog:
     setChangeExpDateDialogVisible(false);
-  };
-
-  // Form states:
-  const { control, handleSubmit, setFocus, setValue } = useForm({
-    defaultValues: {
-      name: product.name,
-      producer: product.producer,
-      expiration: '',
-    },
-  });
-  const rules = {
-    name: {
-      required: 'Name is required',
-    },
-    expiration: {
-      pattern: {
-        value: /^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.\d{4}$/,
-        message: 'Invalid date format',
-      },
-    },
+    reset();
   };
 
   // Submitting form:
@@ -99,6 +100,10 @@ const ProductDetails = ({ route, navigation }) => {
     navigation.goBack();
   };
 
+  // Helper function for retrieving friendly date from datePicker:
+  const dateToString = (numDate) =>
+    `${numDate.getDate()}.${numDate.getMonth()}.${numDate.getFullYear()}`;
+
   // Changing expiration date:
   const [date, setDate] = useState(new Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
@@ -109,10 +114,10 @@ const ProductDetails = ({ route, navigation }) => {
     // Retrieve date:
     if (selectedDate !== undefined) {
       setDate(selectedDate);
-      setValue('expiration', dateToString(selectedDate));
+      setValue('expirationDate', dateToString(selectedDate));
     } else {
       setDate(new Date());
-      setValue('expiration', '');
+      setValue('expirationDate', '');
     }
 
     // TODO: Make sure that it works on iOS devices
@@ -261,20 +266,22 @@ const ProductDetails = ({ route, navigation }) => {
         label1='cancel'
         onPressLabel1={cancelChangeExpDate}
         label2='ok'
-        onPressLabel2={confirmChangeExpDate}
+        onPressLabel2={handleSubmit(confirmChangeExpDate)}
+        titlePaddingBottom={0}
       >
         <View style={styles.calendarFieldContainer}>
           <InputField
             control={control}
-            rules={rules.expiration}
-            name='expiration'
+            rules={rules.expirationDate}
+            name='expirationDate'
             variant='data'
-            editable={false}
             icon={calendar}
             onIconPress={() => {
               setDatepickerVisible(true);
             }}
             placeholder='dd.MM.rrrr'
+            returnKeyType='done'
+            keyboardType='numeric'
           />
         </View>
       </Dialog>
@@ -371,7 +378,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   // Changing expiration date:
-  calendarFieldContainer: { paddingHorizontal: 16, height: 60 },
+  calendarFieldContainer: { paddingHorizontal: 16, height: 70 },
 
   // No-barcode variant's container:
   noBarcodeContainer: { marginHorizontal: 16, flex: 1 },

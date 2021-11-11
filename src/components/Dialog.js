@@ -15,9 +15,10 @@ const DialogBox = ({
   onPressLabel1 = null,
   label2 = null,
   onPressLabel2 = null,
+  titlePaddingBottom = 16,
   children,
 }) => {
-  const styles = useStyles();
+  const styles = useStyles({ titlePaddingBottom });
   const [visible, setVisible] = visibilityState;
 
   return (
@@ -69,10 +70,11 @@ DialogBox.propTypes = {
   onPressLabel1: PropTypes.func.isRequired,
   label2: PropTypes.string.isRequired,
   onPressLabel2: PropTypes.func.isRequired,
+  titlePaddingBottom: PropTypes.number,
   children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme, { titlePaddingBottom }) => ({
   dialog: {
     elevation: 0,
   },
@@ -80,7 +82,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     color: theme.colors.white,
     paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingTop: 16,
+    paddingBottom: titlePaddingBottom,
   },
   paragraph: {
     paddingHorizontal: 24,
