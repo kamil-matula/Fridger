@@ -66,7 +66,7 @@ const AddProductManual = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
 
-  const onChange = (event, selectedDate) => {
+  const onDateChange = (event, selectedDate) => {
     // Hide calendar:
     setDatepickerVisible(false);
 
@@ -189,7 +189,7 @@ const AddProductManual = ({ navigation }) => {
 
       {/* Calendar */}
       {datepickerVisible && (
-        <DateTimePicker value={date} mode='date' onChange={onChange} />
+        <DateTimePicker value={date} mode='date' onChange={onDateChange} />
       )}
 
       {/* Quantity types */}

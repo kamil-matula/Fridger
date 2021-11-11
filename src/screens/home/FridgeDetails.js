@@ -79,15 +79,18 @@ const FridgeDetails = ({ route, navigation }) => {
         `\nCurrent value: ${newValue} ${reduceQuantityItem.quantityType}.`
     );
 
-    // Reset states:
+    // Hide dialog and reset state:
     setReduceQuantityVisible(false);
     setReduceQuantityReason(null);
     setReduceQuantityItem(null);
     reset();
   };
   const cancelReduceQuantity = () => {
-    // Hide dialog:
+    // Hide dialog and reset state:
     setReduceQuantityVisible(false);
+    setReduceQuantityReason(null);
+    setReduceQuantityItem(null);
+    reset();
   };
   const reduceQuantityOpen = (item) => {
     // Set item:
@@ -208,35 +211,37 @@ const FridgeDetails = ({ route, navigation }) => {
       />
 
       {/* Reducing quantity */}
-      <Dialog
-        title='Reduce quantity'
-        visibilityState={[reduceQuantityVisible, setReduceQuantityVisible]}
-        label1='cancel'
-        onPressLabel1={cancelReduceQuantity}
-        label2='ok'
-        onPressLabel2={confirmReduceQuantity}
-      >
-        <View style={styles.reduceQuantityContent}>
-          <RadioButtonGroup
-            items={['eaten', 'wasted', 'disappeared']}
-            checkedState={[reduceQuantityReason, setReduceQuantityReason]}
-          />
-          <Separator />
-          <InputField
-            control={control}
-            name='quantity'
-            returnKeyType='done'
-            variant='quantity'
-            // postfix={
-            //   reduceQuantityItem.maxQuantity
-            //     ? ` / ${reduceQuantityItem.maxQuantity} ${reduceQuantityItem.quantityType}`
-            //     : null
-            // }
-            keyboardType='numeric'
-            textAlign='right'
-          />
-        </View>
-      </Dialog>
+      {reduceQuantityItem && (
+        <Dialog
+          title='Reduce quantity'
+          visibilityState={[reduceQuantityVisible, setReduceQuantityVisible]}
+          label1='cancel'
+          onPressLabel1={cancelReduceQuantity}
+          label2='ok'
+          onPressLabel2={confirmReduceQuantity}
+        >
+          <View style={styles.reduceQuantityContent}>
+            <RadioButtonGroup
+              items={['eaten', 'wasted', 'disappeared']}
+              checkedState={[reduceQuantityReason, setReduceQuantityReason]}
+            />
+            <Separator />
+            <InputField
+              control={control}
+              name='quantity'
+              returnKeyType='done'
+              variant='quantity'
+              postfix={
+                reduceQuantityItem.maxQuantity
+                  ? ` / ${reduceQuantityItem.maxQuantity} ${reduceQuantityItem.quantityType}`
+                  : null
+              }
+              keyboardType='numeric'
+              textAlign='right'
+            />
+          </View>
+        </Dialog>
+      )}
     </View>
   );
 };
