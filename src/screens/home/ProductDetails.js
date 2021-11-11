@@ -3,36 +3,16 @@ import React from 'react';
 import { View, Image, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { AppBar } from 'components';
+import { AppBar, ScoresContainer } from 'components';
 import { makeStyles } from 'utils';
 import { deleteIcon, time } from 'assets/icons';
 import { productsInFridgeList } from 'tmpData';
-import { N1, N2, N3, N4, A, B, C, D, E } from 'assets/icons/nova-nutri';
 
 const ProductDetails = () => {
   const styles = useStyles();
 
   // Temporary, mocked data:
   const product = productsInFridgeList[0];
-
-  // Nova-Score icon:
-  const novaIcon = (() => {
-    if (product.nova === 'N1') return N1;
-    if (product.nova === 'N2') return N2;
-    if (product.nova === 'N3') return N3;
-    if (product.nova === 'N4') return N4;
-    return null;
-  })();
-
-  // Nutri-Score icon:
-  const nutriIcon = (() => {
-    if (product.nutri === 'A') return A;
-    if (product.nutri === 'B') return B;
-    if (product.nutri === 'C') return C;
-    if (product.nutri === 'D') return D;
-    if (product.nutri === 'E') return E;
-    return null;
-  })();
 
   return (
     <View style={styles.container}>
@@ -63,10 +43,12 @@ const ProductDetails = () => {
       <Divider style={styles.divider} />
 
       {/* Rating */}
-      <View style={styles.ratingContainer}>
-        <Image source={novaIcon} style={styles.icon} />
-        <Image source={nutriIcon} style={styles.icon} />
-      </View>
+      <ScoresContainer
+        novaScore={product.nova}
+        nutriScore={product.nutri}
+        containerStyle={styles.ratingContainer}
+        iconStyle={styles.icon}
+      />
       <Divider style={styles.divider} />
 
       {/* TODO: Add additives and nutrients */}
