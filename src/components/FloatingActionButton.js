@@ -4,15 +4,21 @@ import { FAB, useTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
+import { add, check } from 'assets/icons';
 
-const FloatingActionButton = ({ onPress, label, centered = false }) => {
+const FloatingActionButton = ({
+  onPress,
+  label,
+  centered = false,
+  confirm = false,
+}) => {
   const styles = useStyles({ centered });
   const { colors } = useTheme();
 
   return (
     <FAB
       style={styles.fab}
-      icon='plus'
+      icon={confirm ? check : add}
       onPress={onPress}
       color={colors.richBlack}
       label={label}
@@ -24,6 +30,7 @@ FloatingActionButton.propTypes = {
   onPress: PropTypes.func.isRequired,
   label: PropTypes.string,
   centered: PropTypes.bool,
+  confirm: PropTypes.bool,
 };
 
 const useStyles = makeStyles((theme, { centered }) => {

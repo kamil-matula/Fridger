@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { TextInput } from 'react-native';
 import { Appbar, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
 import { useForm, Controller } from 'react-hook-form';
@@ -7,7 +8,6 @@ import PropTypes from 'prop-types';
 
 import { back, drawer } from 'assets/icons';
 import { makeStyles } from 'utils';
-import { TextInput } from 'react-native';
 
 const AppBar = ({
   label = '',

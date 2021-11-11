@@ -7,7 +7,7 @@ export const CustomTheme = {
     primary: '#2A2B2E', // cards, navbar, etc.
     richBlack: '#111113', // status bar
     background: '#202124', // whole page
-    accent: '#5DADEC', // snackbar action
+    accent: '#5DADEC', // snackbar actions
     white: '#E8EAED', // labels
     whiteSemiTransparent: '#E8EAED80',
     cyberYellow: '#FFD300', // active tab
