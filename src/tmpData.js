@@ -170,7 +170,7 @@ export const productsInFridgeList = [
 ];
 
 export const fridgesList = [
-  { id: '1', title: 'Home' },
-  { id: '2', title: 'Bunker' },
-  { id: '3', title: 'My fridge' },
+  { id: '1', name: 'Home' },
+  { id: '2', name: 'Bunker' },
+  { id: '3', name: 'My fridge' },
 ];

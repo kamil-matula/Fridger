@@ -1,18 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { View, Image, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { AppBar, ScoresContainer, ScrollViewLayout } from 'components';
+import { AppBar, ScoresContainer, ScrollViewLayout, Dialog } from 'components';
 import { makeStyles } from 'utils';
 import { deleteIcon, time } from 'assets/icons';
 import { productsInFridgeList } from 'tmpData';
 
-const ProductDetails = () => {
+const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
-  // Temporary, mocked data:
-  const product = productsInFridgeList[0];
+  // Params from navigation:
+  const { productID, fridgeID, fridgeName } = route.params;
+  const product = productsInFridgeList.find((e) => e.id === productID);
+
+  // Deleting:
+  const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
+    useState(false);
+  const confirmRemoveProduct = () => {
+    // TODO: Send request to API and wait for removing product from the fridge
+    console.log(
+      `Product #${productID} has been deleted from fridge #${fridgeID}`
+    );
+
+    // Hide dialog and go back:
+    setDeleteProductDialogVisible(false);
+    navigation.pop();
+  };
+  const cancelRemoveProduct = () => {
+    // Hide dialog:
+    setDeleteProductDialogVisible(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -23,10 +42,12 @@ const ProductDetails = () => {
           // TODO: Open dialog responsible for changing expiration date
         }}
         onPressIcon2={() => {
-          // TODO: Open dialog responsible for deleting product
+          // Open dialog responsible for deleting product
+          setDeleteProductDialogVisible(true);
         }}
       />
 
+      {/* Main content */}
       <ScrollViewLayout addPadding={false}>
         {/* Basic information */}
         <View style={styles.basicInfoContainer}>
@@ -94,6 +115,20 @@ const ProductDetails = () => {
           ))}
         </View>
       </ScrollViewLayout>
+
+      {/* Deleting product from fridge */}
+      <Dialog
+        title='Delete product'
+        paragraph={`Are you sure you want to delete product ${product.name} from fridge ${fridgeName}? This action cannot be undone.`}
+        visibilityState={[
+          deleteProductDialogVisible,
+          setDeleteProductDialogVisible,
+        ]}
+        label1='delete'
+        onPressLabel1={confirmRemoveProduct}
+        label2='cancel'
+        onPressLabel2={cancelRemoveProduct}
+      />
     </View>
   );
 };

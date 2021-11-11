@@ -18,7 +18,7 @@ const Fridges = ({ navigation }) => {
         style={styles.list}
         data={fridgesList}
         renderItem={({ item }) => (
-          <FridgeRow fridgeID={item.id} title={item.title} />
+          <FridgeRow fridgeID={item.id} fridgeName={item.name} />
         )}
         keyExtractor={(item) => item.id}
       />

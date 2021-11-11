@@ -29,7 +29,7 @@ const FridgeDetails = ({ route, navigation }) => {
 
   // Params from navigation
   // (TODO: Replace with more appropriate params):
-  const { fridgeID, title } = route.params;
+  const { fridgeID, fridgeName } = route.params;
 
   // Sorting:
   // eslint-disable-next-line no-unused-vars
@@ -40,7 +40,7 @@ const FridgeDetails = ({ route, navigation }) => {
   // Deleting:
   const [deleteFridgeDialogVisible, setDeleteFridgeDialogVisible] =
     useState(false);
-  const removeFridge = () => {
+  const confirmRemoveFridge = () => {
     // TODO: Send request to API and wait for removing fridge from the list
 
     // Hide dialog and go back:
@@ -100,9 +100,8 @@ const FridgeDetails = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Main content */}
       <AppBar
-        label={title}
+        label={fridgeName}
         icon1={more}
         editable
         onPressIcon1={() => {
@@ -111,10 +110,12 @@ const FridgeDetails = ({ route, navigation }) => {
         }}
         onSubmitEditing={(newName) => {
           // TODO: Send request to API to change fridge/list's name
-          console.log(`Fridge ${title} has been renamed to ${newName}`);
+          console.log(`Fridge ${fridgeName} has been renamed to ${newName}`);
         }}
       />
       <Divider style={styles.divider} />
+
+      {/* Sorting products */}
       <TouchableRipple
         onPress={() => {
           // TODO: Add displaying modal bottom sheet with sorting actions
@@ -128,6 +129,8 @@ const FridgeDetails = ({ route, navigation }) => {
           />
         </View>
       </TouchableRipple>
+
+      {/* List of products */}
       <FlatList
         style={styles.list}
         data={productsInFridgeList}
@@ -137,12 +140,18 @@ const FridgeDetails = ({ route, navigation }) => {
             onPressIcon={() => reduceQuantityOpen(item)}
             onPressRow={() => {
               // Go to appropriate page:
-              navigation.navigate('ProductDetails');
+              navigation.navigate('ProductDetails', {
+                productID: item.id,
+                fridgeID,
+                fridgeName,
+              });
             }}
           />
         )}
         keyExtractor={(item) => item.id.toString()}
       />
+
+      {/* Adding new product */}
       <FloatingActionButton
         onPress={() => {
           navigation.navigate('AddProductManual', { fridgeID: 1 });
@@ -184,13 +193,13 @@ const FridgeDetails = ({ route, navigation }) => {
       {/* Deleting fridge */}
       <Dialog
         title='Delete fridge'
-        paragraph={`Are you sure you want to delete fridge ${title}? This action cannot be undone.`}
+        paragraph={`Are you sure you want to delete fridge ${fridgeName}? This action cannot be undone.`}
         visibilityState={[
           deleteFridgeDialogVisible,
           setDeleteFridgeDialogVisible,
         ]}
         label1='delete'
-        onPressLabel1={removeFridge}
+        onPressLabel1={confirmRemoveFridge}
         label2='cancel'
         onPressLabel2={cancelRemoveFridge}
       />
