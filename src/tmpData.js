@@ -223,3 +223,9 @@ export const fridgesList = [
   { id: '6', name: 'Medicines' },
   { id: '7', name: 'The last container' },
 ];
+
+export const shoppingLists = [
+  { id: 1, title: 'Shopping List 1', uncheck: 4, dips: 11, check: 5 },
+  { id: 2, title: 'Shopping List 2', uncheck: 3, dips: 9, check: 6 },
+  { id: 3, title: 'Shopping List 3', uncheck: 7, dips: 2, check: 7 },
+];

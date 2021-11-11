@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
 import {
+  AddShoppingList,
   AddFridge,
   AddProductAutomat,
   AddProductManual,
@@ -48,6 +49,7 @@ const StackNavigator = () => (
     <Stack.Screen name='Friends' component={Friends} />
     <Stack.Screen name='DeleteAccount' component={DeleteAccount} />
     <Stack.Screen name='AddFridge' component={AddFridge} />
+    <Stack.Screen name='AddShoppingList' component={AddShoppingList} />
     <Stack.Screen name='AddFriend' component={AddFriend} />
     <Stack.Screen name='FriendProfile' component={FriendProfile} />
 

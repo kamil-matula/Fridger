@@ -10,6 +10,7 @@ const FloatingActionButton = ({
   onPress,
   label,
   centered = false,
+  visible = true,
   confirm = false,
 }) => {
   const styles = useStyles({ centered });
@@ -17,6 +18,7 @@ const FloatingActionButton = ({
 
   return (
     <FAB
+      visible={visible}
       style={styles.fab}
       icon={confirm ? check : add}
       onPress={onPress}
@@ -30,6 +32,7 @@ FloatingActionButton.propTypes = {
   onPress: PropTypes.func.isRequired,
   label: PropTypes.string,
   centered: PropTypes.bool,
+  visible: PropTypes.bool,
   confirm: PropTypes.bool,
 };
 

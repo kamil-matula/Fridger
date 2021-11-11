@@ -14,4 +14,6 @@ export { default as BottomSheet } from './BottomSheet';
 export { default as SheetRow } from './SheetRow';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as ProductInfo } from './ProductInfo';
+export { default as ShoppingListRow } from './ShoppingListRow';
+export { default as IconAndBadge } from './IconAndBadge';
 export { default as ScoresContainer } from './ScoresContainer';
