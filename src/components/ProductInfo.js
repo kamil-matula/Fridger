@@ -1,32 +1,13 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { View, Text, Image } from 'react-native';
+import { View, Text } from 'react-native';
 
 import { makeStyles } from 'utils';
-import { N1, N2, N3, N4, A, B, C, D, E } from 'assets/icons/nova-nutri';
+import ScoresContainer from './ScoresContainer';
 
 const ProductInfo = ({ text, subtext1, subtext2, nova, nutri }) => {
   const styles = useStyles();
-
-  // Nova-Score icon:
-  const novaIcon = (() => {
-    if (nova === 'N1') return N1;
-    if (nova === 'N2') return N2;
-    if (nova === 'N3') return N3;
-    if (nova === 'N4') return N4;
-    return null;
-  })();
-
-  // Nutri-Score icon:
-  const nutriIcon = (() => {
-    if (nutri === 'A') return A;
-    if (nutri === 'B') return B;
-    if (nutri === 'C') return C;
-    if (nutri === 'D') return D;
-    if (nutri === 'E') return E;
-    return null;
-  })();
 
   return (
     <View style={styles.container}>
@@ -41,10 +22,12 @@ const ProductInfo = ({ text, subtext1, subtext2, nova, nutri }) => {
           {subtext2}
         </Text>
       </View>
-      <View style={styles.imageContainer}>
-        <Image source={novaIcon} style={styles.icon} />
-        <Image source={nutriIcon} style={styles.icon} />
-      </View>
+      <ScoresContainer
+        novaScore={nova}
+        nutriScore={nutri}
+        containerStyle={styles.imageContainer}
+        iconStyle={styles.icon}
+      />
     </View>
   );
 };

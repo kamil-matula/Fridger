@@ -7,29 +7,33 @@ import PropTypes from 'prop-types';
 import { makeStyles } from 'utils';
 import { reduce } from 'assets/icons';
 
-const FridgeDetailsRow = ({ product, onPressIcon }) => {
+const FridgeDetailsRow = ({ product, onPressIcon, onPressRow }) => {
   const styles = useStyles();
 
   return (
-    <TouchableRipple
-      onPress={() => {
-        // TODO: Add navigating to "Product Details Page"
-      }}
-    >
+    <TouchableRipple onPress={onPressRow}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: product.image }} style={styles.image} />
+          {product.image ? (
+            <Image source={{ uri: product.image }} style={styles.image} />
+          ) : (
+            <View style={styles.image} />
+          )}
         </View>
         <View style={styles.textsContainer}>
           <Text style={styles.name}>{product.name}</Text>
-          <Text style={styles.producer}>{product.producer}</Text>
+          {product.producer && (
+            <Text style={styles.producer}>{product.producer}</Text>
+          )}
           <Text style={styles.quantity}>
             {product.currentQuantity} / {product.maxQuantity}{' '}
             {product.quantityType}
           </Text>
-          <Text style={styles.expirationDate}>
-            expiration date: {product.expirationDate}
-          </Text>
+          {product.expirationDate && (
+            <Text style={styles.expirationDate}>
+              expiration date: {product.expirationDate}
+            </Text>
+          )}
         </View>
         <View style={styles.iconContainer}>
           <TouchableRipple onPress={onPressIcon}>
@@ -44,6 +48,7 @@ const FridgeDetailsRow = ({ product, onPressIcon }) => {
 FridgeDetailsRow.propTypes = {
   product: PropTypes.object.isRequired,
   onPressIcon: PropTypes.func.isRequired,
+  onPressRow: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -55,7 +60,12 @@ const useStyles = makeStyles((theme) => ({
   imageContainer: {
     width: 64,
   },
-  image: { height: 64, resizeMode: 'contain' },
+  image: {
+    // TODO: Add better placeholder
+    backgroundColor: theme.colors.blueJeans,
+    height: 80,
+    width: 64,
+  },
   textsContainer: {
     paddingLeft: 16,
     flex: 1,

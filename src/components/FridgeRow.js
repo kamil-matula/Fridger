@@ -16,7 +16,7 @@ import {
   vegetables,
 } from 'assets/icons/food';
 
-const FridgeRow = ({ fridgeID, title }) => {
+const FridgeRow = ({ fridgeID, fridgeName }) => {
   const styles = useStyles();
   const navigation = useNavigation();
 
@@ -24,11 +24,11 @@ const FridgeRow = ({ fridgeID, title }) => {
     <View>
       <TouchableRipple
         onPress={() => {
-          navigation.navigate('FridgeDetails', { fridgeID, title });
+          navigation.navigate('FridgeDetails', { fridgeID, fridgeName });
         }}
       >
         <View style={styles.container}>
-          <Text style={styles.text}>{title}</Text>
+          <Text style={styles.text}>{fridgeName}</Text>
           {/* TODO: Replace list of icons with something new as we no longer use Food Supplies */}
           <View style={styles.images}>
             {[vegetables, fruits, ham, cheese, bread, eggs, milk].map(
@@ -49,7 +49,7 @@ const FridgeRow = ({ fridgeID, title }) => {
 
 FridgeRow.propTypes = {
   fridgeID: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  fridgeName: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({

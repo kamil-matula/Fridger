@@ -65,7 +65,7 @@ const AddProductAutomat = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
 
-  const onChange = (event, selectedDate) => {
+  const onDateChange = (event, selectedDate) => {
     // Hide calendar:
     setDatepickerVisible(false);
 
@@ -162,7 +162,7 @@ const AddProductAutomat = ({ navigation }) => {
               label='Quantity'
               keyboardType='numeric'
               variant='data'
-              returnKeyType='done'
+              returnKeyType='next'
               textAlign='right'
             />
           </View>
@@ -173,15 +173,12 @@ const AddProductAutomat = ({ navigation }) => {
               name='expiration'
               label='Expiration date'
               variant='data'
-              editable={false}
-              returnKeyType='next'
+              returnKeyType='done'
+              keyboardType='numeric'
               placeholder='dd.MM.rrrr'
               icon={calendar}
               onIconPress={() => {
-                // Display calendar:
                 setDatepickerVisible(true);
-
-                // TODO: Fix displaying calendar (Pixel 4a crashes here)
               }}
             />
           </View>
@@ -191,7 +188,7 @@ const AddProductAutomat = ({ navigation }) => {
 
       {/* Calendar */}
       {datepickerVisible && (
-        <DateTimePicker value={date} mode='date' onChange={onChange} />
+        <DateTimePicker value={date} mode='date' onChange={onDateChange} />
       )}
 
       {/* Button at the bottom */}

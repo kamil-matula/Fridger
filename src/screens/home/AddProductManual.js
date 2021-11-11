@@ -66,7 +66,7 @@ const AddProductManual = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
 
-  const onChange = (event, selectedDate) => {
+  const onDateChange = (event, selectedDate) => {
     // Hide calendar:
     setDatepickerVisible(false);
 
@@ -143,7 +143,7 @@ const AddProductManual = ({ navigation }) => {
                 label='Quantity'
                 keyboardType='numeric'
                 variant='data'
-                returnKeyType='done'
+                returnKeyType='next'
                 placeholder='Enter quantity'
               />
             </View>
@@ -177,10 +177,10 @@ const AddProductManual = ({ navigation }) => {
               name='expiration'
               label='Expiration date'
               variant='data'
-              editable={false}
               icon={calendar}
               onIconPress={showDatepicker}
-              returnKeyType='next'
+              returnKeyType='done'
+              keyboardType='numeric'
               placeholder='dd.MM.rrrr'
             />
           </View>
@@ -189,7 +189,7 @@ const AddProductManual = ({ navigation }) => {
 
       {/* Calendar */}
       {datepickerVisible && (
-        <DateTimePicker value={date} mode='date' onChange={onChange} />
+        <DateTimePicker value={date} mode='date' onChange={onDateChange} />
       )}
 
       {/* Quantity types */}

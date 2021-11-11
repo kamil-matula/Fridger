@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 
-const ScrollViewLayout = ({ children }) => {
-  const styles = useStyles();
+const ScrollViewLayout = ({ children, addPadding = true }) => {
+  const styles = useStyles({ addPadding });
 
   return (
     <KeyboardAvoidingView behavior='padding' style={styles.container}>
@@ -22,15 +22,16 @@ const ScrollViewLayout = ({ children }) => {
 
 ScrollViewLayout.propTypes = {
   children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  addPadding: PropTypes.bool,
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme, { addPadding }) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
   },
   SVcontainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: addPadding ? 16 : 0,
   },
   contentContainer: {
     flexGrow: 1,
