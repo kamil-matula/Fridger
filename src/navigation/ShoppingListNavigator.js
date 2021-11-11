@@ -2,14 +2,21 @@ import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { ShoppingLists, ShoppingListDetails } from 'screens/home';
+import ShoppingListTabNavigator from 'navigation/ShoppingListTabNavigator';
+import { ShoppingListDetails } from 'screens/home';
 
-const Stack = createStackNavigator();
+const ShoppingList = createStackNavigator();
 const ShoppingListNavigator = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name='ShoppingListsList' component={ShoppingLists} />
-    <Stack.Screen name='ShoppingListDetails' component={ShoppingListDetails} />
-  </Stack.Navigator>
+  <ShoppingList.Navigator screenOptions={{ headerShown: false }}>
+    <ShoppingList.Screen
+      name='ShoppingListTabNavigator'
+      component={ShoppingListTabNavigator}
+    />
+    <ShoppingList.Screen
+      name='ShoppingListDetails'
+      component={ShoppingListDetails}
+    />
+  </ShoppingList.Navigator>
 );
 
 export default ShoppingListNavigator;

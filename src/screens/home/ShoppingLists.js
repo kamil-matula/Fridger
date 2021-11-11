@@ -1,19 +1,29 @@
 import React from 'react';
 
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Divider } from 'react-native-paper';
 
-import { AppBar } from 'components';
 import { makeStyles } from 'utils';
+import { shoppingLists } from 'tmpData';
+import { ShoppingListRow } from 'components';
 
-const ShoppingLists = () => {
+const ShoppingLists = ({ navigation }) => {
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
-      <AppBar isDrawer label='Shopping Lists' />
-      <View style={styles.container2}>
-        <Text style={styles.text}>Shopping Lists</Text>
-      </View>
+      {shoppingLists.map(({ id, title, uncheck, dips, check }) => (
+        <View key={id}>
+          <ShoppingListRow
+            label={title}
+            unchecked={uncheck}
+            dips={dips}
+            checked={check}
+            onPress={() => navigation.navigate('ShoppingListDetails')}
+          />
+          <Divider style={styles.divider} />
+        </View>
+      ))}
     </View>
   );
 };
@@ -23,13 +33,11 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  container2: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
   text: {
     color: theme.colors.white,
+  },
+  divider: {
+    backgroundColor: theme.colors.silverMetallic,
   },
 }));
 

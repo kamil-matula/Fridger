@@ -20,3 +20,6 @@ export { default as visibilityOn } from './visibility_on.png';
 export { default as scanner } from './scanner.png';
 export { default as calendar } from './calendar.png';
 export { default as expand } from './expand.png';
+export { default as checkBox } from './check_box.png';
+export { default as checkedCheckBox } from './check_box_checked.png';
+export { default as hand } from './hand.png';

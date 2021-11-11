@@ -5,12 +5,18 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 
-const FloatingActionButton = ({ onPress, label, centered = false }) => {
+const FloatingActionButton = ({
+  onPress,
+  label,
+  centered = false,
+  visible = true,
+}) => {
   const styles = useStyles({ centered });
   const { colors } = useTheme();
 
   return (
     <FAB
+      visible={visible}
       style={styles.fab}
       icon='plus'
       onPress={onPress}
@@ -24,6 +30,7 @@ FloatingActionButton.propTypes = {
   onPress: PropTypes.func.isRequired,
   label: PropTypes.string,
   centered: PropTypes.bool,
+  visible: PropTypes.bool,
 };
 
 const useStyles = makeStyles((theme, { centered }) => {
