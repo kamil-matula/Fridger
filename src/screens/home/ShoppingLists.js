@@ -19,7 +19,9 @@ const ShoppingLists = ({ navigation }) => {
             unchecked={uncheck}
             dips={dips}
             checked={check}
-            onPress={() => navigation.navigate('ShoppingListDetails')}
+            onPress={() =>
+              navigation.navigate('ShoppingListDetailsTabNavigator')
+            }
           />
           <Divider style={styles.divider} />
         </View>

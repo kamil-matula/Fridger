@@ -3,7 +3,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import ShoppingListTabNavigator from 'navigation/ShoppingListTabNavigator';
-import { ShoppingListDetails } from 'screens/home';
+import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
 
 const ShoppingList = createStackNavigator();
 const ShoppingListNavigator = () => (
@@ -13,8 +13,8 @@ const ShoppingListNavigator = () => (
       component={ShoppingListTabNavigator}
     />
     <ShoppingList.Screen
-      name='ShoppingListDetails'
-      component={ShoppingListDetails}
+      name='ShoppingListDetailsTabNavigator'
+      component={ShoppingListDetailsTabNavigator}
     />
   </ShoppingList.Navigator>
 );
