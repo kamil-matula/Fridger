@@ -18,7 +18,16 @@ const Fridges = ({ navigation }) => {
         style={styles.list}
         data={fridgesList}
         renderItem={({ item }) => (
-          <FridgeRow fridgeID={item.id} fridgeName={item.name} />
+          <FridgeRow
+            fridgeName={item.name}
+            onPress={() => {
+              // Go to specific fridge:
+              navigation.navigate('FridgeDetails', {
+                fridgeID: item.id,
+                fridgeName: item.name,
+              });
+            }}
+          />
         )}
         keyExtractor={(item) => item.id}
       />

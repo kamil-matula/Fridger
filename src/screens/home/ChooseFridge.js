@@ -7,7 +7,8 @@ import { AppBar, FridgeRow, FloatingActionButton } from 'components';
 import { makeStyles } from 'utils';
 import { fridgesList } from 'tmpData';
 
-const ChooseFridge = ({ navigation }) => {
+const ChooseFridge = ({ route, navigation }) => {
+  const { activeFridgeName } = route.params;
   const styles = useStyles();
 
   return (
@@ -20,7 +21,14 @@ const ChooseFridge = ({ navigation }) => {
         style={styles.list}
         data={fridgesList}
         renderItem={({ item }) => (
-          <FridgeRow fridgeID={item.id} fridgeName={item.name} />
+          <FridgeRow
+            isActive={item.name === activeFridgeName}
+            fridgeName={item.name}
+            onPress={() => {
+              // TODO: Add connecting this fridge with shopping list
+              console.log(`Fridge ${item.name} has been selected as active`);
+            }}
+          />
         )}
         keyExtractor={(item) => item.id}
       />

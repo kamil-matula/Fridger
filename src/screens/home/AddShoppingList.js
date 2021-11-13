@@ -5,17 +5,24 @@ import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 
 import { AppBar, FloatingActionButton, FoodTypes } from 'components';
 import { makeStyles } from 'utils';
+import { fridgesList } from 'tmpData';
 
 const AddShoppingList = ({ navigation }) => {
+  // TODO: Change it to useState (or something else) after adding Redux, because
+  // currently we are not able to pass [activeFridge, setActiveFridge]
+  // in route params and the docs suggest using useContext to have this
+  // variable both in AddShoppingList and ChooseFridge pages.
+  const activeFridge = fridgesList[0]; // alternative: const activeFridge = null;
+
+  const styles = useStyles({ activeFridge });
   const { colors } = useTheme();
-  const styles = useStyles();
 
   return (
     <View style={styles.container}>
       <AppBar label='Create new shopping list' />
       <Divider style={styles.divider} />
 
-      {/* Necessary content: shopping list name */}
+      {/* Required content: shopping list name */}
       <TextInput
         style={styles.input}
         placeholder='Write name'
@@ -27,25 +34,17 @@ const AddShoppingList = ({ navigation }) => {
       <TouchableRipple
         onPress={() => {
           // Go to ChooseFridge page:
-          navigation.navigate('ChooseFridge');
+          navigation.navigate('ChooseFridge', {
+            activeFridgeName: activeFridge.name,
+          });
         }}
       >
-        <View style={{ padding: 16 }}>
-          <Text style={{ fontSize: 20, color: colors.white }}>
-            Connected to
+        <View style={styles.connectContainer}>
+          <Text style={styles.connectTitle}>Connected to</Text>
+          <Text style={styles.connectedFridgeName}>
+            {activeFridge ? activeFridge.name : 'No fridge selected'}
           </Text>
-          <View style={{ paddingTop: 8 }}>
-            <Text
-              style={{
-                color: colors.silverMetallicSemiTransparent,
-                fontSize: 14,
-                paddingBottom: 8,
-              }}
-            >
-              No fridge selected
-            </Text>
-            <FoodTypes disabled />
-          </View>
+          <FoodTypes disabled={!activeFridge} />
         </View>
       </TouchableRipple>
       <Divider style={styles.divider} />
@@ -65,7 +64,8 @@ const AddShoppingList = ({ navigation }) => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme, { activeFridge }) => ({
+  // Required content:
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
@@ -78,6 +78,17 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     backgroundColor: theme.colors.silverMetallic,
     height: 1,
+  },
+
+  // Optional content:
+  connectContainer: { padding: 16 },
+  connectTitle: { fontSize: 20, color: theme.colors.white },
+  connectedFridgeName: {
+    color: activeFridge
+      ? theme.colors.white
+      : theme.colors.silverMetallicSemiTransparent,
+    fontSize: 14,
+    paddingVertical: 8,
   },
 }));
 
