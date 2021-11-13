@@ -6,7 +6,7 @@ import { TouchableRipple } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
 
-const SheetRow = ({ icon, text, onPress }) => {
+const SheetRow = ({ icon, text, subText, onPress }) => {
   const styles = useStyles();
 
   return (
@@ -14,6 +14,7 @@ const SheetRow = ({ icon, text, onPress }) => {
       <View style={styles.container}>
         <Image source={icon} style={styles.icon} />
         <Text style={styles.text}>{text}</Text>
+        {subText && <Text style={styles.subText}>{subText}</Text>}
       </View>
     </TouchableRipple>
   );
@@ -22,6 +23,7 @@ const SheetRow = ({ icon, text, onPress }) => {
 SheetRow.propTypes = {
   icon: PropTypes.number,
   text: PropTypes.string.isRequired,
+  subText: PropTypes.string,
   onPress: PropTypes.func.isRequired,
 };
 
@@ -41,6 +43,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
     color: theme.colors.white,
     paddingLeft: 16,
+  },
+  subText: {
+    fontSize: 14,
+    color: theme.colors.silverMetallic,
   },
 }));
 

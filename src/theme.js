@@ -12,6 +12,7 @@ export const CustomTheme = {
     whiteSemiTransparent: '#E8EAED80',
     cyberYellow: '#FFD300', // active tab
     silverMetallic: '#9AA0A6', // inactive tab
+    silverMetallicSemiTransparent: '#9AA0A680', // disabled text
     blueJeans: '#5DADEC', // buttons
     darkGreen: '#006400', // green circles
     tartOrange: '#FF4D4D', // buttons

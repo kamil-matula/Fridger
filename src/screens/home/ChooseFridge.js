@@ -7,30 +7,33 @@ import { AppBar, FridgeRow, FloatingActionButton } from 'components';
 import { makeStyles } from 'utils';
 import { fridgesList } from 'tmpData';
 
-const Fridges = ({ navigation }) => {
+const ChooseFridge = ({ route, navigation }) => {
+  const { activeFridgeName } = route.params;
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
-      <AppBar isDrawer label='Fridges' />
+      <AppBar label='Choose fridge' />
       <Divider style={styles.divider} />
+
+      {/* List of available fridges (including active one) */}
       <FlatList
         style={styles.list}
         data={fridgesList}
         renderItem={({ item }) => (
           <FridgeRow
+            isActive={item.name === activeFridgeName}
             fridgeName={item.name}
             onPress={() => {
-              // Go to specific fridge:
-              navigation.navigate('FridgeDetails', {
-                fridgeID: item.id,
-                fridgeName: item.name,
-              });
+              // TODO: Add connecting this fridge with shopping list
+              console.log(`Fridge ${item.name} has been selected as active`);
             }}
           />
         )}
         keyExtractor={(item) => item.id}
       />
+
+      {/* Adding new fridge */}
       <FloatingActionButton
         onPress={() => {
           navigation.navigate('AddFridge');
@@ -55,4 +58,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default Fridges;
+export default ChooseFridge;
