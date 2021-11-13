@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     backgroundColor: theme.colors.silverMetallic,
+    height: 1,
   },
 }));
 

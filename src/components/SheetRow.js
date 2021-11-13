@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     fontWeight: 'bold',
     color: theme.colors.white,
-    paddingLeft: 32,
+    paddingLeft: 16,
   },
 }));
 
