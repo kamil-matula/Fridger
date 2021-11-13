@@ -35,7 +35,7 @@ const AddShoppingList = ({ navigation }) => {
         onPress={() => {
           // Go to ChooseFridge page:
           navigation.navigate('ChooseFridge', {
-            activeFridgeName: activeFridge.name,
+            activeFridgeName: activeFridge ? activeFridge.name : null,
           });
         }}
       >
