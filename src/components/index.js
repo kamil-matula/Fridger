@@ -17,3 +17,4 @@ export { default as ProductInfo } from './ProductInfo';
 export { default as ShoppingListRow } from './ShoppingListRow';
 export { default as IconAndBadge } from './IconAndBadge';
 export { default as ScoresContainer } from './ScoresContainer';
+export { default as FoodTypes } from './FoodTypes';

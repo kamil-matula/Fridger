@@ -26,7 +26,7 @@ const AddFridge = ({ navigation }) => {
         onPress={() => {
           // TODO: Send request to API and add fridge to user
 
-          // Go back to Fridges List:
+          // Go back to FridgesList page or ChooseFridge page
           navigation.goBack();
         }}
       />
