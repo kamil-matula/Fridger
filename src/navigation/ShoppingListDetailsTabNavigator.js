@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 
 import {
   ShoppingList,
@@ -11,7 +11,7 @@ import {
 } from 'screens/home/ShoppingList';
 import { AppBar, FloatingActionButton } from 'components';
 import { makeStyles } from 'utils';
-import { scanner, more } from 'assets/icons';
+import { scanner, more, chat } from 'assets/icons';
 
 const ShoppingListTab = createMaterialTopTabNavigator();
 const ShoppingListDetailsTabNavigator = ({ navigation }) => {
@@ -39,6 +39,7 @@ const ShoppingListDetailsTabNavigator = ({ navigation }) => {
           tabBarContentContainerStyle: styles.contentContainer,
           tabBarLabelStyle: styles.label,
           tabBarIndicatorStyle: styles.indicator,
+          tabBarItemStyle: { height: 48 },
         }}
       >
         {isShared && (
@@ -50,7 +51,14 @@ const ShoppingListDetailsTabNavigator = ({ navigation }) => {
           component={ShoppingListSummary}
         />
         {isShared && (
-          <ShoppingListTab.Screen name='Chat' component={ShoppingListChat} />
+          <ShoppingListTab.Screen
+            name='Chat'
+            component={ShoppingListChat}
+            options={{
+              tabBarLabelStyle: { display: 'none' },
+              tabBarIcon: () => <Image style={styles.icon} source={chat} />,
+            }}
+          />
         )}
       </ShoppingListTab.Navigator>
       {/* TODO: Show only on Shopping list tab   */}
@@ -81,6 +89,11 @@ const useStyles = makeStyles((theme) => ({
   },
   indicator: {
     backgroundColor: theme.colors.cyberYellow,
+  },
+  icon: {
+    width: 24,
+    height: 24,
+    tintColor: theme.colors.silverMetallic,
   },
 }));
 

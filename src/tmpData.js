@@ -229,3 +229,90 @@ export const shoppingLists = [
   { id: 2, title: 'Shopping List 2', uncheck: 3, dips: 9, check: 6 },
   { id: 3, title: 'Shopping List 3', uncheck: 7, dips: 2, check: 7 },
 ];
+
+export const shoppingListItems = [
+  {
+    id: 1,
+    userNick: 'ASDFGHJK',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+    text: 'Mleko',
+    subText: 'UHT',
+    quantity: 1,
+    unit: 'pcs',
+    status: 'unchecked',
+    price: 1,
+  },
+  {
+    id: 2,
+    userNick: 'AAAAA',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
+    text: 'Mleko2',
+    subText: 'UHT',
+    quantity: 1000,
+    unit: 'pcs',
+    status: 'unchecked',
+    price: 2,
+  },
+  {
+    id: 3,
+    userNick: 'ASDFGHJK',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+    text: 'Mleko3',
+    subText: 'UHT',
+    quantity: 2,
+    unit: 'pcs',
+    status: 'indeterminate',
+    price: 3,
+  },
+  {
+    id: 4,
+    userNick: 'ASDFGHJK',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+    text: 'Mleko3',
+    subText: 'UHT',
+    quantity: 2,
+    unit: 'pcs',
+    status: 'indeterminate',
+    price: 4,
+  },
+  {
+    id: 5,
+    userNick: 'AAAAA',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
+    text: 'Mleko3',
+    subText: 'UHT',
+    quantity: 2,
+    unit: 'pcs',
+    status: 'indeterminate',
+    price: 5,
+  },
+  {
+    id: 6,
+    userNick: 'AAAAA',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
+    text: 'Mleko3',
+    subText: 'UHT',
+    quantity: 2,
+    unit: 'pcs',
+    status: 'checked',
+    price: 6,
+  },
+  {
+    id: 7,
+    userNick: 'ASDFGHJK',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+    text: 'Mleko3',
+    subText: 'UHT',
+    quantity: 2,
+    unit: 'pcs',
+    status: 'checked',
+    price: 7,
+  },
+];

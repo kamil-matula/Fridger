@@ -17,3 +17,6 @@ export { default as ProductInfo } from './ProductInfo';
 export { default as ShoppingListRow } from './ShoppingListRow';
 export { default as IconAndBadge } from './IconAndBadge';
 export { default as ScoresContainer } from './ScoresContainer';
+export { default as ShoppingListItem } from './ShoppingListItem';
+export { default as ShoppingListItemInteractive } from './ShoppingListItemInteractive';
+export { default as Chip } from './Chip';
