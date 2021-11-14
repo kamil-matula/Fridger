@@ -6,12 +6,12 @@ import { unauthenticatedMiddleware } from './middleware';
 
 export const store = configureStore({
   reducer: {
-    [fridgerApi.reducerPath]: fridgerApi.reducer,
-    auth: authReducer,
+    [fridgerApi.reducerPath]: fridgerApi.reducer, // RTK Query config needs this
+    auth: authReducer, // auth
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
-      fridgerApi.middleware,
-      unauthenticatedMiddleware
+      fridgerApi.middleware, // RTK Query config needs this
+      unauthenticatedMiddleware // Custom middleware to handle unauthenticated use
     ),
 });

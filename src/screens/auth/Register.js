@@ -138,7 +138,7 @@ const Register = ({ navigation }) => {
         <Button
           label='Register'
           variant='contained'
-          onPress={handleSubmit((data) => handleRegister(data))}
+          onPress={handleSubmit(handleRegister)}
         />
         <Text style={styles.text}>Already have an account?</Text>
         <Button

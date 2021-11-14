@@ -10,10 +10,10 @@ const authApi = fridgerApi.injectEndpoints({
       }),
     }),
     login: builder.mutation({
-      query: (body) => ({
+      query: ({ email, password }) => ({
         url: 'auth/users/login/',
         method: 'POST',
-        body,
+        body: { email, password },
       }),
     }),
     logout: builder.mutation({

@@ -83,7 +83,7 @@ const Login = ({ navigation }) => {
         <Button
           label='Login'
           variant='contained'
-          onPress={handleSubmit((data) => loginPost(data))}
+          onPress={handleSubmit(loginPost)}
         />
         <Text style={styles.text}>Don’t have an account?</Text>
         <Button
