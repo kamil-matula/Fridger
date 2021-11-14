@@ -39,7 +39,6 @@ const StackNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {/* BEFORE AUTHENTICATION */}
       {isAuthenticated ? (
         <>
           {/* LEVEL 1 (BOTTOM TABS) & LEVEL 2 (FRIDGE/LIST DETAILS) */}
@@ -68,6 +67,7 @@ const StackNavigator = () => {
         </>
       ) : (
         <>
+          {/* BEFORE AUTHENTICATION */}
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='ResetPassword' component={ResetPassword} />
           <Stack.Screen name='Register' component={Register} />

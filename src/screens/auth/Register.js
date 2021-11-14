@@ -1,20 +1,22 @@
 import React from 'react';
 
-import { Text, View } from 'react-native';
+import { Text, View, ToastAndroid, AlertIOS, Platform } from 'react-native';
 import { useForm } from 'react-hook-form';
 
 import { InputField, Button, ScrollViewLayout, Separator } from 'components';
 import { makeStyles } from 'utils';
+import { useRegisterMutation } from 'services/fridger/auth';
 
 const Register = ({ navigation }) => {
   const styles = useStyles();
+  const registerPost = useRegisterMutation()[0];
 
-  const { control, handleSubmit, setFocus, getValues } = useForm({
+  const { control, handleSubmit, setFocus, getValues, setError } = useForm({
     defaultValues: {
       email: '',
       password: '',
       password2: '',
-      nick: '',
+      username: '',
     },
   });
 
@@ -38,25 +40,52 @@ const Register = ({ navigation }) => {
       validate: (password2) =>
         getValues('password') === password2 || "Passwords don't match",
     },
-    nick: {
-      required: 'Nick is required',
+    username: {
+      required: 'Username is required',
     },
   };
 
-  const register = (data) => {
-    // TODO: Send data to API to register, get token and stay logged in
-    console.log('register', data);
-
-    // Go to page with confirmation of creating account:
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'RegisterFeedback' }],
-    });
+  const handleRegister = ({ email, username, password }) => {
+    registerPost({ email, username, password })
+      .unwrap()
+      .then(() =>
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'RegisterFeedback' }],
+        })
+      )
+      .catch((error) => {
+        const usernameError = error.data?.username;
+        const emailError = error.data?.email;
+        const passwordError = error.data?.password;
+        const generalError = error.data?.non_field_errors;
+        if (emailError) {
+          setError('email', { type: 'server', message: emailError.join(' ') });
+        }
+        if (usernameError) {
+          setError('username', {
+            type: 'server',
+            message: usernameError.join(' '),
+          });
+        }
+        if (passwordError) {
+          setError('password', {
+            type: 'server',
+            message: passwordError.join(' '),
+          });
+        }
+        if (generalError) {
+          const message = generalError.join(' ');
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+          } else {
+            AlertIOS.alert(message);
+          }
+        }
+      });
   };
-
   return (
     <ScrollViewLayout>
-      {/* Input fields */}
       <View>
         <Text style={styles.header}>Register</Text>
         <InputField
@@ -85,7 +114,7 @@ const Register = ({ navigation }) => {
         <InputField
           control={control}
           rules={rules.password2}
-          onSubmitEditing={() => setFocus('nick')}
+          onSubmitEditing={() => setFocus('username')}
           secure
           name='password2'
           label='Confirm password'
@@ -95,11 +124,11 @@ const Register = ({ navigation }) => {
         <Separator />
         <InputField
           control={control}
-          rules={rules.nick}
-          label='Nick'
-          name='nick'
+          rules={rules.username}
+          label='Username'
+          name='username'
           returnKeyType='done'
-          placeholder='Enter your nick'
+          placeholder='Enter your username'
         />
         <Separator height={32} />
       </View>
@@ -109,7 +138,7 @@ const Register = ({ navigation }) => {
         <Button
           label='Register'
           variant='contained'
-          onPress={handleSubmit(register)}
+          onPress={handleSubmit((data) => handleRegister(data))}
         />
         <Text style={styles.text}>Already have an account?</Text>
         <Button
