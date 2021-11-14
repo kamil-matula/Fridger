@@ -31,7 +31,8 @@
     "no-alert": 0,
     "no-undef": 0, // eg. "alert"
     "no-console": 0,
-    "react/require-default-props": 0
+    "react/require-default-props": 0,
+    "no-param-reassign": [2, { "props": false }]
   },
   "settings": {
     "import/resolver": {

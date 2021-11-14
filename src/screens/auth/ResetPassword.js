@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Text, View } from 'react-native';
+import { Text, View, ToastAndroid, AlertIOS, Platform } from 'react-native';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -11,9 +11,12 @@ import {
   Separator,
 } from 'components';
 import { makeStyles } from 'utils';
+import { useResetPasswordMutation } from 'services/fridger/auth';
 
 const ResetPassword = ({ navigation }) => {
   const styles = useStyles();
+
+  const resetPasswordPost = useResetPasswordMutation()[0];
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -33,11 +36,22 @@ const ResetPassword = ({ navigation }) => {
   };
 
   const resetPassword = (data) => {
-    // TODO: Send request to API to get mail with new password
-    console.log('reset password', data);
-
-    // Go to Login Page:
-    navigation.goBack();
+    resetPasswordPost(data)
+      .unwrap()
+      .then(() => {
+        navigation.goBack();
+        const message = 'Email has been sent with the link.';
+        if (Platform.OS === 'android') {
+          ToastAndroid.show(message, ToastAndroid.SHORT);
+        } else {
+          AlertIOS.alert(message);
+        }
+      })
+      .catch((error) => {
+        // There shoudln't be any error. Even if email doesn't exists in api, we don't
+        // give this info everytime we should have HTTP 204 no content.
+        console.error(error);
+      });
   };
 
   return (
@@ -50,7 +64,7 @@ const ResetPassword = ({ navigation }) => {
             <Text style={styles.header}>Reset Password</Text>
             <Text style={styles.text}>
               Enter email associated with your account.{'\n'}We will send you a
-              new password.
+              link to reset password.
             </Text>
           </View>
           <InputField
