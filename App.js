@@ -20,7 +20,7 @@ import { useLazyUserInfoQuery } from 'services/fridger/auth';
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
-  AsyncStorage.setItem('token', '4bfb31757bd7a8cbeabea2c03943483e678135a0');
+
   return (
     <ReduxProvider store={store}>
       {isLoading && <AppLoading />}
@@ -36,6 +36,7 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
     useLazyUserInfoQuery();
   const isInit = useRef(true);
 
+  // Init post request to check if user is authenticated with token located in storage
   useEffect(() => {
     if (!isInit.current) return;
     const initAuth = async () => {
@@ -49,6 +50,7 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
     isInit.current = false;
   }, [fetchUserInfo, dispatch]);
 
+  // Check if user is successfully authenticated and end app loading
   useEffect(() => {
     if (isUninitialized || isLoading) return;
     if (isSuccess) {
@@ -57,6 +59,7 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
     setIsAppLoading(false);
   }, [isSuccess, dispatch, setIsAppLoading, isUninitialized, isLoading]);
 
+  // Update token in storage whenever value of it in redux changes
   useEffect(() => {
     const updateToken = async () => {
       if (token) {
