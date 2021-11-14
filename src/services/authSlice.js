@@ -17,13 +17,18 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      fridgerApi.endpoints.login.matchFulfilled,
-      (state, { payload }) => {
-        state.isAuthenticated = true;
-        state.token = payload.token;
-      }
-    );
+    builder
+      .addMatcher(
+        fridgerApi.endpoints.login.matchFulfilled,
+        (state, { payload }) => {
+          state.isAuthenticated = true;
+          state.token = payload.auth_token;
+        }
+      )
+      .addMatcher(fridgerApi.endpoints.logout.matchFulfilled, (state) => {
+        state.isAuthenticated = false;
+        state.token = null;
+      });
   },
 });
 

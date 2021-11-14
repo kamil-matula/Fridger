@@ -6,9 +6,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DrawerRow, Button, UserInfo } from 'components';
 import { makeStyles } from 'utils';
+import { useLogoutMutation } from 'services/fridger/auth';
 
 const DrawerContent = ({ navigation }) => {
   const styles = useStyles();
+
+  const logoutPost = useLogoutMutation()[0];
+
   return (
     <SafeAreaView style={styles.drawerContent}>
       <UserInfo
@@ -58,8 +62,7 @@ const DrawerContent = ({ navigation }) => {
           variant='outlined'
           label='LOGOUT'
           onPress={() => {
-            // TODO: Add logging out (removing token from storage)
-            navigation.navigate('Login');
+            logoutPost();
           }}
         />
       </View>
