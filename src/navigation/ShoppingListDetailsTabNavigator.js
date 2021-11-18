@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Image, View } from 'react-native';
@@ -18,6 +18,7 @@ const ShoppingListDetailsTabNavigator = ({ navigation }) => {
   const styles = useStyles();
 
   const isShared = true;
+  const [fabVisible, setFabVisible] = useState(true);
 
   // TODO: Change tab items size. Tab navigator is poorly documented.
   return (
@@ -41,6 +42,20 @@ const ShoppingListDetailsTabNavigator = ({ navigation }) => {
           tabBarIndicatorStyle: styles.indicator,
           tabBarItemStyle: { height: 48 },
         }}
+        screenListeners={{
+          focus: (e) => {
+            if (e.target.startsWith('List-')) {
+              setFabVisible(true);
+            } else if (
+              e.target.startsWith('Your list-') &&
+              isShared === false
+            ) {
+              setFabVisible(true);
+            } else {
+              setFabVisible(false);
+            }
+          },
+        }}
       >
         {isShared && (
           <ShoppingListTab.Screen name='List' component={ShoppingList} />
@@ -61,12 +76,11 @@ const ShoppingListDetailsTabNavigator = ({ navigation }) => {
           />
         )}
       </ShoppingListTab.Navigator>
-      {/* TODO: Show only on Shopping list tab   */}
-      {/* or on your list when isShared is false */}
       <FloatingActionButton
         onPress={() => {
           // TODO: Show bottom sheet
         }}
+        visible={fabVisible}
       />
     </View>
   );

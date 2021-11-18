@@ -20,3 +20,5 @@ export { default as ScoresContainer } from './ScoresContainer';
 export { default as ShoppingListItem } from './ShoppingListItem';
 export { default as ShoppingListItemInteractive } from './ShoppingListItemInteractive';
 export { default as Chip } from './Chip';
+export { default as PriceSummary } from './PriceSummary';
+export { default as PriceSummaryInteractive } from './PriceSummaryInteractive';

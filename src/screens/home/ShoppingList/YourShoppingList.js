@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { View, Text, TextInput } from 'react-native';
-import { useForm, useFieldArray, Controller, useWatch } from 'react-hook-form';
+import { View } from 'react-native';
+import { useForm, useFieldArray } from 'react-hook-form';
 
 import {
   Button,
+  PriceSummaryInteractive,
   ScrollViewLayout,
   Separator,
   ShoppingListItemInteractive,
@@ -17,20 +18,13 @@ import { Divider } from 'react-native-paper';
 const YourShoppingList = () => {
   const styles = useStyles();
 
-  const sumList = (sum, val) => ({ price: sum.price + val.price });
+  const sumList = (sum, val) => ({
+    price: parseFloat(sum.price) + parseFloat(val.price),
+  });
 
-  const [mode, setMode] = useState('edit');
-  const [isSumOverridden, setSumOverridden] = useState(false);
+  const [isSumOverridden, setIsSumOverridden] = useState(false);
 
-  // const [unchecked, setUnchecked] = useState(
-  //   shoppingListItems.filter((e) => e.status === 'unchecked')
-  // );
-
-  // const [indeterminate, setIndeterminate] = useState(
-  //   shoppingListItems.filter((e) => e.status === 'indeterminate')
-  // );
-
-  const { control, handleSubmit, reset, watch } = useForm({
+  const { control, handleSubmit, setValue, getValues, watch } = useForm({
     defaultValues: {
       unchecked: shoppingListItems.filter((e) => e.status === 'unchecked'),
       indeterminate: shoppingListItems.filter(
@@ -42,17 +36,46 @@ const YourShoppingList = () => {
     },
   });
 
-  const indet = watch('indeterminate');
-
   const unchecked = useFieldArray({
     control,
     name: 'unchecked',
+    keyName: 'key',
   });
 
   const indeterminate = useFieldArray({
     control,
     name: 'indeterminate',
+    keyName: 'key',
   });
+
+  const changePlace = (idx, origin, destination) => {
+    if (destination === 'indeterminate') {
+      indeterminate.prepend(getValues(origin)[idx]);
+      unchecked.remove(idx);
+    }
+    if (destination === 'unchecked') {
+      unchecked.prepend(getValues(origin)[idx]);
+
+      // TODO: fix bug - this line adds elements if you have last two elements
+      indeterminate.remove(idx);
+    }
+  };
+
+  const uncheckedItems = watch('unchecked');
+  const indeterminateItems = watch('indeterminate');
+  const sum = indeterminateItems
+    .filter((e) => e.status === 'indeterminate')
+    .reduce(sumList).price;
+
+  useEffect(() => {
+    if (!isSumOverridden) {
+      setValue('summary', sum);
+    }
+  }, [isSumOverridden, setValue, sum]);
+
+  const submit = (data) => {
+    // TODO: set status to checked and remove from list
+  };
 
   return (
     <View style={styles.container}>
@@ -60,50 +83,60 @@ const YourShoppingList = () => {
         <View>
           {unchecked.fields.map((item, index) => (
             <ShoppingListItemInteractive
-              key={item.id}
-              control={control}
-              statusName={`unchecked[${index}].status`}
-              priceName={`unchecked[${index}].price`}
+              key={item.key}
               text={item.text}
-              subText={item.subText}
-              quantity={item.quantity}
-              status={item.status}
-              price={item.price}
-              unit={item.unit}
+              subText={`${item.subText}`}
+              boxText={`${item.quantity} ${item.unit}`}
+              control={control}
+              boxName={`indeterminate.${index}.price`}
+              checkBoxName={`unchecked.${index}.status`}
+              setValue={setValue}
+              onChangeStatus={() => {
+                changePlace(index, 'unchecked', 'indeterminate');
+              }}
             />
           ))}
-          <Divider style={styles.divider} />
+          {uncheckedItems.length > 0 && <Divider style={styles.divider} />}
           {indeterminate.fields.map((item, index) => (
             <ShoppingListItemInteractive
-              key={item.id}
-              control={control}
-              statusName={`indeterminate[${index}].status`}
-              priceName={`indeterminate[${index}].price`}
+              key={item.key}
               text={item.text}
               subText={`${item.quantity} ${item.unit} • ${item.subText}`}
-              quantity={item.quantity}
-              status={item.status}
-              price={item.price}
-              unit={item.unit}
+              control={control}
+              boxName={`indeterminate.${index}.price`}
+              checkBoxName={`indeterminate.${index}.status`}
+              setValue={setValue}
+              onChangeStatus={() => {
+                changePlace(index, 'indeterminate', 'unchecked');
+              }}
             />
           ))}
           <Separator />
-          <View style={styles.summaryContainer}>
-            <Text style={styles.total}>TOTAL:</Text>
-            <TextInput
-              name='summary'
-              control={control}
-              style={styles.totalPrice}
-              keyboardType='numeric'
-            />
-            <Text style={styles.currency}> zł</Text>
-          </View>
+          <PriceSummaryInteractive
+            control={control}
+            name='summary'
+            onEndEditing={() => setIsSumOverridden(true)}
+          />
+          {isSumOverridden && (
+            <View style={styles.reset}>
+              <Button
+                label='reset input override'
+                variant='pureText'
+                onPress={() => {
+                  setIsSumOverridden(false);
+                }}
+              />
+            </View>
+          )}
           <Separator height={32} />
           <View style={{ alignItems: 'center' }}>
-            <Button label='confirm' variant='contained' />
+            <Button
+              label='confirm'
+              variant='contained'
+              onPress={handleSubmit(submit)}
+            />
           </View>
           <Separator height={32} />
-          <Divider style={styles.divider} />
         </View>
       </ScrollViewLayout>
     </View>
@@ -117,7 +150,6 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     backgroundColor: theme.colors.silverMetallic,
-    height: 2,
     margin: 16,
   },
   summaryContainer: {
@@ -146,6 +178,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.silverMetallic,
+  },
+  reset: {
+    alignItems: 'flex-end',
+    paddingHorizontal: 16,
   },
 }));
 

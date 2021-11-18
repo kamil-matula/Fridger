@@ -10,9 +10,7 @@ const ShoppingListItem = ({
   avatarURI,
   text,
   subText,
-  quantity,
-  unit,
-  price,
+  boxText,
   variant = 'avatar',
   status,
 }) => {
@@ -27,7 +25,9 @@ const ShoppingListItem = ({
           <View style={styles.avatarPlaceholder} />
         ))}
       {variant === 'checkbox' && (
-        <Checkbox style={styles.checkbox} disabled status={status} />
+        <View style={styles.checkbox}>
+          <Checkbox disabled status={status} />
+        </View>
       )}
       <View style={styles.textContainer}>
         <Text style={styles.text} numberOfLines={1}>
@@ -40,23 +40,17 @@ const ShoppingListItem = ({
         )}
       </View>
       <View style={styles.quantityContainer}>
-        <Text style={styles.text}>
-          {variant === 'avatar' && `${quantity} ${unit}`}
-          {variant === 'checkbox' &&
-            (status === 'unchecked' ? `${quantity} ${unit}` : `${price} zł`)}
-        </Text>
+        <Text style={styles.text}>{boxText}</Text>
       </View>
     </View>
   );
 };
 
 ShoppingListItem.propTypes = {
-  avatarURI: PropTypes.string.isRequired,
+  avatarURI: PropTypes.string,
   text: PropTypes.string.isRequired,
-  subText: PropTypes.string,
-  quantity: PropTypes.number,
-  unit: PropTypes.string,
-  price: PropTypes.number,
+  subText: PropTypes.string.isRequired,
+  boxText: PropTypes.string,
   variant: PropTypes.oneOf(['avatar', 'checkbox']),
   status: PropTypes.oneOf(['checked', 'unchecked', 'indeterminate']),
 };
