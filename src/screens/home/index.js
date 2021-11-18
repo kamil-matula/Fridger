@@ -8,3 +8,4 @@ export { default as AddProductManual } from './AddProductManual';
 export { default as AddProductAutomat } from './AddProductAutomat';
 export { default as ProductDetails } from './ProductDetails';
 export { default as ShoppingListScanner } from './ShoppingListScanner';
+export { default as AddShoppingListProduct } from './AddShoppingListProduct';

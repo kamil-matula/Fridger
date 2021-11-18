@@ -4,13 +4,21 @@ import { View } from 'react-native';
 
 import { ScrollViewLayout, AppBar } from 'components';
 import { makeStyles } from 'utils';
+import { deleteIcon } from '../../../assets/icons';
 
-const ShoppingListScanner = () => {
+const AddShoppingListProduct = () => {
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
-      <AppBar label='Shopping Lists' />
+      <AppBar
+        label='Add product'
+        icon1={deleteIcon}
+        onPressIcon1={
+          () => {}
+          // TODO: remove product
+        }
+      />
       <ScrollViewLayout addPadding={false} />
     </View>
   );
@@ -23,4 +31,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ShoppingListScanner;
+export default AddShoppingListProduct;

@@ -78,7 +78,7 @@ const ShoppingListDetailsTabNavigator = ({ navigation }) => {
       </ShoppingListTab.Navigator>
       <FloatingActionButton
         onPress={() => {
-          // TODO: Show bottom sheet
+          navigation.navigate('AddShoppingListProduct');
         }}
         visible={fabVisible}
       />

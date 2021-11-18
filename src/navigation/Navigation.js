@@ -11,6 +11,7 @@ import {
   AddProductManual,
   ProductDetails,
   ShoppingListScanner,
+  AddShoppingListProduct,
 } from 'screens/home';
 import {
   FriendProfile,
@@ -61,6 +62,10 @@ const StackNavigator = () => (
     <Stack.Screen name='AddProductAutomat' component={AddProductAutomat} />
     <Stack.Screen name='ProductDetails' component={ProductDetails} />
     <Stack.Screen name='ShoppingListScanner' component={ShoppingListScanner} />
+    <Stack.Screen
+      name='AddShoppingListProduct'
+      component={AddShoppingListProduct}
+    />
   </Stack.Navigator>
 );
 
