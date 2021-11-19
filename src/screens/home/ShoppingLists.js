@@ -25,12 +25,6 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  text: {
-    color: theme.colors.white,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
-  },
 }));
 
 export default ShoppingLists;

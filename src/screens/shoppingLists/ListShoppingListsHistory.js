@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { shoppingLists } from 'tmpData';
+import { shoppingListsHistory } from 'tmpData';
 import { ShoppingListRow } from 'components';
 
 const ListShoppingListsHistory = ({ navigation }) => {
@@ -12,16 +12,14 @@ const ListShoppingListsHistory = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {shoppingLists.map(({ id, title, uncheck, dips, check }) => (
+      {shoppingListsHistory.map(({ id, title, uncheck, dips, check }) => (
         <View key={id}>
           <ShoppingListRow
             label={title}
             unchecked={uncheck}
             dips={dips}
             checked={check}
-            onPress={() =>
-              navigation.navigate('ShoppingListDetailsTabNavigator')
-            }
+            onPress={() => navigation.navigate('ShoppingListDetails')}
           />
           <Divider style={styles.divider} />
         </View>

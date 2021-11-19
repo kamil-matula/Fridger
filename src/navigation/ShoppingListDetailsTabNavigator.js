@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Image, View } from 'react-native';
+import { Image } from 'react-native';
+import PropTypes from 'prop-types';
 
 import {
   ShoppingList,
@@ -9,154 +10,59 @@ import {
   ShoppingListSummary,
   ShoppingListChat,
 } from 'screens/shoppingLists';
-import {
-  AppBar,
-  FloatingActionButton,
-  BottomSheet,
-  SheetRow,
-} from 'components';
 import { makeStyles } from 'utils';
-import {
-  scanner,
-  more,
-  chat,
-  group,
-  groupAdd,
-  hand,
-  deleteIcon,
-} from 'assets/icons';
-import { fridgeTab } from 'assets/icons/navigation';
-import { fridgesList } from 'tmpData';
+import { chat } from 'assets/icons';
 
 const ShoppingListTab = createMaterialTopTabNavigator();
-const ShoppingListDetailsTabNavigator = ({ navigation }) => {
+const ShoppingListDetailsTabNavigator = ({ isShared, setFabVisible }) => {
   const styles = useStyles();
-
-  const isShared = false;
-  const [fabVisible, setFabVisible] = useState(true);
-
-  const activeFridge = fridgesList[0];
-  const bottomSheet = useRef(null);
 
   // TODO: Change tab items size. Tab navigator is poorly documented.
   return (
-    <View style={styles.container}>
-      <AppBar
-        label='Shopping Lists'
-        icon1={scanner}
-        icon2={more}
-        onPressIcon1={() => {
-          navigation.navigate('ShoppingListScanner');
-        }}
-        onPressIcon2={() => {
-          bottomSheet.current.open();
-        }}
-      />
-      <ShoppingListTab.Navigator
-        screenOptions={{
-          tabBarStyle: styles.tabBar,
-          tabBarContentContainerStyle: styles.contentContainer,
-          tabBarLabelStyle: styles.label,
-          tabBarIndicatorStyle: styles.indicator,
-          tabBarItemStyle: { height: 48 },
-        }}
-        screenListeners={{
-          focus: (e) => {
-            if (e.target.startsWith('List-')) {
-              setFabVisible(true);
-            } else if (
-              e.target.startsWith('Your list-') &&
-              isShared === false
-            ) {
-              setFabVisible(true);
-            } else {
-              setFabVisible(false);
-            }
-          },
-        }}
-      >
-        {isShared && (
-          <ShoppingListTab.Screen name='List' component={ShoppingList} />
-        )}
-        <ShoppingListTab.Screen name='Your list' component={YourShoppingList} />
+    <ShoppingListTab.Navigator
+      // Styling:
+      screenOptions={{
+        tabBarStyle: styles.tabBar,
+        tabBarContentContainerStyle: styles.contentContainer,
+        tabBarLabelStyle: styles.label,
+        tabBarIndicatorStyle: styles.indicator,
+        tabBarItemStyle: { height: 48 },
+      }}
+      // Hiding FAB:
+      screenListeners={{
+        focus: (e) => {
+          if (e.target.startsWith('List-')) {
+            setFabVisible(true);
+          } else if (e.target.startsWith('Your list-') && isShared === false) {
+            setFabVisible(true);
+          } else {
+            setFabVisible(false);
+          }
+        },
+      }}
+    >
+      {isShared && (
+        <ShoppingListTab.Screen name='List' component={ShoppingList} />
+      )}
+      <ShoppingListTab.Screen name='Your list' component={YourShoppingList} />
+      <ShoppingListTab.Screen name='Summary' component={ShoppingListSummary} />
+      {isShared && (
         <ShoppingListTab.Screen
-          name='Summary'
-          component={ShoppingListSummary}
-        />
-        {isShared && (
-          <ShoppingListTab.Screen
-            name='Chat'
-            component={ShoppingListChat}
-            options={{
-              tabBarLabelStyle: { display: 'none' },
-              tabBarIcon: () => <Image style={styles.icon} source={chat} />,
-            }}
-          />
-        )}
-      </ShoppingListTab.Navigator>
-      {/* Shopping list actions */}
-      <BottomSheet reference={bottomSheet}>
-        <SheetRow
-          icon={groupAdd}
-          text='Share'
-          onPress={() => {
-            // Hide bottom sheet and change screen:
-            bottomSheet.current.close();
-            navigation.navigate('Share', {
-              // TODO: Add passing data from Shopping Lists page
-              type: 'shoppingList',
-              containerID: 1,
-            });
+          name='Chat'
+          component={ShoppingListChat}
+          options={{
+            tabBarLabelStyle: { display: 'none' },
+            tabBarIcon: () => <Image style={styles.icon} source={chat} />,
           }}
         />
-        <SheetRow
-          icon={group}
-          text='Manage people'
-          onPress={() => {
-            // Hide bottom sheet and change screen:
-            bottomSheet.current.close();
-            navigation.navigate('EditPermissions', {
-              // TODO: Add passing data from Shopping Lists page
-              type: 'shoppingList',
-              containerID: 1,
-            });
-          }}
-        />
-        <SheetRow
-          icon={hand}
-          text='Dibs'
-          onPress={() => {
-            // TODO: Add dibs feature
-          }}
-        />
-        <SheetRow
-          icon={fridgeTab}
-          text='Change fridge'
-          subText={activeFridge ? `   •   ${activeFridge.name}` : null}
-          onPress={() => {
-            // Hide bottom sheet and change screen:
-            bottomSheet.current.close();
-            navigation.navigate('ChooseFridge', {
-              activeFridgeName: activeFridge ? activeFridge.name : null,
-            });
-          }}
-        />
-        <SheetRow
-          icon={deleteIcon}
-          text='Delete List'
-          onPress={() => {
-            // TODO: Add deleting shopping list
-          }}
-        />
-      </BottomSheet>
-      <FloatingActionButton
-        onPress={() => {
-          navigation.navigate('AddShoppingListProduct');
-        }}
-        visible={fabVisible}
-      />
-    </View>
+      )}
+    </ShoppingListTab.Navigator>
   );
+};
+
+ShoppingListDetailsTabNavigator.propTypes = {
+  isShared: PropTypes.bool.isRequired,
+  setFabVisible: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({

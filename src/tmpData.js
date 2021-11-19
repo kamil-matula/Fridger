@@ -224,16 +224,21 @@ export const fridgesList = [
   { id: '7', name: 'The last container' },
 ];
 
-export const shoppingLists = [
+export const shoppingListsActive = [
   { id: 1, title: 'Shopping List 1', uncheck: 4, dips: 11, check: 5 },
   { id: 2, title: 'Shopping List 2', uncheck: 3, dips: 9, check: 6 },
   { id: 3, title: 'Shopping List 3', uncheck: 7, dips: 2, check: 7 },
 ];
 
+export const shoppingListsHistory = [
+  { id: 4, title: 'Shopping List 4', uncheck: 0, dips: 0, check: 10 },
+  { id: 5, title: 'Shopping List 5', uncheck: 0, dips: 0, check: 7 },
+];
+
 export const shoppingListItems = [
   {
     id: 1,
-    userNick: 'ASDFGHJK',
+    userNick: 'RedBoy',
     avatarURI:
       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
     text: 'Mleko',
@@ -245,7 +250,7 @@ export const shoppingListItems = [
   },
   {
     id: 2,
-    userNick: 'AAAAA',
+    userNick: 'Dragggon',
     avatarURI:
       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
     text: 'Mleko2',
@@ -257,7 +262,7 @@ export const shoppingListItems = [
   },
   {
     id: 3,
-    userNick: 'ASDFGHJK',
+    userNick: 'RedBoy',
     avatarURI:
       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
     text: 'Mleko3',
@@ -269,7 +274,7 @@ export const shoppingListItems = [
   },
   {
     id: 4,
-    userNick: 'ASDFGHJK',
+    userNick: 'RedBoy',
     avatarURI:
       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
     text: 'Mleko3',
@@ -281,7 +286,7 @@ export const shoppingListItems = [
   },
   {
     id: 5,
-    userNick: 'AAAAA',
+    userNick: 'Dragggon',
     avatarURI:
       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
     text: 'Mleko3',
@@ -293,7 +298,7 @@ export const shoppingListItems = [
   },
   {
     id: 6,
-    userNick: 'AAAAA',
+    userNick: 'Dragggon',
     avatarURI:
       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
     text: 'Mleko3',
@@ -305,7 +310,7 @@ export const shoppingListItems = [
   },
   {
     id: 7,
-    userNick: 'ASDFGHJK',
+    userNick: 'RedBoy',
     avatarURI:
       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
     text: 'Mleko3',
