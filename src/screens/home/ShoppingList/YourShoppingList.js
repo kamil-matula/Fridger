@@ -53,10 +53,11 @@ const YourShoppingList = () => {
       indeterminate.prepend(getValues(origin)[idx]);
       unchecked.remove(idx);
     }
+    // TODO: fix bug
+    // empty elements are created
+    // focus kick in when element added
     if (destination === 'unchecked') {
       unchecked.prepend(getValues(origin)[idx]);
-
-      // TODO: fix bug - this line adds elements if you have last two elements
       indeterminate.remove(idx);
     }
   };

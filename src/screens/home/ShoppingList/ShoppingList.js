@@ -9,7 +9,7 @@ import { shoppingListItems } from 'tmpData';
 
 import { TouchableRipple } from 'react-native-paper';
 
-const ShoppingList = () => {
+const ShoppingList = ({ navigation }) => {
   const styles = useStyles();
 
   // eslint-disable-next-line no-unused-vars
@@ -24,7 +24,8 @@ const ShoppingList = () => {
               key={idx}
               onPress={() => {
                 if (mode === 'edit') {
-                  // TODO: go to edit item
+                  // TODO: pass values
+                  navigation.navigate('AddShoppingListProduct');
                 }
                 if (mode === 'dips') {
                   // TODO: dips item
