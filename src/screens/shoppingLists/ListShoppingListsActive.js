@@ -12,18 +12,23 @@ const ListShoppingListsActive = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {shoppingListsActive.map(({ id, title, uncheck, dips, check }) => (
-        <View key={id}>
-          <ShoppingListRow
-            label={title}
-            unchecked={uncheck}
-            dips={dips}
-            checked={check}
-            onPress={() => navigation.navigate('ShoppingListDetails')}
-          />
-          <Divider style={styles.divider} />
-        </View>
-      ))}
+      {shoppingListsActive.map(
+        ({ id, title, uncheck, dips, check, isShared }) => (
+          <View key={id}>
+            <ShoppingListRow
+              label={title}
+              unchecked={uncheck}
+              dips={dips}
+              checked={check}
+              isShared={isShared}
+              onPress={() =>
+                navigation.navigate('ShoppingListDetails', { isShared })
+              }
+            />
+            <Divider style={styles.divider} />
+          </View>
+        )
+      )}
     </View>
   );
 };

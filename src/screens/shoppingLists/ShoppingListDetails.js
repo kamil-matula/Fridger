@@ -14,10 +14,10 @@ import { fridgeTab } from 'assets/icons/navigation';
 import { fridgesList } from 'tmpData';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
 
-const ShoppingListDetails = ({ navigation }) => {
+const ShoppingListDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
-  const isShared = false;
+  const { isShared } = route.params; // TODO: Retrieve it from API, not route
   const [fabVisible, setFabVisible] = useState(true);
 
   const activeFridge = fridgesList[0];

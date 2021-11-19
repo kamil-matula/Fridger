@@ -225,14 +225,49 @@ export const fridgesList = [
 ];
 
 export const shoppingListsActive = [
-  { id: 1, title: 'Shopping List 1', uncheck: 4, dips: 11, check: 5 },
-  { id: 2, title: 'Shopping List 2', uncheck: 3, dips: 9, check: 6 },
-  { id: 3, title: 'Shopping List 3', uncheck: 7, dips: 2, check: 7 },
+  {
+    id: 1,
+    title: 'Shopping List 1',
+    uncheck: 4,
+    dips: 11,
+    check: 5,
+    isShared: true,
+  },
+  {
+    id: 2,
+    title: 'Shopping List 2',
+    uncheck: 3,
+    dips: 9,
+    check: 6,
+    isShared: true,
+  },
+  {
+    id: 3,
+    title: 'Shopping List 3',
+    uncheck: 7,
+    dips: 0,
+    check: 7,
+    isShared: false,
+  },
 ];
 
 export const shoppingListsHistory = [
-  { id: 4, title: 'Shopping List 4', uncheck: 0, dips: 0, check: 10 },
-  { id: 5, title: 'Shopping List 5', uncheck: 0, dips: 0, check: 7 },
+  {
+    id: 4,
+    title: 'Shopping List 4',
+    uncheck: 0,
+    dips: 0,
+    check: 10,
+    isShared: false,
+  },
+  {
+    id: 5,
+    title: 'Shopping List 5',
+    uncheck: 0,
+    dips: 0,
+    check: 7,
+    isShared: true,
+  },
 ];
 
 export const shoppingListItems = [
