@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 
 import { View, ScrollView } from 'react-native';
+import { TouchableRipple } from 'react-native-paper';
 
 import { Separator, ShoppingListItem } from 'components';
 import { makeStyles } from 'utils';
 import { shoppingListItems } from 'tmpData';
-
-import { TouchableRipple } from 'react-native-paper';
 
 const ShoppingList = ({ navigation }) => {
   const styles = useStyles();

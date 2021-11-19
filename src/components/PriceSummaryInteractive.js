@@ -51,16 +51,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 24,
     color: theme.colors.white,
     textAlign: 'right',
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.silverMetallic,
   },
   currency: {
     paddingRight: 16,
     paddingBottom: 0,
     fontSize: 24,
     color: theme.colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.silverMetallic,
   },
 }));
 

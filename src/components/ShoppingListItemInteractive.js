@@ -11,18 +11,18 @@ const ShoppingListItemInteractive = ({
   control,
   text,
   subText,
-  boxText,
   boxName,
   checkBoxName,
   setValue,
   onEndEditing,
   onChangeStatus,
 }) => {
-  const theme = useTheme();
-  const styles = useStyles();
-
+  // Controllers:
   const box = useController({ name: boxName, control, rules: {} });
   const checkbox = useController({ name: checkBoxName, control, rules: {} });
+
+  const theme = useTheme();
+  const styles = useStyles({ fieldValue: checkbox.field.value });
 
   return (
     <View style={styles.container}>
@@ -42,20 +42,13 @@ const ShoppingListItemInteractive = ({
         />
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.text} numberOfLines={1}>
-          {text}
-        </Text>
-        {subText && (
-          <Text style={styles.subText} numberOfLines={1}>
-            {subText}
-          </Text>
-        )}
+        <Text style={styles.text}>{text}</Text>
+        {subText && <Text style={styles.subText}>{subText}</Text>}
       </View>
       <View style={styles.quantityContainer}>
-        {checkbox.field.value !== 'indeterminate' ? (
-          <Text style={styles.text}>{boxText}</Text>
-        ) : (
+        {checkbox.field.value === 'indeterminate' && (
           <>
+            {/* TODO: Replace with Input Field? */}
             <TextInput
               name={box.field.name}
               ref={box.field.ref}
@@ -79,7 +72,6 @@ const ShoppingListItemInteractive = ({
 ShoppingListItemInteractive.propTypes = {
   text: PropTypes.string.isRequired,
   subText: PropTypes.string,
-  boxText: PropTypes.string,
   control: PropTypes.object.isRequired,
   boxName: PropTypes.string,
   checkBoxName: PropTypes.string.isRequired,
@@ -88,42 +80,50 @@ ShoppingListItemInteractive.propTypes = {
   onChangeStatus: PropTypes.func,
 };
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  checkbox: {
-    marginRight: 16,
-  },
-  textContainer: {
-    flex: 1,
-  },
-  text: {
-    fontSize: 14,
-    color: theme.colors.white,
-  },
-  inputField: {
-    fontSize: 14,
-    color: theme.colors.white,
-  },
-  subText: {
-    fontSize: 14,
-    color: theme.colors.silverMetallic,
-  },
-  quantityContainer: {
-    flexDirection: 'row',
-    height: 32,
-    width: 64,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: theme.colors.silverMetallic,
-    marginLeft: 16,
-  },
-}));
+const useStyles = makeStyles((theme, { fieldValue }) => {
+  const obj = {
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+    },
+    checkbox: {
+      marginRight: 16,
+    },
+    textContainer: {
+      flex: 1,
+    },
+    text: {
+      fontSize: 14,
+      color: theme.colors.white,
+    },
+    inputField: {
+      fontSize: 14,
+      color: theme.colors.white,
+    },
+    subText: {
+      fontSize: 14,
+      color: theme.colors.silverMetallic,
+    },
+    quantityContainer: {
+      flexDirection: 'row',
+      height: 32,
+      width: 64,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginLeft: 16,
+    },
+  };
+
+  // Container for price:
+  if (fieldValue === 'indeterminate') {
+    obj.quantityContainer.borderRadius = 5;
+    obj.quantityContainer.borderWidth = 1;
+    obj.quantityContainer.borderColor = theme.colors.silverMetallic;
+  }
+
+  return obj;
+});
 
 export default ShoppingListItemInteractive;

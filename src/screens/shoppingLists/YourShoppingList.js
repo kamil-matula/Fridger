@@ -1,7 +1,7 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 
 import { View } from 'react-native';
+import { Divider } from 'react-native-paper';
 import { useForm, useFieldArray } from 'react-hook-form';
 
 import {
@@ -13,7 +13,6 @@ import {
 } from 'components';
 import { makeStyles } from 'utils';
 import { shoppingListItems } from 'tmpData';
-import { Divider } from 'react-native-paper';
 
 const YourShoppingList = () => {
   const styles = useStyles();
@@ -78,6 +77,7 @@ const YourShoppingList = () => {
 
   const submit = (data) => {
     // TODO: set status to checked and remove from list
+    console.log(data);
   };
 
   return (
@@ -88,8 +88,11 @@ const YourShoppingList = () => {
             <ShoppingListItemInteractive
               key={item.key}
               text={item.name}
-              subText={item.note}
-              boxText={`${item.quantity} ${item.unit}`}
+              subText={
+                item.note
+                  ? `${item.quantity} ${item.unit}  •  ${item.note}`
+                  : `${item.quantity} ${item.unit}`
+              }
               control={control}
               boxName={`unchecked.${index}.price`}
               checkBoxName={`unchecked.${index}.status`}
@@ -158,33 +161,6 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     backgroundColor: theme.colors.silverMetallic,
     margin: 16,
-  },
-  summaryContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    padding: 16,
-  },
-  total: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: theme.colors.silverMetallic,
-  },
-  totalPrice: {
-    flex: 1,
-    paddingBottom: 0,
-    fontSize: 24,
-    color: theme.colors.white,
-    textAlign: 'right',
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.silverMetallic,
-  },
-  currency: {
-    paddingRight: 16,
-    paddingBottom: 0,
-    fontSize: 24,
-    color: theme.colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.silverMetallic,
   },
   reset: {
     alignItems: 'flex-end',

@@ -11,47 +11,38 @@ import { Divider } from 'react-native-paper';
 const ShoppingListSummary = () => {
   const styles = useStyles();
 
-  // TODO: I will get different data and this preprocessing won't be necessary
+  // TODO: Remove this preprocessing after adding appropriate fetching data
+  const usersNicks = Array.from(
+    new Set(shoppingListItems.map((e) => e.userNick))
+  );
+  const usersURIs = Array.from(
+    new Set(shoppingListItems.map((e) => e.avatarURI))
+  );
   const users = new Set(
-    shoppingListItems.map((e) => ({ name: e.userNick, avatar: e.avatarURI }))
+    usersNicks.map((_, idx) => ({
+      name: usersNicks[idx],
+      avatar: usersURIs[idx],
+    }))
   );
 
   const productsNotBought = (username) => {
     const products = shoppingListItems.filter(
       (product) =>
-        username === product.userNick && product.status === 'unchecked'
+        username === product.userNick &&
+        (product.status === 'unchecked' || product.status === 'indeterminate')
     );
 
-    return products.map(({ name, note, quantity, unit, status }, idx) => (
+    return products.map(({ name, note, quantity, unit }, idx) => (
       <ShoppingListItem
         key={idx}
         text={name}
-        subText={note}
-        boxText={`${quantity} ${unit}`}
+        subText={
+          note ? `${quantity} ${unit}  •  ${note}` : `${quantity} ${unit}`
+        }
         variant='checkbox'
-        status={status}
+        status='unchecked'
       />
     ));
-  };
-
-  const productsIndeterminate = (username) => {
-    const products = shoppingListItems.filter(
-      (product) =>
-        username === product.userNick && product.status === 'indeterminate'
-    );
-
-    return products.map(
-      ({ name, note, quantity, unit, status, price }, idx) => (
-        <ShoppingListItem
-          key={idx}
-          text={name}
-          subText={`${quantity} ${unit} • ${note}`}
-          boxText={`${price} zł`}
-          variant='checkbox'
-          status={status}
-        />
-      )
-    );
   };
 
   const productsBought = (username) => {
@@ -64,7 +55,9 @@ const ShoppingListSummary = () => {
         <ShoppingListItem
           key={idx}
           text={name}
-          subText={`${quantity} ${unit}  •  ${note}`}
+          subText={
+            note ? `${quantity} ${unit}  •  ${note}` : `${quantity} ${unit}`
+          }
           boxText={`${price} zł`}
           variant='checkbox'
           status={status}
@@ -98,7 +91,6 @@ const ShoppingListSummary = () => {
                 <Separator />
               </View>
               {productsNotBought(user.name)}
-              {productsIndeterminate(user.name)}
               {/* TODO: remove divider when no products above */}
               <Divider style={styles.divider} />
               {productsBought(user.name)}
