@@ -33,11 +33,7 @@ const ShoppingListItem = ({
         <Text style={styles.text} numberOfLines={1}>
           {text}
         </Text>
-        {subText && (
-          <Text style={styles.subText} numberOfLines={1}>
-            {subText}
-          </Text>
-        )}
+        {subText && <Text style={styles.subText}>{subText}</Text>}
       </View>
       <View style={styles.quantityContainer}>
         <Text style={styles.text}>{boxText}</Text>
@@ -98,6 +94,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: theme.colors.silverMetallic,
+    marginLeft: 16,
   },
 }));
 

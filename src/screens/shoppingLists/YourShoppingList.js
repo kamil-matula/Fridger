@@ -18,9 +18,13 @@ import { Divider } from 'react-native-paper';
 const YourShoppingList = () => {
   const styles = useStyles();
 
-  const sumList = (sum, val) => ({
-    price: parseFloat(sum.price) + parseFloat(val.price),
-  });
+  const sumList = (list) => {
+    let sum = 0;
+    for (let i = 0; i < list.length; i += 1) {
+      sum += parseFloat(list[i].price);
+    }
+    return sum;
+  };
 
   const [isSumOverridden, setIsSumOverridden] = useState(false);
 
@@ -30,9 +34,9 @@ const YourShoppingList = () => {
       indeterminate: shoppingListItems.filter(
         (e) => e.status === 'indeterminate'
       ),
-      summary: shoppingListItems
-        .filter((e) => e.status === 'indeterminate')
-        .reduce(sumList).price,
+      summary: sumList(
+        shoppingListItems.filter((e) => e.status === 'indeterminate')
+      ),
     },
   });
 
@@ -64,9 +68,9 @@ const YourShoppingList = () => {
 
   const uncheckedItems = watch('unchecked');
   const indeterminateItems = watch('indeterminate');
-  const sum = indeterminateItems
-    .filter((e) => e.status === 'indeterminate')
-    .reduce(sumList).price;
+  const sum = sumList(
+    indeterminateItems.filter((e) => e.status === 'indeterminate')
+  );
 
   useEffect(() => {
     if (!isSumOverridden) {
@@ -89,7 +93,7 @@ const YourShoppingList = () => {
               subText={`${item.subText}`}
               boxText={`${item.quantity} ${item.unit}`}
               control={control}
-              boxName={`indeterminate.${index}.price`}
+              boxName={`unchecked.${index}.price`}
               checkBoxName={`unchecked.${index}.status`}
               setValue={setValue}
               onChangeStatus={() => {
