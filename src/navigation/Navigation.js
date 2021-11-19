@@ -6,13 +6,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
 import {
   AddShoppingList,
+  ShoppingListScanner,
+  AddShoppingListProduct,
+} from 'screens/shoppingLists';
+import {
   AddFridge,
   AddProductAutomat,
   AddProductManual,
   ProductDetails,
-  ShoppingListScanner,
-  AddShoppingListProduct,
-} from 'screens/home';
+} from 'screens/fridges';
 import {
   FriendProfile,
   AddFriend,

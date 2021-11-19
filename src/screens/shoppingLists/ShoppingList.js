@@ -1,4 +1,3 @@
-/* eslint-disable arrow-body-style */
 import React, { useState } from 'react';
 
 import { View, ScrollView } from 'react-native';

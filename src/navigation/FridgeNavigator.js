@@ -2,7 +2,8 @@ import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { FridgeDetails, Fridges } from 'screens/home';
+import { Fridges } from 'screens/home';
+import { FridgeDetails } from 'screens/fridges';
 
 const Stack = createStackNavigator();
 const FridgeNavigator = () => (

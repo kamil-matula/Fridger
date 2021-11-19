@@ -8,7 +8,7 @@ import {
   YourShoppingList,
   ShoppingListSummary,
   ShoppingListChat,
-} from 'screens/home/ShoppingList';
+} from 'screens/shoppingLists';
 import {
   AppBar,
   FloatingActionButton,
@@ -32,7 +32,7 @@ const ShoppingListTab = createMaterialTopTabNavigator();
 const ShoppingListDetailsTabNavigator = ({ navigation }) => {
   const styles = useStyles();
 
-  const isShared = true;
+  const isShared = false;
   const [fabVisible, setFabVisible] = useState(true);
 
   const activeFridge = fridgesList[0];
