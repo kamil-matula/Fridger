@@ -14,7 +14,7 @@ const ShoppingListItem = ({
   variant = 'avatar',
   status,
 }) => {
-  const styles = useStyles();
+  const styles = useStyles({ boxText });
 
   return (
     <View style={styles.container}>
@@ -36,7 +36,7 @@ const ShoppingListItem = ({
         {subText && <Text style={styles.subText}>{subText}</Text>}
       </View>
       <View style={styles.quantityContainer}>
-        <Text style={styles.text}>{boxText}</Text>
+        {boxText && <Text style={styles.text}>{boxText}</Text>}
       </View>
     </View>
   );
@@ -51,51 +51,59 @@ ShoppingListItem.propTypes = {
   status: PropTypes.oneOf(['checked', 'unchecked', 'indeterminate']),
 };
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 32,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.colors.silverMetallic,
-    marginRight: 16,
-  },
-  avatarPlaceholder: {
-    width: 32,
-    height: 32,
-    marginRight: 16,
-  },
-  checkbox: {
-    marginRight: 16,
-  },
-  textContainer: {
-    flex: 1,
-  },
-  text: {
-    fontSize: 14,
-    color: theme.colors.white,
-  },
-  subText: {
-    fontSize: 14,
-    color: theme.colors.silverMetallic,
-  },
-  quantityContainer: {
-    flexDirection: 'row',
-    height: 32,
-    width: 64,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: theme.colors.silverMetallic,
-    marginLeft: 16,
-  },
-}));
+const useStyles = makeStyles((theme, { boxText }) => {
+  const obj = {
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+    },
+    avatar: {
+      width: 32,
+      height: 32,
+      borderRadius: 32,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: theme.colors.silverMetallic,
+      marginRight: 16,
+    },
+    avatarPlaceholder: {
+      width: 32,
+      height: 32,
+      marginRight: 16,
+    },
+    checkbox: {
+      marginRight: 16,
+    },
+    textContainer: {
+      flex: 1,
+    },
+    text: {
+      fontSize: 14,
+      color: theme.colors.white,
+    },
+    subText: {
+      fontSize: 14,
+      color: theme.colors.silverMetallic,
+    },
+    quantityContainer: {
+      flexDirection: 'row',
+      height: 32,
+      width: 64,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginLeft: 16,
+    },
+  };
+
+  // Container for price:
+  if (boxText) {
+    obj.quantityContainer.borderRadius = 5;
+    obj.quantityContainer.borderWidth = 1;
+    obj.quantityContainer.borderColor = theme.colors.silverMetallic;
+  }
+
+  return obj;
+});
 
 export default ShoppingListItem;

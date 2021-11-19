@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { View, ScrollView } from 'react-native';
 
-import { ShoppingListItem } from 'components';
+import { Separator, ShoppingListItem } from 'components';
 import { makeStyles } from 'utils';
 import { shoppingListItems } from 'tmpData';
 
@@ -17,8 +17,9 @@ const ShoppingList = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView>
+        {/* List of clickable items */}
         {shoppingListItems.map(
-          ({ avatarURI, text, subText, quantity, unit }, idx) => (
+          ({ avatarURI, name, note, quantity, unit, price, status }, idx) => (
             <TouchableRipple
               key={idx}
               onPress={() => {
@@ -32,14 +33,21 @@ const ShoppingList = ({ navigation }) => {
               }}
             >
               <ShoppingListItem
-                avatarURI={avatarURI}
-                text={text}
-                subText={subText}
-                boxText={`${quantity} ${unit}`}
+                avatarURI={status !== 'unchecked' ? avatarURI : null}
+                text={name}
+                subText={
+                  note
+                    ? `${quantity} ${unit}  •  ${note}`
+                    : `${quantity} ${unit}`
+                }
+                boxText={status === 'checked' ? `${price} zł` : null}
               />
             </TouchableRipple>
           )
         )}
+
+        {/* Space for a FAB */}
+        <Separator height={64} />
       </ScrollView>
     </View>
   );

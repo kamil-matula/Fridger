@@ -22,11 +22,11 @@ const ShoppingListSummary = () => {
         username === product.userNick && product.status === 'unchecked'
     );
 
-    return products.map(({ text, subText, quantity, unit, status }, idx) => (
+    return products.map(({ name, note, quantity, unit, status }, idx) => (
       <ShoppingListItem
         key={idx}
-        text={text}
-        subText={subText}
+        text={name}
+        subText={note}
         boxText={`${quantity} ${unit}`}
         variant='checkbox'
         status={status}
@@ -41,11 +41,11 @@ const ShoppingListSummary = () => {
     );
 
     return products.map(
-      ({ text, subText, quantity, unit, status, price }, idx) => (
+      ({ name, note, quantity, unit, status, price }, idx) => (
         <ShoppingListItem
           key={idx}
-          text={text}
-          subText={`${quantity} ${unit} • ${subText}`}
+          text={name}
+          subText={`${quantity} ${unit} • ${note}`}
           boxText={`${price} zł`}
           variant='checkbox'
           status={status}
@@ -60,11 +60,11 @@ const ShoppingListSummary = () => {
     );
 
     return products.map(
-      ({ text, subText, quantity, unit, status, price }, idx) => (
+      ({ name, note, quantity, unit, status, price }, idx) => (
         <ShoppingListItem
           key={idx}
-          text={text}
-          subText={`${quantity} ${unit} • ${subText}`}
+          text={name}
+          subText={`${quantity} ${unit}  •  ${note}`}
           boxText={`${price} zł`}
           variant='checkbox'
           status={status}

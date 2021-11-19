@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Text, View, StyleSheet, TextInput } from 'react-native';
+import { Text, View, TextInput } from 'react-native';
 import { useController } from 'react-hook-form';
 
 import { makeStyles } from 'utils';
@@ -68,7 +68,7 @@ const ShoppingListItemInteractive = ({
               maxLength={5}
               onEndEditing={onEndEditing}
             />
-            <Text style={styles.text}> zł</Text>
+            <Text style={styles.text}>zł</Text>
           </>
         )}
       </View>
@@ -94,19 +94,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 16,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 32,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.colors.silverMetallic,
-    marginRight: 16,
-  },
-  avatarPlaceholder: {
-    width: 32,
-    height: 32,
-    marginRight: 16,
   },
   checkbox: {
     marginRight: 16,
@@ -135,6 +122,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: theme.colors.silverMetallic,
+    marginLeft: 16,
   },
 }));
 

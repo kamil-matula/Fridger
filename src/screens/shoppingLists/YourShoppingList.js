@@ -57,9 +57,7 @@ const YourShoppingList = () => {
       indeterminate.prepend(getValues(origin)[idx]);
       unchecked.remove(idx);
     }
-    // TODO: fix bug
-    // empty elements are created
-    // focus kick in when element added
+
     if (destination === 'unchecked') {
       unchecked.prepend(getValues(origin)[idx]);
       indeterminate.remove(idx);
@@ -89,8 +87,8 @@ const YourShoppingList = () => {
           {unchecked.fields.map((item, index) => (
             <ShoppingListItemInteractive
               key={item.key}
-              text={item.text}
-              subText={`${item.subText}`}
+              text={item.name}
+              subText={item.note}
               boxText={`${item.quantity} ${item.unit}`}
               control={control}
               boxName={`unchecked.${index}.price`}
@@ -105,8 +103,12 @@ const YourShoppingList = () => {
           {indeterminate.fields.map((item, index) => (
             <ShoppingListItemInteractive
               key={item.key}
-              text={item.text}
-              subText={`${item.quantity} ${item.unit} • ${item.subText}`}
+              text={item.name}
+              subText={
+                item.note
+                  ? `${item.quantity} ${item.unit}  •  ${item.note}`
+                  : `${item.quantity} ${item.unit}`
+              }
               control={control}
               boxName={`indeterminate.${index}.price`}
               checkBoxName={`indeterminate.${index}.status`}
