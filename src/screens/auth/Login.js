@@ -1,13 +1,16 @@
 import React from 'react';
 
-import { Text, View } from 'react-native';
+import { Text, View, ToastAndroid, AlertIOS, Platform } from 'react-native';
 import { useForm } from 'react-hook-form';
 
 import { InputField, Button, ScrollViewLayout, Separator } from 'components';
+import { useLoginMutation } from 'services/fridger/auth';
 import { makeStyles } from 'utils';
 
 const Login = ({ navigation }) => {
   const styles = useStyles();
+
+  const [loginPost, { isError, error }] = useLoginMutation();
 
   const { control, handleSubmit, setFocus } = useForm({
     defaultValues: {
@@ -17,34 +20,36 @@ const Login = ({ navigation }) => {
   });
 
   const rules = {
-    // email: {
-    //   required: 'Email is required',
-    //   pattern: {
-    //     value:
-    //       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    //     message: 'Invalid email format',
-    //   },
-    // },
-    // password: {
-    //   required: 'Password is required',
-    //   minLength: {
-    //     value: 8,
-    //     message: 'Password must contain at least 8 characters',
-    //   },
-    // },
+    email: {
+      required: 'Email is required',
+      pattern: {
+        value:
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        message: 'Invalid email format',
+      },
+    },
+    password: {
+      required: 'Password is required',
+    },
   };
 
-  const login = (data) => {
-    // TODO: Send data to API to get token and stay logged in
-    console.log('login', data);
+  if (isError) {
+    if (error.status === 400) {
+      // Show toast:
+      const message = error.data.non_field_errors.join(' ');
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(message, ToastAndroid.SHORT);
+      } else {
+        AlertIOS.alert(message);
+      }
 
-    // Go to Home Pages:
-    navigation.replace('DrawerNavigator');
-  };
+      // Additional debugging for cases if toast doesn't show up:
+      console.log(message);
+    }
+  }
 
   return (
     <ScrollViewLayout>
-      {/* Input fields */}
       <View>
         <Text style={styles.header}>Login</Text>
         <InputField
@@ -78,12 +83,11 @@ const Login = ({ navigation }) => {
         <Separator height={32} />
       </View>
 
-      {/* Buttons */}
       <View>
         <Button
           label='Login'
           variant='contained'
-          onPress={handleSubmit(login)}
+          onPress={handleSubmit(loginPost)}
         />
         <Text style={styles.text}>Don’t have an account?</Text>
         <Button

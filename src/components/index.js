@@ -22,3 +22,4 @@ export { default as ShoppingListItemInteractive } from './ShoppingListItemIntera
 export { default as Chip } from './Chip';
 export { default as PriceSummary } from './PriceSummary';
 export { default as PriceSummaryInteractive } from './PriceSummaryInteractive';
+export { default as FoodTypes } from './FoodTypes';

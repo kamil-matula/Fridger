@@ -35,10 +35,24 @@ const FridgeDetails = ({ route, navigation }) => {
   const { fridgeID, fridgeName } = route.params;
 
   // Sorting:
-  // eslint-disable-next-line no-unused-vars
   const [sortingCategoryName, setSortingCategoryName] = useState('Name');
-  // eslint-disable-next-line no-unused-vars
   const [sortingDirection, setSortingDirection] = useState('asc');
+  const refSorting = useRef(null);
+  const onSortPress = (category) => {
+    // TODO: Send request to API and refresh products
+    console.log(`Sorting products by ${category}`);
+
+    // Hide bottom sheet and set new sorting:
+    if (sortingCategoryName === category)
+      setSortingDirection((it) => (it === 'asc' ? 'desc' : 'asc'));
+    else setSortingCategoryName(category);
+    refSorting.current.close();
+  };
+  const displaySortIcon = (category) => {
+    if (sortingCategoryName === category)
+      return sortingDirection === 'asc' ? up : down;
+    return null;
+  };
 
   // Deleting:
   const [deleteFridgeDialogVisible, setDeleteFridgeDialogVisible] =
@@ -102,7 +116,7 @@ const FridgeDetails = ({ route, navigation }) => {
   };
 
   // Other actions:
-  const refBS = useRef(null);
+  const refFridgeActions = useRef(null);
 
   return (
     <View style={styles.container}>
@@ -111,8 +125,8 @@ const FridgeDetails = ({ route, navigation }) => {
         icon1={more}
         editable
         onPressIcon1={() => {
-          // Open dialog with fridge actions:
-          refBS.current.open();
+          // Open bottom sheet with fridge actions:
+          refFridgeActions.current.open();
         }}
         onSubmitEditing={(newName) => {
           // TODO: Send request to API to change fridge/list's name
@@ -124,7 +138,8 @@ const FridgeDetails = ({ route, navigation }) => {
       {/* Sorting products */}
       <TouchableRipple
         onPress={() => {
-          // TODO: Add displaying modal bottom sheet with sorting actions
+          // Open bottom sheet with sorting actions:
+          refSorting.current.open();
         }}
       >
         <View style={styles.sortingLabel}>
@@ -165,14 +180,17 @@ const FridgeDetails = ({ route, navigation }) => {
       />
 
       {/* Fridge actions */}
-      <BottomSheet reference={refBS}>
+      <BottomSheet reference={refFridgeActions}>
         <SheetRow
           icon={groupAdd}
           text='Share'
           onPress={() => {
             // Hide bottom sheet and change screen:
-            refBS.current.close();
-            navigation.navigate('Share', { fridgeID });
+            refFridgeActions.current.close();
+            navigation.navigate('Share', {
+              type: 'fridge',
+              containerID: fridgeID,
+            });
           }}
         />
         <SheetRow
@@ -180,8 +198,11 @@ const FridgeDetails = ({ route, navigation }) => {
           text='Manage people'
           onPress={() => {
             // Hide bottom sheet and change screen:
-            refBS.current.close();
-            navigation.navigate('EditPermissions', { fridgeID });
+            refFridgeActions.current.close();
+            navigation.navigate('EditPermissions', {
+              type: 'fridge',
+              containerID: fridgeID,
+            });
           }}
         />
         <SheetRow
@@ -189,11 +210,50 @@ const FridgeDetails = ({ route, navigation }) => {
           text='Delete fridge'
           onPress={() => {
             // Hide bottom sheet and show dialog responsible for deleting fridge:
-            refBS.current.close();
+            refFridgeActions.current.close();
             setDeleteFridgeDialogVisible(true);
           }}
         />
-        <SheetRow icon={logout} text='Quit' onPress={() => {}} />
+        <SheetRow
+          icon={logout}
+          text='Quit'
+          onPress={() => {
+            // TODO: Send request to API to lose access to current fridge
+            console.log('Quitted');
+          }}
+        />
+      </BottomSheet>
+
+      {/* Sorting products */}
+      <BottomSheet title='Sort by' reference={refSorting}>
+        <SheetRow
+          icon={displaySortIcon('Name')}
+          text='Name'
+          onPress={() => {
+            onSortPress('Name');
+          }}
+        />
+        <SheetRow
+          icon={displaySortIcon('Producer')}
+          text='Producer'
+          onPress={() => {
+            onSortPress('Producer');
+          }}
+        />
+        <SheetRow
+          icon={displaySortIcon('Quantity')}
+          text='Quantity'
+          onPress={() => {
+            onSortPress('Quantity');
+          }}
+        />
+        <SheetRow
+          icon={displaySortIcon('Expiration date')}
+          text='Expiration date'
+          onPress={() => {
+            onSortPress('Expiration date');
+          }}
+        />
       </BottomSheet>
 
       {/* Deleting fridge */}

@@ -21,9 +21,9 @@ const RegisterFeedback = ({ navigation }) => {
         <Image style={styles.image} source={pigeon} />
       </View>
       <Button
-        label='Next'
+        label='OK'
         variant='contained'
-        onPress={() => navigation.replace('DrawerNavigator')}
+        onPress={() => navigation.replace('Login')}
       />
     </View>
   );

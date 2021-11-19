@@ -15,13 +15,20 @@ import { fridgesList } from 'tmpData';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
 
 const ShoppingListDetails = ({ route, navigation }) => {
-  const styles = useStyles();
+  // TODO: Change it to useState (or something else) after adding Redux, because
+  // currently we are not able to pass [activeFridge, setActiveFridge]
+  // in route params and the docs suggest using useContext to have this
+  // variable both in AddShoppingList and ChooseFridge pages.
+  const activeFridge = fridgesList[0]; // alternative: const activeFridge = null;
 
+  // FAB & Tabs conditions:
   const { isShared } = route.params; // TODO: Retrieve it from API, not route
   const [fabVisible, setFabVisible] = useState(true);
 
-  const activeFridge = fridgesList[0];
+  // Shopping List Actions:
   const bottomSheet = useRef(null);
+
+  const styles = useStyles();
 
   return (
     <View style={styles.container}>
