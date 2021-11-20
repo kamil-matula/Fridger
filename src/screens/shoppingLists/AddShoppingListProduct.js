@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
@@ -10,20 +10,28 @@ import {
   BottomSheet,
   SheetRow,
   FloatingActionButton,
+  Dialog,
 } from 'components';
 import { makeStyles } from 'utils';
-import { deleteIcon, expand, check } from '../../../assets/icons';
+import { deleteIcon, expand, check } from 'assets/icons';
+import { shoppingListItems } from 'tmpData';
 
-const AddShoppingListProduct = ({ navigation }) => {
+const AddShoppingListProduct = ({ route, navigation }) => {
   const styles = useStyles();
+
+  // Product identifying:
+  const product = route.params
+    ? shoppingListItems.find((e) => e.id === route.params.productID)
+    : null;
+  const mode = product ? 'edit' : 'add';
 
   // Form states:
   const { control, handleSubmit, setFocus, setValue, reset, watch } = useForm({
     defaultValues: {
-      name: '',
-      quantity: '',
-      unit: 'pcs',
-      note: '',
+      name: product ? product.name : '',
+      quantity: product ? product.quantity.toString() : '',
+      unit: product ? product.unit : 'pcs',
+      note: product ? product.note ?? '' : '',
     },
   });
   const rules = {
@@ -56,7 +64,7 @@ const AddShoppingListProduct = ({ navigation }) => {
 
   // Submitting form:
   const addProduct = (data) => {
-    // TODO: Send request to API to add product to fridge
+    // TODO: Send request to API to add product to shopping list
     console.log(`Product ${JSON.stringify(data)} added to shopping list`);
 
     // Reset states:
@@ -70,17 +78,54 @@ const AddShoppingListProduct = ({ navigation }) => {
     // Go back:
     navigation.goBack();
   };
+  const editProduct = (data) => {
+    // TODO: Send request to API to edit shopping list's product
+    console.log(`Product has been changed to ${JSON.stringify(data)}`);
+
+    // Reset states:
+    reset({
+      name: '',
+      producer: '',
+      quantity: '',
+      unit: 'pcs',
+    });
+
+    // Go back:
+    navigation.goBack();
+  };
+
+  // Deleting product:
+  const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
+    useState(false);
+  const confirmRemoveProduct = () => {
+    // TODO: Send request to API and wait for removing fridge from the list
+
+    // Hide dialog and go back:
+    setDeleteProductDialogVisible(false);
+    navigation.pop();
+  };
+  const cancelRemoveProduct = () => {
+    // Hide dialog:
+    setDeleteProductDialogVisible(false);
+  };
 
   return (
     <View style={styles.container}>
-      <AppBar
-        label='Add product'
-        icon1={deleteIcon}
-        onPressIcon1={
-          () => {}
-          // TODO: remove product
-        }
-      />
+      {/* Screen title */}
+      {mode === 'add' ? (
+        <AppBar label='Add product' />
+      ) : (
+        <AppBar
+          label='Edit product'
+          icon1={deleteIcon}
+          onPressIcon1={() => {
+            // Show 'Delete Product' dialog:
+            setDeleteProductDialogVisible(true);
+          }}
+        />
+      )}
+
+      {/* Providing data */}
       <ScrollViewLayout>
         <View>
           <InputField
@@ -122,9 +167,11 @@ const AddShoppingListProduct = ({ navigation }) => {
               />
             </View>
           </View>
+
+          {/* TODO: Increase height to 2-3 lines instead of one,
+              text-wrapping and limit of characters */}
           <InputField
             control={control}
-            rules={rules.producer}
             name='note'
             label='Note'
             variant='data'
@@ -133,6 +180,7 @@ const AddShoppingListProduct = ({ navigation }) => {
           />
         </View>
       </ScrollViewLayout>
+
       {/* Quantity types */}
       <BottomSheet reference={refBS} title='Choose unit'>
         <SheetRow
@@ -173,11 +221,36 @@ const AddShoppingListProduct = ({ navigation }) => {
       </BottomSheet>
 
       {/* Button at the bottom */}
-      <FloatingActionButton
-        label='Add product'
-        onPress={handleSubmit(addProduct)}
-        centered
-      />
+      {mode === 'add' ? (
+        <FloatingActionButton
+          label='Add product'
+          onPress={handleSubmit(addProduct)}
+          centered
+        />
+      ) : (
+        <FloatingActionButton
+          label='Confirm'
+          onPress={handleSubmit(editProduct)}
+          centered
+          confirm
+        />
+      )}
+
+      {/* Deleting product */}
+      {product && (
+        <Dialog
+          title='Delete product'
+          paragraph={`Are you sure you want to delete ${product.name} from this shopping list? This action cannot be undone.`}
+          visibilityState={[
+            deleteProductDialogVisible,
+            setDeleteProductDialogVisible,
+          ]}
+          label1='delete'
+          onPressLabel1={confirmRemoveProduct}
+          label2='cancel'
+          onPressLabel2={cancelRemoveProduct}
+        />
+      )}
     </View>
   );
 };

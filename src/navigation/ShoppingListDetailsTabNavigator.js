@@ -1,17 +1,14 @@
 import React from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Image } from 'react-native';
 import PropTypes from 'prop-types';
 
 import {
-  ShoppingList,
-  YourShoppingList,
+  ShoppingListAll,
+  ShoppingListYour,
   ShoppingListSummary,
-  ShoppingListChat,
-} from 'screens/shoppingLists';
+} from 'screens/shoppingLists/details';
 import { makeStyles } from 'utils';
-import { chat } from 'assets/icons';
 
 const ShoppingListTab = createMaterialTopTabNavigator();
 const ShoppingListDetailsTabNavigator = ({ isShared, setFabVisible }) => {
@@ -31,9 +28,9 @@ const ShoppingListDetailsTabNavigator = ({ isShared, setFabVisible }) => {
       // Hiding FAB:
       screenListeners={{
         focus: (e) => {
-          if (e.target.startsWith('List-')) {
+          if (e.target.startsWith('All')) {
             setFabVisible(true);
-          } else if (e.target.startsWith('Your list-') && isShared === false) {
+          } else if (e.target.startsWith('Your') && isShared === false) {
             setFabVisible(true);
           } else {
             setFabVisible(false);
@@ -42,20 +39,16 @@ const ShoppingListDetailsTabNavigator = ({ isShared, setFabVisible }) => {
       }}
     >
       {isShared && (
-        <ShoppingListTab.Screen name='List' component={ShoppingList} />
-      )}
-      <ShoppingListTab.Screen name='Your list' component={YourShoppingList} />
-      <ShoppingListTab.Screen name='Summary' component={ShoppingListSummary} />
-      {isShared && (
         <ShoppingListTab.Screen
-          name='Chat'
-          component={ShoppingListChat}
-          options={{
-            tabBarLabelStyle: { display: 'none' },
-            tabBarIcon: () => <Image style={styles.icon} source={chat} />,
-          }}
+          name='All Products'
+          component={ShoppingListAll}
         />
       )}
+      <ShoppingListTab.Screen
+        name='Your Products'
+        component={ShoppingListYour}
+      />
+      <ShoppingListTab.Screen name='Summary' component={ShoppingListSummary} />
     </ShoppingListTab.Navigator>
   );
 };

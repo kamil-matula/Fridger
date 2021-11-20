@@ -7,13 +7,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {
   AppBar,
-  ScoresContainer,
   ScrollViewLayout,
   Dialog,
   FloatingActionButton,
   InputField,
   Separator,
 } from 'components';
+import { ScoresContainer } from 'components/fridges';
 import { makeStyles } from 'utils';
 import { deleteIcon, time, calendar } from 'assets/icons';
 import { productsInFridgeList } from 'tmpData';
@@ -21,7 +21,7 @@ import { productsInFridgeList } from 'tmpData';
 const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
-  // Params from navigation:
+  // Identifying product:
   const { productID, fridgeID, fridgeName } = route.params;
   const product = productsInFridgeList.find((e) => e.id === productID);
 

@@ -15,6 +15,7 @@ const ShoppingListRow = ({
   dips,
   onPress,
   isShared,
+  isActive,
 }) => {
   const styles = useStyles();
 
@@ -22,12 +23,19 @@ const ShoppingListRow = ({
     <TouchableRipple onPress={onPress}>
       <View style={styles.container}>
         <Text style={styles.text}>{label}</Text>
-        <View style={styles.iconsContainer}>
-          <IconAndBadge icon={checkBox} number={unchecked} />
-          <View style={styles.horizontalSeparator} />
 
-          {/* There are no dibs in shopping lists that are private */}
-          {isShared && (
+        {/* Displaying amounts of bought, unbought and indeterminate products */}
+        <View style={styles.iconsContainer}>
+          {/* There are no unbought products in shopping lists that are in history */}
+          {isActive && (
+            <>
+              <IconAndBadge icon={checkBox} number={unchecked} />
+              <View style={styles.horizontalSeparator} />
+            </>
+          )}
+
+          {/* There are no dibs in shopping lists that are private or in history */}
+          {isShared && isActive && (
             <>
               <IconAndBadge icon={hand} number={dips} />
               <View style={styles.horizontalSeparator} />
@@ -48,6 +56,7 @@ ShoppingListRow.propTypes = {
   dips: PropTypes.number.isRequired,
   onPress: PropTypes.func.isRequired,
   isShared: PropTypes.bool.isRequired,
+  isActive: PropTypes.bool.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({

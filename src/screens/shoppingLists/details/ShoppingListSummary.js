@@ -1,12 +1,12 @@
-/* eslint-disable arrow-body-style */
 import React from 'react';
 
 import { View, ScrollView } from 'react-native';
+import { Divider } from 'react-native-paper';
 
-import { ShoppingListItem, Chip, Separator, PriceSummary } from 'components';
+import { Separator } from 'components';
+import { PriceSummary, ShoppingListItem, Chip } from 'components/shoppingLists';
 import { makeStyles } from 'utils';
 import { shoppingListItems } from 'tmpData';
-import { Divider } from 'react-native-paper';
 
 const ShoppingListSummary = () => {
   const styles = useStyles();
@@ -18,13 +18,16 @@ const ShoppingListSummary = () => {
   const usersURIs = Array.from(
     new Set(shoppingListItems.map((e) => e.avatarURI))
   );
-  const users = new Set(
-    usersNicks.map((_, idx) => ({
-      name: usersNicks[idx],
-      avatar: usersURIs[idx],
-    }))
+  const users = Array.from(
+    new Set(
+      usersNicks.map((_, idx) => ({
+        name: usersNicks[idx],
+        avatar: usersURIs[idx],
+      }))
+    )
   );
 
+  // Function which returns list of components of not-bought products:
   const productsNotBought = (username) => {
     const products = shoppingListItems.filter(
       (product) =>
@@ -45,6 +48,7 @@ const ShoppingListSummary = () => {
     ));
   };
 
+  // Function which returns list of components of bought products:
   const productsBought = (username) => {
     const products = shoppingListItems.filter(
       (product) => username === product.userNick && product.status === 'checked'
@@ -58,6 +62,7 @@ const ShoppingListSummary = () => {
           subText={
             note ? `${quantity} ${unit}  •  ${note}` : `${quantity} ${unit}`
           }
+          // TODO: Use appropriate currency instead of hardcoded one
           boxText={`${price} zł`}
           variant='checkbox'
           status={status}
@@ -66,38 +71,52 @@ const ShoppingListSummary = () => {
     );
   };
 
-  const sumList = (sum, val) => ({ price: sum.price + val.price });
-
+  // Function which returns component with total price:
   const sumUp = (username) => {
+    // Choose matching ones:
     const products = shoppingListItems.filter(
       (product) => username === product.userNick && product.status === 'checked'
     );
 
-    const sum = products.reduce(sumList).price;
+    // Calculate price:
+    let sum = 0;
+    for (let i = 0; i < products.length; i += 1)
+      sum += parseFloat(products[i].price);
 
-    return <PriceSummary value={sum} editable={false} />;
+    // TODO: Use appropriate currency instead of hardcoded one
+    return <PriceSummary value={sum} currency='zł' />;
   };
 
-  // TODO: use FlatList?
   return (
     <View style={styles.container}>
       <ScrollView>
         <View>
-          {Array.from(users).map((user, idx) => (
-            <View key={idx}>
-              <View style={{ paddingHorizontal: 16 }}>
-                <Separator />
-                <Chip avatarURI={user.avatar} text={user.name} />
-                <Separator />
+          {users.map((user, idx) => {
+            const notBoughtProds = productsNotBought(user.name);
+            const boughtProds = productsBought(user.name);
+
+            return (
+              <View key={idx}>
+                {/* Sub-list owner */}
+                <View style={{ paddingHorizontal: 16 }}>
+                  <Separator />
+                  <Chip avatarURI={user.avatar} text={user.name} />
+                  <Separator />
+                </View>
+
+                {/* Products */}
+                {notBoughtProds}
+                {notBoughtProds.length > 0 && boughtProds.length > 0 && (
+                  <Divider style={styles.divider} />
+                )}
+                {boughtProds}
+
+                {/* Total price */}
+                {sumUp(user.name)}
+                <Divider style={styles.dividerWide} />
               </View>
-              {productsNotBought(user.name)}
-              {/* TODO: remove divider when no products above */}
-              <Divider style={styles.divider} />
-              {productsBought(user.name)}
-              {sumUp(user.name)}
-              <Divider style={styles.dividerWide} />
-            </View>
-          ))}
+            );
+          })}
         </View>
       </ScrollView>
     </View>

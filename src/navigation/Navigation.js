@@ -7,9 +7,9 @@ import { useSelector } from 'react-redux';
 import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
 import {
   AddShoppingList,
+  ChooseFridge,
   ShoppingListScanner,
   AddShoppingListProduct,
-  ChooseFridge,
 } from 'screens/shoppingLists';
 import {
   AddFridge,

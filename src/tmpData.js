@@ -120,8 +120,9 @@ export const productsInFridgeList = [
   {
     // General:
     id: 1,
-    name: 'Pain de mie à la farine complète 1',
-    producer: 'La Boulangère Bio',
+    name: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare eros vel ullamcorper pretium.',
+    producer:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare eros vel ullamcorper pretium.',
     currentQuantity: 200,
     maxQuantity: 500,
     quantityType: 'g',
@@ -232,6 +233,7 @@ export const shoppingListsActive = [
     dips: 11,
     check: 5,
     isShared: true,
+    isActive: true,
   },
   {
     id: 2,
@@ -240,6 +242,7 @@ export const shoppingListsActive = [
     dips: 9,
     check: 6,
     isShared: true,
+    isActive: true,
   },
   {
     id: 3,
@@ -248,6 +251,7 @@ export const shoppingListsActive = [
     dips: 0,
     check: 7,
     isShared: false,
+    isActive: true,
   },
 ];
 
@@ -259,6 +263,7 @@ export const shoppingListsHistory = [
     dips: 0,
     check: 10,
     isShared: false,
+    isActive: false,
   },
   {
     id: 5,
@@ -267,6 +272,7 @@ export const shoppingListsHistory = [
     dips: 0,
     check: 7,
     isShared: true,
+    isActive: false,
   },
 ];
 
@@ -288,7 +294,7 @@ export const shoppingListItems = [
     avatarURI:
       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
     name: 'Mleko 2',
-    note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
+    note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     quantity: 1000,
     unit: 'pcs',
     status: 'unchecked',
@@ -353,5 +359,27 @@ export const shoppingListItems = [
     unit: 'pcs',
     status: 'checked',
     price: 7,
+  },
+  {
+    id: 8,
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png',
+    userNick: 'NotSquirtle',
+    name: 'Mleko 8',
+    quantity: 1,
+    unit: 'pcs',
+    status: 'checked',
+    price: 3,
+  },
+  {
+    id: 9,
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png',
+    userNick: 'Squirtle',
+    name: 'Mleko 9',
+    quantity: 1,
+    unit: 'pcs',
+    status: 'indeterminate',
+    price: 2,
   },
 ];

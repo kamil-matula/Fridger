@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { Separator, ShoppingListItem } from 'components';
+import { Separator } from 'components';
+import { ShoppingListItem } from 'components/shoppingLists';
 import { makeStyles } from 'utils';
 import { shoppingListItems } from 'tmpData';
 
-const ShoppingList = ({ navigation }) => {
+const ShoppingListAll = ({ navigation }) => {
   const styles = useStyles();
 
   // eslint-disable-next-line no-unused-vars
@@ -18,16 +19,24 @@ const ShoppingList = ({ navigation }) => {
       <ScrollView>
         {/* List of clickable items */}
         {shoppingListItems.map(
-          ({ avatarURI, name, note, quantity, unit, price, status }, idx) => (
+          (
+            { id, avatarURI, name, note, quantity, unit, price, status },
+            idx
+          ) => (
             <TouchableRipple
               key={idx}
               onPress={() => {
+                // Standard mode: Click to edit product
                 if (mode === 'edit') {
-                  // TODO: pass values
-                  navigation.navigate('AddShoppingListProduct');
+                  navigation.navigate('AddShoppingListProduct', {
+                    productID: id,
+                  });
                 }
+
+                // Mode available only in shared lists: Click to reserve product
                 if (mode === 'dips') {
-                  // TODO: dips item
+                  // TODO: Add possibility to reserve a product.
+                  // NOTE: The avatars should be replaced with custom checkboxes if this mode is on.
                 }
               }}
             >
@@ -39,6 +48,7 @@ const ShoppingList = ({ navigation }) => {
                     ? `${quantity} ${unit}  •  ${note}`
                     : `${quantity} ${unit}`
                 }
+                // TODO: Use appropriate currency instead of hardcoded one
                 boxText={status === 'checked' ? `${price} zł` : null}
               />
             </TouchableRipple>
@@ -59,4 +69,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ShoppingList;
+export default ShoppingListAll;

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 import { check } from 'assets/icons';
-import FoodTypes from './FoodTypes';
+import { FoodTypes } from 'components';
 
 const FridgeRow = ({ onPress, fridgeName, isActive = false }) => {
   const styles = useStyles();

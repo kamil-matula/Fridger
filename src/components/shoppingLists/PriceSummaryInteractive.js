@@ -6,7 +6,8 @@ import { useController } from 'react-hook-form';
 
 import { makeStyles } from 'utils';
 
-const PriceSummaryInteractive = ({ control, name, onEndEditing }) => {
+// This component is used in second tab of Shopping List Details
+const PriceSummaryInteractive = ({ control, name, onEndEditing, currency }) => {
   const styles = useStyles();
 
   const { field } = useController({ name, control });
@@ -20,10 +21,10 @@ const PriceSummaryInteractive = ({ control, name, onEndEditing }) => {
         onChangeText={field.onChange}
         value={field.value.toString()}
         keyboardType='numeric'
-        maxLength={15}
+        maxLength={10}
         onEndEditing={onEndEditing}
       />
-      <Text style={styles.currency}> zł</Text>
+      <Text style={styles.currency}> {currency}</Text>
     </View>
   );
 };
@@ -32,6 +33,7 @@ PriceSummaryInteractive.propTypes = {
   control: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
   onEndEditing: PropTypes.func,
+  currency: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({

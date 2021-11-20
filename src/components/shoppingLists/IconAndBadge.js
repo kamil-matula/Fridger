@@ -8,6 +8,7 @@ import { makeStyles } from 'utils';
 const IconAndBadge = ({ icon, number }) => {
   const styles = useStyles();
 
+  // Don't display numbers with two (and more) digits:
   const num = number >= 10 ? '+9' : number;
 
   return (

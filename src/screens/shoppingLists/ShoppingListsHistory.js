@@ -5,15 +5,16 @@ import { Divider } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
 import { shoppingListsHistory } from 'tmpData';
-import { ShoppingListRow } from 'components';
+import { ShoppingListRow } from 'components/shoppingLists';
 
-const ListShoppingListsHistory = ({ navigation }) => {
+const ShoppingListsHistory = ({ navigation }) => {
   const styles = useStyles();
 
+  // TODO: Use list of inactive shopping lists from redux
   return (
     <View style={styles.container}>
       {shoppingListsHistory.map(
-        ({ id, title, uncheck, dips, check, isShared }) => (
+        ({ id, title, uncheck, dips, check, isShared, isActive }) => (
           <View key={id}>
             <ShoppingListRow
               label={title}
@@ -21,9 +22,10 @@ const ListShoppingListsHistory = ({ navigation }) => {
               dips={dips}
               checked={check}
               isShared={isShared}
-              onPress={() =>
-                navigation.navigate('ShoppingListDetails', { isShared })
-              }
+              isActive={isActive}
+              onPress={() => {
+                navigation.navigate('ShoppingListDetails', { isShared });
+              }}
             />
             <Divider style={styles.divider} />
           </View>
@@ -46,4 +48,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ListShoppingListsHistory;
+export default ShoppingListsHistory;

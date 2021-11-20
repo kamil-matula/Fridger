@@ -12,15 +12,9 @@ const ProductInfo = ({ text, subtext1, subtext2, nova, nutri }) => {
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
-        <Text style={styles.text} numberOfLines={1}>
-          {text}
-        </Text>
-        <Text style={styles.subtext} numberOfLines={1}>
-          {subtext1}
-        </Text>
-        <Text style={styles.subtext} numberOfLines={1}>
-          {subtext2}
-        </Text>
+        <Text style={styles.text}>{text}</Text>
+        <Text style={styles.subtext}>{subtext1}</Text>
+        <Text style={styles.subtext}>{subtext2}</Text>
       </View>
       <ScoresContainer
         novaScore={nova}

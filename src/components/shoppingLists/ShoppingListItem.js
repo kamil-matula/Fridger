@@ -2,9 +2,9 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { Image, Text, View, StyleSheet } from 'react-native';
+import { Checkbox } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { Checkbox } from 'react-native-paper';
 
 const ShoppingListItem = ({
   avatarURI,
@@ -18,24 +18,31 @@ const ShoppingListItem = ({
 
   return (
     <View style={styles.container}>
+      {/* Avatar variant helps in informing who reserved 
+          the product. It is used in first tab. */}
       {variant === 'avatar' &&
         (avatarURI ? (
           <Image style={styles.avatar} source={{ uri: avatarURI }} />
         ) : (
           <View style={styles.avatarPlaceholder} />
         ))}
+
+      {/* Checkbox variant helps in informing about product state 
+          (bought or unbought). It is used in third tab. */}
       {variant === 'checkbox' && (
         <View style={styles.checkbox}>
           <Checkbox disabled status={status} />
         </View>
       )}
+
+      {/* Name, quantity and note of specific product */}
       <View style={styles.textContainer}>
-        <Text style={styles.text} numberOfLines={1}>
-          {text}
-        </Text>
+        <Text style={styles.text}>{text}</Text>
         {subText && <Text style={styles.subText}>{subText}</Text>}
       </View>
-      <View style={styles.quantityContainer}>
+
+      {/* Price of bought product */}
+      <View style={styles.priceContainer}>
         {boxText && <Text style={styles.text}>{boxText}</Text>}
       </View>
     </View>
@@ -87,7 +94,7 @@ const useStyles = makeStyles((theme, { boxText }) => {
       fontSize: 14,
       color: theme.colors.silverMetallic,
     },
-    quantityContainer: {
+    priceContainer: {
       flexDirection: 'row',
       height: 32,
       width: 64,
@@ -100,9 +107,9 @@ const useStyles = makeStyles((theme, { boxText }) => {
 
   // Container for price:
   if (boxText) {
-    obj.quantityContainer.borderRadius = 5;
-    obj.quantityContainer.borderWidth = 1;
-    obj.quantityContainer.borderColor = theme.colors.silverMetallic;
+    obj.priceContainer.borderRadius = 5;
+    obj.priceContainer.borderWidth = 1;
+    obj.priceContainer.borderColor = theme.colors.silverMetallic;
   }
 
   return obj;

@@ -10,7 +10,7 @@ const ShoppingListScanner = () => {
 
   return (
     <View style={styles.container}>
-      <AppBar label='Shopping Lists' />
+      <AppBar label='Shopping List Scanner' />
       <ScrollViewLayout addPadding={false} />
     </View>
   );
