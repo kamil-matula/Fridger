@@ -237,18 +237,20 @@ const AddShoppingListProduct = ({ route, navigation }) => {
       )}
 
       {/* Deleting product */}
-      <Dialog
-        title='Delete product'
-        paragraph={`Are you sure you want to delete ${product.name} from this shopping list? This action cannot be undone.`}
-        visibilityState={[
-          deleteProductDialogVisible,
-          setDeleteProductDialogVisible,
-        ]}
-        label1='delete'
-        onPressLabel1={confirmRemoveProduct}
-        label2='cancel'
-        onPressLabel2={cancelRemoveProduct}
-      />
+      {product && (
+        <Dialog
+          title='Delete product'
+          paragraph={`Are you sure you want to delete ${product.name} from this shopping list? This action cannot be undone.`}
+          visibilityState={[
+            deleteProductDialogVisible,
+            setDeleteProductDialogVisible,
+          ]}
+          label1='delete'
+          onPressLabel1={confirmRemoveProduct}
+          label2='cancel'
+          onPressLabel2={cancelRemoveProduct}
+        />
+      )}
     </View>
   );
 };
