@@ -4,13 +4,11 @@ import { View } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm, useFieldArray } from 'react-hook-form';
 
+import { Button, ScrollViewLayout, Separator } from 'components';
 import {
-  Button,
   PriceSummaryInteractive,
-  ScrollViewLayout,
-  Separator,
   ShoppingListItemInteractive,
-} from 'components';
+} from 'components/shoppingLists';
 import { makeStyles } from 'utils';
 import { shoppingListItems } from 'tmpData';
 
@@ -133,6 +131,8 @@ const YourShoppingList = () => {
                 control={control}
                 name='summary'
                 onEndEditing={() => setIsSumOverridden(true)}
+                // TODO: Use appropriate currency instead of hardcoded one
+                currency='zł'
               />
               {isSumOverridden && (
                 <View style={styles.reset}>

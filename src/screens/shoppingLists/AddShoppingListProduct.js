@@ -12,7 +12,7 @@ import {
   FloatingActionButton,
 } from 'components';
 import { makeStyles } from 'utils';
-import { deleteIcon, expand, check } from '../../../assets/icons';
+import { deleteIcon, expand, check } from 'assets/icons';
 
 const AddShoppingListProduct = ({ navigation }) => {
   const styles = useStyles();

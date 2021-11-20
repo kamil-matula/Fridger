@@ -1,12 +1,12 @@
-/* eslint-disable arrow-body-style */
 import React from 'react';
 
 import { View, ScrollView } from 'react-native';
+import { Divider } from 'react-native-paper';
 
-import { ShoppingListItem, Chip, Separator, PriceSummary } from 'components';
+import { Separator } from 'components';
+import { PriceSummary, ShoppingListItem, Chip } from 'components/shoppingLists';
 import { makeStyles } from 'utils';
 import { shoppingListItems } from 'tmpData';
-import { Divider } from 'react-native-paper';
 
 const ShoppingListSummary = () => {
   const styles = useStyles();
@@ -75,7 +75,8 @@ const ShoppingListSummary = () => {
 
     const sum = products.reduce(sumList).price;
 
-    return <PriceSummary value={sum} editable={false} />;
+    // TODO: Use appropriate currency instead of hardcoded one
+    return <PriceSummary value={sum} currency='zł' />;
   };
 
   // TODO: use FlatList?

@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { Separator, ShoppingListItem } from 'components';
+import { Separator } from 'components';
+import { ShoppingListItem } from 'components/shoppingLists';
 import { makeStyles } from 'utils';
 import { shoppingListItems } from 'tmpData';
 

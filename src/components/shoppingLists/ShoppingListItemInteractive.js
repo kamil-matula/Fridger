@@ -2,11 +2,12 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { Text, View, TextInput } from 'react-native';
+import { Checkbox, useTheme } from 'react-native-paper';
 import { useController } from 'react-hook-form';
 
 import { makeStyles } from 'utils';
-import { Checkbox, useTheme } from 'react-native-paper';
 
+// This component is used in second tab of Shopping List Details
 const ShoppingListItemInteractive = ({
   control,
   text,
@@ -21,15 +22,18 @@ const ShoppingListItemInteractive = ({
   const box = useController({ name: boxName, control, rules: {} });
   const checkbox = useController({ name: checkBoxName, control, rules: {} });
 
-  const theme = useTheme();
+  // Styling:
+  const { colors } = useTheme();
   const styles = useStyles({ fieldValue: checkbox.field.value });
 
   return (
     <View style={styles.container}>
       <View style={styles.checkbox}>
+        {/* Checkbox responsible for changing product state: 
+            unchecked or indeterminate */}
         <Checkbox
-          color={theme.colors.silverMetallic}
-          uncheckedColor={theme.colors.silverMetallic}
+          color={colors.silverMetallic}
+          uncheckedColor={colors.silverMetallic}
           status={checkbox.field.value}
           onPress={() => {
             if (checkbox.field.value === 'unchecked') {
@@ -41,11 +45,15 @@ const ShoppingListItemInteractive = ({
           }}
         />
       </View>
+
+      {/* Name, quantity and note of specific product */}
       <View style={styles.textContainer}>
         <Text style={styles.text}>{text}</Text>
         {subText && <Text style={styles.subText}>{subText}</Text>}
       </View>
-      <View style={styles.quantityContainer}>
+
+      {/* Temporary price of indeterminate product */}
+      <View style={styles.priceContainer}>
         {checkbox.field.value === 'indeterminate' && (
           <>
             {/* TODO: Replace with Input Field? */}
@@ -54,7 +62,7 @@ const ShoppingListItemInteractive = ({
               onChangeText={box.field.onChange}
               value={box.field.value.toString()}
               style={styles.inputField}
-              placeholderTextColor={theme.colors.silverMetallic}
+              placeholderTextColor={colors.silverMetallic}
               placeholder='0'
               keyboardType='numeric'
               maxLength={5}
@@ -105,7 +113,7 @@ const useStyles = makeStyles((theme, { fieldValue }) => {
       fontSize: 14,
       color: theme.colors.silverMetallic,
     },
-    quantityContainer: {
+    priceContainer: {
       flexDirection: 'row',
       height: 32,
       width: 64,
@@ -118,9 +126,9 @@ const useStyles = makeStyles((theme, { fieldValue }) => {
 
   // Container for price:
   if (fieldValue === 'indeterminate') {
-    obj.quantityContainer.borderRadius = 5;
-    obj.quantityContainer.borderWidth = 1;
-    obj.quantityContainer.borderColor = theme.colors.silverMetallic;
+    obj.priceContainer.borderRadius = 5;
+    obj.priceContainer.borderWidth = 1;
+    obj.priceContainer.borderColor = theme.colors.silverMetallic;
   }
 
   return obj;

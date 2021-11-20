@@ -2,27 +2,31 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
+
 import { makeStyles } from 'utils';
 
-const PriceSummary = ({ value }) => {
+// This component is used in third tab of Shopping List Details
+const PriceSummary = ({ value, currency }) => {
   const styles = useStyles();
 
   return (
     <View style={styles.summaryContainer}>
       <Text style={styles.total}>TOTAL:</Text>
-      <Text style={styles.totalPrice}>{value}</Text>
-      <Text style={styles.currency}> zł</Text>
+      <Text style={styles.totalPrice}>
+        {value} {currency}
+      </Text>
     </View>
   );
 };
 
 PriceSummary.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  value: PropTypes.number.isRequired,
+  currency: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
   summaryContainer: {
-    alignItems: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     padding: 16,
   },
@@ -32,17 +36,11 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.silverMetallic,
   },
   totalPrice: {
-    flex: 1,
-    paddingBottom: 0,
-    fontSize: 24,
-    color: theme.colors.white,
-    textAlign: 'right',
-  },
-  currency: {
     paddingRight: 16,
     paddingBottom: 0,
     fontSize: 24,
     color: theme.colors.white,
+    textAlign: 'right',
   },
 }));
 

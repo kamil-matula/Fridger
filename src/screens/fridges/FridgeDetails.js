@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import {
   AppBar,
   FloatingActionButton,
-  FridgeDetailsRow,
   BottomSheet,
   SheetRow,
   Dialog,
@@ -15,6 +14,7 @@ import {
   Separator,
   InputField,
 } from 'components';
+import { FridgeDetailsRow } from 'components/fridges';
 import { makeStyles } from 'utils';
 import {
   group,

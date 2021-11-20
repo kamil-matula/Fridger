@@ -7,13 +7,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {
   AppBar,
-  ScoresContainer,
   ScrollViewLayout,
   Dialog,
   FloatingActionButton,
   InputField,
   Separator,
 } from 'components';
+import { ScoresContainer } from 'components/fridges';
 import { makeStyles } from 'utils';
 import { deleteIcon, time, calendar } from 'assets/icons';
 import { productsInFridgeList } from 'tmpData';

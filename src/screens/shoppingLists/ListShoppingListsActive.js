@@ -5,7 +5,7 @@ import { Divider } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
 import { shoppingListsActive } from 'tmpData';
-import { ShoppingListRow } from 'components';
+import { ShoppingListRow } from 'components/shoppingLists';
 
 const ListShoppingListsActive = ({ navigation }) => {
   const styles = useStyles();
@@ -13,7 +13,7 @@ const ListShoppingListsActive = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {shoppingListsActive.map(
-        ({ id, title, uncheck, dips, check, isShared }) => (
+        ({ id, title, uncheck, dips, check, isShared, isActive }) => (
           <View key={id}>
             <ShoppingListRow
               label={title}
@@ -21,9 +21,10 @@ const ListShoppingListsActive = ({ navigation }) => {
               dips={dips}
               checked={check}
               isShared={isShared}
-              onPress={() =>
-                navigation.navigate('ShoppingListDetails', { isShared })
-              }
+              isActive={isActive}
+              onPress={() => {
+                navigation.navigate('ShoppingListDetails', { isShared });
+              }}
             />
             <Divider style={styles.divider} />
           </View>

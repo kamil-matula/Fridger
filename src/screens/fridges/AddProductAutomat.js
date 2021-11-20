@@ -11,10 +11,10 @@ import {
   ScrollViewLayout,
   AppBar,
   FloatingActionButton,
-  ProductInfo,
   Separator,
   Button,
 } from 'components';
+import { ProductInfo } from 'components/fridges';
 import { makeStyles } from 'utils';
 import { edit, calendar } from 'assets/icons';
 
@@ -142,8 +142,8 @@ const AddProductAutomat = ({ navigation }) => {
       {/* TODO: Display data from API instead of hardcoded one */}
       {/* Product data from API */}
       <ProductInfo
-        text='Orzeszki ziemne smażone w chrupiącej posypce'
-        subtext1='La Boulangère Bio'
+        text='Lorem ipsum dolor sit amet, consectetur adipiscing elit .Proin ornare eros vel ullamcorper pretium.'
+        subtext1='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare eros vel ullamcorper pretium.'
         subtext2='500 g'
         nutri='A'
         nova='N1'
