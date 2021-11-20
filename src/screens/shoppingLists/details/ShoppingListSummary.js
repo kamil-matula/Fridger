@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, ScrollView } from 'react-native';
+import { View, FlatList } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import { Separator } from 'components';
@@ -18,14 +18,16 @@ const ShoppingListSummary = () => {
   const usersURIs = Array.from(
     new Set(shoppingListItems.map((e) => e.avatarURI))
   );
-  const users = new Set(
-    usersNicks.map((_, idx) => ({
-      name: usersNicks[idx],
-      avatar: usersURIs[idx],
-    }))
+  const users = Array.from(
+    new Set(
+      usersNicks.map((_, idx) => ({
+        name: usersNicks[idx],
+        avatar: usersURIs[idx],
+      }))
+    )
   );
 
-  // Function which returns list of not-bought products:
+  // Function which returns list of components of not-bought products:
   const productsNotBought = (username) => {
     const products = shoppingListItems.filter(
       (product) =>
@@ -46,7 +48,7 @@ const ShoppingListSummary = () => {
     ));
   };
 
-  // Function which returns list of bought products:
+  // Function which returns list of components of bought products:
   const productsBought = (username) => {
     const products = shoppingListItems.filter(
       (product) => username === product.userNick && product.status === 'checked'
@@ -69,41 +71,55 @@ const ShoppingListSummary = () => {
     );
   };
 
-  const sumList = (sum, val) => ({ price: sum.price + val.price });
-
+  // Function which returns component with total price:
   const sumUp = (username) => {
+    // Choose matching ones:
     const products = shoppingListItems.filter(
       (product) => username === product.userNick && product.status === 'checked'
     );
 
-    const sum = products.reduce(sumList).price;
+    // Calculate price:
+    let sum = 0;
+    for (let i = 0; i < products.length; i += 1)
+      sum += parseFloat(products[i].price);
 
     // TODO: Use appropriate currency instead of hardcoded one
     return <PriceSummary value={sum} currency='zł' />;
   };
 
-  // TODO: use FlatList?
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <View>
-          {Array.from(users).map((user, idx) => (
-            <View key={idx}>
+      <FlatList
+        // style={styles.list}
+        data={users}
+        renderItem={({ item }) => {
+          const notBoughtProds = productsNotBought(item.name);
+          const boughtProds = productsBought(item.name);
+
+          return (
+            <View>
+              {/* Sub-list owner */}
               <View style={{ paddingHorizontal: 16 }}>
                 <Separator />
-                <Chip avatarURI={user.avatar} text={user.name} />
+                <Chip avatarURI={item.avatar} text={item.name} />
                 <Separator />
               </View>
-              {productsNotBought(user.name)}
-              {/* TODO: remove divider when no products above */}
-              <Divider style={styles.divider} />
-              {productsBought(user.name)}
-              {sumUp(user.name)}
+
+              {/* Products */}
+              {notBoughtProds}
+              {notBoughtProds.length > 0 && boughtProds.length > 0 && (
+                <Divider style={styles.divider} />
+              )}
+              {boughtProds}
+
+              {/* Total price */}
+              {sumUp(item.name)}
               <Divider style={styles.dividerWide} />
             </View>
-          ))}
-        </View>
-      </ScrollView>
+          );
+        }}
+        keyExtractor={(item) => item.name.toString()}
+      />
     </View>
   );
 };

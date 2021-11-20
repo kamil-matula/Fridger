@@ -360,4 +360,25 @@ export const shoppingListItems = [
     status: 'checked',
     price: 7,
   },
+  {
+    id: 8,
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png',
+    userNick: 'NotSquirtle',
+    name: 'Mleko 8',
+    quantity: 1,
+    unit: 'pcs',
+    status: 'checked',
+    price: 3,
+  },
+  {
+    id: 9,
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png',
+    userNick: 'Squirtle',
+    name: 'Mleko 9',
+    quantity: 1,
+    unit: 'pcs',
+    status: 'indeterminate',
+  },
 ];

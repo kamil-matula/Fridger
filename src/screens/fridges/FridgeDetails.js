@@ -25,14 +25,15 @@ import {
   down,
   up,
 } from 'assets/icons';
-import { productsInFridgeList } from 'tmpData';
+import { fridgesList, productsInFridgeList } from 'tmpData';
 
 const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
-  // Params from navigation
-  // (TODO: Replace with more appropriate params):
-  const { fridgeID, fridgeName } = route.params;
+  // Fridge identifying:
+  const fridge = route.params
+    ? fridgesList.find((e) => e.id === route.params.fridgeID)
+    : null;
 
   // Sorting:
   const [sortingCategoryName, setSortingCategoryName] = useState('Name');
@@ -121,7 +122,7 @@ const FridgeDetails = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar
-        label={fridgeName}
+        label={fridge.name}
         icon1={more}
         editable
         onPressIcon1={() => {
@@ -130,7 +131,7 @@ const FridgeDetails = ({ route, navigation }) => {
         }}
         onSubmitEditing={(newName) => {
           // TODO: Send request to API to change fridge/list's name
-          console.log(`Fridge ${fridgeName} has been renamed to ${newName}`);
+          console.log(`Fridge ${fridge.name} has been renamed to ${newName}`);
         }}
       />
       <Divider style={styles.divider} />
@@ -163,8 +164,8 @@ const FridgeDetails = ({ route, navigation }) => {
               // Go to appropriate page:
               navigation.navigate('ProductDetails', {
                 productID: item.id,
-                fridgeID,
-                fridgeName,
+                fridgeID: fridge.id,
+                fridgeName: fridge.name,
               });
             }}
           />
@@ -175,7 +176,7 @@ const FridgeDetails = ({ route, navigation }) => {
       {/* Adding new product */}
       <FloatingActionButton
         onPress={() => {
-          navigation.navigate('AddProductManual', { fridgeID: 1 });
+          navigation.navigate('AddProductManual', { fridgeID: fridge.id });
         }}
       />
 
@@ -189,7 +190,7 @@ const FridgeDetails = ({ route, navigation }) => {
             refFridgeActions.current.close();
             navigation.navigate('Share', {
               type: 'fridge',
-              containerID: fridgeID,
+              containerID: fridge.id,
             });
           }}
         />
@@ -201,7 +202,7 @@ const FridgeDetails = ({ route, navigation }) => {
             refFridgeActions.current.close();
             navigation.navigate('EditPermissions', {
               type: 'fridge',
-              containerID: fridgeID,
+              containerID: fridge.id,
             });
           }}
         />
@@ -259,7 +260,7 @@ const FridgeDetails = ({ route, navigation }) => {
       {/* Deleting fridge */}
       <Dialog
         title='Delete fridge'
-        paragraph={`Are you sure you want to delete fridge ${fridgeName}? This action cannot be undone.`}
+        paragraph={`Are you sure you want to delete fridge ${fridge.name}? This action cannot be undone.`}
         visibilityState={[
           deleteFridgeDialogVisible,
           setDeleteFridgeDialogVisible,

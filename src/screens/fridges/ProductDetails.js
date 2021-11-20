@@ -21,7 +21,7 @@ import { productsInFridgeList } from 'tmpData';
 const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
-  // Params from navigation:
+  // Identifying product:
   const { productID, fridgeID, fridgeName } = route.params;
   const product = productsInFridgeList.find((e) => e.id === productID);
 

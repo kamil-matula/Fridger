@@ -16,7 +16,6 @@ const Fridges = ({ navigation }) => {
       <AppBar isDrawer label='Fridges' />
       <Divider style={styles.divider} />
       <FlatList
-        style={styles.list}
         data={fridgesList}
         renderItem={({ item }) => (
           <FridgeRow
@@ -25,7 +24,6 @@ const Fridges = ({ navigation }) => {
               // Go to specific fridge:
               navigation.navigate('FridgeDetails', {
                 fridgeID: item.id,
-                fridgeName: item.name,
               });
             }}
           />
@@ -50,9 +48,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.silverMetallic,
     width: '100%',
     height: 1,
-  },
-  list: {
-    width: '100%',
   },
 }));
 
