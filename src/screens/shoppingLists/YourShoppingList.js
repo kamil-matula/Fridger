@@ -69,6 +69,9 @@ const YourShoppingList = () => {
     indeterminateItems.filter((e) => e.status === 'indeterminate')
   );
 
+  const uncheckedExist = uncheckedItems.length > 0;
+  const indeterminateExist = indeterminateItems.length > 0;
+
   useEffect(() => {
     if (!isSumOverridden) {
       setValue('summary', sum);
@@ -102,7 +105,7 @@ const YourShoppingList = () => {
               }}
             />
           ))}
-          {uncheckedItems.length > 0 && indeterminateItems.length > 0 && (
+          {uncheckedExist && indeterminateExist && (
             <Divider style={styles.divider} />
           )}
           {indeterminate.fields.map((item, index) => (
@@ -123,32 +126,36 @@ const YourShoppingList = () => {
               }}
             />
           ))}
-          <Separator />
-          <PriceSummaryInteractive
-            control={control}
-            name='summary'
-            onEndEditing={() => setIsSumOverridden(true)}
-          />
-          {isSumOverridden && (
-            <View style={styles.reset}>
-              <Button
-                label='reset input override'
-                variant='pureText'
-                onPress={() => {
-                  setIsSumOverridden(false);
-                }}
+          {indeterminateExist && (
+            <>
+              <Separator />
+              <PriceSummaryInteractive
+                control={control}
+                name='summary'
+                onEndEditing={() => setIsSumOverridden(true)}
               />
-            </View>
+              {isSumOverridden && (
+                <View style={styles.reset}>
+                  <Button
+                    label='reset input override'
+                    variant='pureText'
+                    onPress={() => {
+                      setIsSumOverridden(false);
+                    }}
+                  />
+                </View>
+              )}
+              <Separator height={32} />
+              <View style={{ alignItems: 'center' }}>
+                <Button
+                  label='confirm'
+                  variant='contained'
+                  onPress={handleSubmit(submit)}
+                />
+              </View>
+              <Separator height={32} />
+            </>
           )}
-          <Separator height={32} />
-          <View style={{ alignItems: 'center' }}>
-            <Button
-              label='confirm'
-              variant='contained'
-              onPress={handleSubmit(submit)}
-            />
-          </View>
-          <Separator height={32} />
         </View>
       </ScrollViewLayout>
     </View>
