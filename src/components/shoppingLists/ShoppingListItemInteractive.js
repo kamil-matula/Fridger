@@ -17,6 +17,7 @@ const ShoppingListItemInteractive = ({
   setValue,
   onEndEditing,
   onChangeStatus,
+  currency,
 }) => {
   // Controllers:
   const box = useController({ name: boxName, control, rules: {} });
@@ -68,7 +69,7 @@ const ShoppingListItemInteractive = ({
               maxLength={5}
               onEndEditing={onEndEditing}
             />
-            <Text style={styles.text}>zł</Text>
+            <Text style={styles.text}>{currency}</Text>
           </>
         )}
       </View>
@@ -85,6 +86,7 @@ ShoppingListItemInteractive.propTypes = {
   setValue: PropTypes.func.isRequired,
   onEndEditing: PropTypes.func,
   onChangeStatus: PropTypes.func,
+  currency: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles((theme, { fieldValue }) => {

@@ -17,9 +17,7 @@ const ShoppingListYour = () => {
 
   const sumList = (list) => {
     let sum = 0;
-    for (let i = 0; i < list.length; i += 1) {
-      sum += parseFloat(list[i].price);
-    }
+    for (let i = 0; i < list.length; i += 1) sum += parseFloat(list[i].price);
     return sum;
   };
 
@@ -101,6 +99,8 @@ const ShoppingListYour = () => {
               onChangeStatus={() => {
                 changePlace(index, 'unchecked', 'indeterminate');
               }}
+              // TODO: Use appropriate currency instead of hardcoded one
+              currency='zł'
             />
           ))}
           {uncheckedExist && indeterminateExist && (
@@ -122,6 +122,8 @@ const ShoppingListYour = () => {
               onChangeStatus={() => {
                 changePlace(index, 'indeterminate', 'unchecked');
               }}
+              // TODO: Use appropriate currency instead of hardcoded one
+              currency='zł'
             />
           ))}
           {indeterminateExist && (

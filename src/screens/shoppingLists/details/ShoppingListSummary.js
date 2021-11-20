@@ -25,6 +25,7 @@ const ShoppingListSummary = () => {
     }))
   );
 
+  // Function which returns list of not-bought products:
   const productsNotBought = (username) => {
     const products = shoppingListItems.filter(
       (product) =>
@@ -45,6 +46,7 @@ const ShoppingListSummary = () => {
     ));
   };
 
+  // Function which returns list of bought products:
   const productsBought = (username) => {
     const products = shoppingListItems.filter(
       (product) => username === product.userNick && product.status === 'checked'
@@ -58,6 +60,7 @@ const ShoppingListSummary = () => {
           subText={
             note ? `${quantity} ${unit}  •  ${note}` : `${quantity} ${unit}`
           }
+          // TODO: Use appropriate currency instead of hardcoded one
           boxText={`${price} zł`}
           variant='checkbox'
           status={status}
