@@ -35,12 +35,16 @@ const Login = ({ navigation }) => {
 
   if (isError) {
     if (error.status === 400) {
+      // Show toast:
       const message = error.data.non_field_errors.join(' ');
       if (Platform.OS === 'android') {
         ToastAndroid.show(message, ToastAndroid.SHORT);
       } else {
         AlertIOS.alert(message);
       }
+
+      // Additional debugging for cases if toast doesn't show up:
+      console.log(message);
     }
   }
 

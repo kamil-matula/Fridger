@@ -1,47 +1,63 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
-import { AppBar, BottomSheet, SheetRow } from 'components';
+import {
+  AppBar,
+  FloatingActionButton,
+  BottomSheet,
+  SheetRow,
+} from 'components';
 import { makeStyles } from 'utils';
-import { group, groupAdd, more, hand, deleteIcon } from 'assets/icons';
+import { scanner, more, group, groupAdd, hand, deleteIcon } from 'assets/icons';
 import { fridgeTab } from 'assets/icons/navigation';
 import { fridgesList } from 'tmpData';
+import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
 
-const ShoppingListDetails = ({ navigation }) => {
+const ShoppingListDetails = ({ route, navigation }) => {
   // TODO: Change it to useState (or something else) after adding Redux, because
   // currently we are not able to pass [activeFridge, setActiveFridge]
   // in route params and the docs suggest using useContext to have this
   // variable both in AddShoppingList and ChooseFridge pages.
   const activeFridge = fridgesList[0]; // alternative: const activeFridge = null;
 
+  // FAB & Tabs conditions:
+  const { isShared } = route.params; // TODO: Retrieve it from API, not route
+  const [fabVisible, setFabVisible] = useState(true);
+
   // Shopping List Actions:
-  const refActions = useRef(null);
+  const bottomSheet = useRef(null);
 
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
       <AppBar
-        label='Shopping List Details'
-        icon1={more}
+        label='Shopping Lists'
+        icon1={scanner}
+        icon2={more}
         onPressIcon1={() => {
-          // Open modal bottom sheet with shopping list actions:
-          refActions.current.open();
+          navigation.navigate('ShoppingListScanner');
+        }}
+        onPressIcon2={() => {
+          bottomSheet.current.open();
         }}
       />
-      <View style={styles.container2}>
-        <Text style={styles.text}>Shopping List Details</Text>
-      </View>
+
+      {/* Tabs */}
+      <ShoppingListDetailsTabNavigator
+        isShared={isShared}
+        setFabVisible={setFabVisible}
+      />
 
       {/* Shopping list actions */}
-      <BottomSheet reference={refActions}>
+      <BottomSheet reference={bottomSheet}>
         <SheetRow
           icon={groupAdd}
           text='Share'
           onPress={() => {
             // Hide bottom sheet and change screen:
-            refActions.current.close();
+            bottomSheet.current.close();
             navigation.navigate('Share', {
               // TODO: Add passing data from Shopping Lists page
               type: 'shoppingList',
@@ -54,7 +70,7 @@ const ShoppingListDetails = ({ navigation }) => {
           text='Manage people'
           onPress={() => {
             // Hide bottom sheet and change screen:
-            refActions.current.close();
+            bottomSheet.current.close();
             navigation.navigate('EditPermissions', {
               // TODO: Add passing data from Shopping Lists page
               type: 'shoppingList',
@@ -75,7 +91,7 @@ const ShoppingListDetails = ({ navigation }) => {
           subText={activeFridge ? `   •   ${activeFridge.name}` : null}
           onPress={() => {
             // Hide bottom sheet and change screen:
-            refActions.current.close();
+            bottomSheet.current.close();
             navigation.navigate('ChooseFridge', {
               activeFridgeName: activeFridge ? activeFridge.name : null,
             });
@@ -89,6 +105,12 @@ const ShoppingListDetails = ({ navigation }) => {
           }}
         />
       </BottomSheet>
+      <FloatingActionButton
+        onPress={() => {
+          navigation.navigate('AddShoppingListProduct');
+        }}
+        visible={fabVisible}
+      />
     </View>
   );
 };
@@ -97,14 +119,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  container2: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  text: {
-    color: theme.colors.white,
   },
 }));
 

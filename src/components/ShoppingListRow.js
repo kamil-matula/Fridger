@@ -8,7 +8,14 @@ import { makeStyles } from 'utils';
 import { checkBox, checkedCheckBox, hand } from 'assets/icons';
 import IconAndBadge from './IconAndBadge';
 
-const ShoppingListRow = ({ label, unchecked, checked, dips, onPress }) => {
+const ShoppingListRow = ({
+  label,
+  unchecked,
+  checked,
+  dips,
+  onPress,
+  isShared,
+}) => {
   const styles = useStyles();
 
   return (
@@ -18,8 +25,15 @@ const ShoppingListRow = ({ label, unchecked, checked, dips, onPress }) => {
         <View style={styles.iconsContainer}>
           <IconAndBadge icon={checkBox} number={unchecked} />
           <View style={styles.horizontalSeparator} />
-          <IconAndBadge icon={hand} number={dips} />
-          <View style={styles.horizontalSeparator} />
+
+          {/* There are no dibs in shopping lists that are private */}
+          {isShared && (
+            <>
+              <IconAndBadge icon={hand} number={dips} />
+              <View style={styles.horizontalSeparator} />
+            </>
+          )}
+
           <IconAndBadge icon={checkedCheckBox} number={checked} />
         </View>
       </View>
@@ -33,6 +47,7 @@ ShoppingListRow.propTypes = {
   checked: PropTypes.number.isRequired,
   dips: PropTypes.number.isRequired,
   onPress: PropTypes.func.isRequired,
+  isShared: PropTypes.bool.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({

@@ -28,6 +28,7 @@ const InputField = ({
   blurOnSubmit = false,
   textAlign,
   postfix,
+  paddings = true,
   ...props
 }) => {
   // Validation:
@@ -55,7 +56,9 @@ const InputField = ({
 
   return (
     <>
-      {variant !== 'quantity' && <Text style={styles.label}>{label}</Text>}
+      {variant !== 'quantity' && paddings && (
+        <Text style={styles.label}>{label}</Text>
+      )}
 
       <View style={styles.inputContainer}>
         {/* Data providing */}
@@ -96,10 +99,11 @@ const InputField = ({
       </View>
 
       {/* Current error */}
-      {invalid ? (
-        <Text style={styles.errorText}>{error.message}</Text>
-      ) : (
+      {invalid && <Text style={styles.errorText}>{error.message}</Text>}
+      {!invalid && paddings ? (
         <Separator height={variant === 'quantity' ? 0 : 20} />
+      ) : (
+        <></>
       )}
     </>
   );
@@ -118,6 +122,7 @@ InputField.propTypes = {
   blurOnSubmit: PropTypes.bool,
   textAlign: PropTypes.oneOf(['left', 'center', 'right', 'justify']),
   postfix: PropTypes.string, // needed in ReduceQuantity dialog
+  paddings: PropTypes.bool,
 };
 
 const useStyles = makeStyles(
@@ -189,6 +194,7 @@ const useStyles = makeStyles(
       obj.input.fontSize = 16;
       if (hasIcon) {
         obj.icon.marginHorizontal = 8;
+        obj.inputContainer.minWidth = 80;
       } else {
         obj.inputContainer.paddingRight = 8;
       }

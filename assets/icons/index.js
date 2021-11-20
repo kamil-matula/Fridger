@@ -24,3 +24,4 @@ export { default as visibilityOn } from './visibility_on.png';
 export { default as checkBox } from './check_box.png';
 export { default as checkedCheckBox } from './check_box_checked.png';
 export { default as hand } from './hand.png';
+export { default as chat } from './chat.png';

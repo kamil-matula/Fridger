@@ -7,12 +7,16 @@ import { useSelector } from 'react-redux';
 import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
 import {
   AddShoppingList,
+  ShoppingListScanner,
+  AddShoppingListProduct,
+  ChooseFridge,
+} from 'screens/shoppingLists';
+import {
   AddFridge,
   AddProductAutomat,
   AddProductManual,
   ProductDetails,
-  ChooseFridge,
-} from 'screens/home';
+} from 'screens/fridges';
 import {
   FriendProfile,
   AddFriend,
@@ -62,8 +66,16 @@ const StackNavigator = () => {
             name='AddProductAutomat'
             component={AddProductAutomat}
           />
-          <Stack.Screen name='ChooseFridge' component={ChooseFridge} />
           <Stack.Screen name='ProductDetails' component={ProductDetails} />
+          <Stack.Screen
+            name='ShoppingListScanner'
+            component={ShoppingListScanner}
+          />
+          <Stack.Screen
+            name='AddShoppingListProduct'
+            component={AddShoppingListProduct}
+          />
+          <Stack.Screen name='ChooseFridge' component={ChooseFridge} />
         </>
       ) : (
         <>

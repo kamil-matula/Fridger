@@ -224,8 +224,134 @@ export const fridgesList = [
   { id: '7', name: 'The last container' },
 ];
 
-export const shoppingLists = [
-  { id: 1, title: 'Shopping List 1', uncheck: 4, dips: 11, check: 5 },
-  { id: 2, title: 'Shopping List 2', uncheck: 3, dips: 9, check: 6 },
-  { id: 3, title: 'Shopping List 3', uncheck: 7, dips: 2, check: 7 },
+export const shoppingListsActive = [
+  {
+    id: 1,
+    title: 'Shopping List 1',
+    uncheck: 4,
+    dips: 11,
+    check: 5,
+    isShared: true,
+  },
+  {
+    id: 2,
+    title: 'Shopping List 2',
+    uncheck: 3,
+    dips: 9,
+    check: 6,
+    isShared: true,
+  },
+  {
+    id: 3,
+    title: 'Shopping List 3',
+    uncheck: 7,
+    dips: 0,
+    check: 7,
+    isShared: false,
+  },
+];
+
+export const shoppingListsHistory = [
+  {
+    id: 4,
+    title: 'Shopping List 4',
+    uncheck: 0,
+    dips: 0,
+    check: 10,
+    isShared: false,
+  },
+  {
+    id: 5,
+    title: 'Shopping List 5',
+    uncheck: 0,
+    dips: 0,
+    check: 7,
+    isShared: true,
+  },
+];
+
+export const shoppingListItems = [
+  {
+    id: 1,
+    userNick: 'RedBoy',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+    name: 'Mleko 1',
+    quantity: 1,
+    unit: 'pcs',
+    status: 'unchecked',
+    price: 1,
+  },
+  {
+    id: 2,
+    userNick: 'Dragggon',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
+    name: 'Mleko 2',
+    note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
+    quantity: 1000,
+    unit: 'pcs',
+    status: 'unchecked',
+    price: 2,
+  },
+  {
+    id: 3,
+    userNick: 'RedBoy',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+    name: 'Mleko 3',
+    note: 'Proin ornare eros vel ullamcorper pretium. Nullam volutpat ac nisl eu accumsan. Maecenas dapibus mauris vitae elementum hendrerit. In dapibus augue a dui tempus, nec ultricies nisl pulvinar. Nulla nibh est, mattis at volutpat non, eleifend in enim. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. ',
+    quantity: 32,
+    unit: 'pcs',
+    status: 'indeterminate',
+    price: 3,
+  },
+  {
+    id: 4,
+    userNick: 'RedBoy',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+    name: 'Mleko 4',
+    note: 'Nullam orci mi, finibus fermentum nisi blandit, consectetur rhoncus mi.',
+    quantity: 12,
+    unit: 'pcs',
+    status: 'indeterminate',
+    price: 4,
+  },
+  {
+    id: 5,
+    userNick: 'Dragggon',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
+    name: 'Mleko 5',
+    note: 'Short description',
+    quantity: 10,
+    unit: 'pcs',
+    status: 'indeterminate',
+    price: 5,
+  },
+  {
+    id: 6,
+    userNick: 'Dragggon',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
+    name: 'Mleko 6',
+    note: 'Vivamus gravida ornare quam id tempor. Nunc ut ex at dui consectetur volutpat. Praesent.',
+    quantity: 4,
+    unit: 'pcs',
+    status: 'checked',
+    price: 6,
+  },
+  {
+    id: 7,
+    userNick: 'RedBoy',
+    avatarURI:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+    name: 'Mleko 7',
+    note: 'Nam vel placerat elit, eget consectetur metus. Nam imperdiet nibh in diam sollicitudin, eu ultrices ligula elementum. ',
+    quantity: 5,
+    unit: 'pcs',
+    status: 'checked',
+    price: 7,
+  },
 ];

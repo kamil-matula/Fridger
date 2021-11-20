@@ -17,6 +17,7 @@ const DrawerNavigator = () => {
         headerTransparent: true,
         headerTintColor: colors.white,
         headerTitleStyle: { color: 'transparent' },
+        swipeEdgeWidth: 0, // disable opening drawer via swipe
       }}
       drawerContent={({ navigation }) => (
         // Custom design for drawer content
