@@ -15,14 +15,14 @@ import { shoppingListItems } from 'tmpData';
 const ShoppingListYour = () => {
   const styles = useStyles();
 
+  // Calculating total price:
   const sumList = (list) => {
     let sum = 0;
     for (let i = 0; i < list.length; i += 1) sum += parseFloat(list[i].price);
     return sum;
   };
 
-  const [isSumOverridden, setIsSumOverridden] = useState(false);
-
+  // Form states:
   const { control, handleSubmit, setValue, getValues, watch } = useForm({
     defaultValues: {
       unchecked: shoppingListItems.filter((e) => e.status === 'unchecked'),
@@ -34,22 +34,26 @@ const ShoppingListYour = () => {
       ),
     },
   });
-
   const unchecked = useFieldArray({
     control,
     name: 'unchecked',
     keyName: 'key',
   });
-
   const indeterminate = useFieldArray({
     control,
     name: 'indeterminate',
     keyName: 'key',
   });
 
+  // Lists with matching states + total price:
+  const uncheckedItems = watch('unchecked');
+  const indeterminateItems = watch('indeterminate');
+  const sum = sumList(indeterminateItems);
+
+  // Function which changes product state:
   const changePlace = (idx, origin, destination) => {
     if (destination === 'indeterminate') {
-      indeterminate.prepend(getValues(origin)[idx]);
+      indeterminate.append(getValues(origin)[idx]);
       unchecked.remove(idx);
     }
 
@@ -59,15 +63,8 @@ const ShoppingListYour = () => {
     }
   };
 
-  const uncheckedItems = watch('unchecked');
-  const indeterminateItems = watch('indeterminate');
-  const sum = sumList(
-    indeterminateItems.filter((e) => e.status === 'indeterminate')
-  );
-
-  const uncheckedExist = uncheckedItems.length > 0;
-  const indeterminateExist = indeterminateItems.length > 0;
-
+  // Recalculating sum:
+  const [isSumOverridden, setIsSumOverridden] = useState(false);
   useEffect(() => {
     if (!isSumOverridden) {
       setValue('summary', sum);
@@ -83,6 +80,7 @@ const ShoppingListYour = () => {
     <View style={styles.container}>
       <ScrollViewLayout addPadding={false}>
         <View>
+          {/* List of products that can be placed in basket */}
           {unchecked.fields.map((item, index) => (
             <ShoppingListItemInteractive
               key={item.key}
@@ -103,9 +101,12 @@ const ShoppingListYour = () => {
               currency='zł'
             />
           ))}
-          {uncheckedExist && indeterminateExist && (
+
+          {uncheckedItems.length > 0 && indeterminateItems.length > 0 && (
             <Divider style={styles.divider} />
           )}
+
+          {/* List of products that are in basket */}
           {indeterminate.fields.map((item, index) => (
             <ShoppingListItemInteractive
               key={item.key}
@@ -126,9 +127,13 @@ const ShoppingListYour = () => {
               currency='zł'
             />
           ))}
-          {indeterminateExist && (
+
+          {/* Rendering sum of prices and button only 
+              if there are products in the basket */}
+          {indeterminateItems.length > 0 && (
             <>
               <Separator />
+              {/* Editable sum of prices */}
               <PriceSummaryInteractive
                 control={control}
                 name='summary'
@@ -136,7 +141,9 @@ const ShoppingListYour = () => {
                 // TODO: Use appropriate currency instead of hardcoded one
                 currency='zł'
               />
-              {isSumOverridden && (
+
+              {/* Possiblity to recalculate sum */}
+              {isSumOverridden ? (
                 <View style={styles.reset}>
                   <Button
                     label='reset input override'
@@ -146,8 +153,12 @@ const ShoppingListYour = () => {
                     }}
                   />
                 </View>
+              ) : (
+                <Separator height={16} />
               )}
               <Separator height={32} />
+
+              {/* Confirming changes */}
               <View style={{ alignItems: 'center' }}>
                 <Button
                   label='confirm'

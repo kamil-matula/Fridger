@@ -380,5 +380,6 @@ export const shoppingListItems = [
     quantity: 1,
     unit: 'pcs',
     status: 'indeterminate',
+    price: 2,
   },
 ];

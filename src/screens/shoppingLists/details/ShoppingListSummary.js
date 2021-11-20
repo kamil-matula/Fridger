@@ -90,7 +90,6 @@ const ShoppingListSummary = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        // style={styles.list}
         data={users}
         renderItem={({ item }) => {
           const notBoughtProds = productsNotBought(item.name);
