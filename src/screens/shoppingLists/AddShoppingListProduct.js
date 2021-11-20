@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
@@ -10,6 +10,7 @@ import {
   BottomSheet,
   SheetRow,
   FloatingActionButton,
+  Dialog,
 } from 'components';
 import { makeStyles } from 'utils';
 import { deleteIcon, expand, check } from 'assets/icons';
@@ -93,6 +94,21 @@ const AddShoppingListProduct = ({ route, navigation }) => {
     navigation.goBack();
   };
 
+  // Deleting product:
+  const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
+    useState(false);
+  const confirmRemoveProduct = () => {
+    // TODO: Send request to API and wait for removing fridge from the list
+
+    // Hide dialog and go back:
+    setDeleteProductDialogVisible(false);
+    navigation.pop();
+  };
+  const cancelRemoveProduct = () => {
+    // Hide dialog:
+    setDeleteProductDialogVisible(false);
+  };
+
   return (
     <View style={styles.container}>
       {/* Screen title */}
@@ -102,10 +118,10 @@ const AddShoppingListProduct = ({ route, navigation }) => {
         <AppBar
           label='Edit product'
           icon1={deleteIcon}
-          onPressIcon1={
-            () => {}
-            // TODO: remove product
-          }
+          onPressIcon1={() => {
+            // Show 'Delete Product' dialog:
+            setDeleteProductDialogVisible(true);
+          }}
         />
       )}
 
@@ -219,6 +235,20 @@ const AddShoppingListProduct = ({ route, navigation }) => {
           confirm
         />
       )}
+
+      {/* Deleting product */}
+      <Dialog
+        title='Delete product'
+        paragraph={`Are you sure you want to delete ${product.name} from this shopping list? This action cannot be undone.`}
+        visibilityState={[
+          deleteProductDialogVisible,
+          setDeleteProductDialogVisible,
+        ]}
+        label1='delete'
+        onPressLabel1={confirmRemoveProduct}
+        label2='cancel'
+        onPressLabel2={cancelRemoveProduct}
+      />
     </View>
   );
 };
