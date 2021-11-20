@@ -298,6 +298,7 @@ const FridgeDetails = ({ route, navigation }) => {
               }
               keyboardType='numeric'
               textAlign='right'
+              paddings={false}
             />
           </View>
         </Dialog>

@@ -56,9 +56,8 @@ const InputField = ({
 
   return (
     <>
-      {variant !== 'quantity' && paddings && (
-        <Text style={styles.label}>{label}</Text>
-      )}
+      {/* Input field title */}
+      {paddings && <Text style={styles.label}>{label}</Text>}
 
       <View style={styles.inputContainer}>
         {/* Data providing */}
@@ -78,9 +77,7 @@ const InputField = ({
         />
 
         {/* Maximum quantity */}
-        {variant === 'quantity' && (
-          <Text style={styles.inputPostfix}>{postfix}</Text>
-        )}
+        {postfix && <Text style={styles.inputPostfix}>{postfix}</Text>}
 
         {/* Password hiding */}
         {secure && (
@@ -91,6 +88,8 @@ const InputField = ({
             />
           </TouchableWithoutFeedback>
         )}
+
+        {/* Other icons, eg. calendar */}
         {icon && (
           <TouchableWithoutFeedback onPress={onIconPress}>
             <Image source={icon} style={styles.icon} />
@@ -98,12 +97,11 @@ const InputField = ({
         )}
       </View>
 
-      {/* Current error */}
-      {invalid && <Text style={styles.errorText}>{error.message}</Text>}
-      {!invalid && paddings ? (
-        <Separator height={variant === 'quantity' ? 0 : 20} />
+      {/* Current error or space for it (if can occur) */}
+      {invalid ? (
+        <Text style={styles.errorText}>{error.message}</Text>
       ) : (
-        <></>
+        <Separator height={paddings ? 20 : 0} />
       )}
     </>
   );
@@ -121,7 +119,7 @@ InputField.propTypes = {
   onSubmitEditing: PropTypes.func,
   blurOnSubmit: PropTypes.bool,
   textAlign: PropTypes.oneOf(['left', 'center', 'right', 'justify']),
-  postfix: PropTypes.string, // needed in ReduceQuantity dialog
+  postfix: PropTypes.string,
   paddings: PropTypes.bool,
 };
 
