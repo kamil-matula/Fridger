@@ -51,7 +51,6 @@ const ShoppingListItemInteractive = ({
             {/* TODO: Replace with Input Field? */}
             <TextInput
               name={box.field.name}
-              ref={box.field.ref}
               onChangeText={box.field.onChange}
               value={box.field.value.toString()}
               style={styles.inputField}
