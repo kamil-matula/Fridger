@@ -84,12 +84,12 @@ const useStyles = makeStyles((theme, { fieldValue }) => {
   const obj = {
     container: {
       flexDirection: 'row',
-      alignItems: 'center',
       paddingVertical: 8,
       paddingHorizontal: 16,
     },
     checkbox: {
       marginRight: 16,
+      alignItems: 'center',
     },
     textContainer: {
       flex: 1,
@@ -113,6 +113,7 @@ const useStyles = makeStyles((theme, { fieldValue }) => {
       alignItems: 'center',
       justifyContent: 'center',
       marginLeft: 16,
+      marginVertical: 4,
     },
   };
 

@@ -55,7 +55,6 @@ const useStyles = makeStyles((theme, { boxText }) => {
   const obj = {
     container: {
       flexDirection: 'row',
-      alignItems: 'center',
       paddingVertical: 8,
       paddingHorizontal: 16,
     },
@@ -66,11 +65,13 @@ const useStyles = makeStyles((theme, { boxText }) => {
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: theme.colors.silverMetallic,
       marginRight: 16,
+      marginVertical: 4,
     },
     avatarPlaceholder: {
       width: 32,
       height: 32,
       marginRight: 16,
+      marginVertical: 4,
     },
     checkbox: {
       marginRight: 16,
@@ -93,6 +94,7 @@ const useStyles = makeStyles((theme, { boxText }) => {
       alignItems: 'center',
       justifyContent: 'center',
       marginLeft: 16,
+      marginVertical: 4,
     },
   };
 
