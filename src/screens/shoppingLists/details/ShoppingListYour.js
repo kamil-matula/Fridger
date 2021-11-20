@@ -53,7 +53,7 @@ const ShoppingListYour = () => {
   // Function which changes product state:
   const changePlace = (idx, origin, destination) => {
     if (destination === 'indeterminate') {
-      indeterminate.append(getValues(origin)[idx]);
+      indeterminate.prepend(getValues(origin)[idx]);
       unchecked.remove(idx);
     }
 

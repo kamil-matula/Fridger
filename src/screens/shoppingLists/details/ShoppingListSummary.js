@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, FlatList } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import { Separator } from 'components';
@@ -89,36 +89,36 @@ const ShoppingListSummary = () => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={users}
-        renderItem={({ item }) => {
-          const notBoughtProds = productsNotBought(item.name);
-          const boughtProds = productsBought(item.name);
+      <ScrollView>
+        <View>
+          {users.map((user, idx) => {
+            const notBoughtProds = productsNotBought(user.name);
+            const boughtProds = productsBought(user.name);
 
-          return (
-            <View>
-              {/* Sub-list owner */}
-              <View style={{ paddingHorizontal: 16 }}>
-                <Separator />
-                <Chip avatarURI={item.avatar} text={item.name} />
-                <Separator />
+            return (
+              <View key={idx}>
+                {/* Sub-list owner */}
+                <View style={{ paddingHorizontal: 16 }}>
+                  <Separator />
+                  <Chip avatarURI={user.avatar} text={user.name} />
+                  <Separator />
+                </View>
+
+                {/* Products */}
+                {notBoughtProds}
+                {notBoughtProds.length > 0 && boughtProds.length > 0 && (
+                  <Divider style={styles.divider} />
+                )}
+                {boughtProds}
+
+                {/* Total price */}
+                {sumUp(user.name)}
+                <Divider style={styles.dividerWide} />
               </View>
-
-              {/* Products */}
-              {notBoughtProds}
-              {notBoughtProds.length > 0 && boughtProds.length > 0 && (
-                <Divider style={styles.divider} />
-              )}
-              {boughtProds}
-
-              {/* Total price */}
-              {sumUp(item.name)}
-              <Divider style={styles.dividerWide} />
-            </View>
-          );
-        }}
-        keyExtractor={(item) => item.name.toString()}
-      />
+            );
+          })}
+        </View>
+      </ScrollView>
     </View>
   );
 };
