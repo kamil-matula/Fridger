@@ -58,7 +58,7 @@ const YourShoppingList = () => {
     }
 
     if (destination === 'unchecked') {
-      unchecked.prepend(getValues(origin)[idx]);
+      unchecked.append(getValues(origin)[idx]);
       indeterminate.remove(idx);
     }
   };
@@ -102,7 +102,9 @@ const YourShoppingList = () => {
               }}
             />
           ))}
-          {uncheckedItems.length > 0 && <Divider style={styles.divider} />}
+          {uncheckedItems.length > 0 && indeterminateItems.length > 0 && (
+            <Divider style={styles.divider} />
+          )}
           {indeterminate.fields.map((item, index) => (
             <ShoppingListItemInteractive
               key={item.key}
