@@ -1,10 +1,7 @@
 export { default as AddShoppingList } from './AddShoppingList';
 export { default as AddShoppingListProduct } from './AddShoppingListProduct';
 export { default as ChooseFridge } from './ChooseFridge';
-export { default as ListShoppingListsActive } from './ListShoppingListsActive';
-export { default as ListShoppingListsHistory } from './ListShoppingListsHistory';
-export { default as ShoppingList } from './ShoppingList';
-export { default as ShoppingListChat } from './ShoppingListChat';
-export { default as ShoppingListSummary } from './ShoppingListSummary';
+export { default as ShoppingListDetails } from './ShoppingListDetails';
 export { default as ShoppingListScanner } from './ShoppingListScanner';
-export { default as YourShoppingList } from './YourShoppingList';
+export { default as ShoppingListsActive } from './ShoppingListsActive';
+export { default as ShoppingListsHistory } from './ShoppingListsHistory';

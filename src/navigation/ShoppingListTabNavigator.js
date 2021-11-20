@@ -4,8 +4,8 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 import { makeStyles } from 'utils';
 import {
-  ListShoppingListsActive,
-  ListShoppingListsHistory,
+  ShoppingListsActive,
+  ShoppingListsHistory,
 } from 'screens/shoppingLists';
 
 const ShoppingListTab = createMaterialTopTabNavigator();
@@ -21,14 +21,8 @@ const ShoppingListTabNavigator = () => {
         tabBarIndicatorStyle: styles.indicator,
       }}
     >
-      <ShoppingListTab.Screen
-        name='Active'
-        component={ListShoppingListsActive}
-      />
-      <ShoppingListTab.Screen
-        name='History'
-        component={ListShoppingListsHistory}
-      />
+      <ShoppingListTab.Screen name='Active' component={ShoppingListsActive} />
+      <ShoppingListTab.Screen name='History' component={ShoppingListsHistory} />
     </ShoppingListTab.Navigator>
   );
 };

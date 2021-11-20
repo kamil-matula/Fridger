@@ -8,7 +8,7 @@ import { ShoppingListItem } from 'components/shoppingLists';
 import { makeStyles } from 'utils';
 import { shoppingListItems } from 'tmpData';
 
-const ShoppingList = ({ navigation }) => {
+const ShoppingListAll = ({ navigation }) => {
   const styles = useStyles();
 
   // eslint-disable-next-line no-unused-vars
@@ -60,4 +60,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ShoppingList;
+export default ShoppingListAll;

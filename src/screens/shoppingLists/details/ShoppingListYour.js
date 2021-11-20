@@ -12,7 +12,7 @@ import {
 import { makeStyles } from 'utils';
 import { shoppingListItems } from 'tmpData';
 
-const YourShoppingList = () => {
+const ShoppingListYour = () => {
   const styles = useStyles();
 
   const sumList = (list) => {
@@ -177,4 +177,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default YourShoppingList;
+export default ShoppingListYour;
