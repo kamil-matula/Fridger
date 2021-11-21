@@ -28,10 +28,11 @@ const ChooseFridge = ({ route, navigation }) => {
             onPress={() => {
               // TODO: Add connecting this fridge with shopping list
               console.log(`Fridge ${item.name} has been selected as active`);
+              navigation.pop();
             }}
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
 
       {/* Adding new fridge */}

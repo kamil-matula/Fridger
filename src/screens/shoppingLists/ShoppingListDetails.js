@@ -63,6 +63,13 @@ const ShoppingListDetails = ({ route, navigation }) => {
         onPressIcon2={() => {
           bottomSheet.current.open();
         }}
+        editable
+        onSubmitEditing={(newName) => {
+          // TODO: Send request to API to change list's name
+          console.log(
+            `Shopping List ${shoppingList.name} has been renamed to ${newName}`
+          );
+        }}
       />
 
       {/* Tabs */}
@@ -88,9 +95,8 @@ const ShoppingListDetails = ({ route, navigation }) => {
             // Hide bottom sheet and change screen:
             bottomSheet.current.close();
             navigation.navigate('Share', {
-              // TODO: Add passing data from Shopping Lists page
               type: 'shoppingList',
-              containerID: 1,
+              containerID: shoppingList.id,
             });
           }}
         />
@@ -101,9 +107,8 @@ const ShoppingListDetails = ({ route, navigation }) => {
             // Hide bottom sheet and change screen:
             bottomSheet.current.close();
             navigation.navigate('EditPermissions', {
-              // TODO: Add passing data from Shopping Lists page
               type: 'shoppingList',
-              containerID: 1,
+              containerID: shoppingList.id,
             });
           }}
         />

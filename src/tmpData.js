@@ -216,13 +216,13 @@ export const productsInFridgeList = [
 ];
 
 export const fridgesList = [
-  { id: '1', name: 'Home' },
-  { id: '2', name: 'Bunker' },
-  { id: '3', name: 'My fridge' },
-  { id: '4', name: 'Another fridge' },
-  { id: '5', name: 'Bin' },
-  { id: '6', name: 'Medicines' },
-  { id: '7', name: 'The last container' },
+  { id: 1, name: 'Home' },
+  { id: 2, name: 'Bunker' },
+  { id: 3, name: 'My fridge' },
+  { id: 4, name: 'Another fridge' },
+  { id: 5, name: 'Bin' },
+  { id: 6, name: 'Medicines' },
+  { id: 7, name: 'The last container' },
 ];
 
 export const shoppingListsList = [
