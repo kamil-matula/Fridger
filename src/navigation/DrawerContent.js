@@ -11,10 +11,12 @@ import { useLogoutMutation } from 'services/fridger/auth';
 const DrawerContent = ({ navigation }) => {
   const styles = useStyles();
 
-  const logoutPost = useLogoutMutation()[0];
+  // Communication with API:
+  const [logoutPost, { isLoading }] = useLogoutMutation();
 
   return (
     <SafeAreaView style={styles.drawerContent}>
+      {/* Logged-in user info */}
       <UserInfo
         // TODO: Replace with real user name, nick and image
         title='Ardelle Coppage'
@@ -22,9 +24,9 @@ const DrawerContent = ({ navigation }) => {
         avatarURI='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
         variant='big'
       />
-
       <Divider style={styles.divider} />
 
+      {/* Other screens */}
       <View style={styles.section}>
         <Text style={styles.sectionName}>Account</Text>
         <DrawerRow
@@ -57,6 +59,7 @@ const DrawerContent = ({ navigation }) => {
         />
       </View>
 
+      {/* Logging out */}
       <View style={styles.buttonContainer}>
         <Button
           variant='outlined'
@@ -64,6 +67,7 @@ const DrawerContent = ({ navigation }) => {
           onPress={() => {
             logoutPost();
           }}
+          isLoading={isLoading}
         />
       </View>
     </SafeAreaView>

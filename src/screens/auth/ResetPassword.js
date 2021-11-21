@@ -16,14 +16,14 @@ import { useResetPasswordMutation } from 'services/fridger/auth';
 const ResetPassword = ({ navigation }) => {
   const styles = useStyles();
 
-  const resetPasswordPost = useResetPasswordMutation()[0];
-
+  // Form states:
   const { control, handleSubmit } = useForm({
     defaultValues: {
       email: '',
     },
   });
 
+  // Form rules:
   const rules = {
     email: {
       required: 'Email is required',
@@ -35,6 +35,8 @@ const ResetPassword = ({ navigation }) => {
     },
   };
 
+  // Connection with API:
+  const [resetPasswordPost, { isLoading }] = useResetPasswordMutation();
   const resetPassword = (data) => {
     resetPasswordPost(data)
       .unwrap()
@@ -48,7 +50,7 @@ const ResetPassword = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        // There shoudln't be any error. Even if email doesn't exists in api, we don't
+        // There shouldn't be any error. Even if email doesn't exists in api, we don't
         // give this info everytime we should have HTTP 204 no content.
         console.error(error);
       });
@@ -86,6 +88,7 @@ const ResetPassword = ({ navigation }) => {
             label='Submit'
             variant='contained'
             onPress={handleSubmit(resetPassword)}
+            isLoading={isLoading}
           />
           <Separator />
         </View>
