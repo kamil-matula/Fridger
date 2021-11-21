@@ -11,4 +11,3 @@ export { default as FloatingActionButton } from './FloatingActionButton';
 export { default as BottomSheet } from './BottomSheet';
 export { default as SheetRow } from './SheetRow';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
-export { default as FoodTypes } from './FoodTypes';

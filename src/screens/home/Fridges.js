@@ -19,7 +19,14 @@ const Fridges = ({ navigation }) => {
         data={fridgesList}
         renderItem={({ item }) => (
           <FridgeRow
-            fridgeName={item.name}
+            text={item.name}
+            subText={
+              item.people > 1
+                ? `${item.items} items  •  shared with ${
+                    item.people - 1
+                  } friends`
+                : `${item.items} items`
+            }
             onPress={() => {
               // Go to specific fridge:
               navigation.navigate('FridgeDetails', {

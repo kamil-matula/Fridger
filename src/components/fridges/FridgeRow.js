@@ -6,9 +6,8 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 import { check } from 'assets/icons';
-import { FoodTypes } from 'components';
 
-const FridgeRow = ({ onPress, fridgeName, isActive = false }) => {
+const FridgeRow = ({ onPress, text, subText, isActive = false }) => {
   const styles = useStyles();
 
   return (
@@ -16,8 +15,8 @@ const FridgeRow = ({ onPress, fridgeName, isActive = false }) => {
       <TouchableRipple onPress={onPress}>
         <View style={styles.container}>
           <View style={styles.innerContainer}>
-            <Text style={styles.text}>{fridgeName}</Text>
-            <FoodTypes />
+            <Text style={styles.text}>{text}</Text>
+            <Text style={styles.subText}>{subText}</Text>
           </View>
           {isActive && <Image source={check} style={styles.icon} />}
         </View>
@@ -29,7 +28,8 @@ const FridgeRow = ({ onPress, fridgeName, isActive = false }) => {
 
 FridgeRow.propTypes = {
   onPress: PropTypes.func.isRequired,
-  fridgeName: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  subText: PropTypes.string.isRequired,
   isActive: PropTypes.bool,
 };
 
@@ -43,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
   text: {
     fontSize: 20,
     marginBottom: 8,
+    color: theme.colors.white,
+  },
+  subText: {
+    fontSize: 16,
+    color: theme.colors.silverMetallic,
   },
   divider: {
     backgroundColor: theme.colors.silverMetallic,

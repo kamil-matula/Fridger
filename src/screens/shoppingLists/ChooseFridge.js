@@ -24,7 +24,14 @@ const ChooseFridge = ({ route, navigation }) => {
         renderItem={({ item }) => (
           <FridgeRow
             isActive={item.name === activeFridgeName}
-            fridgeName={item.name}
+            text={item.name}
+            subText={
+              item.people > 1
+                ? `${item.items} items  •  shared with ${
+                    item.people - 1
+                  } friends`
+                : `${item.items} items`
+            }
             onPress={() => {
               // TODO: Add connecting this fridge with shopping list
               console.log(`Fridge ${item.name} has been selected as active`);
