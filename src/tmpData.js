@@ -225,54 +225,56 @@ export const fridgesList = [
   { id: '7', name: 'The last container' },
 ];
 
-export const shoppingListsActive = [
+export const shoppingListsList = [
   {
     id: 1,
-    title: 'Shopping List 1',
+    name: 'Shopping List 1',
     uncheck: 4,
     dips: 11,
     check: 5,
     isShared: true,
     isActive: true,
+    activeFridgeID: 1,
   },
   {
     id: 2,
-    title: 'Shopping List 2',
+    name: 'Shopping List 2',
     uncheck: 3,
     dips: 9,
     check: 6,
     isShared: true,
     isActive: true,
+    activeFridgeID: 2,
   },
   {
     id: 3,
-    title: 'Shopping List 3',
+    name: 'Shopping List 3',
     uncheck: 7,
     dips: 0,
     check: 7,
     isShared: false,
     isActive: true,
+    activeFridgeID: null,
   },
-];
-
-export const shoppingListsHistory = [
   {
     id: 4,
-    title: 'Shopping List 4',
+    name: 'Shopping List 4',
     uncheck: 0,
     dips: 0,
     check: 10,
     isShared: false,
     isActive: false,
+    activeFridgeID: 4,
   },
   {
     id: 5,
-    title: 'Shopping List 5',
+    name: 'Shopping List 5',
     uncheck: 0,
     dips: 0,
     check: 7,
     isShared: true,
     isActive: false,
+    activeFridgeID: null,
   },
 ];
 

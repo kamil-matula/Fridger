@@ -4,27 +4,31 @@ import { View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { shoppingListsHistory } from 'tmpData';
+import { shoppingListsList } from 'tmpData';
 import { ShoppingListRow } from 'components/shoppingLists';
 
 const ShoppingListsHistory = ({ navigation }) => {
   const styles = useStyles();
+  const shoppingListsHistory = shoppingListsList.filter((e) => !e.isActive);
 
   // TODO: Use list of inactive shopping lists from redux
   return (
     <View style={styles.container}>
       {shoppingListsHistory.map(
-        ({ id, title, uncheck, dips, check, isShared, isActive }) => (
+        ({ id, name, uncheck, dips, check, isShared, isActive }) => (
           <View key={id}>
             <ShoppingListRow
-              label={title}
+              label={name}
               unchecked={uncheck}
               dips={dips}
               checked={check}
               isShared={isShared}
               isActive={isActive}
               onPress={() => {
-                navigation.navigate('ShoppingListDetails', { isShared });
+                // Go to specific shopping list:
+                navigation.navigate('ShoppingListDetails', {
+                  shoppingListID: id,
+                });
               }}
             />
             <Divider style={styles.divider} />
