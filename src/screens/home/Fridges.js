@@ -28,7 +28,7 @@ const Fridges = ({ navigation }) => {
             }}
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
       <FloatingActionButton
         onPress={() => {

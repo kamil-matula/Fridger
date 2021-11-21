@@ -7,23 +7,44 @@ import {
   FloatingActionButton,
   BottomSheet,
   SheetRow,
+  Dialog,
 } from 'components';
 import { makeStyles } from 'utils';
 import { scanner, more, group, groupAdd, hand, deleteIcon } from 'assets/icons';
 import { fridgeTab } from 'assets/icons/navigation';
-import { fridgesList } from 'tmpData';
+import { fridgesList, shoppingListsList } from 'tmpData';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
 
 const ShoppingListDetails = ({ route, navigation }) => {
-  // TODO: Change it to useState (or something else) after adding Redux, because
-  // currently we are not able to pass [activeFridge, setActiveFridge]
-  // in route params and the docs suggest using useContext to have this
-  // variable both in AddShoppingList and ChooseFridge pages.
-  const activeFridge = fridgesList[0]; // alternative: const activeFridge = null;
+  // Shopping list identifying
+  // (TODO: Add error-handling for cases when route.params.shoppingListID doesn't exist):
+  const shoppingList = shoppingListsList.find(
+    (e) => e.id === route.params.shoppingListID
+  );
+
+  // Active fridge identifying:
+  const activeFridge = shoppingList.activeFridgeID
+    ? fridgesList.find((e) => e.id === shoppingList.activeFridgeID)
+    : null;
 
   // FAB & Tabs conditions:
-  const { isShared } = route.params; // TODO: Retrieve it from API, not route
+  const { isShared } = shoppingList;
   const [fabVisible, setFabVisible] = useState(true);
+
+  // Deleting:
+  const [deleteShoppingListDialogVisible, setDeleteShoppingListDialogVisible] =
+    useState(false);
+  const confirmRemoveShoppingList = () => {
+    // TODO: Send request to API and wait for removing shopping list from the list
+
+    // Hide dialog and go back:
+    setDeleteShoppingListDialogVisible(false);
+    navigation.pop();
+  };
+  const cancelRemoveShoppingList = () => {
+    // Hide dialog:
+    setDeleteShoppingListDialogVisible(false);
+  };
 
   // Shopping List Actions:
   const bottomSheet = useRef(null);
@@ -33,7 +54,7 @@ const ShoppingListDetails = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar
-        label='Shopping Lists'
+        label={shoppingList.name}
         icon1={scanner}
         icon2={more}
         onPressIcon1={() => {
@@ -42,12 +63,27 @@ const ShoppingListDetails = ({ route, navigation }) => {
         onPressIcon2={() => {
           bottomSheet.current.open();
         }}
+        editable
+        onSubmitEditing={(newName) => {
+          // TODO: Send request to API to change list's name
+          console.log(
+            `Shopping List ${shoppingList.name} has been renamed to ${newName}`
+          );
+        }}
       />
 
       {/* Tabs */}
       <ShoppingListDetailsTabNavigator
         isShared={isShared}
         setFabVisible={setFabVisible}
+      />
+
+      {/* Adding new product */}
+      <FloatingActionButton
+        onPress={() => {
+          navigation.navigate('AddShoppingListProduct');
+        }}
+        visible={fabVisible}
       />
 
       {/* Shopping list actions */}
@@ -59,9 +95,8 @@ const ShoppingListDetails = ({ route, navigation }) => {
             // Hide bottom sheet and change screen:
             bottomSheet.current.close();
             navigation.navigate('Share', {
-              // TODO: Add passing data from Shopping Lists page
               type: 'shoppingList',
-              containerID: 1,
+              containerID: shoppingList.id,
             });
           }}
         />
@@ -72,9 +107,8 @@ const ShoppingListDetails = ({ route, navigation }) => {
             // Hide bottom sheet and change screen:
             bottomSheet.current.close();
             navigation.navigate('EditPermissions', {
-              // TODO: Add passing data from Shopping Lists page
               type: 'shoppingList',
-              containerID: 1,
+              containerID: shoppingList.id,
             });
           }}
         />
@@ -101,15 +135,25 @@ const ShoppingListDetails = ({ route, navigation }) => {
           icon={deleteIcon}
           text='Delete List'
           onPress={() => {
-            // TODO: Add deleting shopping list
+            // Show dialog and hide bottom sheet:
+            bottomSheet.current.close();
+            setDeleteShoppingListDialogVisible(true);
           }}
         />
       </BottomSheet>
-      <FloatingActionButton
-        onPress={() => {
-          navigation.navigate('AddShoppingListProduct');
-        }}
-        visible={fabVisible}
+
+      {/* Deleting shopping list */}
+      <Dialog
+        title='Delete shopping list'
+        paragraph={`Are you sure you want to delete shopping list ${shoppingList.name}? This action cannot be undone.`}
+        visibilityState={[
+          deleteShoppingListDialogVisible,
+          setDeleteShoppingListDialogVisible,
+        ]}
+        label1='delete'
+        onPressLabel1={confirmRemoveShoppingList}
+        label2='cancel'
+        onPressLabel2={cancelRemoveShoppingList}
       />
     </View>
   );
