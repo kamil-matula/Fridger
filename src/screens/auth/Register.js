@@ -9,8 +9,8 @@ import { useRegisterMutation } from 'services/fridger/auth';
 
 const Register = ({ navigation }) => {
   const styles = useStyles();
-  const registerPost = useRegisterMutation()[0];
 
+  // Form states:
   const { control, handleSubmit, setFocus, getValues, setError } = useForm({
     defaultValues: {
       email: '',
@@ -20,6 +20,7 @@ const Register = ({ navigation }) => {
     },
   });
 
+  // Form rules:
   const rules = {
     email: {
       required: 'Email is required',
@@ -45,6 +46,8 @@ const Register = ({ navigation }) => {
     },
   };
 
+  // Connection with API:
+  const [registerPost, { isLoading }] = useRegisterMutation();
   const handleRegister = ({ email, username, password }) => {
     registerPost({ email, username, password })
       .unwrap()
@@ -84,10 +87,13 @@ const Register = ({ navigation }) => {
         }
       });
   };
+
   return (
     <ScrollViewLayout>
       <View>
         <Text style={styles.header}>Register</Text>
+
+        {/* Providing data */}
         <InputField
           control={control}
           rules={rules.email}
@@ -139,6 +145,7 @@ const Register = ({ navigation }) => {
           label='Register'
           variant='contained'
           onPress={handleSubmit(handleRegister)}
+          isLoading={isLoading}
         />
         <Text style={styles.text}>Already have an account?</Text>
         <Button

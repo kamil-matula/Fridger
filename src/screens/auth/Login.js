@@ -10,8 +10,7 @@ import { makeStyles } from 'utils';
 const Login = ({ navigation }) => {
   const styles = useStyles();
 
-  const [loginPost, { isError, error }] = useLoginMutation();
-
+  // Form states:
   const { control, handleSubmit, setFocus } = useForm({
     defaultValues: {
       email: '',
@@ -19,6 +18,7 @@ const Login = ({ navigation }) => {
     },
   });
 
+  // Form rules:
   const rules = {
     email: {
       required: 'Email is required',
@@ -33,6 +33,8 @@ const Login = ({ navigation }) => {
     },
   };
 
+  // Connection with API:
+  const [loginPost, { isError, error, isLoading }] = useLoginMutation();
   if (isError) {
     if (error.status === 400) {
       // Show toast:
@@ -52,6 +54,8 @@ const Login = ({ navigation }) => {
     <ScrollViewLayout>
       <View>
         <Text style={styles.header}>Login</Text>
+
+        {/* Providing data */}
         <InputField
           control={control}
           rules={rules.email}
@@ -83,11 +87,13 @@ const Login = ({ navigation }) => {
         <Separator height={32} />
       </View>
 
+      {/* Buttons */}
       <View>
         <Button
           label='Login'
           variant='contained'
           onPress={handleSubmit(loginPost)}
+          isLoading={isLoading}
         />
         <Text style={styles.text}>Don’t have an account?</Text>
         <Button

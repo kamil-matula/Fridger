@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Image, TouchableOpacity } from 'react-native';
-import { Text } from 'react-native-paper';
+import { View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text, useTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
@@ -13,10 +13,12 @@ const Button = ({
   variant,
   color = 'blue',
   rounded = false,
+  isLoading = false,
 }) => {
   const hasLabel = !!label;
   const hasIcon = !!icon;
 
+  const { colors } = useTheme();
   const styles = useStyles({
     variant,
     color,
@@ -25,11 +27,18 @@ const Button = ({
     hasIcon,
   });
 
-  return (
+  // NOTE: For some reason creating activity indicator
+  // as separate component results in ignoring 'height' property
+  // and the indicator is bigger than it supposed to be.
+  return !isLoading ? (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       {icon && <Image style={styles.icon} source={icon} />}
       <Text style={styles.text}>{label}</Text>
     </TouchableOpacity>
+  ) : (
+    <View style={styles.indicatorContainer}>
+      <ActivityIndicator size='large' color={colors.blueJeans} />
+    </View>
   );
 };
 
@@ -41,6 +50,7 @@ Button.propTypes = {
     .isRequired,
   color: PropTypes.oneOf(['blue', 'red']),
   rounded: PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
 
 const useStyles = makeStyles(
@@ -50,6 +60,11 @@ const useStyles = makeStyles(
       button: {
         flexDirection: 'row',
         borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 48,
+      },
+      indicatorContainer: {
         justifyContent: 'center',
         alignItems: 'center',
         height: 48,
