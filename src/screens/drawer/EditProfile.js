@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-import { View, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  ToastAndroid,
+  Platform,
+  AlertIOS,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useForm } from 'react-hook-form';
 
+import {
+  useUserInfoQuery,
+  useUpdateUserInfoMutation,
+} from 'services/fridger/user';
 import { makeStyles } from 'utils';
 import {
   InputField,
@@ -11,6 +22,7 @@ import {
   AppBar,
   ScrollViewLayout,
   Separator,
+  LoadingOverlay,
 } from 'components';
 import { tmpPerson } from 'assets/images';
 import { edit } from 'assets/icons';
@@ -18,40 +30,54 @@ import { edit } from 'assets/icons';
 const EditProfile = ({ navigation }) => {
   const styles = useStyles();
 
+  // Queries
+  const userInfo = useUserInfoQuery();
+  const [updateUser, updateUserStatus] = useUpdateUserInfoMutation();
+
+  // Form states
   const { control, handleSubmit, setFocus, setValue, watch } = useForm({
     defaultValues: {
-      avatar: null,
-      nick: '',
-      name: '',
-      surname: '',
+      username: '',
+      first_name: '',
+      last_name: '',
       email: '',
+      avatar: null,
     },
   });
 
-  const avatarUri = watch('avatar');
+  // Update when data fetched
+  useEffect(() => {
+    setValue('username', userInfo.data?.username);
+    setValue('first_name', userInfo.data?.first_name);
+    setValue('last_name', userInfo.data?.last_name);
+    setValue('email', userInfo.data?.email);
+    setValue('avatar', userInfo.data?.avatar);
+  }, [userInfo.data, setValue]);
+
+  const avatar = watch('avatar');
 
   const rules = {
-    nick: {
-      required: 'Nick is required',
+    username: {
+      required: 'Username is required',
       minLength: {
         value: 5,
-        message: 'Nick must contain at least 5 characters',
+        message: 'Username must contain at least 5 characters',
       },
       maxLength: {
         value: 20,
-        message: 'Nick cannot contain no more than 20 characters',
-      },
-    },
-    name: {
-      maxLength: {
-        value: 20,
-        message: 'Name cannot contain more than 20 characters',
+        message: 'Username cannot contain no more than 20 characters',
       },
     },
-    surname: {
+    firstName: {
       maxLength: {
         value: 20,
-        message: 'Surname cannot contain more than 20 characters',
+        message: 'First name cannot contain more than 20 characters',
+      },
+    },
+    lastName: {
+      maxLength: {
+        value: 20,
+        message: 'Last name cannot contain more than 20 characters',
       },
     },
     email: {
@@ -64,12 +90,18 @@ const EditProfile = ({ navigation }) => {
     },
   };
 
-  const saveChanges = (data) => {
-    // TODO: Send request to API to update profile
-    console.log('editProfile', data);
-
-    // Go back to Home Page:
-    navigation.goBack();
+  // Send to api
+  const saveChanges = (dataToSend) => {
+    updateUser(dataToSend)
+      .unwrap()
+      .then(() => navigation.goBack())
+      .catch((error) => {
+        if (Platform.OS === 'android') {
+          ToastAndroid.show(error, ToastAndroid.SHORT);
+        } else {
+          AlertIOS.alert(error);
+        }
+      });
   };
 
   // Changing avatar:
@@ -89,12 +121,13 @@ const EditProfile = ({ navigation }) => {
     }
 
     // Setting new image:
-    setValue('avatar', pickerResult.uri);
+    setValue('avatar', pickerResult);
   };
 
   return (
     <View style={styles.container}>
       <AppBar label='Edit profile' />
+      {userInfo.isLoading && <LoadingOverlay />}
       <ScrollViewLayout>
         {/* Input fields and image picker */}
         <View>
@@ -102,7 +135,7 @@ const EditProfile = ({ navigation }) => {
             <TouchableOpacity onPress={openImagePickerAsync}>
               <Image
                 style={styles.avatar}
-                source={avatarUri === null ? tmpPerson : { uri: avatarUri }}
+                source={avatar === null ? tmpPerson : { uri: avatar.uri }}
               />
               <View style={styles.badgeContainer}>
                 <Image style={styles.badge} source={edit} />
@@ -111,32 +144,32 @@ const EditProfile = ({ navigation }) => {
           </View>
           <InputField
             control={control}
-            rules={rules.nick}
-            onSubmitEditing={() => setFocus('name')}
-            name='nick'
-            label='Nick'
+            rules={rules.username}
+            name='username'
+            label='Username'
             returnKeyType='next'
             placeholder='Enter your nick'
+            onSubmitEditing={() => setFocus('first_name')}
           />
           <Separator />
           <InputField
             control={control}
-            rules={rules.name}
-            onSubmitEditing={() => setFocus('surname')}
-            name='name'
-            label='Name'
+            rules={rules.firstName}
+            name='first_name'
+            label='First Name'
             returnKeyType='next'
-            placeholder='Enter your name'
+            placeholder='Enter your first name'
+            onSubmitEditing={() => setFocus('last_name')}
           />
           <Separator />
           <InputField
             control={control}
-            rules={rules.surname}
+            rules={rules.lastName}
+            name='last_name'
+            label='Last Name'
+            returnKeyType='next'
+            placeholder='Enter your last name'
             onSubmitEditing={() => setFocus('email')}
-            name='surname'
-            label='Surname'
-            returnKeyType='next'
-            placeholder='Enter your surname'
           />
           <Separator />
           <InputField
@@ -158,6 +191,7 @@ const EditProfile = ({ navigation }) => {
             label='save changes'
             variant='contained'
             onPress={handleSubmit(saveChanges)}
+            isLoading={updateUserStatus.isLoading}
           />
           <Separator />
         </View>

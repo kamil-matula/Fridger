@@ -29,25 +29,12 @@ const authApi = fridgerApi.injectEndpoints({
         body: { email },
       }),
     }),
-    deleteAccount: builder.mutation({
-      query: ({ password }) => ({
-        url: 'auth/users/me/',
-        method: 'DELETE',
-        body: { password },
-      }),
-    }),
-    userInfo: builder.query({
-      query: () => 'auth/users/me/',
-    }),
   }),
 });
 
 export const {
   useLoginMutation,
   useRegisterMutation,
-  useDeleteAccountMutation,
   useLogoutMutation,
   useResetPasswordMutation,
-  useUserInfoQuery,
-  useLazyUserInfoQuery,
 } = authApi;

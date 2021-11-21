@@ -16,7 +16,7 @@ import { Navigation } from 'navigation';
 import { CustomTheme } from 'theme';
 import { loadToken, authenticate } from 'services/authSlice';
 import { store } from 'services/store';
-import { useLazyUserInfoQuery } from 'services/fridger/auth';
+import { useLazyUserInfoQuery } from 'services/fridger/user';
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
