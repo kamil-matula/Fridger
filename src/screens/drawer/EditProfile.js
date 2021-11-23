@@ -1,13 +1,6 @@
 import React, { useEffect } from 'react';
 
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  ToastAndroid,
-  Platform,
-  AlertIOS,
-} from 'react-native';
+import { View, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useForm } from 'react-hook-form';
 
@@ -38,18 +31,18 @@ const EditProfile = ({ navigation }) => {
   const { control, handleSubmit, setFocus, setValue, watch } = useForm({
     defaultValues: {
       username: '',
-      first_name: '',
-      last_name: '',
+      firstName: '',
+      lastName: '',
       email: '',
-      avatar: null,
+      avatar: '',
     },
   });
 
   // Update when data fetched
   useEffect(() => {
     setValue('username', userInfo.data?.username);
-    setValue('first_name', userInfo.data?.first_name);
-    setValue('last_name', userInfo.data?.last_name);
+    setValue('firstName', userInfo.data?.first_name);
+    setValue('lastName', userInfo.data?.last_name);
     setValue('email', userInfo.data?.email);
     setValue('avatar', userInfo.data?.avatar);
   }, [userInfo.data, setValue]);
@@ -96,11 +89,7 @@ const EditProfile = ({ navigation }) => {
       .unwrap()
       .then(() => navigation.goBack())
       .catch((error) => {
-        if (Platform.OS === 'android') {
-          ToastAndroid.show(error, ToastAndroid.SHORT);
-        } else {
-          AlertIOS.alert(error);
-        }
+        console.log(error);
       });
   };
 
@@ -149,23 +138,23 @@ const EditProfile = ({ navigation }) => {
             label='Username'
             returnKeyType='next'
             placeholder='Enter your nick'
-            onSubmitEditing={() => setFocus('first_name')}
+            onSubmitEditing={() => setFocus('firstName')}
           />
           <Separator />
           <InputField
             control={control}
             rules={rules.firstName}
-            name='first_name'
+            name='firstName'
             label='First Name'
             returnKeyType='next'
             placeholder='Enter your first name'
-            onSubmitEditing={() => setFocus('last_name')}
+            onSubmitEditing={() => setFocus('firstName')}
           />
           <Separator />
           <InputField
             control={control}
             rules={rules.lastName}
-            name='last_name'
+            name='firstName'
             label='Last Name'
             returnKeyType='next'
             placeholder='Enter your last name'
