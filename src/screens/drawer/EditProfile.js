@@ -35,6 +35,7 @@ const EditProfile = ({ navigation }) => {
       lastName: '',
       email: '',
       avatar: '',
+      canUseRealName: false,
     },
   });
 
@@ -45,6 +46,7 @@ const EditProfile = ({ navigation }) => {
     setValue('lastName', userInfo.data?.last_name);
     setValue('email', userInfo.data?.email);
     setValue('avatar', userInfo.data?.avatar);
+    setValue('canUseRealName', userInfo.data?.can_use_real_name);
   }, [userInfo.data, setValue]);
 
   const avatar = watch('avatar');
@@ -110,7 +112,7 @@ const EditProfile = ({ navigation }) => {
     }
 
     // Setting new image:
-    setValue('avatar', pickerResult);
+    setValue('avatar', pickerResult.uri);
   };
 
   return (
@@ -124,7 +126,7 @@ const EditProfile = ({ navigation }) => {
             <TouchableOpacity onPress={openImagePickerAsync}>
               <Image
                 style={styles.avatar}
-                source={avatar === null ? tmpPerson : { uri: avatar.uri }}
+                source={avatar ? { uri: avatar } : tmpPerson}
               />
               <View style={styles.badgeContainer}>
                 <Image style={styles.badge} source={edit} />

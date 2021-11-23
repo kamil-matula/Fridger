@@ -17,17 +17,25 @@ const user = fridgerApi.injectEndpoints({
       }),
     }),
     updateUserInfo: builder.mutation({
-      query: ({ username, firstName, lastName, avatar, canUseRealName }) => ({
-        url: 'auth/users/me/',
-        method: 'PATCH',
-        body: {
-          username: username,
-          first_name: firstName,
-          last_name: lastName,
-          avatar: avatar,
-          can_use_real_name: canUseRealName,
-        },
-      }),
+      query: ({ username, firstName, lastName, avatar, canUseRealName }) => {
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('first_name', firstName);
+        formData.append('last_name', lastName);
+        formData.append('avatar', {
+          type: 'image/png',
+          uri: avatar,
+          name: `${username}.png`,
+        });
+        formData.append('can_use_real_name', canUseRealName);
+        console.log(formData);
+        return {
+          url: 'auth/users/me/',
+          method: 'PATCH',
+          headers: { 'Content-type': 'multipart/form-data' },
+          body: formData,
+        };
+      },
     }),
   }),
 });
