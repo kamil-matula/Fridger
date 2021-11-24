@@ -28,7 +28,6 @@ const user = fridgerApi.injectEndpoints({
           name: `${username}.png`,
         });
         formData.append('can_use_real_name', canUseRealName);
-        console.log(formData);
         return {
           url: 'auth/users/me/',
           method: 'PATCH',

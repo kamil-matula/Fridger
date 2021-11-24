@@ -91,7 +91,43 @@ const EditProfile = ({ navigation }) => {
       .unwrap()
       .then(() => navigation.goBack())
       .catch((error) => {
-        console.log(error);
+        const usernameError = error.data?.username;
+        const firstNameError = error.data?.first_name;
+        const lastNameError = error.data?.last_name;
+        const emailError = error.data?.email;
+        const generalError = error.data?.non_field_errors;
+        if (usernameError) {
+          setError('username', {
+            type: 'server',
+            message: usernameError.join(' '),
+          });
+        }
+        if (firstNameError) {
+          setError('first_name', {
+            type: 'server',
+            message: firstNameError.join(' '),
+          });
+        }
+        if (lastNameError) {
+          setError('last_name', {
+            type: 'server',
+            message: lastNameError.join(' '),
+          });
+        }
+        if (emailError) {
+          setError('email', {
+            type: 'server',
+            message: emailError.join(' '),
+          });
+        }
+        if (generalError) {
+          const message = generalError.join(' ');
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+          } else {
+            AlertIOS.alert(message);
+          }
+        }
       });
   };
 
