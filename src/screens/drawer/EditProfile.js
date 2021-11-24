@@ -24,8 +24,9 @@ const EditProfile = ({ navigation }) => {
   const styles = useStyles();
 
   // Queries
-  const userInfo = useUserInfoQuery();
-  const [updateUser, updateUserStatus] = useUpdateUserInfoMutation();
+  const { data: userData, isLoading: userIsLoading } = useUserInfoQuery();
+  const [updateUser, { isLoading: updateUserIsLoading }] =
+    useUpdateUserInfoMutation();
 
   // Form states
   const { control, handleSubmit, setFocus, setValue, watch } = useForm({
@@ -41,13 +42,13 @@ const EditProfile = ({ navigation }) => {
 
   // Update when data fetched
   useEffect(() => {
-    setValue('username', userInfo.data?.username);
-    setValue('firstName', userInfo.data?.first_name);
-    setValue('lastName', userInfo.data?.last_name);
-    setValue('email', userInfo.data?.email);
-    setValue('avatar', userInfo.data?.avatar);
-    setValue('canUseRealName', userInfo.data?.can_use_real_name);
-  }, [userInfo.data, setValue]);
+    setValue('username', userData?.username);
+    setValue('firstName', userData?.first_name);
+    setValue('lastName', userData?.last_name);
+    setValue('email', userData?.email);
+    setValue('avatar', userData?.avatar);
+    setValue('canUseRealName', userData?.can_use_real_name);
+  }, [userData, setValue]);
 
   const avatar = watch('avatar');
 
@@ -154,7 +155,7 @@ const EditProfile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar label='Edit profile' />
-      {userInfo.isLoading && <LoadingOverlay />}
+      {userIsLoading && <LoadingOverlay />}
       <ScrollViewLayout>
         {/* Input fields and image picker */}
         <View>
@@ -218,7 +219,7 @@ const EditProfile = ({ navigation }) => {
             label='save changes'
             variant='contained'
             onPress={handleSubmit(saveChanges)}
-            isLoading={updateUserStatus.isLoading}
+            isLoading={updateUserIsLoading}
           />
           <Separator />
         </View>
