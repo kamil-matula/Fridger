@@ -10,7 +10,7 @@ import {
   Dialog,
 } from 'components';
 import { makeStyles } from 'utils';
-import { scanner, more, group, groupAdd, hand, deleteIcon } from 'assets/icons';
+import { more, group, groupAdd, hand, deleteIcon } from 'assets/icons';
 import { fridgeTab } from 'assets/icons/navigation';
 import { fridgesList, shoppingListsList } from 'tmpData';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
@@ -55,12 +55,8 @@ const ShoppingListDetails = ({ route, navigation }) => {
     <View style={styles.container}>
       <AppBar
         label={shoppingList.name}
-        icon1={scanner}
-        icon2={more}
+        icon1={more}
         onPressIcon1={() => {
-          navigation.navigate('ShoppingListScanner');
-        }}
-        onPressIcon2={() => {
           bottomSheet.current.open();
         }}
         editable

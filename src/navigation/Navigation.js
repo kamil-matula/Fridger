@@ -8,7 +8,6 @@ import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
 import {
   AddShoppingList,
   ChooseFridge,
-  ShoppingListScanner,
   AddShoppingListProduct,
 } from 'screens/shoppingLists';
 import {
@@ -67,10 +66,6 @@ const StackNavigator = () => {
             component={AddProductAutomat}
           />
           <Stack.Screen name='ProductDetails' component={ProductDetails} />
-          <Stack.Screen
-            name='ShoppingListScanner'
-            component={ShoppingListScanner}
-          />
           <Stack.Screen
             name='AddShoppingListProduct'
             component={AddShoppingListProduct}

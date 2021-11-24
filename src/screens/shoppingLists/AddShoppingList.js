@@ -3,7 +3,7 @@ import React from 'react';
 import { View, TextInput, Text } from 'react-native';
 import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 
-import { AppBar, FloatingActionButton, FoodTypes } from 'components';
+import { AppBar, FloatingActionButton } from 'components';
 import { makeStyles } from 'utils';
 import { fridgesList } from 'tmpData';
 
@@ -41,10 +41,25 @@ const AddShoppingList = ({ navigation }) => {
       >
         <View style={styles.connectContainer}>
           <Text style={styles.connectTitle}>Connected to</Text>
-          <Text style={styles.connectedFridgeName}>
-            {activeFridge ? activeFridge.name : 'No fridge selected'}
-          </Text>
-          <FoodTypes disabled={!activeFridge} />
+          <View
+            style={{
+              justifyContent: 'center',
+              height: 40,
+            }}
+          >
+            <Text style={styles.connectedFridgeName}>
+              {activeFridge ? activeFridge.name : 'No fridge selected'}
+            </Text>
+            {activeFridge && (
+              <Text style={styles.connectedFridgeInfo}>
+                {activeFridge.people > 1
+                  ? `${activeFridge.items} items  •  shared with ${
+                      activeFridge.people - 1
+                    } friends`
+                  : `${activeFridge.items} items`}
+              </Text>
+            )}
+          </View>
         </View>
       </TouchableRipple>
       <Divider style={styles.divider} />
@@ -82,13 +97,16 @@ const useStyles = makeStyles((theme, { activeFridge }) => ({
 
   // Optional content:
   connectContainer: { padding: 16 },
-  connectTitle: { fontSize: 20, color: theme.colors.white },
+  connectTitle: { fontSize: 20, color: theme.colors.white, paddingBottom: 4 },
   connectedFridgeName: {
-    color: activeFridge
-      ? theme.colors.white
-      : theme.colors.silverMetallicSemiTransparent,
+    color: activeFridge ? theme.colors.white : theme.colors.silverMetallic,
     fontSize: 14,
-    paddingVertical: 8,
+    includeFontPadding: false,
+  },
+  connectedFridgeInfo: {
+    fontSize: 14,
+    color: theme.colors.silverMetallic,
+    includeFontPadding: false,
   },
 }));
 
