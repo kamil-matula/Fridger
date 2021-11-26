@@ -109,7 +109,10 @@ const useStyles = makeStyles((theme) => ({
   buttonContainer: {
     margin: 16,
   },
-  indicatorContainer: { width: 160, height: 80 },
+  indicatorContainer: {
+    width: 160,
+    height: 64, // height of avatar (32) + its vertical paddings (32)
+  },
 }));
 
 export default DrawerContent;
