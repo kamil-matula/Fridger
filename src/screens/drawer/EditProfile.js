@@ -85,7 +85,6 @@ const EditProfile = ({ navigation }) => {
         const usernameError = error.data?.username;
         const firstNameError = error.data?.first_name;
         const lastNameError = error.data?.last_name;
-        const generalError = error.data?.non_field_errors;
         if (usernameError) {
           setError('username', {
             type: 'server',
@@ -106,6 +105,7 @@ const EditProfile = ({ navigation }) => {
         }
 
         // ... or display toast if it's different kind of problem:
+        const generalError = error.data?.non_field_errors;
         if (generalError) {
           const message = generalError.join(' ');
           if (Platform.OS === 'android') {
@@ -169,20 +169,19 @@ const EditProfile = ({ navigation }) => {
             control={control}
             rules={rules.firstName}
             name='firstName'
-            label='First Name'
+            label='First Name (optional)'
             returnKeyType='next'
             placeholder='Enter your first name'
-            onSubmitEditing={() => setFocus('firstName')}
+            onSubmitEditing={() => setFocus('lastName')}
           />
           <Separator />
           <InputField
             control={control}
             rules={rules.lastName}
-            name='firstName'
-            label='Last Name'
-            returnKeyType='next'
+            name='lastName'
+            label='Last Name (optional)'
+            returnKeyType='done'
             placeholder='Enter your last name'
-            onSubmitEditing={() => setFocus('email')}
           />
           <Separator height={32} />
         </View>

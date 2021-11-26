@@ -28,7 +28,7 @@ const DrawerContent = ({ navigation }) => {
         <UserInfo
           title={userData ? userData?.username : ''}
           subtitle={
-            userData?.first_name && userData?.last_name
+            userData?.first_name || userData?.last_name
               ? `${userData?.first_name} ${userData?.last_name}`
               : null
           }
@@ -93,7 +93,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.primary,
   },
   section: {
-    marginHorizontal: 16,
+    marginLeft: 16,
+    marginRight: 8,
     flex: 1,
   },
   sectionName: {
