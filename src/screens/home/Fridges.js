@@ -41,7 +41,6 @@ const Fridges = ({ navigation }) => {
         onPress={() => {
           navigation.navigate('AddFridge');
         }}
-        isBottomNavigationBar
       />
     </View>
   );

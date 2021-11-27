@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Dimensions, StatusBar } from 'react-native';
+import { View } from 'react-native';
 import { FAB, useTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
@@ -13,24 +13,28 @@ const FloatingActionButton = ({
   centered = false,
   visible = true,
   confirm = false,
-  isBottomNavigationBar = false,
 }) => {
-  const windowHeight =
-    Dimensions.get('window').height -
-    StatusBar.currentHeight -
-    (isBottomNavigationBar ? 48 : 0);
-  const styles = useStyles({ centered, windowHeight });
+  const [fabPosition, setFabPosition] = useState(null);
+  const styles = useStyles({ centered, fabPosition });
   const { colors } = useTheme();
 
   return (
-    <FAB
-      visible={visible}
-      style={styles.fab}
-      icon={confirm ? check : add}
-      onPress={onPress}
-      color={colors.richBlack}
-      label={label}
-    />
+    <View
+      style={styles.fabContainer}
+      onLayout={(e) => {
+        // Check where is FAB right after first build:
+        if (!fabPosition) setFabPosition(e.nativeEvent.layout.y);
+      }}
+    >
+      <FAB
+        visible={visible}
+        style={styles.fab}
+        icon={confirm ? check : add}
+        onPress={onPress}
+        color={colors.richBlack}
+        label={label}
+      />
+    </View>
   );
 };
 
@@ -40,26 +44,29 @@ FloatingActionButton.propTypes = {
   centered: PropTypes.bool,
   visible: PropTypes.bool,
   confirm: PropTypes.bool,
-  isBottomNavigationBar: PropTypes.bool,
 };
 
-const useStyles = makeStyles((theme, { centered, windowHeight }) => {
+const useStyles = makeStyles((theme, { centered, fabPosition }) => {
   // Default styles:
   const obj = {
     fab: {
-      position: 'absolute',
-      margin: 16,
-      top: windowHeight - 48 - 16,
-      right: 0,
       backgroundColor: theme.colors.blueJeans,
+    },
+    fabContainer: {
+      position: 'absolute',
+      borderRadius: 32,
+      margin: 16,
+      top: fabPosition ? fabPosition - 16 : null,
+      bottom: fabPosition ? null : 0,
+      right: 0,
     },
   };
 
   // Rendering in the middle:
   if (centered) {
-    obj.fab.right = null;
-    obj.fab.alignSelf = 'center';
-    obj.fab.height = 48;
+    obj.fabContainer.right = null;
+    obj.fabContainer.alignSelf = 'center';
+    obj.fabContainer.height = 48;
   }
 
   return obj;

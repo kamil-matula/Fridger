@@ -15,7 +15,6 @@ const ShoppingLists = ({ navigation }) => {
       <ShoppingListTabNavigator />
       <FloatingActionButton
         onPress={() => navigation.navigate('AddShoppingList')}
-        isBottomNavigationBar
       />
     </View>
   );
