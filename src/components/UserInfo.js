@@ -5,6 +5,7 @@ import { Text, TouchableRipple } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
+import { tmpPerson } from '../../assets/images';
 
 const UserInfo = ({
   title,
@@ -26,10 +27,13 @@ const UserInfo = ({
     <TouchableRipple onPress={onClick}>
       <View style={styles.container}>
         <View style={styles.dataContainer}>
-          <Image style={styles.avatar} source={{ uri: avatarURI }} />
+          <Image
+            style={styles.avatar}
+            source={avatarURI ? { uri: avatarURI } : tmpPerson}
+          />
           <View style={styles.textContainer}>
             <Text style={styles.title}>{title}</Text>
-            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+            {!!subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
           </View>
         </View>
         <View style={styles.iconsContainer}>
@@ -58,7 +62,7 @@ UserInfo.propTypes = {
   title: PropTypes.string.isRequired,
   subtitle: PropTypes.string,
   subtitleTint: PropTypes.string,
-  avatarURI: PropTypes.string.isRequired,
+  avatarURI: PropTypes.string,
   onClick: PropTypes.func,
   variant: PropTypes.oneOf(['small', 'big']),
   icon1: PropTypes.number,
