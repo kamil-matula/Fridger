@@ -7,6 +7,7 @@ const friends = fridgerApi.injectEndpoints({
         url: `friends/?page=${page}`,
         method: 'GET',
       }),
+      providesTags: ['Friends'],
     }),
     addToFriends: builder.mutation({
       query: ({ username }) => ({
@@ -14,18 +15,21 @@ const friends = fridgerApi.injectEndpoints({
         method: 'POST',
         body: { username },
       }),
+      invalidatesTags: ['Friends'],
     }),
     deleteFriend: builder.mutation({
       query: ({ id }) => ({
         url: `friends/${id}/`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Friends'],
     }),
     acceptFriend: builder.mutation({
       query: ({ id }) => ({
         url: `friends/${id}/accept`,
         method: 'POST',
       }),
+      invalidatesTags: ['Friends'],
     }),
   }),
 });
