@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isRejectedWithValue } from '@reduxjs/toolkit';
 import { logout } from './authSlice';
 
-// middleware which logout user and removes token when fetch
-// returns HTTP 401 (Unathorized)
+// Middleware which logs user out and removes token when fetching
+// returns HTTP 401 (Unauthorized)
 export const unauthenticatedMiddleware =
   ({ dispatch }) =>
   (next) =>

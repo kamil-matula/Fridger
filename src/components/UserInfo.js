@@ -5,6 +5,7 @@ import { Text, TouchableRipple } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
+import { tmpPerson } from 'assets/images';
 
 const UserInfo = ({
   title,
@@ -19,14 +20,24 @@ const UserInfo = ({
   icon2 = null,
   onPressIcon2 = null,
   iconTint2,
+  containerWidth,
 }) => {
-  const styles = useStyles({ subtitleTint, variant, iconTint1, iconTint2 });
+  const styles = useStyles({
+    subtitleTint,
+    variant,
+    iconTint1,
+    iconTint2,
+    containerWidth,
+  });
 
   return (
     <TouchableRipple onPress={onClick}>
       <View style={styles.container}>
         <View style={styles.dataContainer}>
-          <Image style={styles.avatar} source={{ uri: avatarURI }} />
+          <Image
+            style={styles.avatar}
+            source={avatarURI ? { uri: avatarURI } : tmpPerson}
+          />
           <View style={styles.textContainer}>
             <Text style={styles.title}>{title}</Text>
             {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
@@ -58,7 +69,7 @@ UserInfo.propTypes = {
   title: PropTypes.string.isRequired,
   subtitle: PropTypes.string,
   subtitleTint: PropTypes.string,
-  avatarURI: PropTypes.string.isRequired,
+  avatarURI: PropTypes.string,
   onClick: PropTypes.func,
   variant: PropTypes.oneOf(['small', 'big']),
   icon1: PropTypes.number,
@@ -67,16 +78,18 @@ UserInfo.propTypes = {
   icon2: PropTypes.number,
   iconTint2: PropTypes.string,
   onPressIcon2: PropTypes.func,
+  containerWidth: PropTypes.number,
 };
 
 const useStyles = makeStyles(
-  (theme, { subtitleTint, variant, iconTint1, iconTint2 }) => {
+  (theme, { subtitleTint, variant, iconTint1, iconTint2, containerWidth }) => {
     // Common styles:
     const obj = {
       container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        width: containerWidth,
       },
       dataContainer: {
         flexDirection: 'row',

@@ -23,35 +23,32 @@ import { edit } from 'assets/icons';
 const EditProfile = ({ navigation }) => {
   const styles = useStyles();
 
-  // Queries
+  // Queries:
   const { data: userData, isLoading: userIsLoading } = useUserInfoQuery();
   const [updateUser, { isLoading: updateUserIsLoading }] =
     useUpdateUserInfoMutation();
 
-  // Form states
+  // Form states:
   const { control, handleSubmit, setFocus, setValue, watch } = useForm({
     defaultValues: {
       username: '',
       firstName: '',
       lastName: '',
-      email: '',
       avatar: '',
       canUseRealName: false,
     },
   });
 
-  // Update when data fetched
+  // Update states when data is fetched:
   useEffect(() => {
     setValue('username', userData?.username);
     setValue('firstName', userData?.first_name);
     setValue('lastName', userData?.last_name);
-    setValue('email', userData?.email);
     setValue('avatar', userData?.avatar);
     setValue('canUseRealName', userData?.can_use_real_name);
   }, [userData, setValue]);
 
   const avatar = watch('avatar');
-
   const rules = {
     username: {
       required: 'Username is required',
@@ -76,27 +73,18 @@ const EditProfile = ({ navigation }) => {
         message: 'Last name cannot contain more than 20 characters',
       },
     },
-    email: {
-      required: 'Email is required',
-      pattern: {
-        value:
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        message: 'Invalid email format',
-      },
-    },
   };
 
-  // Send to api
+  // Send data to api:
   const saveChanges = (dataToSend) => {
     updateUser(dataToSend)
       .unwrap()
       .then(() => navigation.goBack())
       .catch((error) => {
+        // Display error under specific input field...
         const usernameError = error.data?.username;
         const firstNameError = error.data?.first_name;
         const lastNameError = error.data?.last_name;
-        const emailError = error.data?.email;
-        const generalError = error.data?.non_field_errors;
         if (usernameError) {
           setError('username', {
             type: 'server',
@@ -115,12 +103,9 @@ const EditProfile = ({ navigation }) => {
             message: lastNameError.join(' '),
           });
         }
-        if (emailError) {
-          setError('email', {
-            type: 'server',
-            message: emailError.join(' '),
-          });
-        }
+
+        // ... or display toast if it's different kind of problem:
+        const generalError = error.data?.non_field_errors;
         if (generalError) {
           const message = generalError.join(' ');
           if (Platform.OS === 'android') {
@@ -184,31 +169,19 @@ const EditProfile = ({ navigation }) => {
             control={control}
             rules={rules.firstName}
             name='firstName'
-            label='First Name'
+            label='First Name (optional)'
             returnKeyType='next'
             placeholder='Enter your first name'
-            onSubmitEditing={() => setFocus('firstName')}
+            onSubmitEditing={() => setFocus('lastName')}
           />
           <Separator />
           <InputField
             control={control}
             rules={rules.lastName}
-            name='firstName'
-            label='Last Name'
-            returnKeyType='next'
-            placeholder='Enter your last name'
-            onSubmitEditing={() => setFocus('email')}
-          />
-          <Separator />
-          <InputField
-            control={control}
-            rules={rules.email}
-            name='email'
-            label='Email'
+            name='lastName'
+            label='Last Name (optional)'
             returnKeyType='done'
-            placeholder='Enter your email'
-            autoComplete='email'
-            keyboardType='email-address'
+            placeholder='Enter your last name'
           />
           <Separator height={32} />
         </View>

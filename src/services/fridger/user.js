@@ -1,4 +1,3 @@
-/* eslint-disable object-shorthand */
 import { fridgerApi } from './fridgerApi';
 
 const user = fridgerApi.injectEndpoints({
