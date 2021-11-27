@@ -15,7 +15,7 @@ const ChooseFridge = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar label='Choose fridge' />
-      <Divider style={styles.divider} />
+      <Divider />
 
       {/* List of available fridges (including active one) */}
       <FlatList
@@ -56,11 +56,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
-    width: '100%',
-    height: 1,
   },
   list: {
     width: '100%',

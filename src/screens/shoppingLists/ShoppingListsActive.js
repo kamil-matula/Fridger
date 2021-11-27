@@ -31,7 +31,7 @@ const ShoppingListsActive = ({ navigation }) => {
                 });
               }}
             />
-            <Divider style={styles.divider} />
+            <Divider />
           </View>
         )
       )}
@@ -46,9 +46,6 @@ const useStyles = makeStyles((theme) => ({
   },
   text: {
     color: theme.colors.white,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
   },
 }));
 

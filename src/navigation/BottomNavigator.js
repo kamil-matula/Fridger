@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Image } from 'react-native';
+import { Image, View } from 'react-native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { useTheme } from 'react-native-paper';
 
@@ -12,88 +12,102 @@ import ShoppingListNavigator from './ShoppingListNavigator';
 
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
-  const styles = useStyles();
+  const [barPosition, setBarPosition] = useState(null);
+  const styles = useStyles({ barPosition });
   const { colors } = useTheme();
 
   return (
-    <Tab.Navigator
-      activeColor={colors.cyberYellow}
-      barStyle={{ backgroundColor: colors.primary }}
-      inactiveColor={colors.silverMetallic}
-      shifting={false}
-      backBehavior='none'
-      initialRouteName='Menu'
+    <View
+      style={{ flex: 1 }}
+      onLayout={(e) => {
+        // Measure only after first build:
+        if (!barPosition) setBarPosition(e.nativeEvent.layout.height);
+      }}
     >
-      {/* MENU */}
-      <Tab.Screen
-        name='Menu'
-        component={Menu}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={menuTab}
-              style={[
-                styles.icon,
-                {
-                  tintColor: focused
-                    ? colors.cyberYellow
-                    : colors.silverMetallic,
-                },
-              ]}
-            />
-          ),
-          tabBarLabel: 'MENU',
-        }}
-      />
+      <Tab.Navigator
+        activeColor={colors.cyberYellow}
+        barStyle={styles.bar}
+        inactiveColor={colors.silverMetallic}
+        shifting={false}
+        backBehavior='none'
+        initialRouteName='Menu'
+      >
+        {/* MENU */}
+        <Tab.Screen
+          name='Menu'
+          component={Menu}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Image
+                source={menuTab}
+                style={[
+                  styles.icon,
+                  {
+                    tintColor: focused
+                      ? colors.cyberYellow
+                      : colors.silverMetallic,
+                  },
+                ]}
+              />
+            ),
+            tabBarLabel: 'MENU',
+          }}
+        />
 
-      {/* FRIDGES, FRIDGE DETAILS */}
-      <Tab.Screen
-        name='Fridges'
-        component={FridgeNavigator}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={fridgeTab}
-              style={[
-                styles.icon,
-                {
-                  tintColor: focused
-                    ? colors.cyberYellow
-                    : colors.silverMetallic,
-                },
-              ]}
-            />
-          ),
-          tabBarLabel: 'FRIDGES',
-        }}
-      />
+        {/* FRIDGES, FRIDGE DETAILS */}
+        <Tab.Screen
+          name='Fridges'
+          component={FridgeNavigator}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Image
+                source={fridgeTab}
+                style={[
+                  styles.icon,
+                  {
+                    tintColor: focused
+                      ? colors.cyberYellow
+                      : colors.silverMetallic,
+                  },
+                ]}
+              />
+            ),
+            tabBarLabel: 'FRIDGES',
+          }}
+        />
 
-      {/* SHOPPING LISTS, SHOPPING LIST DETAILS */}
-      <Tab.Screen
-        name='Shopping Lists'
-        component={ShoppingListNavigator}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={listTab}
-              style={[
-                styles.icon,
-                {
-                  tintColor: focused
-                    ? colors.cyberYellow
-                    : colors.silverMetallic,
-                },
-              ]}
-            />
-          ),
-          tabBarLabel: 'SHOPPING LISTS',
-        }}
-      />
-    </Tab.Navigator>
+        {/* SHOPPING LISTS, SHOPPING LIST DETAILS */}
+        <Tab.Screen
+          name='Shopping Lists'
+          component={ShoppingListNavigator}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Image
+                source={listTab}
+                style={[
+                  styles.icon,
+                  {
+                    tintColor: focused
+                      ? colors.cyberYellow
+                      : colors.silverMetallic,
+                  },
+                ]}
+              />
+            ),
+            tabBarLabel: 'SHOPPING LISTS',
+          }}
+        />
+      </Tab.Navigator>
+    </View>
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme, { barPosition }) => ({
+  bar: {
+    backgroundColor: theme.colors.primary,
+    position: 'absolute',
+    top: barPosition - 54,
+  },
   icon: {
     width: 20,
     height: 20,

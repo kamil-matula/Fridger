@@ -13,13 +13,13 @@ const AddFridge = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar label='Create New Fridge' />
-      <Divider style={styles.divider} />
+      <Divider />
       <TextInput
         style={styles.input}
         placeholder='Write name'
         placeholderTextColor={colors.silverMetallic}
       />
-      <Divider style={styles.divider} />
+      <Divider />
       <FloatingActionButton
         centered
         label='Add fridge'
@@ -43,10 +43,6 @@ const useStyles = makeStyles((theme) => ({
     padding: 16,
     color: theme.colors.white,
     fontSize: 20,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
-    height: 1,
   },
 }));
 

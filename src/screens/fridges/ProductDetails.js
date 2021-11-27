@@ -155,7 +155,7 @@ const ProductDetails = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
-          <Divider style={styles.divider} />
+          <Divider />
 
           {/* Rating */}
           <ScoresContainer
@@ -164,7 +164,7 @@ const ProductDetails = ({ route, navigation }) => {
             containerStyle={styles.ratingContainer}
             iconStyle={styles.icon}
           />
-          <Divider style={styles.divider} />
+          <Divider />
 
           {/* Additives */}
           <View style={styles.additivesContainer}>
@@ -176,7 +176,7 @@ const ProductDetails = ({ route, navigation }) => {
               </Text>
             ))}
           </View>
-          <Divider style={styles.divider} />
+          <Divider />
 
           {/* Nutrients */}
           <View style={styles.nutrientsContainer}>
@@ -184,7 +184,7 @@ const ProductDetails = ({ route, navigation }) => {
               <Text style={styles.nutrientHeader}>Nutrition facts</Text>
               <Text style={styles.nutrientHeader}>100 g / 100 ml</Text>
             </View>
-            <Divider style={styles.divider} />
+            <Divider />
             {[
               ['Energy (kJ)', `${product.nutritions.energy} kJ`],
               ['Fat', `${product.nutritions.fat} g`],
@@ -203,7 +203,7 @@ const ProductDetails = ({ route, navigation }) => {
                   <Text style={styles.nutrientText}>{element[0]}</Text>
                   <Text style={styles.nutrientText}>{element[1]}</Text>
                 </View>
-                <Divider style={styles.divider} />
+                <Divider />
               </View>
             ))}
           </View>
@@ -299,11 +299,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
-    width: '100%',
-    height: 1,
   },
 
   // Basic info:

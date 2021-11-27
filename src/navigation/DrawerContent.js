@@ -37,7 +37,7 @@ const DrawerContent = ({ navigation }) => {
           containerWidth={160}
         />
       )}
-      <Divider style={styles.divider} />
+      <Divider />
 
       {/* Other screens */}
       <View style={styles.section}>
@@ -102,9 +102,6 @@ const useStyles = makeStyles((theme) => ({
     marginVertical: 16,
     color: theme.colors.silverMetallic,
     width: 280,
-  },
-  divider: {
-    backgroundColor: theme.colors.white,
   },
   buttonContainer: {
     margin: 16,

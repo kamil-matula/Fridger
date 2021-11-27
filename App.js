@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as PaperProvider } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppLoading from 'expo-app-loading';
 import { StatusBar } from 'expo-status-bar';
+import PropTypes from 'prop-types';
 import {
   Provider as ReduxProvider,
   useDispatch,

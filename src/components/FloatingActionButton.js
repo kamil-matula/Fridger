@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 
+import { View } from 'react-native';
 import { FAB, useTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
@@ -12,19 +13,29 @@ const FloatingActionButton = ({
   centered = false,
   visible = true,
   confirm = false,
+  isBottomNavigationBar = false,
 }) => {
-  const styles = useStyles({ centered });
+  const [fabPosition, setFabPosition] = useState(null);
+  const styles = useStyles({ centered, fabPosition, isBottomNavigationBar });
   const { colors } = useTheme();
 
   return (
-    <FAB
-      visible={visible}
-      style={styles.fab}
-      icon={confirm ? check : add}
-      onPress={onPress}
-      color={colors.richBlack}
-      label={label}
-    />
+    <View
+      style={styles.fabContainer}
+      onLayout={(e) => {
+        // Measure only after first build:
+        if (!fabPosition) setFabPosition(e.nativeEvent.layout.y);
+      }}
+    >
+      <FAB
+        visible={visible}
+        style={styles.fab}
+        icon={confirm ? check : add}
+        onPress={onPress}
+        color={colors.richBlack}
+        label={label}
+      />
+    </View>
   );
 };
 
@@ -34,28 +45,40 @@ FloatingActionButton.propTypes = {
   centered: PropTypes.bool,
   visible: PropTypes.bool,
   confirm: PropTypes.bool,
+  isBottomNavigationBar: PropTypes.bool,
 };
 
-const useStyles = makeStyles((theme, { centered }) => {
-  // Default styles:
-  const obj = {
-    fab: {
-      position: 'absolute',
-      margin: 16,
-      bottom: 0,
-      right: 0,
-      backgroundColor: theme.colors.blueJeans,
-    },
-  };
+const useStyles = makeStyles(
+  (theme, { centered, fabPosition, isBottomNavigationBar }) => {
+    // Default styles:
+    const obj = {
+      fab: {
+        backgroundColor: theme.colors.blueJeans,
+      },
+      fabContainer: {
+        position: 'absolute',
+        borderRadius: 32,
+        margin: 16,
+        right: 0,
+      },
+    };
 
-  // Rendering in the middle:
-  if (centered) {
-    obj.fab.right = null;
-    obj.fab.alignSelf = 'center';
-    obj.fab.height = 48;
+    // Rendering at the bottom:
+    if (fabPosition) {
+      obj.fabContainer.top = fabPosition - 16;
+    } else {
+      obj.fabContainer.bottom = isBottomNavigationBar ? 54 : 0;
+    }
+
+    // Rendering in the middle:
+    if (centered) {
+      obj.fabContainer.right = null;
+      obj.fabContainer.alignSelf = 'center';
+      obj.fabContainer.height = 48;
+    }
+
+    return obj;
   }
-
-  return obj;
-});
+);
 
 export default FloatingActionButton;

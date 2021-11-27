@@ -14,7 +14,7 @@ const Fridges = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar isDrawer label='Fridges' />
-      <Divider style={styles.divider} />
+      <Divider />
       <FlatList
         data={fridgesList}
         renderItem={({ item }) => (
@@ -41,6 +41,7 @@ const Fridges = ({ navigation }) => {
         onPress={() => {
           navigation.navigate('AddFridge');
         }}
+        isBottomNavigationBar
       />
     </View>
   );
@@ -50,11 +51,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
-    width: '100%',
-    height: 1,
   },
 }));
 
