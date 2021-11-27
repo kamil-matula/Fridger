@@ -134,7 +134,7 @@ const FridgeDetails = ({ route, navigation }) => {
           console.log(`Fridge ${fridge.name} has been renamed to ${newName}`);
         }}
       />
-      <Divider style={styles.divider} />
+      <Divider />
 
       {/* Sorting products */}
       <TouchableRipple
@@ -154,7 +154,6 @@ const FridgeDetails = ({ route, navigation }) => {
 
       {/* List of products */}
       <FlatList
-        style={styles.list}
         data={productsInFridgeList}
         renderItem={({ item }) => (
           <FridgeDetailsRow
@@ -312,14 +311,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
-    width: '100%',
-    height: 1,
-  },
-  list: {
-    width: '100%',
   },
   sortingLabel: {
     flexDirection: 'row',

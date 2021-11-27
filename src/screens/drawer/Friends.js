@@ -140,7 +140,7 @@ const Friends = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar label='friends' />
-      <Divider style={styles.divider} />
+      <Divider />
       <ScrollView>
         {/* My ID */}
         <Text style={styles.header}>Your ID</Text>
@@ -156,7 +156,7 @@ const Friends = ({ navigation }) => {
         {/* Invitations */}
         {requests.length !== 0 && (
           <>
-            <Divider style={styles.divider} />
+            <Divider />
             <Text style={styles.header}>Pending requests</Text>
             {requests.map((e) => (
               <UserInfo
@@ -180,7 +180,7 @@ const Friends = ({ navigation }) => {
         )}
 
         {/* Existing friends */}
-        <Divider style={styles.divider} />
+        <Divider />
         {friends.map((e) => (
           <UserInfo
             key={e.id}
@@ -236,10 +236,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
-    height: 1,
   },
   header: {
     color: theme.colors.white,

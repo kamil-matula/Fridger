@@ -25,7 +25,7 @@ const BottomSheet = ({ reference, title, children }) => {
       {title ? (
         <>
           <Text style={styles.title}>{title}</Text>
-          <Divider style={styles.divider} />
+          <Divider />
         </>
       ) : (
         <Separator />
@@ -62,10 +62,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: theme.colors.primary,
     borderRadius: 5,
-  },
-  divider: {
-    backgroundColor: theme.colors.white,
-    height: 1,
   },
 }));
 

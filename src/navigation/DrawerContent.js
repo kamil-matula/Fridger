@@ -24,7 +24,7 @@ const DrawerContent = ({ navigation }) => {
         avatarURI='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
         variant='big'
       />
-      <Divider style={styles.divider} />
+      <Divider />
 
       {/* Other screens */}
       <View style={styles.section}>
@@ -87,9 +87,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     marginVertical: 16,
     color: theme.colors.silverMetallic,
-  },
-  divider: {
-    backgroundColor: theme.colors.white,
   },
   buttonContainer: {
     margin: 16,

@@ -21,7 +21,7 @@ const FridgeRow = ({ onPress, text, subText, isActive = false }) => {
           {isActive && <Image source={check} style={styles.icon} />}
         </View>
       </TouchableRipple>
-      <Divider style={styles.divider} />
+      <Divider />
     </View>
   );
 };
@@ -48,10 +48,6 @@ const useStyles = makeStyles((theme) => ({
   subText: {
     fontSize: 16,
     color: theme.colors.silverMetallic,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
-    height: 1,
   },
   icon: {
     width: 32,
