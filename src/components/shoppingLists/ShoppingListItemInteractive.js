@@ -68,6 +68,12 @@ const ShoppingListItemInteractive = ({
               keyboardType='numeric'
               maxLength={5}
               onEndEditing={onEndEditing}
+              onFocus={() => {
+                console.log('focus');
+              }}
+              onBlur={() => {
+                console.log('blur');
+              }}
             />
             <Text style={styles.text}>{currency}</Text>
           </>

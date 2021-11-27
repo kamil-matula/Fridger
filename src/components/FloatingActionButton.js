@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Dimensions, StatusBar } from 'react-native';
 import { FAB, useTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
@@ -12,8 +13,13 @@ const FloatingActionButton = ({
   centered = false,
   visible = true,
   confirm = false,
+  isBottomNavigationBar = false,
 }) => {
-  const styles = useStyles({ centered });
+  const windowHeight =
+    Dimensions.get('window').height -
+    StatusBar.currentHeight -
+    (isBottomNavigationBar ? 48 : 0);
+  const styles = useStyles({ centered, windowHeight });
   const { colors } = useTheme();
 
   return (
@@ -34,15 +40,16 @@ FloatingActionButton.propTypes = {
   centered: PropTypes.bool,
   visible: PropTypes.bool,
   confirm: PropTypes.bool,
+  isBottomNavigationBar: PropTypes.bool,
 };
 
-const useStyles = makeStyles((theme, { centered }) => {
+const useStyles = makeStyles((theme, { centered, windowHeight }) => {
   // Default styles:
   const obj = {
     fab: {
       position: 'absolute',
       margin: 16,
-      bottom: 0,
+      top: windowHeight - 48 - 16,
       right: 0,
       backgroundColor: theme.colors.blueJeans,
     },
