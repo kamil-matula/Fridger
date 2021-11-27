@@ -83,7 +83,7 @@ const EditPermissions = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar label='edit permissions' />
-      <Divider style={styles.divider} />
+      <Divider />
       <ScrollView>
         {/* Connection with Share Screen */}
         <TouchableRipple onPress={navigateToShare}>
@@ -92,7 +92,7 @@ const EditPermissions = ({ route, navigation }) => {
             <Image style={styles.icon} source={forward} />
           </View>
         </TouchableRipple>
-        <Divider style={styles.divider} />
+        <Divider />
 
         {/* Creator of this fridge / shopping list */}
         <UserInfo
@@ -186,9 +186,6 @@ const useStyles = makeStyles((theme) => ({
     width: 32,
     margin: 4,
     tintColor: theme.colors.silverMetallic,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
   },
   imageContainer: {
     paddingVertical: 32,

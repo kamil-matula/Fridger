@@ -129,11 +129,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.background,
   },
   divider: {
-    backgroundColor: theme.colors.silverMetallic,
     margin: 16,
   },
   dividerWide: {
-    backgroundColor: theme.colors.silverMetallic,
     marginVertical: 16,
   },
 }));

@@ -148,7 +148,7 @@ const AddProductAutomat = ({ navigation }) => {
         nutri='A'
         nova='N1'
       />
-      <Divider style={styles.divider} />
+      <Divider />
 
       {/* Providing data */}
       <ScrollViewLayout>
@@ -226,9 +226,6 @@ const useStyles = makeStyles((theme) => ({
   accessText: {
     fontSize: 24,
     color: theme.colors.tartOrange,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
   },
 }));
 

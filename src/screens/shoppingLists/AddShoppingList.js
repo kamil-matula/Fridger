@@ -20,7 +20,7 @@ const AddShoppingList = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar label='Create new shopping list' />
-      <Divider style={styles.divider} />
+      <Divider />
 
       {/* Required content: shopping list name */}
       <TextInput
@@ -28,7 +28,7 @@ const AddShoppingList = ({ navigation }) => {
         placeholder='Write name'
         placeholderTextColor={colors.silverMetallic}
       />
-      <Divider style={styles.divider} />
+      <Divider />
 
       {/* Optional content: connecting to fridge */}
       <TouchableRipple
@@ -62,7 +62,7 @@ const AddShoppingList = ({ navigation }) => {
           </View>
         </View>
       </TouchableRipple>
-      <Divider style={styles.divider} />
+      <Divider />
 
       {/* Button at the bottom of the screen */}
       <FloatingActionButton
@@ -89,10 +89,6 @@ const useStyles = makeStyles((theme, { activeFridge }) => ({
     padding: 16,
     color: theme.colors.white,
     fontSize: 20,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
-    height: 1,
   },
 
   // Optional content:

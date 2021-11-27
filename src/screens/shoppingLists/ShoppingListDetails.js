@@ -80,6 +80,7 @@ const ShoppingListDetails = ({ route, navigation }) => {
           navigation.navigate('AddShoppingListProduct');
         }}
         visible={fabVisible}
+        isBottomNavigationBar
       />
 
       {/* Shopping list actions */}

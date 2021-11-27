@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
@@ -9,14 +9,14 @@ const ScrollViewLayout = ({ children, addPadding = true }) => {
   const styles = useStyles({ addPadding });
 
   return (
-    <KeyboardAvoidingView behavior='padding' style={styles.container}>
+    <View style={styles.container}>
       <ScrollView
         style={styles.SVcontainer}
         contentContainerStyle={styles.contentContainer}
       >
         {children}
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

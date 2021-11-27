@@ -32,7 +32,7 @@ const Share = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar label='share with friends' />
-      <Divider style={styles.divider} />
+      <Divider />
       <ScrollView>
         {/* Connection with Edit Permissions Screen */}
         <TouchableRipple onPress={navigateToEditPermissions}>
@@ -45,7 +45,7 @@ const Share = ({ route, navigation }) => {
         </TouchableRipple>
 
         {/* List of friends available to invite */}
-        <Divider style={styles.divider} />
+        <Divider />
         {friends.map((e) => (
           <UserInfo
             key={e.id}
@@ -85,9 +85,6 @@ const useStyles = makeStyles((theme) => ({
     width: 32,
     margin: 4,
     tintColor: theme.colors.silverMetallic,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
   },
   imageContainer: {
     paddingVertical: 32,

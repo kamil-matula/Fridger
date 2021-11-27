@@ -43,7 +43,7 @@ const AddFriend = ({ navigation }) => {
     <View style={styles.container}>
       {/* Main content */}
       <AppBar label='Add friend' />
-      <Divider style={styles.divider} />
+      <Divider />
       <TextInput
         style={styles.input}
         placeholder='Paste friend ID'
@@ -51,7 +51,7 @@ const AddFriend = ({ navigation }) => {
         keyboardType='numeric'
         onEndEditing={find}
       />
-      <Divider style={styles.divider} />
+      <Divider />
       {found && (
         <>
           <ScrollViewLayout>
@@ -117,10 +117,6 @@ const useStyles = makeStyles((theme) => ({
     padding: 16,
     color: theme.colors.white,
     fontSize: 20,
-  },
-  divider: {
-    backgroundColor: theme.colors.silverMetallic,
-    height: 1,
   },
   imageContainer: {
     paddingVertical: 32,

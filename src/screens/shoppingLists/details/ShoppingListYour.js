@@ -181,7 +181,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.background,
   },
   divider: {
-    backgroundColor: theme.colors.silverMetallic,
     margin: 16,
   },
   reset: {
