@@ -13,16 +13,17 @@ const FloatingActionButton = ({
   centered = false,
   visible = true,
   confirm = false,
+  isBottomNavigationBar = false,
 }) => {
   const [fabPosition, setFabPosition] = useState(null);
-  const styles = useStyles({ centered, fabPosition });
+  const styles = useStyles({ centered, fabPosition, isBottomNavigationBar });
   const { colors } = useTheme();
 
   return (
     <View
       style={styles.fabContainer}
       onLayout={(e) => {
-        // Check where is FAB right after first build:
+        // Measure only after first build:
         if (!fabPosition) setFabPosition(e.nativeEvent.layout.y);
       }}
     >
@@ -44,32 +45,40 @@ FloatingActionButton.propTypes = {
   centered: PropTypes.bool,
   visible: PropTypes.bool,
   confirm: PropTypes.bool,
+  isBottomNavigationBar: PropTypes.bool,
 };
 
-const useStyles = makeStyles((theme, { centered, fabPosition }) => {
-  // Default styles:
-  const obj = {
-    fab: {
-      backgroundColor: theme.colors.blueJeans,
-    },
-    fabContainer: {
-      position: 'absolute',
-      borderRadius: 32,
-      margin: 16,
-      top: fabPosition ? fabPosition - 16 : null,
-      bottom: fabPosition ? null : 0,
-      right: 0,
-    },
-  };
+const useStyles = makeStyles(
+  (theme, { centered, fabPosition, isBottomNavigationBar }) => {
+    // Default styles:
+    const obj = {
+      fab: {
+        backgroundColor: theme.colors.blueJeans,
+      },
+      fabContainer: {
+        position: 'absolute',
+        borderRadius: 32,
+        margin: 16,
+        right: 0,
+      },
+    };
 
-  // Rendering in the middle:
-  if (centered) {
-    obj.fabContainer.right = null;
-    obj.fabContainer.alignSelf = 'center';
-    obj.fabContainer.height = 48;
+    // Rendering at the bottom:
+    if (fabPosition) {
+      obj.fabContainer.top = fabPosition - 16;
+    } else {
+      obj.fabContainer.bottom = isBottomNavigationBar ? 54 : 0;
+    }
+
+    // Rendering in the middle:
+    if (centered) {
+      obj.fabContainer.right = null;
+      obj.fabContainer.alignSelf = 'center';
+      obj.fabContainer.height = 48;
+    }
+
+    return obj;
   }
-
-  return obj;
-});
+);
 
 export default FloatingActionButton;

@@ -177,6 +177,7 @@ const FridgeDetails = ({ route, navigation }) => {
         onPress={() => {
           navigation.navigate('AddProductManual', { fridgeID: fridge.id });
         }}
+        isBottomNavigationBar
       />
 
       {/* Fridge actions */}
