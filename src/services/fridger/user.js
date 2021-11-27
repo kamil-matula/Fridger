@@ -14,7 +14,7 @@ const user = fridgerApi.injectEndpoints({
         url: 'auth/users/me/',
         method: 'GET',
       }),
-      providesTags: ['UserInfo'],
+      providesTags: ['User'],
     }),
     updateUserInfo: builder.mutation({
       query: ({ username, firstName, lastName, avatar, canUseRealName }) => {
@@ -35,7 +35,7 @@ const user = fridgerApi.injectEndpoints({
           body: formData,
         };
       },
-      invalidatesTags: ['UserInfo'],
+      invalidatesTags: ['User'],
     }),
   }),
 });

@@ -40,7 +40,7 @@ const UserInfo = ({
           />
           <View style={styles.textContainer}>
             <Text style={styles.title}>{title}</Text>
-            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+            {!!subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
           </View>
         </View>
         <View style={styles.iconsContainer}>
