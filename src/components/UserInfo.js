@@ -5,7 +5,7 @@ import { Text, TouchableRipple } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
-import { tmpPerson } from '../../assets/images';
+import { tmpPerson } from 'assets/images';
 
 const UserInfo = ({
   title,
@@ -20,8 +20,15 @@ const UserInfo = ({
   icon2 = null,
   onPressIcon2 = null,
   iconTint2,
+  containerWidth,
 }) => {
-  const styles = useStyles({ subtitleTint, variant, iconTint1, iconTint2 });
+  const styles = useStyles({
+    subtitleTint,
+    variant,
+    iconTint1,
+    iconTint2,
+    containerWidth,
+  });
 
   return (
     <TouchableRipple onPress={onClick}>
@@ -71,16 +78,18 @@ UserInfo.propTypes = {
   icon2: PropTypes.number,
   iconTint2: PropTypes.string,
   onPressIcon2: PropTypes.func,
+  containerWidth: PropTypes.number,
 };
 
 const useStyles = makeStyles(
-  (theme, { subtitleTint, variant, iconTint1, iconTint2 }) => {
+  (theme, { subtitleTint, variant, iconTint1, iconTint2, containerWidth }) => {
     // Common styles:
     const obj = {
       container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        width: containerWidth,
       },
       dataContainer: {
         flexDirection: 'row',

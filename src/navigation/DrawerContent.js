@@ -1,29 +1,42 @@
 import React from 'react';
 
-import { View } from 'react-native';
-import { Text, Divider } from 'react-native-paper';
+import { View, ActivityIndicator } from 'react-native';
+import { Text, Divider, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DrawerRow, Button, UserInfo } from 'components';
 import { makeStyles } from 'utils';
 import { useLogoutMutation } from 'services/fridger/auth';
+import { useUserInfoQuery } from 'services/fridger/user';
 
 const DrawerContent = ({ navigation }) => {
   const styles = useStyles();
+  const { colors } = useTheme();
 
   // Communication with API:
   const [logoutPost, { isLoading }] = useLogoutMutation();
+  const { data: userData, isLoading: userIsLoading } = useUserInfoQuery();
 
   return (
     <SafeAreaView style={styles.drawerContent}>
       {/* Logged-in user info */}
-      <UserInfo
-        // TODO: Replace with real user name, nick and image
-        title='Ardelle Coppage'
-        subtitle='Minkx'
-        avatarURI='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
-        variant='big'
-      />
+      {userIsLoading ? (
+        <View style={styles.indicatorContainer}>
+          <ActivityIndicator size='large' color={colors.blueJeans} />
+        </View>
+      ) : (
+        <UserInfo
+          title={userData ? userData?.username : ''}
+          subtitle={
+            userData?.first_name || userData?.last_name
+              ? `${userData?.first_name} ${userData?.last_name}`
+              : null
+          }
+          avatarURI={userData?.avatar}
+          variant='big'
+          containerWidth={160}
+        />
+      )}
       <Divider style={styles.divider} />
 
       {/* Other screens */}
@@ -80,19 +93,25 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.primary,
   },
   section: {
-    marginHorizontal: 16,
+    marginLeft: 16,
+    marginRight: 8,
     flex: 1,
   },
   sectionName: {
     fontSize: 18,
     marginVertical: 16,
     color: theme.colors.silverMetallic,
+    width: 280,
   },
   divider: {
     backgroundColor: theme.colors.white,
   },
   buttonContainer: {
     margin: 16,
+  },
+  indicatorContainer: {
+    width: 160,
+    height: 64, // height of avatar (32) + its vertical paddings (32)
   },
 }));
 
