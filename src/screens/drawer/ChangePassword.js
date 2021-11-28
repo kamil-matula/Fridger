@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View } from 'react-native';
+import { View, AlertIOS, Platform } from 'react-native';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -12,37 +12,66 @@ import {
 } from 'components';
 import { makeStyles } from 'utils';
 
+import { useChangePasswordMutation } from 'services/fridger/user';
+
 const ChangePassword = ({ navigation }) => {
   const styles = useStyles();
 
-  const { control, handleSubmit, setFocus, getValues } = useForm({
+  const [changePasswordQuery, { isLoading }] = useChangePasswordMutation();
+
+  const { control, handleSubmit, setFocus, getValues, setError } = useForm({
     defaultValues: {
-      oldPassword: '',
-      password: '',
-      password2: '',
+      currentPassword: '',
+      newPassword: '',
+      newPassword2: '',
     },
   });
 
   const rules = {
-    password: {
+    newPassword: {
       required: 'Password is required',
       minLength: {
         value: 8,
         message: 'Password must contain at least 8 characters',
       },
     },
-    password2: {
-      validate: (password2) =>
-        getValues('password') === password2 || "Passwords don't match",
+    newPassword2: {
+      validate: (newPassword2) =>
+        getValues('newPassword') === newPassword2 || "Passwords don't match",
     },
   };
 
   const changePassword = (data) => {
-    // TODO: Send request to API to change password
-    console.log('change password', data);
-
-    // Go back to Home Page:
-    navigation.goBack();
+    changePasswordQuery(data)
+      .unwrap()
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch((error) => {
+        const currentPasswordError = error.data?.current_password;
+        const newPasswordError = error.data?.new_password;
+        const generalError = error.data?.non_field_errors;
+        if (currentPasswordError) {
+          setError('currentPassword', {
+            type: 'server',
+            message: currentPasswordError.join(' '),
+          });
+        }
+        if (newPasswordError) {
+          setError('newPassword', {
+            type: 'server',
+            message: newPasswordError.join(' '),
+          });
+        }
+        if (generalError) {
+          const message = generalError.join(' ');
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+          } else {
+            AlertIOS.alert(message);
+          }
+        }
+      });
   };
 
   return (
@@ -56,8 +85,8 @@ const ChangePassword = ({ navigation }) => {
             rules={rules.password}
             onSubmitEditing={() => setFocus('password')}
             secure
-            name='oldPassword'
-            label='Old password'
+            name='currentPassword'
+            label='Current password'
             returnKeyType='next'
             placeholder='Enter your old password'
           />
@@ -67,7 +96,7 @@ const ChangePassword = ({ navigation }) => {
             rules={rules.password}
             onSubmitEditing={() => setFocus('password2')}
             secure
-            name='password'
+            name='newPassword'
             label='New password'
             returnKeyType='next'
             placeholder='Enter your new password'
@@ -77,7 +106,7 @@ const ChangePassword = ({ navigation }) => {
             control={control}
             rules={rules.password2}
             secure
-            name='password2'
+            name='newPassword2'
             label='Confirm new password'
             returnKeyType='next'
             placeholder='Confirm your new password'
@@ -91,6 +120,7 @@ const ChangePassword = ({ navigation }) => {
             label='Submit'
             variant='contained'
             onPress={handleSubmit(changePassword)}
+            isLoading={isLoading}
           />
           <Separator />
         </View>
