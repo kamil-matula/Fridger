@@ -9,6 +9,13 @@ const user = fridgerApi.injectEndpoints({
         body: { password },
       }),
     }),
+    changePassword: builder.mutation({
+      query: ({ currentPassword, newPassword }) => ({
+        url: 'auth/users/me/change-password',
+        method: 'POST',
+        body: { current_password: currentPassword, new_password: newPassword },
+      }),
+    }),
     userInfo: builder.query({
       query: () => ({
         url: 'auth/users/me',
@@ -48,6 +55,7 @@ const user = fridgerApi.injectEndpoints({
 
 export const {
   useDeleteAccountMutation,
+  useChangePasswordMutation,
   useUserInfoQuery,
   useLazyUserInfoQuery,
   useUpdateUserInfoMutation,
