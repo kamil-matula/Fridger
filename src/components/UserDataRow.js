@@ -11,7 +11,7 @@ const UserDataRow = ({ label, data }) => {
   return (
     <>
       <Text style={styles.label}>{label}</Text>
-      <Text style={styles.data}>{data ?? '-'}</Text>
+      <Text style={styles.data}>{data || '-'}</Text>
     </>
   );
 };

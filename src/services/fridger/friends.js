@@ -10,10 +10,10 @@ const friends = fridgerApi.injectEndpoints({
       providesTags: ['Friends'],
     }),
     addToFriends: builder.mutation({
-      query: ({ username }) => ({
+      query: (id) => ({
         url: 'friends',
         method: 'POST',
-        body: { username },
+        body: { friend_to_add: id },
       }),
       invalidatesTags: ['Friends'],
     }),
