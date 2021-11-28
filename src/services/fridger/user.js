@@ -4,14 +4,14 @@ const user = fridgerApi.injectEndpoints({
   endpoints: (builder) => ({
     deleteAccount: builder.mutation({
       query: ({ password }) => ({
-        url: 'auth/users/me/',
+        url: 'auth/users/me',
         method: 'DELETE',
         body: { password },
       }),
     }),
     userInfo: builder.query({
       query: () => ({
-        url: 'auth/users/me/',
+        url: 'auth/users/me',
         method: 'GET',
       }),
       providesTags: ['User'],
@@ -29,13 +29,19 @@ const user = fridgerApi.injectEndpoints({
         });
         formData.append('can_use_real_name', canUseRealName);
         return {
-          url: 'auth/users/me/',
+          url: 'auth/users/me',
           method: 'PATCH',
           headers: { 'Content-type': 'multipart/form-data' },
           body: formData,
         };
       },
       invalidatesTags: ['User'],
+    }),
+    findUser: builder.query({
+      query: (username) => ({
+        url: `users/${username}`,
+        method: 'GET',
+      }),
     }),
   }),
 });
@@ -45,4 +51,5 @@ export const {
   useUserInfoQuery,
   useLazyUserInfoQuery,
   useUpdateUserInfoMutation,
+  useLazyFindUserQuery,
 } = user;

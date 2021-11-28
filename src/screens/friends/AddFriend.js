@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { View, TextInput, Image, Text } from 'react-native';
-import { Divider, useTheme, Snackbar } from 'react-native-paper';
+import { View, TextInput, Image, ToastAndroid, Platform } from 'react-native';
+import { Divider, useTheme, ActivityIndicator } from 'react-native-paper';
 
 import {
   AppBar,
@@ -13,31 +13,58 @@ import {
 import { makeStyles } from 'utils';
 import { tmpPerson } from 'assets/images';
 
+import { useLazyFindUserQuery } from 'services/fridger/user';
+import { useAddToFriendsMutation } from 'services/fridger/friends';
+
 const AddFriend = ({ navigation }) => {
-  const theme = useTheme();
+  const { colors } = useTheme();
   const styles = useStyles();
 
+  const [findUserQuery, findUser] = useLazyFindUserQuery();
+  const [addToFriendsQuery, addToFriends] = useAddToFriendsMutation();
+
+  const [username, setUsername] = useState('');
   const [friend, setFriend] = useState(null);
-  const [found, setFound] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const onDismissSnackBar = () => setVisible(false);
 
   const find = () => {
-    // TODO: Add sending request to API to find user with given ID
-
-    // Update UI:
-    const userHasBeenFound = true;
-    setFriend({
-      avatarUri: null,
-      nick: 'Minkx',
-      name: 'Ardelle',
-      surname: 'Coppage',
-    });
-    setFound(userHasBeenFound);
-    if (!userHasBeenFound) {
-      setVisible(true);
-    }
+    findUserQuery(username);
   };
+
+  useEffect(() => {
+    if (findUser.isSuccess) {
+      setFriend({
+        id: findUser.data.id,
+        username: findUser.data.username,
+        firstName: findUser.data.first_name,
+        lastName: findUser.data.last_name,
+        avatar: findUser.data.avatar,
+      });
+    }
+    if (findUser.isError) {
+      const msg = 'User not found';
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+      } else {
+        AlertIOS.alert(msg);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [findUser.isSuccess, findUser.isError]);
+
+  useEffect(() => {
+    if (addToFriends.isSuccess) {
+      navigation.goBack();
+    }
+    if (addToFriends.isError) {
+      const msg = 'Something went wrong';
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+      } else {
+        AlertIOS.alert(msg);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addToFriends.isSuccess, addToFriends.isError]);
 
   return (
     <View style={styles.container}>
@@ -46,64 +73,54 @@ const AddFriend = ({ navigation }) => {
       <Divider />
       <TextInput
         style={styles.input}
-        placeholder='Paste friend ID'
-        placeholderTextColor={theme.colors.silverMetallic}
-        keyboardType='numeric'
+        placeholder='Enter username'
+        placeholderTextColor={colors.silverMetallic}
+        value={username}
+        onChangeText={setUsername}
         onEndEditing={find}
       />
       <Divider />
-      {found && (
-        <>
-          <ScrollViewLayout>
-            <View>
-              <View style={styles.imageContainer}>
-                <Image
-                  style={styles.avatar}
-                  source={
-                    friend.avatarUri !== null
-                      ? { uri: friend.avatarUri }
-                      : tmpPerson
-                  }
-                />
+      {findUser.isLoading ? (
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <ActivityIndicator animating size='large' color={colors.blueJeans} />
+        </View>
+      ) : (
+        findUser.isSuccess && (
+          <>
+            <ScrollViewLayout>
+              <View>
+                <View style={styles.imageContainer}>
+                  <Image
+                    style={styles.avatar}
+                    source={
+                      friend?.avatar !== null
+                        ? { uri: friend?.avatar }
+                        : tmpPerson
+                    }
+                  />
+                </View>
+                <UserDataRow label='Nick' data={friend?.username} />
+                <Separator />
+                <UserDataRow label='Name' data={friend?.firstName} />
+                <Separator />
+                <UserDataRow label='Surname' data={friend?.lastName} />
+                <Separator height={32} />
               </View>
-              <UserDataRow label='Nick' data={friend.nick} />
-              <Separator />
-              <UserDataRow label='Name' data={friend.name} />
-              <Separator />
-              <UserDataRow label='Surname' data={friend.surname} />
-              <Separator height={32} />
-            </View>
-            <View>
-              <Button
-                label='add to friends'
-                variant='contained'
-                onPress={() => {
-                  // TODO: Send request to API to add to friends
-
-                  // Return to list of friends:
-                  navigation.goBack();
-                }}
-              />
-              <Separator />
-            </View>
-          </ScrollViewLayout>
-        </>
+              <View>
+                <Button
+                  label='add to friends'
+                  variant='contained'
+                  onPress={() => {
+                    addToFriendsQuery(friend.id);
+                  }}
+                  isLoading={addToFriends.isLoading}
+                />
+                <Separator />
+              </View>
+            </ScrollViewLayout>
+          </>
+        )
       )}
-
-      {/* Displaying negative result of searching */}
-      <Snackbar
-        style={styles.snackbar}
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        action={{
-          label: 'dismiss',
-          onPress: () => {
-            setVisible(false);
-          },
-        }}
-      >
-        <Text style={styles.snackbarText}>User not found</Text>
-      </Snackbar>
     </View>
   );
 };
