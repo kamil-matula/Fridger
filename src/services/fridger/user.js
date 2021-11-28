@@ -6,7 +6,7 @@ const user = fridgerApi.injectEndpoints({
       query: ({ password }) => ({
         url: 'auth/users/me',
         method: 'DELETE',
-        body: { password },
+        body: { current_password: password },
       }),
     }),
     changePassword: builder.mutation({
