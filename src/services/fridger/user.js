@@ -37,6 +37,12 @@ const user = fridgerApi.injectEndpoints({
       },
       invalidatesTags: ['User'],
     }),
+    findUser: builder.query({
+      query: (username) => ({
+        url: `users/${username}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -45,4 +51,5 @@ export const {
   useUserInfoQuery,
   useLazyUserInfoQuery,
   useUpdateUserInfoMutation,
+  useLazyFindUserQuery,
 } = user;
