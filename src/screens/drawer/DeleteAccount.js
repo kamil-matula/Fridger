@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View } from 'react-native';
+import { View, AlertIOS, Platform } from 'react-native';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -12,10 +12,16 @@ import {
 } from 'components';
 import { makeStyles } from 'utils';
 
-const DeleteAccount = ({ navigation }) => {
+import { useDeleteAccountMutation } from 'services/fridger/user';
+import { useLogoutMutation } from 'services/fridger/auth';
+
+const DeleteAccount = () => {
   const styles = useStyles();
 
-  const { control, handleSubmit, setFocus, getValues } = useForm({
+  const [deleteAccountQuery, { isLoading }] = useDeleteAccountMutation();
+  const [logout] = useLogoutMutation();
+
+  const { control, handleSubmit, setFocus, getValues, setError } = useForm({
     defaultValues: {
       password: '',
       password2: '',
@@ -37,11 +43,29 @@ const DeleteAccount = ({ navigation }) => {
   };
 
   const deleteAccount = (data) => {
-    // TODO: Send request to API to delete account
-    console.log('delete account', data);
-
-    // Go back to Home Page:
-    navigation.goBack();
+    deleteAccountQuery(data)
+      .unwrap()
+      .then(() => {
+        logout();
+      })
+      .catch((error) => {
+        const currentPasswordError = error.data?.current_password;
+        const generalError = error.data?.non_field_errors;
+        if (currentPasswordError) {
+          setError('password', {
+            type: 'server',
+            message: currentPasswordError.join(' '),
+          });
+        }
+        if (generalError) {
+          const message = generalError.join(' ');
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+          } else {
+            AlertIOS.alert(message);
+          }
+        }
+      });
   };
 
   return (
@@ -80,6 +104,7 @@ const DeleteAccount = ({ navigation }) => {
             variant='contained'
             color='red'
             onPress={handleSubmit(deleteAccount)}
+            isLoading={isLoading}
           />
           <Separator />
         </View>
