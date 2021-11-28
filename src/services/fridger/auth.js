@@ -24,7 +24,7 @@ const authApi = fridgerApi.injectEndpoints({
     }),
     resetPassword: builder.mutation({
       query: ({ email }) => ({
-        url: 'auth/users/reset_password',
+        url: 'auth/users/reset-password',
         method: 'POST',
         body: { email },
       }),
