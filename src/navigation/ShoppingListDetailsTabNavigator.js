@@ -14,7 +14,6 @@ const ShoppingListTab = createMaterialTopTabNavigator();
 const ShoppingListDetailsTabNavigator = ({ isShared, setFabVisible }) => {
   const styles = useStyles();
 
-  // TODO: Change tab items size. Tab navigator is poorly documented.
   return (
     <ShoppingListTab.Navigator
       // Styling:
