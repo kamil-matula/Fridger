@@ -55,8 +55,8 @@ const ShoppingListAll = ({ navigation }) => {
           )
         )}
 
-        {/* Space for a FAB */}
-        <Separator height={64} />
+        {/* Space for FAB */}
+        <Separator height={80} />
       </ScrollView>
     </View>
   );

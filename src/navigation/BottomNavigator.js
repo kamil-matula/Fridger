@@ -16,6 +16,22 @@ const BottomNavigator = () => {
   const styles = useStyles({ barPosition });
   const { colors } = useTheme();
 
+  // Single tab options:
+  const tabOptions = (source, tabBarLabel) => ({
+    tabBarIcon: ({ focused }) => (
+      <Image
+        source={source}
+        style={[
+          styles.icon,
+          {
+            tintColor: focused ? colors.cyberYellow : colors.silverMetallic,
+          },
+        ]}
+      />
+    ),
+    tabBarLabel,
+  });
+
   return (
     <View
       style={{ flex: 1 }}
@@ -36,66 +52,21 @@ const BottomNavigator = () => {
         <Tab.Screen
           name='Menu'
           component={Menu}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={menuTab}
-                style={[
-                  styles.icon,
-                  {
-                    tintColor: focused
-                      ? colors.cyberYellow
-                      : colors.silverMetallic,
-                  },
-                ]}
-              />
-            ),
-            tabBarLabel: 'MENU',
-          }}
+          options={tabOptions(menuTab, 'MENU')}
         />
 
         {/* FRIDGES, FRIDGE DETAILS */}
         <Tab.Screen
           name='Fridges'
           component={FridgeNavigator}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={fridgeTab}
-                style={[
-                  styles.icon,
-                  {
-                    tintColor: focused
-                      ? colors.cyberYellow
-                      : colors.silverMetallic,
-                  },
-                ]}
-              />
-            ),
-            tabBarLabel: 'FRIDGES',
-          }}
+          options={tabOptions(fridgeTab, 'FRIDGES')}
         />
 
         {/* SHOPPING LISTS, SHOPPING LIST DETAILS */}
         <Tab.Screen
           name='Shopping Lists'
           component={ShoppingListNavigator}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={listTab}
-                style={[
-                  styles.icon,
-                  {
-                    tintColor: focused
-                      ? colors.cyberYellow
-                      : colors.silverMetallic,
-                  },
-                ]}
-              />
-            ),
-            tabBarLabel: 'SHOPPING LISTS',
-          }}
+          options={tabOptions(listTab, 'SHOPPING LISTS')}
         />
       </Tab.Navigator>
     </View>
@@ -106,7 +77,7 @@ const useStyles = makeStyles((theme, { barPosition }) => ({
   bar: {
     backgroundColor: theme.colors.primary,
     position: 'absolute',
-    top: barPosition - 54,
+    top: barPosition ? barPosition - 54 : null, // 54 is height of navbar
   },
   icon: {
     width: 20,

@@ -166,7 +166,7 @@ const ShoppingListYour = () => {
                   onPress={handleSubmit(submit)}
                 />
               </View>
-              <Separator height={32} />
+              <Separator height={16} />
             </>
           )}
         </View>
