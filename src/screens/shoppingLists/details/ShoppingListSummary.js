@@ -62,8 +62,7 @@ const ShoppingListSummary = () => {
           subText={
             note ? `${quantity} ${unit}  •  ${note}` : `${quantity} ${unit}`
           }
-          // TODO: Use appropriate currency instead of hardcoded one
-          boxText={`${price} zł`}
+          boxText={`${price} PLN`}
           variant='checkbox'
           status={status}
         />
@@ -83,8 +82,7 @@ const ShoppingListSummary = () => {
     for (let i = 0; i < products.length; i += 1)
       sum += parseFloat(products[i].price);
 
-    // TODO: Use appropriate currency instead of hardcoded one
-    return <PriceSummary value={sum} currency='zł' />;
+    return <PriceSummary value={sum} currency='PLN' />;
   };
 
   return (

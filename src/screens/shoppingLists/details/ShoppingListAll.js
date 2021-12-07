@@ -48,8 +48,7 @@ const ShoppingListAll = ({ navigation }) => {
                     ? `${quantity} ${unit}  •  ${note}`
                     : `${quantity} ${unit}`
                 }
-                // TODO: Use appropriate currency instead of hardcoded one
-                boxText={status === 'checked' ? `${price} zł` : null}
+                boxText={status === 'checked' ? `${price} PLN` : null}
               />
             </TouchableRipple>
           )
