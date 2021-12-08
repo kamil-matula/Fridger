@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
@@ -12,6 +13,7 @@ import {
 const ShoppingListTab = createMaterialTopTabNavigator();
 const ShoppingListTabNavigator = ({ setFabVisible }) => {
   const styles = useStyles();
+  const { colors } = useTheme();
 
   return (
     <ShoppingListTab.Navigator
@@ -22,6 +24,7 @@ const ShoppingListTabNavigator = ({ setFabVisible }) => {
         tabBarLabelStyle: styles.label,
         tabBarIndicatorStyle: styles.indicator,
       }}
+      sceneContainerStyle={{ backgroundColor: colors.background }}
       // Hiding FAB:
       screenListeners={{
         focus: (e) => {

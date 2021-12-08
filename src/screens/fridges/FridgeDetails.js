@@ -172,6 +172,9 @@ const FridgeDetails = ({ route, navigation }) => {
         keyExtractor={(item) => item.id.toString()}
       />
 
+      {/* Space for bottom nav bar */}
+      <Separator height={54} />
+
       {/* Adding new product */}
       <FloatingActionButton
         onPress={() => {
