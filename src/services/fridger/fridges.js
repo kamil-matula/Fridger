@@ -25,7 +25,7 @@ const fridgesApi = fridgerApi.injectEndpoints({
       providesTags: ['Products'],
     }),
     editFridgeName: builder.mutation({
-      query: (id, name) => ({
+      query: ({ id, name }) => ({
         url: `fridges/${id}`,
         method: 'PUT',
         body: { name },

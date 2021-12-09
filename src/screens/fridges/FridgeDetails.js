@@ -58,8 +58,8 @@ const FridgeDetails = ({ route, navigation }) => {
   }, [data]);
 
   // Send data to api:
-  const editFridgeName = (id, name) => {
-    editFridgeNameQuery(id, name)
+  const editFridgeName = ({ id, name }) => {
+    editFridgeNameQuery({ id, name })
       .unwrap()
       .then((response) => {
         // TODO: Add displaying toast here?
@@ -167,7 +167,7 @@ const FridgeDetails = ({ route, navigation }) => {
         }}
         onSubmitEditing={(newName) => {
           if (fridge != null) {
-            editFridgeName(fridge.id, newName);
+            editFridgeName({ id: fridge.id, name: newName });
           }
         }}
       />
