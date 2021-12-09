@@ -24,17 +24,19 @@ const Friends = ({ navigation }) => {
   const theme = useTheme();
   const styles = useStyles();
 
+  // Queries:
   const deleteFriend = useDeleteFriendMutation()[0];
   const acceptFriend = useAcceptFriendMutation()[0];
-
-  // Lists
   const { data: requestsData, isLoading: requestsAreLoading } =
     useFriendsQuery(false);
   const { data: friendsData, isLoading: friendsAreLoading } =
     useFriendsQuery(true);
+
+  // Lists:
   const [requests, setRequests] = useState([]);
   const [friends, setFriends] = useState([]);
 
+  // Update requests when data is fetched:
   useEffect(() => {
     if (requestsData) {
       setRequests(
@@ -49,6 +51,7 @@ const Friends = ({ navigation }) => {
     }
   }, [requestsData]);
 
+  // Update list of friends when data is fetched:
   useEffect(() => {
     if (friendsData) {
       setFriends(
@@ -63,32 +66,36 @@ const Friends = ({ navigation }) => {
     }
   }, [friendsData]);
 
-  // Remove friend
+  // Remove friend:
   const [toRemove, setToRemove] = useState(null);
-  const [toRemoveNick, setToRemoveNick] = useState('');
   const [dialogVisible, setDialogVisible] = useState(null);
 
   const prepareToRemove = (friend) => {
     setToRemove(friend);
-    setToRemoveNick(friend.username);
     setDialogVisible(true);
   };
 
-  const removeFriend = () => {
+  const confirmRemoveFriend = () => {
+    // Remove friend locally:
     const idx = friends.findIndex((e) => e.id === toRemove.id);
-    // Local
     setFriends([...friends.splice(0, idx), ...friends.splice(idx + 1)]);
-    // Server
+
+    // Send request to API:
     deleteFriend(toRemove.id);
 
+    // Hide dialog:
     setDialogVisible(false);
+
+    // TODO: Get rid of manipulating local data;
+    // it is better to refetch data after sending request to API
   };
 
   const cancelRemoveFriend = () => {
+    // Hide dialog:
     setDialogVisible(false);
   };
 
-  // Invitations
+  // Reject invitation:
   const [rejected, setRejected] = useState(null);
   const [snackbarVisible, setSnackbarVisible] = useState(null);
   const [rejectCanceled, setRejectCanceled] = useMemo(() => {
@@ -102,35 +109,45 @@ const Friends = ({ navigation }) => {
   }, []);
 
   const onDismissSnackBar = () => {
+    // If not undone, send request to API:
     if (!rejectCanceled()) {
       deleteFriend(rejected.id);
     }
+
+    // Hide snackbar:
     setRejectCanceled(false);
     setSnackbarVisible(false);
   };
 
+  // Accept invitation:
   const accept = (id) => {
+    // Accept invitation locally:
     const idx = requests.findIndex((e) => e.id === id);
-    // Local
     setFriends([requests[idx], ...friends]);
-    // Server
-    acceptFriend(id);
-    // Remove from invitation list
     setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
+
+    // Send request to API:
+    acceptFriend(id);
+
+    // TODO: Get rid of manipulating local data;
+    // it is better to refetch data after sending request to API
   };
 
   const reject = (id) => {
+    // Reject invitation locally:
     const idx = requests.findIndex((e) => e.id === id);
-    // Local
     setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
-    // UNDO action
+
+    // Give a chance to undo & send request to API on dismiss:
     setRejected(requests[idx]);
     setSnackbarVisible(true);
   };
 
   const undo = () => {
-    // Add rejected request back to the list
+    // Add rejected request back to the list:
     setRequests([...requests, rejected]);
+
+    // Hide snackbar:
     setRejectCanceled(true);
     setSnackbarVisible(false);
   };
@@ -151,8 +168,8 @@ const Friends = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* Main content */}
       <AppBar label='friends' />
-      {requestsAreLoading && friendsAreLoading && <LoadingOverlay />}
       <Divider />
       <ScrollView>
         {/* Invitations */}
@@ -205,13 +222,16 @@ const Friends = ({ navigation }) => {
         <Separator height={80} />
       </ScrollView>
 
+      {/* Loading */}
+      {(requestsAreLoading || friendsAreLoading) && <LoadingOverlay />}
+
       {/* Deleting friend */}
       <Dialog
         title='Remove from friends'
-        paragraph={`Are you sure you want to remove ${toRemoveNick} from friends? This action cannot be undone.`}
+        paragraph={`Are you sure you want to remove ${toRemove?.username} from friends? This action cannot be undone.`}
         visibilityState={[dialogVisible, setDialogVisible]}
         label1='remove'
-        onPressLabel1={removeFriend}
+        onPressLabel1={confirmRemoveFriend}
         label2='cancel'
         onPressLabel2={cancelRemoveFriend}
       />

@@ -69,7 +69,7 @@ const ShoppingListYour = () => {
     if (!isSumOverridden) {
       setValue('summary', sum);
     }
-  }, [isSumOverridden, setValue, sum]);
+  }, [isSumOverridden, sum]);
 
   const submit = (data) => {
     // TODO: set status to checked and remove from list

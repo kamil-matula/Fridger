@@ -1,6 +1,6 @@
 import { fridgerApi } from './fridgerApi';
 
-const friends = fridgerApi.injectEndpoints({
+const friendsApi = fridgerApi.injectEndpoints({
   endpoints: (builder) => ({
     friends: builder.query({
       query: (isAccepted) => ({
@@ -39,4 +39,4 @@ export const {
   useAddToFriendsMutation,
   useDeleteFriendMutation,
   useAcceptFriendMutation,
-} = friends;
+} = friendsApi;

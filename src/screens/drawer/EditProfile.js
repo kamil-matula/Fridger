@@ -46,7 +46,7 @@ const EditProfile = ({ navigation }) => {
     setValue('lastName', userData?.last_name);
     setValue('avatar', userData?.avatar);
     setValue('canUseRealName', userData?.can_use_real_name);
-  }, [userData, setValue]);
+  }, [userData]);
 
   const avatar = watch('avatar');
   const rules = {

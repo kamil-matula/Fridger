@@ -20,6 +20,7 @@ const AddFriend = ({ navigation }) => {
   const { colors } = useTheme();
   const styles = useStyles();
 
+  // Queries:
   const [findUserQuery, findUser] = useLazyFindUserQuery();
   const [addToFriendsQuery, addToFriends] = useAddToFriendsMutation();
 
@@ -30,6 +31,7 @@ const AddFriend = ({ navigation }) => {
     findUserQuery(username);
   };
 
+  // Update states when data is fetched or display error message:
   useEffect(() => {
     if (findUser.isSuccess) {
       setFriend({
@@ -48,9 +50,9 @@ const AddFriend = ({ navigation }) => {
         AlertIOS.alert(msg);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [findUser.isSuccess, findUser.isError]);
 
+  // Handle with adding friend action:
   useEffect(() => {
     if (addToFriends.isSuccess) {
       navigation.goBack();
@@ -63,14 +65,14 @@ const AddFriend = ({ navigation }) => {
         AlertIOS.alert(msg);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addToFriends.isSuccess, addToFriends.isError]);
 
   return (
     <View style={styles.container}>
-      {/* Main content */}
       <AppBar label='Add friend' />
       <Divider />
+
+      {/* Searching by username */}
       <TextInput
         style={styles.input}
         placeholder='Enter username'
@@ -80,6 +82,8 @@ const AddFriend = ({ navigation }) => {
         onEndEditing={find}
       />
       <Divider />
+
+      {/* User profile / loader */}
       {findUser.isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <ActivityIndicator animating size='large' color={colors.blueJeans} />
