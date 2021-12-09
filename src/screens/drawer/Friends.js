@@ -21,7 +21,7 @@ import {
 } from 'services/fridger/friends';
 
 const Friends = ({ navigation }) => {
-  const theme = useTheme();
+  const { colors } = useTheme();
   const styles = useStyles();
 
   // Queries:
@@ -186,10 +186,10 @@ const Friends = ({ navigation }) => {
                 variant='small'
                 icon1={clear}
                 onPressIcon1={() => reject(user.id)}
-                iconTint1={theme.colors.tartOrange}
+                iconTint1={colors.tartOrange}
                 icon2={done}
                 onPressIcon2={() => accept(user.id)}
-                iconTint2={theme.colors.darkGreen}
+                iconTint2={colors.darkGreen}
               />
             ))}
           </>
@@ -212,7 +212,7 @@ const Friends = ({ navigation }) => {
                 variant='small'
                 icon1={deleteIcon}
                 onPressIcon1={() => prepareToRemove(user)}
-                iconTint1={theme.colors.silverMetallic}
+                iconTint1={colors.silverMetallic}
               />
             ))}
           </>

@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const fridgerApi = createApi({
   reducerPath: 'fridgerApi',
-  tagTypes: ['User', 'Friends'],
+  tagTypes: ['User', 'Friends', 'Fridges'],
   baseQuery: fetchBaseQuery({
     baseUrl: `https://fridger-api.herokuapp.com/api/v1`,
     prepareHeaders: (headers, { getState }) => {
