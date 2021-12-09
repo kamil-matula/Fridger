@@ -28,8 +28,9 @@ import {
 } from 'assets/icons';
 import { productsInFridgeList } from 'tmpData';
 import {
+  useDeleteFridgeMutation,
   useEditFridgeNameMutation,
-  useOneFridgeQuery,
+  useSpecificFridgeQuery,
 } from 'services/fridger/fridges';
 
 const FridgeDetails = ({ route, navigation }) => {
@@ -39,8 +40,9 @@ const FridgeDetails = ({ route, navigation }) => {
   const fridgeID = route.params ? route.params.fridgeID : null;
 
   // Queries:
-  const { data, isLoading } = useOneFridgeQuery(fridgeID);
+  const { data, isLoading } = useSpecificFridgeQuery(fridgeID);
   const [editFridgeNameQuery] = useEditFridgeNameMutation();
+  const [deleteFridgeQuery] = useDeleteFridgeMutation();
 
   // Data:
   const [fridge, setFridge] = useState(null);
@@ -58,12 +60,27 @@ const FridgeDetails = ({ route, navigation }) => {
   }, [data]);
 
   // Send data to api:
-  const editFridgeName = ({ id, name }) => {
-    editFridgeNameQuery({ id, name })
+  const editFridgeName = (name) => {
+    editFridgeNameQuery({ id: fridge.id, name })
       .unwrap()
       .then((response) => {
         // TODO: Add displaying toast here?
         console.log(response);
+      })
+      .catch((error) => {
+        // TODO: Add error-handling after making sure what kind of errors can be here
+        console.log(error);
+      });
+  };
+  const deleteFridge = () => {
+    deleteFridgeQuery(fridge.id)
+      .unwrap()
+      .then(() => {
+        // TODO: Add displaying toast here?
+
+        // Hide dialog and go back:
+        setDeleteFridgeDialogVisible(false);
+        navigation.pop();
       })
       .catch((error) => {
         // TODO: Add error-handling after making sure what kind of errors can be here
@@ -95,11 +112,7 @@ const FridgeDetails = ({ route, navigation }) => {
   const [deleteFridgeDialogVisible, setDeleteFridgeDialogVisible] =
     useState(false);
   const confirmRemoveFridge = () => {
-    // TODO: Send request to API and wait for removing fridge from the list
-
-    // Hide dialog and go back:
-    setDeleteFridgeDialogVisible(false);
-    navigation.pop();
+    deleteFridge();
   };
   const cancelRemoveFridge = () => {
     // Hide dialog:
@@ -167,7 +180,7 @@ const FridgeDetails = ({ route, navigation }) => {
         }}
         onSubmitEditing={(newName) => {
           if (fridge != null) {
-            editFridgeName({ id: fridge.id, name: newName });
+            editFridgeName(newName);
           }
         }}
       />
