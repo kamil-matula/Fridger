@@ -22,7 +22,7 @@ const Fridges = ({ navigation }) => {
   // Data:
   const [fridges, setFridges] = useState([]);
 
-  // Update requests when data is fetched:
+  // Update fridges when data is fetched:
   useEffect(() => {
     if (data) {
       setFridges(

@@ -17,7 +17,15 @@ const fridgesApi = fridgerApi.injectEndpoints({
       }),
       invalidatesTags: ['Fridges'],
     }),
+    oneFridge: builder.query({
+      query: (id) => ({
+        url: `fridges/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['Products'],
+    }),
   }),
 });
 
-export const { useFridgesQuery, useAddFridgeMutation } = fridgesApi;
+export const { useFridgesQuery, useAddFridgeMutation, useOneFridgeQuery } =
+  fridgesApi;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { TextInput } from 'react-native';
 import { Appbar, useTheme } from 'react-native-paper';
@@ -24,7 +24,7 @@ const AppBar = ({
   const navigation = useNavigation();
 
   // Editing fridge / shopping list's name:
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues: {
       label,
     },
@@ -33,6 +33,11 @@ const AppBar = ({
     // Update name:
     onSubmitEditing(data);
   };
+
+  // Update label when data is fetched:
+  useEffect(() => {
+    setValue('label', label);
+  }, [label]);
 
   return (
     <Appbar.Header style={styles.bar}>

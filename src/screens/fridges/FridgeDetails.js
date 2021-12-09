@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 import { FlatList, View, Text, Image } from 'react-native';
 import { Divider, TouchableRipple } from 'react-native-paper';
@@ -13,6 +13,7 @@ import {
   RadioButtonGroup,
   Separator,
   InputField,
+  LoadingOverlay,
 } from 'components';
 import { FridgeDetailsRow } from 'components/fridges';
 import { makeStyles } from 'utils';
@@ -25,15 +26,32 @@ import {
   down,
   up,
 } from 'assets/icons';
-import { fridgesList, productsInFridgeList } from 'tmpData';
+import { productsInFridgeList } from 'tmpData';
+import { useOneFridgeQuery } from 'services/fridger/fridges';
 
 const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
   // Fridge identifying:
-  const fridge = route.params
-    ? fridgesList.find((e) => e.id === route.params.fridgeID)
-    : null;
+  const fridgeID = route.params ? route.params.fridgeID : null;
+
+  // Queries:
+  const { data, isLoading } = useOneFridgeQuery(fridgeID);
+
+  // Data:
+  const [fridge, setFridge] = useState(null);
+
+  // Update fridge when data is fetched:
+  useEffect(() => {
+    if (data) {
+      setFridge({
+        id: data.id,
+        name: data.name,
+        items: data.products_count,
+        people: data.shared_with_count,
+      });
+    }
+  }, [data]);
 
   // Sorting:
   const [sortingCategoryName, setSortingCategoryName] = useState('Name');
@@ -122,7 +140,7 @@ const FridgeDetails = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar
-        label={fridge.name}
+        label={fridge?.name ?? ''}
         icon1={more}
         editable
         onPressIcon1={() => {
@@ -131,7 +149,8 @@ const FridgeDetails = ({ route, navigation }) => {
         }}
         onSubmitEditing={(newName) => {
           // TODO: Send request to API to change fridge/list's name
-          console.log(`Fridge ${fridge.name} has been renamed to ${newName}`);
+          if (fridge != null)
+            console.log(`Fridge ${fridge.name} has been renamed to ${newName}`);
         }}
       />
       <Divider />
@@ -153,6 +172,7 @@ const FridgeDetails = ({ route, navigation }) => {
       </TouchableRipple>
 
       {/* List of products */}
+      {/* TODO: Use products from API instead of mocked data */}
       <FlatList
         data={productsInFridgeList}
         renderItem={({ item }) => (
@@ -161,11 +181,12 @@ const FridgeDetails = ({ route, navigation }) => {
             onPressIcon={() => reduceQuantityOpen(item)}
             onPressRow={() => {
               // Go to appropriate page:
-              navigation.navigate('ProductDetails', {
-                productID: item.id,
-                fridgeID: fridge.id,
-                fridgeName: fridge.name,
-              });
+              if (fridge != null)
+                navigation.navigate('ProductDetails', {
+                  productID: item.id,
+                  fridgeID: fridge.id,
+                  fridgeName: fridge.name,
+                });
             }}
           />
         )}
@@ -178,7 +199,8 @@ const FridgeDetails = ({ route, navigation }) => {
       {/* Adding new product */}
       <FloatingActionButton
         onPress={() => {
-          navigation.navigate('AddProductManual', { fridgeID: fridge.id });
+          if (fridge != null)
+            navigation.navigate('AddProductManual', { fridgeID: fridge.id });
         }}
         isBottomNavigationBar
       />
@@ -191,10 +213,11 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and change screen:
             refFridgeActions.current.close();
-            navigation.navigate('Share', {
-              type: 'fridge',
-              containerID: fridge.id,
-            });
+            if (fridge != null)
+              navigation.navigate('Share', {
+                type: 'fridge',
+                containerID: fridge.id,
+              });
           }}
         />
         <SheetRow
@@ -203,10 +226,11 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and change screen:
             refFridgeActions.current.close();
-            navigation.navigate('EditPermissions', {
-              type: 'fridge',
-              containerID: fridge.id,
-            });
+            if (fridge != null)
+              navigation.navigate('EditPermissions', {
+                type: 'fridge',
+                containerID: fridge.id,
+              });
           }}
         />
         <SheetRow
@@ -263,7 +287,9 @@ const FridgeDetails = ({ route, navigation }) => {
       {/* Deleting fridge */}
       <Dialog
         title='Delete fridge'
-        paragraph={`Are you sure you want to delete fridge ${fridge.name}? This action cannot be undone.`}
+        paragraph={`Are you sure you want to delete fridge ${
+          fridge?.name ?? 'Unknown'
+        }? This action cannot be undone.`}
         visibilityState={[
           deleteFridgeDialogVisible,
           setDeleteFridgeDialogVisible,
@@ -307,6 +333,9 @@ const FridgeDetails = ({ route, navigation }) => {
           </View>
         </Dialog>
       )}
+
+      {/* Loading */}
+      {isLoading && <LoadingOverlay />}
     </View>
   );
 };
