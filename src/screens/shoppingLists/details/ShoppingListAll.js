@@ -48,15 +48,14 @@ const ShoppingListAll = ({ navigation }) => {
                     ? `${quantity} ${unit}  •  ${note}`
                     : `${quantity} ${unit}`
                 }
-                // TODO: Use appropriate currency instead of hardcoded one
-                boxText={status === 'checked' ? `${price} zł` : null}
+                boxText={status === 'checked' ? `${price} PLN` : null}
               />
             </TouchableRipple>
           )
         )}
 
-        {/* Space for a FAB */}
-        <Separator height={64} />
+        {/* Space for FAB */}
+        <Separator height={80} />
       </ScrollView>
     </View>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { View } from 'react-native';
 
@@ -9,11 +9,15 @@ import ShoppingListTabNavigator from 'navigation/ShoppingListTabNavigator';
 const ShoppingLists = ({ navigation }) => {
   const styles = useStyles();
 
+  // FAB conditions:
+  const [fabVisible, setFabVisible] = useState(true);
+
   return (
     <View style={styles.container}>
       <AppBar isDrawer label='Shopping Lists' />
-      <ShoppingListTabNavigator />
+      <ShoppingListTabNavigator setFabVisible={setFabVisible} />
       <FloatingActionButton
+        visible={fabVisible}
         onPress={() => navigation.navigate('AddShoppingList')}
         isBottomNavigationBar
       />

@@ -97,8 +97,7 @@ const ShoppingListYour = () => {
               onChangeStatus={() => {
                 changePlace(index, 'unchecked', 'indeterminate');
               }}
-              // TODO: Use appropriate currency instead of hardcoded one
-              currency='zł'
+              currency='PLN'
             />
           ))}
 
@@ -123,8 +122,7 @@ const ShoppingListYour = () => {
               onChangeStatus={() => {
                 changePlace(index, 'indeterminate', 'unchecked');
               }}
-              // TODO: Use appropriate currency instead of hardcoded one
-              currency='zł'
+              currency='PLN'
             />
           ))}
 
@@ -138,8 +136,7 @@ const ShoppingListYour = () => {
                 control={control}
                 name='summary'
                 onEndEditing={() => setIsSumOverridden(true)}
-                // TODO: Use appropriate currency instead of hardcoded one
-                currency='zł'
+                currency='PLN'
               />
 
               {/* Possiblity to recalculate sum */}
@@ -166,7 +163,7 @@ const ShoppingListYour = () => {
                   onPress={handleSubmit(submit)}
                 />
               </View>
-              <Separator height={32} />
+              <Separator height={16} />
             </>
           )}
         </View>

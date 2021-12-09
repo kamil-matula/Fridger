@@ -4,7 +4,7 @@ const friends = fridgerApi.injectEndpoints({
   endpoints: (builder) => ({
     friends: builder.query({
       query: (isAccepted) => ({
-        url: `friends/?is_accepted=${isAccepted}`,
+        url: `friends?is_accepted=${isAccepted}`,
         method: 'GET',
       }),
       providesTags: ['Friends'],

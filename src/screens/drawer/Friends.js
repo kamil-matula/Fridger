@@ -1,21 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  ToastAndroid,
-  Platform,
-  AlertIOS,
-} from 'react-native';
-import {
-  Divider,
-  Snackbar,
-  TouchableRipple,
-  useTheme,
-} from 'react-native-paper';
-import * as Clipboard from 'expo-clipboard';
+import { View, Text, ScrollView } from 'react-native';
+import { useTheme, Snackbar, Divider } from 'react-native-paper';
 
 import {
   AppBar,
@@ -26,15 +12,13 @@ import {
   LoadingOverlay,
 } from 'components';
 import { makeStyles } from 'utils';
-import { copy, done, clear, deleteIcon } from 'assets/icons';
+import { done, clear, deleteIcon } from 'assets/icons';
 
 import {
   useFriendsQuery,
   useDeleteFriendMutation,
   useAcceptFriendMutation,
 } from 'services/fridger/friends';
-
-import { useUserInfoQuery } from 'services/fridger/user';
 
 const Friends = ({ navigation }) => {
   const theme = useTheme();
@@ -151,25 +135,6 @@ const Friends = ({ navigation }) => {
     setSnackbarVisible(false);
   };
 
-  // User ID
-  const [userID, setUserID] = useState('');
-  const { data: userData } = useUserInfoQuery();
-
-  useEffect(() => {
-    setUserID(userData?.id);
-  }, [userData]);
-
-  const copyToClipboard = () => {
-    Clipboard.setString(userID);
-
-    const msg = 'Copied to clipboard!';
-    if (Platform.OS === 'android') {
-      ToastAndroid.show(msg, ToastAndroid.SHORT);
-    } else {
-      AlertIOS.alert(msg);
-    }
-  };
-
   // Navigation:
   const navigateToFriendProfile = (user) => {
     navigation.navigate('FriendProfile', {
@@ -190,21 +155,9 @@ const Friends = ({ navigation }) => {
       {requestsAreLoading && friendsAreLoading && <LoadingOverlay />}
       <Divider />
       <ScrollView>
-        {/* My ID */}
-        <Text style={styles.header}>Your ID</Text>
-        <View style={styles.userID}>
-          <Text style={styles.text}>{userID}</Text>
-          <View style={{ borderRadius: 20, overflow: 'hidden' }}>
-            <TouchableRipple onPress={copyToClipboard}>
-              <Image style={styles.icon} source={copy} />
-            </TouchableRipple>
-          </View>
-        </View>
-
         {/* Invitations */}
         {requests.length !== 0 && (
           <>
-            <Divider />
             <Text style={styles.header}>Pending requests</Text>
             {requests.map((user) => (
               <UserInfo
@@ -225,24 +178,31 @@ const Friends = ({ navigation }) => {
           </>
         )}
 
+        {/* Line between the lists */}
+        {requests.length !== 0 && friends.length !== 0 && <Divider />}
+
         {/* Existing friends */}
-        <Divider />
-        {friends.map((user) => (
-          <UserInfo
-            key={user.id}
-            title={user.username}
-            subtitle={`${user.firstName} ${user.lastName}`.trim()}
-            avatarURI={user.avatar}
-            onClick={() => navigateToFriendProfile(user)}
-            variant='small'
-            icon1={deleteIcon}
-            onPressIcon1={() => prepareToRemove(user)}
-            iconTint1={theme.colors.silverMetallic}
-          />
-        ))}
+        {friends.length !== 0 && (
+          <>
+            <Text style={styles.header}>Accepted requests</Text>
+            {friends.map((user) => (
+              <UserInfo
+                key={user.id}
+                title={user.username}
+                subtitle={`${user.firstName} ${user.lastName}`.trim()}
+                avatarURI={user.avatar}
+                onClick={() => navigateToFriendProfile(user)}
+                variant='small'
+                icon1={deleteIcon}
+                onPressIcon1={() => prepareToRemove(user)}
+                iconTint1={theme.colors.silverMetallic}
+              />
+            ))}
+          </>
+        )}
 
         {/* Space for FAB */}
-        <Separator height={88} />
+        <Separator height={80} />
       </ScrollView>
 
       {/* Deleting friend */}

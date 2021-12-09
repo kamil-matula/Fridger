@@ -8,6 +8,7 @@ import {
   BottomSheet,
   SheetRow,
   Dialog,
+  Separator,
 } from 'components';
 import { makeStyles } from 'utils';
 import { more, group, groupAdd, hand, deleteIcon } from 'assets/icons';
@@ -73,6 +74,9 @@ const ShoppingListDetails = ({ route, navigation }) => {
         isShared={isShared}
         setFabVisible={setFabVisible}
       />
+
+      {/* Space for bottom nav bar */}
+      <Separator height={54} />
 
       {/* Adding new product */}
       <FloatingActionButton

@@ -3,7 +3,7 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { AppBar, FloatingActionButton } from 'components';
+import { AppBar, FloatingActionButton, Separator } from 'components';
 import { FridgeRow } from 'components/fridges';
 import { makeStyles } from 'utils';
 import { fridgesList } from 'tmpData';
@@ -15,6 +15,8 @@ const Fridges = ({ navigation }) => {
     <View style={styles.container}>
       <AppBar isDrawer label='Fridges' />
       <Divider />
+
+      {/* List of fridges */}
       <FlatList
         data={fridgesList}
         renderItem={({ item }) => (
@@ -37,6 +39,11 @@ const Fridges = ({ navigation }) => {
         )}
         keyExtractor={(item) => item.id.toString()}
       />
+
+      {/* Space for bottom nav bar */}
+      <Separator height={54} />
+
+      {/* Adding new fridge */}
       <FloatingActionButton
         onPress={() => {
           navigation.navigate('AddFridge');

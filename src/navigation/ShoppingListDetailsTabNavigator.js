@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import {
@@ -13,8 +14,8 @@ import { makeStyles } from 'utils';
 const ShoppingListTab = createMaterialTopTabNavigator();
 const ShoppingListDetailsTabNavigator = ({ isShared, setFabVisible }) => {
   const styles = useStyles();
+  const { colors } = useTheme();
 
-  // TODO: Change tab items size. Tab navigator is poorly documented.
   return (
     <ShoppingListTab.Navigator
       // Styling:
@@ -25,6 +26,7 @@ const ShoppingListDetailsTabNavigator = ({ isShared, setFabVisible }) => {
         tabBarIndicatorStyle: styles.indicator,
         tabBarItemStyle: { height: 48 },
       }}
+      sceneContainerStyle={{ backgroundColor: colors.background }}
       // Hiding FAB:
       screenListeners={{
         focus: (e) => {

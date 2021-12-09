@@ -57,7 +57,6 @@ const ShoppingListItemInteractive = ({
       <View style={styles.priceContainer}>
         {checkbox.field.value === 'indeterminate' && (
           <>
-            {/* TODO: Replace with Input Field? */}
             <TextInput
               name={box.field.name}
               onChangeText={box.field.onChange}
