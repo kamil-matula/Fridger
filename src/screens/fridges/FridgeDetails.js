@@ -27,7 +27,10 @@ import {
   up,
 } from 'assets/icons';
 import { productsInFridgeList } from 'tmpData';
-import { useOneFridgeQuery } from 'services/fridger/fridges';
+import {
+  useEditFridgeNameMutation,
+  useOneFridgeQuery,
+} from 'services/fridger/fridges';
 
 const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
@@ -37,6 +40,7 @@ const FridgeDetails = ({ route, navigation }) => {
 
   // Queries:
   const { data, isLoading } = useOneFridgeQuery(fridgeID);
+  const [editFridgeNameQuery] = useEditFridgeNameMutation();
 
   // Data:
   const [fridge, setFridge] = useState(null);
@@ -52,6 +56,20 @@ const FridgeDetails = ({ route, navigation }) => {
       });
     }
   }, [data]);
+
+  // Send data to api:
+  const editFridgeName = (id, name) => {
+    editFridgeNameQuery(id, name)
+      .unwrap()
+      .then((response) => {
+        // TODO: Add displaying toast here?
+        console.log(response);
+      })
+      .catch((error) => {
+        // TODO: Add error-handling after making sure what kind of errors can be here
+        console.log(error);
+      });
+  };
 
   // Sorting:
   const [sortingCategoryName, setSortingCategoryName] = useState('Name');
@@ -148,9 +166,9 @@ const FridgeDetails = ({ route, navigation }) => {
           refFridgeActions.current.open();
         }}
         onSubmitEditing={(newName) => {
-          // TODO: Send request to API to change fridge/list's name
-          if (fridge != null)
-            console.log(`Fridge ${fridge.name} has been renamed to ${newName}`);
+          if (fridge != null) {
+            editFridgeName(fridge.id, newName);
+          }
         }}
       />
       <Divider />
