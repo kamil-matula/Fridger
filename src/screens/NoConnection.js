@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BackHandler, View, StyleSheet } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 
