@@ -17,8 +17,10 @@ import { useChangePasswordMutation } from 'services/fridger/user';
 const ChangePassword = ({ navigation }) => {
   const styles = useStyles();
 
+  // Queries:
   const [changePasswordQuery, { isLoading }] = useChangePasswordMutation();
 
+  // Form states:
   const { control, handleSubmit, setFocus, getValues, setError } = useForm({
     defaultValues: {
       currentPassword: '',
@@ -41,16 +43,15 @@ const ChangePassword = ({ navigation }) => {
     },
   };
 
+  // Send data to api:
   const changePassword = (data) => {
     changePasswordQuery(data)
       .unwrap()
-      .then(() => {
-        navigation.goBack();
-      })
+      .then(() => navigation.goBack())
       .catch((error) => {
+        // Display error under specific input field...
         const currentPasswordError = error.data?.current_password;
         const newPasswordError = error.data?.new_password;
-        const generalError = error.data?.non_field_errors;
         if (currentPasswordError) {
           setError('currentPassword', {
             type: 'server',
@@ -63,6 +64,9 @@ const ChangePassword = ({ navigation }) => {
             message: newPasswordError.join(' '),
           });
         }
+
+        // ... or display toast if it's different kind of problem:
+        const generalError = error.data?.non_field_errors;
         if (generalError) {
           const message = generalError.join(' ');
           if (Platform.OS === 'android') {
@@ -82,8 +86,7 @@ const ChangePassword = ({ navigation }) => {
         <View>
           <InputField
             control={control}
-            rules={rules.password}
-            onSubmitEditing={() => setFocus('password')}
+            onSubmitEditing={() => setFocus('newPassword')}
             secure
             name='currentPassword'
             label='Current password'
@@ -93,8 +96,8 @@ const ChangePassword = ({ navigation }) => {
           <Separator />
           <InputField
             control={control}
-            rules={rules.password}
-            onSubmitEditing={() => setFocus('password2')}
+            rules={rules.newPassword}
+            onSubmitEditing={() => setFocus('newPassword2')}
             secure
             name='newPassword'
             label='New password'
@@ -104,11 +107,11 @@ const ChangePassword = ({ navigation }) => {
           <Separator />
           <InputField
             control={control}
-            rules={rules.password2}
+            rules={rules.newPassword2}
             secure
             name='newPassword2'
             label='Confirm new password'
-            returnKeyType='next'
+            returnKeyType='done'
             placeholder='Confirm your new password'
           />
           <Separator height={32} />

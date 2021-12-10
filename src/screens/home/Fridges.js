@@ -1,15 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { FlatList, View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { AppBar, FloatingActionButton, Separator } from 'components';
+import {
+  AppBar,
+  FloatingActionButton,
+  LoadingOverlay,
+  Separator,
+} from 'components';
 import { FridgeRow } from 'components/fridges';
 import { makeStyles } from 'utils';
-import { fridgesList } from 'tmpData';
+import { useFridgesQuery } from 'services/fridger/fridges';
 
 const Fridges = ({ navigation }) => {
   const styles = useStyles();
+
+  // Queries:
+  const { data, isLoading } = useFridgesQuery();
+
+  // Data:
+  const [fridges, setFridges] = useState([]);
+
+  // Update fridges when data is fetched:
+  useEffect(() => {
+    if (data) {
+      setFridges(
+        data.map((e) => ({
+          id: e.id,
+          name: e.name,
+          items: e.products_count,
+          people: e.shared_with_count,
+        }))
+      );
+    }
+  }, [data]);
 
   return (
     <View style={styles.container}>
@@ -18,7 +43,7 @@ const Fridges = ({ navigation }) => {
 
       {/* List of fridges */}
       <FlatList
-        data={fridgesList}
+        data={fridges}
         renderItem={({ item }) => (
           <FridgeRow
             text={item.name}
@@ -50,6 +75,9 @@ const Fridges = ({ navigation }) => {
         }}
         isBottomNavigationBar
       />
+
+      {/* Loading */}
+      {isLoading && <LoadingOverlay />}
     </View>
   );
 };

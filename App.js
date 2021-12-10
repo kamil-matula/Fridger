@@ -48,7 +48,7 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
     };
     initAuth();
     isInit.current = false;
-  }, [fetchUserInfo, dispatch]);
+  }, [fetchUserInfo]);
 
   // Check if user is successfully authenticated and end app loading
   useEffect(() => {
@@ -57,7 +57,7 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
       dispatch(authenticate());
     }
     setIsAppLoading(false);
-  }, [isSuccess, dispatch, setIsAppLoading, isUninitialized, isLoading]);
+  }, [isSuccess, isUninitialized, isLoading]);
 
   // Update token in storage whenever value of it in redux changes
   useEffect(() => {

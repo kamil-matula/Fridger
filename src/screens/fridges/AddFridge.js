@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { View, TextInput } from 'react-native';
 import { Divider, useTheme } from 'react-native-paper';
 
 import { AppBar, FloatingActionButton } from 'components';
 import { makeStyles } from 'utils';
+import { useAddFridgeMutation } from 'services/fridger/fridges';
 
 const AddFridge = ({ navigation }) => {
   const { colors } = useTheme();
   const styles = useStyles();
+
+  // Text Input content:
+  const [name, setName] = useState('');
+
+  // Queries:
+  const [addFridgeQuery, { isLoading }] = useAddFridgeMutation();
+
+  // Send data to api:
+  const addFridge = () => {
+    if (!isLoading)
+      addFridgeQuery(name)
+        .unwrap()
+        .then(() => navigation.goBack())
+        .catch((error) => {
+          // TODO: Add error-handling after making sure what kind of errors can be here
+          console.log(error);
+        });
+  };
 
   return (
     <View style={styles.container}>
@@ -18,18 +37,13 @@ const AddFridge = ({ navigation }) => {
         style={styles.input}
         placeholder='Write name'
         placeholderTextColor={colors.silverMetallic}
+        value={name}
+        onChangeText={(e) => setName(e)}
       />
       <Divider />
-      <FloatingActionButton
-        centered
-        label='Add fridge'
-        onPress={() => {
-          // TODO: Send request to API and add fridge to user
 
-          // Go back to FridgesList page or ChooseFridge page
-          navigation.goBack();
-        }}
-      />
+      {/* TODO: Add loader */}
+      <FloatingActionButton centered label='Add fridge' onPress={addFridge} />
     </View>
   );
 };

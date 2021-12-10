@@ -18,9 +18,11 @@ import { useLogoutMutation } from 'services/fridger/auth';
 const DeleteAccount = () => {
   const styles = useStyles();
 
+  // Queries:
   const [deleteAccountQuery, { isLoading }] = useDeleteAccountMutation();
   const [logout] = useLogoutMutation();
 
+  // Form states:
   const { control, handleSubmit, setFocus, getValues, setError } = useForm({
     defaultValues: {
       password: '',
@@ -42,21 +44,23 @@ const DeleteAccount = () => {
     },
   };
 
+  // Send data to api:
   const deleteAccount = (data) => {
     deleteAccountQuery(data)
       .unwrap()
-      .then(() => {
-        logout();
-      })
+      .then(() => logout())
       .catch((error) => {
+        // Display error under specific input field...
         const currentPasswordError = error.data?.current_password;
-        const generalError = error.data?.non_field_errors;
         if (currentPasswordError) {
           setError('password', {
             type: 'server',
             message: currentPasswordError.join(' '),
           });
         }
+
+        // ... or display toast if it's different kind of problem:
+        const generalError = error.data?.non_field_errors;
         if (generalError) {
           const message = generalError.join(' ');
           if (Platform.OS === 'android') {
@@ -91,7 +95,7 @@ const DeleteAccount = () => {
             secure
             name='password2'
             label='Confirm password'
-            returnKeyType='next'
+            returnKeyType='done'
             placeholder='Confirm your password'
           />
           <Separator height={32} />
