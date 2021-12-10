@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, CommonActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { useNavigation } from '@react-navigation/core';
 
 import { Login, ResetPassword, Register, RegisterFeedback } from 'screens/auth';
 import {
@@ -28,60 +30,107 @@ import {
   Friends,
   DeleteAccount,
 } from 'screens/drawer';
+import NoConnection from 'screens/NoConnection';
 import DrawerNavigator from './DrawerNavigator';
 
 const Navigation = () => (
   <NavigationContainer>
-    <StackNavigator />
+    <RootStackNavigator />
   </NavigationContainer>
 );
 
-const Stack = createStackNavigator();
-const StackNavigator = () => {
+const RootStack = createStackNavigator();
+const RootStackNavigator = () => {
+  const netInfo = useNetInfo();
+  const navigation = useNavigation();
+
+  // Changing screens if network changed:
+  useEffect(() => {
+    // Move to valid stack if there is internet connection,
+    // move to No Internet Screen if there is no internet connection,
+    // do nothing on init (when isInternetReachable is null):
+    if (netInfo.isConnected && netInfo.isInternetReachable) {
+      navigation.dispatch(CommonActions.navigate('Internet'));
+    } else if (
+      netInfo.isConnected === false ||
+      netInfo.isInternetReachable === false
+    ) {
+      navigation.dispatch(CommonActions.navigate('NoInternet'));
+    }
+  }, [netInfo.isConnected, netInfo.isInternetReachable]);
+
+  return (
+    <RootStack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName='Internet'
+    >
+      <RootStack.Screen name='Internet' component={MainStackNavigator} />
+      <RootStack.Screen name='NoInternet' component={NoConnection} />
+    </RootStack.Navigator>
+  );
+};
+
+const MainStack = createStackNavigator();
+const MainStackNavigator = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <MainStack.Navigator screenOptions={{ headerShown: false }}>
       {isAuthenticated ? (
         <>
           {/* LEVEL 1 (BOTTOM TABS) & LEVEL 2 (FRIDGE/LIST DETAILS) */}
-          <Stack.Screen name='DrawerNavigator' component={DrawerNavigator} />
+          <MainStack.Screen
+            name='DrawerNavigator'
+            component={DrawerNavigator}
+          />
 
           {/* LEVEL 2 (DRAWER + ADDING NEW STUFF) */}
-          <Stack.Screen name='EditProfile' component={EditProfile} />
-          <Stack.Screen name='ChangePassword' component={ChangePassword} />
-          <Stack.Screen name='Friends' component={Friends} />
-          <Stack.Screen name='DeleteAccount' component={DeleteAccount} />
-          <Stack.Screen name='AddFridge' component={AddFridge} />
-          <Stack.Screen name='AddShoppingList' component={AddShoppingList} />
-          <Stack.Screen name='AddFriend' component={AddFriend} />
-          <Stack.Screen name='FriendProfile' component={FriendProfile} />
+          <MainStack.Screen name='EditProfile' component={EditProfile} />
+          <MainStack.Screen name='ChangePassword' component={ChangePassword} />
+          <MainStack.Screen name='Friends' component={Friends} />
+          <MainStack.Screen name='DeleteAccount' component={DeleteAccount} />
+          <MainStack.Screen name='AddFridge' component={AddFridge} />
+          <MainStack.Screen
+            name='AddShoppingList'
+            component={AddShoppingList}
+          />
+          <MainStack.Screen name='AddFriend' component={AddFriend} />
+          <MainStack.Screen name='FriendProfile' component={FriendProfile} />
 
           {/* LEVEL 3 */}
-          <Stack.Screen name='Share' component={Share} />
-          <Stack.Screen name='EditPermissions' component={EditPermissions} />
-          <Stack.Screen name='AddProductManual' component={AddProductManual} />
-          <Stack.Screen
+          <MainStack.Screen name='Share' component={Share} />
+          <MainStack.Screen
+            name='EditPermissions'
+            component={EditPermissions}
+          />
+          <MainStack.Screen
+            name='AddProductManual'
+            component={AddProductManual}
+          />
+          <MainStack.Screen
             name='AddProductAutomat'
             component={AddProductAutomat}
           />
-          <Stack.Screen name='ProductDetails' component={ProductDetails} />
-          <Stack.Screen
+          <MainStack.Screen name='ProductDetails' component={ProductDetails} />
+          <MainStack.Screen
             name='AddShoppingListProduct'
             component={AddShoppingListProduct}
           />
-          <Stack.Screen name='ChooseFridge' component={ChooseFridge} />
+          <MainStack.Screen name='ChooseFridge' component={ChooseFridge} />
         </>
       ) : (
         <>
           {/* BEFORE AUTHENTICATION */}
-          <Stack.Screen name='Login' component={Login} />
-          <Stack.Screen name='ResetPassword' component={ResetPassword} />
-          <Stack.Screen name='Register' component={Register} />
-          <Stack.Screen name='RegisterFeedback' component={RegisterFeedback} />
+          <MainStack.Screen name='Login' component={Login} />
+          <MainStack.Screen name='ResetPassword' component={ResetPassword} />
+          <MainStack.Screen name='Register' component={Register} />
+          <MainStack.Screen
+            name='RegisterFeedback'
+            component={RegisterFeedback}
+          />
         </>
       )}
-    </Stack.Navigator>
+    </MainStack.Navigator>
   );
 };
 
