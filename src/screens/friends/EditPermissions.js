@@ -124,7 +124,7 @@ const EditPermissions = ({ route, navigation }) => {
         behavior: 'pop',
         type: route.params.type,
         containerID: route.params.containerID,
-        fridgeName: route.params.fridgeName,
+        containerName: route.params.containerName,
       });
     }
   };
@@ -157,19 +157,19 @@ const EditPermissions = ({ route, navigation }) => {
           {/* List of people who have access to this fridge / shopping list */}
           {owners.data
             .filter((user) => user.permission !== 'CREATOR')
-            .map((user) => (
+            .map((ownership) => (
               <TouchableRipple
-                key={user.id}
-                onPress={() => prepareToChangePermission(user)}
+                key={ownership.id}
+                onPress={() => prepareToChangePermission(ownership)}
               >
                 <UserInfo
-                  title={user.user.username}
-                  subtitle={user.permission}
+                  title={ownership.user.username}
+                  subtitle={ownership.permission}
                   subtitleTint={theme.colors.blueJeans}
-                  avatarURI={user.user.avatar}
+                  avatarURI={ownership.user.avatar}
                   variant='small'
                   icon1={deleteIcon}
-                  onPressIcon1={() => prepareToRemove(user)}
+                  onPressIcon1={() => prepareToRemove(ownership)}
                   iconTint1={theme.colors.silverMetallic}
                 />
               </TouchableRipple>
@@ -208,7 +208,7 @@ const EditPermissions = ({ route, navigation }) => {
       {/* TODO: Pass Fridge/List name and display it in the dialog */}
       <Dialog
         title='Remove friend from list'
-        paragraph={`Are you sure you want to remove ${toRemoveNick} from ${route.params.fridgeName}? This action cannot be undone.`}
+        paragraph={`Are you sure you want to remove ${toRemoveNick} from ${route.params.containerName}? This action cannot be undone.`}
         visibilityState={[dialogVisible, setDialogVisible]}
         label1='remove'
         onPressLabel1={removeFriend}

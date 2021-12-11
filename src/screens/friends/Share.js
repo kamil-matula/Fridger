@@ -25,21 +25,13 @@ const Share = ({ route, navigation }) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const [ownersCount, setOwnersCount] = useState(0);
-
   const owners = useFridgeOwnersQuery(route.params.containerID);
   const friends = useFriendsQuery(true);
   const addUser = useAddUserMutation()[0];
 
-  useEffect(() => {
-    if (owners.data) {
-      setOwnersCount(owners.data.length - 1);
-    }
-  }, [owners.data]);
-
   const addFriend = (id) => {
     // Send request to API to share fridge/shopping list with friend
-    AddUser({
+    addUser({
       userId: id,
       fridgeId: route.params.containerID,
       permissionName: 'READ',
@@ -67,7 +59,7 @@ const Share = ({ route, navigation }) => {
         behavior: 'pop',
         type: route.params.type,
         containerID: route.params.containerID,
-        fridgeName: route.params.fridgeName,
+        containerName: route.params.containerName,
       });
     }
   };
@@ -86,7 +78,7 @@ const Share = ({ route, navigation }) => {
           <TouchableRipple onPress={navigateToEditPermissions}>
             <View style={styles.infoContainer}>
               <Text style={styles.text}>
-                {`Shared with ${ownersCount} friends`}
+                {`Shared with ${owners.data.length - 1} friends`}
               </Text>
               <Image style={styles.icon} source={forward} />
             </View>
