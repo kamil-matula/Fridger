@@ -9,22 +9,23 @@ import { UserInfo, AppBar, LoadingOverlay } from 'components';
 import { add, forward } from 'assets/icons';
 
 import { useFriendsQuery } from 'services/fridger/friends';
+import { useFridgeOwnersQuery } from 'services/fridger/fridgesOwnerships';
 
 const Share = ({ route, navigation }) => {
   const styles = useStyles();
   const theme = useTheme();
 
   const [friends, setFriends] = useState([]);
-  const [friendsCount, setFriendsCount] = useState(4);
+  const [ownersCount, setOwnersCount] = useState(0);
 
-  const { data: friendsData, isLoading: friendsAreLoading } =
-    useFriendsQuery(true);
+  const ownersQuery = useFridgeOwnersQuery(route.params.containerID);
+  const friendsQuery = useFriendsQuery(true);
 
   // Update list of friends when data is fetched:
   useEffect(() => {
-    if (friendsData) {
+    if (friendsQuery.data) {
       setFriends(
-        friendsData.map((e) => ({
+        friendsQuery.data.map((e) => ({
           id: e.id,
           username: e.friend.username,
           firstName: e.friend.first_name,
@@ -33,7 +34,13 @@ const Share = ({ route, navigation }) => {
         }))
       );
     }
-  }, [friendsData]);
+  }, [friendsQuery.isSuccess]);
+
+  useEffect(() => {
+    if (ownersQuery.data) {
+      setOwnersCount(ownersQuery.data.length - 1);
+    }
+  }, [ownersQuery.isSuccess]);
 
   const addFriend = () => {
     // TODO: Send request to API to share fridge/shopping list with friend
@@ -55,7 +62,7 @@ const Share = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       {/* Loading */}
-      {friendsAreLoading && <LoadingOverlay />}
+      {friendsQuery.isLoading && <LoadingOverlay />}
 
       <AppBar label='share with friends' />
       <Divider />
@@ -64,7 +71,7 @@ const Share = ({ route, navigation }) => {
         <TouchableRipple onPress={navigateToEditPermissions}>
           <View style={styles.infoContainer}>
             <Text style={styles.text}>
-              {`Shared with ${friendsCount} friends`}
+              {`Shared with ${ownersCount} friends`}
             </Text>
             <Image style={styles.icon} source={forward} />
           </View>
