@@ -17,7 +17,7 @@ import { add, forward } from 'assets/icons';
 
 import { useFriendsQuery } from 'services/fridger/friends';
 import {
-  useLazyFridgeOwnersQuery,
+  useFridgeOwnersQuery,
   useAddUserMutation,
 } from 'services/fridger/fridgesOwnerships';
 
@@ -25,65 +25,26 @@ const Share = ({ route, navigation }) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const [friends, setFriends] = useState([]);
   const [ownersCount, setOwnersCount] = useState(0);
 
-  const [ownersQuery, ownersQueryStatus] = useLazyFridgeOwnersQuery();
-  const friendsQuery = useFriendsQuery(true);
-  const AddUser = useAddUserMutation()[0];
+  const owners = useFridgeOwnersQuery(route.params.containerID);
+  const friends = useFriendsQuery(true);
+  const addUser = useAddUserMutation()[0];
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      ownersQuery(route.params.containerID);
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-
-  // Update list of friends when data is fetched:
-  useEffect(() => {
-    if (friendsQuery.data && ownersQueryStatus.data) {
-      setFriends(
-        friendsQuery.data
-          .filter(({ friend }) => {
-            if (
-              ownersQueryStatus.data.find(({ user }) => user.id === friend.id)
-            ) {
-              return false;
-            }
-            return true;
-          })
-          .map(({ friend }) => ({
-            id: friend.id,
-            username: friend.username,
-            firstName: friend.first_name,
-            lastName: friend.last_name,
-            avatar: friend.avatar,
-          }))
-      );
+    if (owners.data) {
+      setOwnersCount(owners.data.length - 1);
     }
-  }, [friendsQuery.data, ownersQueryStatus.data]);
+  }, [owners.data]);
 
-  useEffect(() => {
-    if (ownersQueryStatus.data) {
-      setOwnersCount(ownersQueryStatus.data.length - 1);
-    }
-  }, [ownersQueryStatus.isSuccess]);
-
-  const addFriend = (user) => {
+  const addFriend = (id) => {
     // Send request to API to share fridge/shopping list with friend
     AddUser({
-      userId: user.id,
+      userId: id,
       fridgeId: route.params.containerID,
       permissionName: 'READ',
     })
       .unwrap()
-      .then(() => {
-        // Remove friend with given id:
-        const idx = friends.findIndex((e) => e.id === user.id);
-        setFriends([...friends.slice(0, idx), ...friends.slice(idx + 1)]);
-        setOwnersCount(ownersCount + 1);
-      })
       .catch((error) => {
         const generalError = error.data?.non_field_errors;
         if (generalError) {
@@ -117,7 +78,7 @@ const Share = ({ route, navigation }) => {
 
       <AppBar label='share with friends' />
       <Divider />
-      {friendsQuery.isLoading || ownersQueryStatus.isLoading ? (
+      {friends.isLoading || owners.isLoading ? (
         <LoadingOverlay />
       ) : (
         <ScrollView>
@@ -133,19 +94,15 @@ const Share = ({ route, navigation }) => {
 
           {/* List of friends available to invite */}
           <Divider />
-          {friends.map((user) => (
+          {friends.data.map(({ friend }) => (
             <UserInfo
-              key={user.id}
-              title={user.username}
-              subtitle={
-                user.firstName
-                  ? `${user.firstName} ${user.lastName ? user.lastName : ''}`
-                  : null
-              }
-              avatarURI={user.avatar}
+              key={friend.id}
+              title={friend.username}
+              subtitle={`${friend.first_name} ${friend.last_name}`.trim()}
+              avatarURI={friend.avatar}
               variant='small'
               icon1={add}
-              onPressIcon1={() => addFriend(user)}
+              onPressIcon1={() => addFriend(friend.id)}
               iconTint1={theme.colors.silverMetallic}
             />
           ))}

@@ -16,7 +16,7 @@ import {
 import { forward, deleteIcon, check } from 'assets/icons';
 
 import {
-  useLazyFridgeOwnersQuery,
+  useFridgeOwnersQuery,
   useRemoveUserMutation,
   useUpdatePermissionMutation,
 } from 'services/fridger/fridgesOwnerships';
@@ -30,48 +30,22 @@ const EditPermissions = ({ route, navigation }) => {
     avatar: null,
     permission: '',
   });
-  const [owners, setOwners] = useState([]);
 
   const updatePermission = useUpdatePermissionMutation()[0];
-  const [removeUser, removeUserStatus] = useRemoveUserMutation();
-  const [ownersQuery, ownersQueryStatus] = useLazyFridgeOwnersQuery();
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      ownersQuery(route.params.containerID);
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+  const removeUser = useRemoveUserMutation()[0];
+  const owners = useFridgeOwnersQuery(route.params.containerID);
 
   // Update list of owners when data is fetched:
   useEffect(() => {
-    if (ownersQueryStatus.data) {
-      setOwners(
-        ownersQueryStatus.data
-          .filter((e) => {
-            if (e.permission === 'CREATOR') {
-              setCreator({
-                username: e.user.username,
-                avatar: e.user.avatar,
-                permission: e.permission,
-              });
-              return false;
-            }
-            return true;
-          })
-          .map((e) => ({
-            modelId: e.id,
-            id: e.user.id,
-            username: e.user.username,
-            firstName: e.user.first_name,
-            lastName: e.user.last_name,
-            avatar: e.user.avatar,
-            permission: e.permission,
-          }))
-      );
+    if (owners.data) {
+      const tmp = owners.data.find((e) => e.permission === 'CREATOR');
+      setCreator({
+        username: tmp.user.username,
+        avatar: tmp.user.avatar,
+        permission: tmp.permission,
+      });
     }
-  }, [ownersQueryStatus.data]);
+  }, [owners.data]);
 
   // Changing permission - preparation:
   const [toChange, setToChange] = useState(null);
@@ -85,21 +59,10 @@ const EditPermissions = ({ route, navigation }) => {
   const refBS = useRef(null);
   const changePermission = (newPermission) => {
     updatePermission({
-      modelId: toChange.modelId,
+      modelId: toChange.id,
       permissionName: newPermission,
     })
       .unwrap()
-      .then(() => {
-        // Change permissions for a friend with given id:
-        const idx = owners.findIndex((e) => e.id === toChange.id);
-        const changedFriend = owners[idx];
-        changedFriend.permission = newPermission;
-        setOwners([
-          ...owners.slice(0, idx),
-          changedFriend,
-          ...owners.slice(idx + 1),
-        ]);
-      })
       .catch((error) => {
         const generalError = error.data?.non_field_errors;
         if (generalError) {
@@ -123,19 +86,14 @@ const EditPermissions = ({ route, navigation }) => {
   const prepareToRemove = (friend) => {
     // Display dialog with appropriate data:
     setToRemove(friend);
-    setToRemoveNick(friend.username);
+    setToRemoveNick(friend.user.username);
     setDialogVisible(true);
   };
 
   // Removing friend from list - main methods:
   const removeFriend = () => {
-    removeUser(toRemove.modelId)
+    removeUser(toRemove.id)
       .unwrap()
-      .then(() => {
-        // Remove friend with given id:
-        const idx = owners.findIndex((e) => e.id === toRemove.id);
-        setOwners([...owners.slice(0, idx), ...owners.slice(idx + 1)]);
-      })
       .catch((error) => {
         const generalError = error.data?.non_field_errors;
         if (generalError) {
@@ -175,7 +133,7 @@ const EditPermissions = ({ route, navigation }) => {
     <View style={styles.container}>
       <AppBar label='edit permissions' />
       <Divider />
-      {ownersQueryStatus.isLoading || removeUserStatus.isLoading ? (
+      {owners.isLoading ? (
         <LoadingOverlay />
       ) : (
         <ScrollView>
@@ -197,23 +155,25 @@ const EditPermissions = ({ route, navigation }) => {
           />
 
           {/* List of people who have access to this fridge / shopping list */}
-          {owners.map((user) => (
-            <TouchableRipple
-              key={user.id}
-              onPress={() => prepareToChangePermission(user)}
-            >
-              <UserInfo
-                title={user.username}
-                subtitle={user.permission}
-                subtitleTint={theme.colors.blueJeans}
-                avatarURI={user.avatar}
-                variant='small'
-                icon1={deleteIcon}
-                onPressIcon1={() => prepareToRemove(user)}
-                iconTint1={theme.colors.silverMetallic}
-              />
-            </TouchableRipple>
-          ))}
+          {owners.data
+            .filter((user) => user.permission !== 'CREATOR')
+            .map((user) => (
+              <TouchableRipple
+                key={user.id}
+                onPress={() => prepareToChangePermission(user)}
+              >
+                <UserInfo
+                  title={user.user.username}
+                  subtitle={user.permission}
+                  subtitleTint={theme.colors.blueJeans}
+                  avatarURI={user.user.avatar}
+                  variant='small'
+                  icon1={deleteIcon}
+                  onPressIcon1={() => prepareToRemove(user)}
+                  iconTint1={theme.colors.silverMetallic}
+                />
+              </TouchableRipple>
+            ))}
         </ScrollView>
       )}
 
