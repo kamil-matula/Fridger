@@ -1,7 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 
-import { View, Image, ScrollView, Text } from 'react-native';
+import {
+  View,
+  Image,
+  ScrollView,
+  Text,
+  AlertIOS,
+  Platform,
+} from 'react-native';
 import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
@@ -9,7 +16,10 @@ import { UserInfo, AppBar, LoadingOverlay } from 'components';
 import { add, forward } from 'assets/icons';
 
 import { useFriendsQuery } from 'services/fridger/friends';
-import { useFridgeOwnersQuery } from 'services/fridger/fridgesOwnerships';
+import {
+  useFridgeOwnersQuery,
+  useAddUserMutation,
+} from 'services/fridger/fridgesOwnerships';
 
 const Share = ({ route, navigation }) => {
   const styles = useStyles();
@@ -20,6 +30,8 @@ const Share = ({ route, navigation }) => {
 
   const ownersQuery = useFridgeOwnersQuery(route.params.containerID);
   const friendsQuery = useFriendsQuery(true);
+
+  const [AddUser, AddUserStatus] = useAddUserMutation();
 
   // Update list of friends when data is fetched:
   useEffect(() => {
@@ -49,8 +61,31 @@ const Share = ({ route, navigation }) => {
     }
   }, [ownersQuery.isSuccess]);
 
-  const addFriend = () => {
-    // TODO: Send request to API to share fridge/shopping list with friend
+  const addFriend = (user) => {
+    // Send request to API to share fridge/shopping list with friend
+    AddUser({
+      userId: user.id,
+      fridgeId: route.params.containerID,
+      permissionName: 'READ',
+    })
+      .unwrap()
+      .then(() => {
+        // Remove friend with given id:
+        const idx = friends.findIndex((e) => e.id === user.id);
+        setFriends([...friends.slice(0, idx), ...friends.slice(idx + 1)]);
+      })
+      .catch((error) => {
+        console.log(error);
+        const generalError = error.data?.non_field_errors;
+        if (generalError) {
+          const message = generalError.join(' ');
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+          } else {
+            AlertIOS.alert(message);
+          }
+        }
+      });
   };
 
   const navigateToEditPermissions = () => {
