@@ -14,4 +14,5 @@ export const fridgerApi = createApi({
     },
   }),
   endpoints: () => ({}),
+  refetchOnMountOrArgChange: true,
 });

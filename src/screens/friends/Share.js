@@ -1,20 +1,39 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { UserInfo, AppBar } from 'components';
+import { UserInfo, AppBar, LoadingOverlay } from 'components';
 import { add, forward } from 'assets/icons';
-import { friendsList } from 'tmpData';
+
+import { useFriendsQuery } from 'services/fridger/friends';
 
 const Share = ({ route, navigation }) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const [friends, setFriends] = useState(friendsList);
+  const [friends, setFriends] = useState([]);
   const [friendsCount, setFriendsCount] = useState(4);
+
+  const { data: friendsData, isLoading: friendsAreLoading } =
+    useFriendsQuery(true);
+
+  // Update list of friends when data is fetched:
+  useEffect(() => {
+    if (friendsData) {
+      setFriends(
+        friendsData.map((e) => ({
+          id: e.id,
+          username: e.friend.username,
+          firstName: e.friend.first_name,
+          lastName: e.friend.last_name,
+          avatar: e.friend.avatar,
+        }))
+      );
+    }
+  }, [friendsData]);
 
   const addFriend = () => {
     // TODO: Send request to API to share fridge/shopping list with friend
@@ -35,6 +54,9 @@ const Share = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* Loading */}
+      {friendsAreLoading && <LoadingOverlay />}
+
       <AppBar label='share with friends' />
       <Divider />
       <ScrollView>
@@ -50,15 +72,19 @@ const Share = ({ route, navigation }) => {
 
         {/* List of friends available to invite */}
         <Divider />
-        {friends.map((e) => (
+        {friends.map((user) => (
           <UserInfo
-            key={e.id}
-            title={e.nick}
-            subtitle={e.name ? `${e.name} ${e.surname ? e.surname : ''}` : null}
-            avatarURI={e.avatar}
+            key={user.id}
+            title={user.username}
+            subtitle={
+              user.firstName
+                ? `${user.firstName} ${user.lastName ? user.lastName : ''}`
+                : null
+            }
+            avatarURI={user.avatar}
             variant='small'
             icon1={add}
-            onPressIcon1={() => addFriend(e)}
+            onPressIcon1={() => addFriend(user)}
             iconTint1={theme.colors.silverMetallic}
           />
         ))}
