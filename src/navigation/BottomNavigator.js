@@ -5,7 +5,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { Menu } from 'screens/home';
+import { Statistics } from 'screens/home';
 import { fridgeTab, listTab, menuTab } from 'assets/icons/navigation';
 import FridgeNavigator from './FridgeNavigator';
 import ShoppingListNavigator from './ShoppingListNavigator';
@@ -62,10 +62,11 @@ const BottomNavigator = () => {
           options={tabOptions(listTab, 'SHOPPING LISTS')}
         />
 
-        {/* MENU */}
+        {/* STATISTICS */}
         <Tab.Screen
-          name='Menu'
-          component={Menu}
+          name='Statistics'
+          component={Statistics}
+          // TODO: Change icon
           options={tabOptions(menuTab, 'STATISTICS')}
         />
       </Tab.Navigator>

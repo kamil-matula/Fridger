@@ -1,15 +1,16 @@
 import React from 'react';
 
-import { Text, View } from 'react-native';
+import { Text, View, Image } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 
-const StatsCard = ({ title, last7data, last30data }) => {
+const StatsCard = ({ title, icon, last7data, last30data }) => {
   const styles = useStyles();
 
   return (
     <View style={styles.card}>
+      <Image style={styles.icon} source={icon} />
       <Text style={styles.title}>{title}</Text>
       <View style={styles.daysContainer}>
         <Text style={styles.subtitle}>Last 7 days</Text>
@@ -17,16 +18,16 @@ const StatsCard = ({ title, last7data, last30data }) => {
       </View>
       <View style={styles.quantitiesContainer}>
         <View style={styles.quantitiesColumn}>
-          {last7data.map((e, index) => (
+          {last7data.map((element, index) => (
             <Text key={`last7_${index}`} style={styles.text}>
-              {e}
+              {element}
             </Text>
           ))}
         </View>
         <View style={styles.quantitiesColumn}>
-          {last30data.map((e, index) => (
+          {last30data.map((element, index) => (
             <Text key={`last30_${index}`} style={styles.text}>
-              {e}
+              {element}
             </Text>
           ))}
         </View>
@@ -37,23 +38,29 @@ const StatsCard = ({ title, last7data, last30data }) => {
 
 StatsCard.propTypes = {
   title: PropTypes.string.isRequired,
+  icon: PropTypes.number,
   last7data: PropTypes.arrayOf(PropTypes.string).isRequired,
   last30data: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: '100%',
+    width: 250,
     borderRadius: 5,
     backgroundColor: theme.colors.primary,
-    justifyContent: 'center',
     alignItems: 'center',
     padding: 8,
     marginVertical: 8,
   },
+  icon: {
+    tintColor: theme.colors.silverMetallic,
+    height: 48,
+    width: 48,
+    margin: 8,
+  },
   title: {
     color: theme.colors.white,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
   },
   daysContainer: {
@@ -61,17 +68,17 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     width: '100%',
-    marginBottom: 4,
+    marginVertical: 2,
   },
   subtitle: {
     color: theme.colors.silverMetallic,
-    fontSize: 14,
   },
   quantitiesContainer: { flexDirection: 'row' },
   quantitiesColumn: {
     width: '50%',
     justifyContent: 'center',
     alignItems: 'center',
+    height: 60,
   },
   text: {
     color: theme.colors.white,
