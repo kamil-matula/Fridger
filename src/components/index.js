@@ -12,3 +12,4 @@ export { default as BottomSheet } from './BottomSheet';
 export { default as SheetRow } from './SheetRow';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as LoadingOverlay } from './LoadingOverlay';
+export { default as StatsCard } from './StatsCard';

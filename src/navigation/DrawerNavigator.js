@@ -25,7 +25,7 @@ const DrawerNavigator = () => {
         <DrawerContent navigation={navigation} />
       )}
     >
-      {/* MAIN SCREEN: MENU, FRIDGES, SHOPPING LISTS (+ DETAILS) */}
+      {/* MAIN SCREEN: FRIDGES, SHOPPING LISTS, STATISTICS (+ DETAILS) */}
       <Drawer.Screen
         name='Home'
         component={BottomNavigator}
