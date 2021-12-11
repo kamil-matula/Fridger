@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
-import { AppBar } from 'components';
+import { AppBar, StatsCard } from 'components';
 import { makeStyles } from 'utils';
 
 const Menu = () => {
@@ -12,7 +12,21 @@ const Menu = () => {
     <View style={styles.container}>
       <AppBar isDrawer />
       <View style={styles.container2}>
-        <Text style={styles.text}>Menu</Text>
+        <StatsCard
+          title='Food eaten'
+          last7data={['120 kg', '500 ml']}
+          last30data={['600 kg', '12100 ml', '30 pieces']}
+        />
+        <StatsCard
+          title='Food wasted'
+          last7data={['50 kg']}
+          last30data={['120 kg', '100 ml']}
+        />
+        <StatsCard
+          title='Money spent'
+          last7data={['500 PLN']}
+          last30data={['1500 PLN']}
+        />
       </View>
     </View>
   );
@@ -24,12 +38,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.background,
   },
   container2: {
-    justifyContent: 'center',
-    alignItems: 'center',
     flex: 1,
-  },
-  text: {
-    color: theme.colors.white,
+    paddingHorizontal: 16,
   },
 }));
 

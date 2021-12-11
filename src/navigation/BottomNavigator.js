@@ -46,15 +46,8 @@ const BottomNavigator = () => {
         inactiveColor={colors.silverMetallic}
         shifting={false}
         backBehavior='none'
-        initialRouteName='Menu'
+        initialRouteName='Fridges'
       >
-        {/* MENU */}
-        <Tab.Screen
-          name='Menu'
-          component={Menu}
-          options={tabOptions(menuTab, 'MENU')}
-        />
-
         {/* FRIDGES, FRIDGE DETAILS */}
         <Tab.Screen
           name='Fridges'
@@ -67,6 +60,13 @@ const BottomNavigator = () => {
           name='Shopping Lists'
           component={ShoppingListNavigator}
           options={tabOptions(listTab, 'SHOPPING LISTS')}
+        />
+
+        {/* MENU */}
+        <Tab.Screen
+          name='Menu'
+          component={Menu}
+          options={tabOptions(menuTab, 'STATISTICS')}
         />
       </Tab.Navigator>
     </View>
