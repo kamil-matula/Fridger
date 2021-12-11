@@ -23,18 +23,25 @@ const Share = ({ route, navigation }) => {
 
   // Update list of friends when data is fetched:
   useEffect(() => {
-    if (friendsQuery.data) {
+    if (friendsQuery.data && ownersQuery.data) {
       setFriends(
-        friendsQuery.data.map((e) => ({
-          id: e.id,
-          username: e.friend.username,
-          firstName: e.friend.first_name,
-          lastName: e.friend.last_name,
-          avatar: e.friend.avatar,
-        }))
+        friendsQuery.data
+          .filter((friend) => {
+            if (ownersQuery.data.find((owner) => owner.id === friend.id)) {
+              return false;
+            }
+            return true;
+          })
+          .map((e) => ({
+            id: e.id,
+            username: e.friend.username,
+            firstName: e.friend.first_name,
+            lastName: e.friend.last_name,
+            avatar: e.friend.avatar,
+          }))
       );
     }
-  }, [friendsQuery.isSuccess]);
+  }, [friendsQuery.isSuccess, ownersQuery.isSuccess]);
 
   useEffect(() => {
     if (ownersQuery.data) {
@@ -62,7 +69,7 @@ const Share = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       {/* Loading */}
-      {friendsQuery.isLoading && <LoadingOverlay />}
+      {(friendsQuery.isLoading || ownersQuery.isLoading) && <LoadingOverlay />}
 
       <AppBar label='share with friends' />
       <Divider />
