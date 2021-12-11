@@ -31,7 +31,7 @@ const Share = ({ route, navigation }) => {
   const ownersQuery = useFridgeOwnersQuery(route.params.containerID);
   const friendsQuery = useFriendsQuery(true);
 
-  const [AddUser, AddUserStatus] = useAddUserMutation();
+  const AddUser = useAddUserMutation()[0];
 
   // Update list of friends when data is fetched:
   useEffect(() => {
@@ -44,12 +44,12 @@ const Share = ({ route, navigation }) => {
             }
             return true;
           })
-          .map((e) => ({
-            id: e.id,
-            username: e.friend.username,
-            firstName: e.friend.first_name,
-            lastName: e.friend.last_name,
-            avatar: e.friend.avatar,
+          .map(({ friend }) => ({
+            id: friend.id,
+            username: friend.username,
+            firstName: friend.first_name,
+            lastName: friend.last_name,
+            avatar: friend.avatar,
           }))
       );
     }
