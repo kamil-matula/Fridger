@@ -38,8 +38,8 @@ const Share = ({ route, navigation }) => {
     if (friendsQuery.data && ownersQuery.data) {
       setFriends(
         friendsQuery.data
-          .filter((friend) => {
-            if (ownersQuery.data.find((owner) => owner.id === friend.id)) {
+          .filter(({ friend }) => {
+            if (ownersQuery.data.find(({ user }) => user.id === friend.id)) {
               return false;
             }
             return true;
