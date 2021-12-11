@@ -25,7 +25,11 @@ const EditPermissions = ({ route, navigation }) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const [creator, setCreator] = useState([]);
+  const [creator, setCreator] = useState({
+    username: '',
+    avatar: null,
+    permission: '',
+  });
   const [owners, setOwners] = useState([]);
 
   const updatePermission = useUpdatePermissionMutation()[0];
@@ -48,10 +52,7 @@ const EditPermissions = ({ route, navigation }) => {
           .filter((e) => {
             if (e.permission === 'CREATOR') {
               setCreator({
-                id: e.user.id,
                 username: e.user.username,
-                firstName: e.user.first_name,
-                lastName: e.user.last_name,
                 avatar: e.user.avatar,
                 permission: e.permission,
               });
@@ -190,8 +191,8 @@ const EditPermissions = ({ route, navigation }) => {
 
           {/* Creator of this fridge / shopping list */}
           <UserInfo
-            title={creator.username || ''}
-            subtitle='CREATOR'
+            title={creator.username}
+            subtitle={creator.permission}
             avatarURI={creator.avatar}
             variant='small'
           />
