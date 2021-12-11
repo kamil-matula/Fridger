@@ -15,12 +15,13 @@ const Statistics = () => {
     <View style={styles.container}>
       <AppBar isDrawer />
 
-      <ScrollViewLayout>
+      <ScrollViewLayout addPadding={false}>
         {/* Cards */}
         <View style={styles.container2}>
           <StatsCard
             title='Food eaten'
             icon={happy}
+            last1data={['3 kg', '500 ml']}
             last7data={['120 kg', '500 ml']}
             last30data={['600 kg', '12100 ml', '30 pieces']}
           />
@@ -28,6 +29,7 @@ const Statistics = () => {
           <StatsCard
             title='Food wasted'
             icon={sad}
+            last1data={['0.5 kg']}
             last7data={['50 kg']}
             last30data={['120 kg', '100 ml']}
           />
@@ -35,6 +37,7 @@ const Statistics = () => {
           <StatsCard
             title='Money spent'
             icon={money}
+            last1data={['50 PLN']}
             last7data={['500 PLN']}
             last30data={['1500 PLN']}
           />
@@ -56,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginHorizontal: 16,
   },
 }));
 

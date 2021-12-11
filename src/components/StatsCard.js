@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 
-const StatsCard = ({ title, icon, last7data, last30data }) => {
+const StatsCard = ({ title, icon, last1data, last7data, last30data }) => {
   const styles = useStyles();
 
   return (
@@ -13,10 +13,18 @@ const StatsCard = ({ title, icon, last7data, last30data }) => {
       <Image style={styles.icon} source={icon} />
       <Text style={styles.title}>{title}</Text>
       <View style={styles.daysContainer}>
+        <Text style={styles.subtitle}>Last 24 hours</Text>
         <Text style={styles.subtitle}>Last 7 days</Text>
         <Text style={styles.subtitle}>Last 30 days</Text>
       </View>
       <View style={styles.quantitiesContainer}>
+        <View style={styles.quantitiesColumn}>
+          {last1data.map((element, index) => (
+            <Text key={`last1_${index}`} style={styles.text}>
+              {element}
+            </Text>
+          ))}
+        </View>
         <View style={styles.quantitiesColumn}>
           {last7data.map((element, index) => (
             <Text key={`last7_${index}`} style={styles.text}>
@@ -39,13 +47,14 @@ const StatsCard = ({ title, icon, last7data, last30data }) => {
 StatsCard.propTypes = {
   title: PropTypes.string.isRequired,
   icon: PropTypes.number,
+  last1data: PropTypes.arrayOf(PropTypes.string).isRequired,
   last7data: PropTypes.arrayOf(PropTypes.string).isRequired,
   last30data: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: 250,
+    width: '100%',
     borderRadius: 5,
     backgroundColor: theme.colors.primary,
     alignItems: 'center',
@@ -75,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
   },
   quantitiesContainer: { flexDirection: 'row' },
   quantitiesColumn: {
-    width: '50%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     height: 60,
