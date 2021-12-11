@@ -1,14 +1,24 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, AlertIOS, Platform } from 'react';
 
 import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, useTheme, TouchableRipple } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { UserInfo, AppBar, BottomSheet, SheetRow, Dialog } from 'components';
+import {
+  UserInfo,
+  AppBar,
+  BottomSheet,
+  SheetRow,
+  Dialog,
+  LoadingOverlay,
+} from 'components';
 import { forward, deleteIcon, check } from 'assets/icons';
 
-import { useFridgeOwnersQuery } from 'services/fridger/fridgesOwnerships';
+import {
+  useFridgeOwnersQuery,
+  useRemoveUserMutation,
+} from 'services/fridger/fridgesOwnerships';
 
 const EditPermissions = ({ route, navigation }) => {
   const styles = useStyles();
@@ -17,6 +27,7 @@ const EditPermissions = ({ route, navigation }) => {
   const [creator, setCreator] = useState([]);
   const [owners, setOwners] = useState([]);
 
+  const [removeUser, removeUserStatus] = useRemoveUserMutation();
   const ownersQuery = useFridgeOwnersQuery(route.params.containerID);
   // Update list of owners when data is fetched:
   useEffect(() => {
@@ -38,6 +49,7 @@ const EditPermissions = ({ route, navigation }) => {
             return true;
           })
           .map((e) => ({
+            modelId: e.id,
             id: e.user.id,
             username: e.user.username,
             firstName: e.user.first_name,
@@ -83,17 +95,32 @@ const EditPermissions = ({ route, navigation }) => {
   const prepareToRemove = (friend) => {
     // Display dialog with appropriate data:
     setToRemove(friend);
-    setToRemoveNick(friend.nick);
+    setToRemoveNick(friend.username);
     setDialogVisible(true);
   };
 
   // Removing friend from list - main methods:
   const removeFriend = () => {
-    // Remove friend with given id:
-    const idx = owners.findIndex((e) => e.id === toRemove.id);
-    setOwners([...owners.slice(0, idx), ...owners.slice(idx + 1)]);
-
-    // TODO: Send request to API to remove friend globally instead of locally
+    removeUser(toRemove.modelId)
+      .unwrap()
+      .then(() => {
+        // Remove friend with given id:
+        const idx = owners.findIndex((e) => e.id === toRemove.id);
+        setOwners([...owners.slice(0, idx), ...owners.slice(idx + 1)]);
+      })
+      .catch((error) => {
+        console.log(toRemove.modelId);
+        console.log(error);
+        const generalError = error.data?.non_field_errors;
+        if (generalError) {
+          const message = generalError.join(' ');
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+          } else {
+            AlertIOS.alert(message);
+          }
+        }
+      });
 
     // Hide dialog:
     setDialogVisible(false);
@@ -121,43 +148,47 @@ const EditPermissions = ({ route, navigation }) => {
     <View style={styles.container}>
       <AppBar label='edit permissions' />
       <Divider />
-      <ScrollView>
-        {/* Connection with Share Screen */}
-        <TouchableRipple onPress={navigateToShare}>
-          <View style={styles.infoContainer}>
-            <Text style={styles.text}>Add more friends</Text>
-            <Image style={styles.icon} source={forward} />
-          </View>
-        </TouchableRipple>
-        <Divider />
-
-        {/* Creator of this fridge / shopping list */}
-        <UserInfo
-          title={creator.username}
-          subtitle='CREATOR'
-          avatarURI={creator.avatar}
-          variant='small'
-        />
-
-        {/* List of people who have access to this fridge / shopping list */}
-        {owners.map((user) => (
-          <TouchableRipple
-            key={user.id}
-            onPress={() => prepareToChangePermission(user)}
-          >
-            <UserInfo
-              title={user.username}
-              subtitle={user.permission}
-              subtitleTint={theme.colors.blueJeans}
-              avatarURI={user.avatar}
-              variant='small'
-              icon1={deleteIcon}
-              onPressIcon1={() => prepareToRemove(user)}
-              iconTint1={theme.colors.silverMetallic}
-            />
+      {ownersQuery.isLoading || removeUserStatus.isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <ScrollView>
+          {/* Connection with Share Screen */}
+          <TouchableRipple onPress={navigateToShare}>
+            <View style={styles.infoContainer}>
+              <Text style={styles.text}>Add more friends</Text>
+              <Image style={styles.icon} source={forward} />
+            </View>
           </TouchableRipple>
-        ))}
-      </ScrollView>
+          <Divider />
+
+          {/* Creator of this fridge / shopping list */}
+          <UserInfo
+            title={creator.username || ''}
+            subtitle='CREATOR'
+            avatarURI={creator.avatar}
+            variant='small'
+          />
+
+          {/* List of people who have access to this fridge / shopping list */}
+          {owners.map((user) => (
+            <TouchableRipple
+              key={user.id}
+              onPress={() => prepareToChangePermission(user)}
+            >
+              <UserInfo
+                title={user.username}
+                subtitle={user.permission}
+                subtitleTint={theme.colors.blueJeans}
+                avatarURI={user.avatar}
+                variant='small'
+                icon1={deleteIcon}
+                onPressIcon1={() => prepareToRemove(user)}
+                iconTint1={theme.colors.silverMetallic}
+              />
+            </TouchableRipple>
+          ))}
+        </ScrollView>
+      )}
 
       {/* Permission actions */}
       <BottomSheet reference={refBS} title='Change permission'>
@@ -190,7 +221,7 @@ const EditPermissions = ({ route, navigation }) => {
       {/* TODO: Pass Fridge/List name and display it in the dialog */}
       <Dialog
         title='Remove friend from list'
-        paragraph={`Are you sure you want to remove  ${toRemoveNick} from <list name>? This action cannot be undone.`}
+        paragraph={`Are you sure you want to remove ${toRemoveNick} from list? This action cannot be undone.`}
         visibilityState={[dialogVisible, setDialogVisible]}
         label1='remove'
         onPressLabel1={removeFriend}

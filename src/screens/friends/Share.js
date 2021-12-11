@@ -73,9 +73,9 @@ const Share = ({ route, navigation }) => {
         // Remove friend with given id:
         const idx = friends.findIndex((e) => e.id === user.id);
         setFriends([...friends.slice(0, idx), ...friends.slice(idx + 1)]);
+        setOwnersCount(ownersCount + 1);
       })
       .catch((error) => {
-        console.log(error);
         const generalError = error.data?.non_field_errors;
         if (generalError) {
           const message = generalError.join(' ');
