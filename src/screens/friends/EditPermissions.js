@@ -166,6 +166,7 @@ const EditPermissions = ({ route, navigation }) => {
         behavior: 'pop',
         type: route.params.type,
         containerID: route.params.containerID,
+        fridgeName: route.params.fridgeName,
       });
     }
   };
@@ -247,7 +248,7 @@ const EditPermissions = ({ route, navigation }) => {
       {/* TODO: Pass Fridge/List name and display it in the dialog */}
       <Dialog
         title='Remove friend from list'
-        paragraph={`Are you sure you want to remove ${toRemoveNick} from list? This action cannot be undone.`}
+        paragraph={`Are you sure you want to remove ${toRemoveNick} from ${route.params.fridgeName}? This action cannot be undone.`}
         visibilityState={[dialogVisible, setDialogVisible]}
         label1='remove'
         onPressLabel1={removeFriend}

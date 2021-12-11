@@ -106,6 +106,7 @@ const Share = ({ route, navigation }) => {
         behavior: 'pop',
         type: route.params.type,
         containerID: route.params.containerID,
+        fridgeName: route.params.fridgeName,
       });
     }
   };

@@ -248,6 +248,7 @@ const FridgeDetails = ({ route, navigation }) => {
               navigation.navigate('Share', {
                 type: 'fridge',
                 containerID: fridge.id,
+                fridgeName: fridge.name,
               });
           }}
         />
@@ -261,6 +262,7 @@ const FridgeDetails = ({ route, navigation }) => {
               navigation.navigate('EditPermissions', {
                 type: 'fridge',
                 containerID: fridge.id,
+                fridgeName: fridge.name,
               });
           }}
         />
