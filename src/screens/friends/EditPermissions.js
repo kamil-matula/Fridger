@@ -18,6 +18,7 @@ import { forward, deleteIcon, check } from 'assets/icons';
 import {
   useLazyFridgeOwnersQuery,
   useRemoveUserMutation,
+  useUpdatePermissionMutation,
 } from 'services/fridger/fridgesOwnerships';
 
 const EditPermissions = ({ route, navigation }) => {
@@ -27,6 +28,7 @@ const EditPermissions = ({ route, navigation }) => {
   const [creator, setCreator] = useState([]);
   const [owners, setOwners] = useState([]);
 
+  const updatePermission = useUpdatePermissionMutation()[0];
   const [removeUser, removeUserStatus] = useRemoveUserMutation();
   const [ownersQuery, ownersQueryStatus] = useLazyFridgeOwnersQuery();
 
@@ -81,17 +83,35 @@ const EditPermissions = ({ route, navigation }) => {
   // Changing permission - main methods:
   const refBS = useRef(null);
   const changePermission = (newPermission) => {
-    // Change permissions for a friend with given id:
-    const idx = owners.findIndex((e) => e.id === toChange.id);
-    const changedFriend = owners[idx];
-    changedFriend.permission = newPermission;
-    setOwners([
-      ...owners.slice(0, idx),
-      changedFriend,
-      ...owners.slice(idx + 1),
-    ]);
-
-    // TODO: Send request to API to change permissions globally instead of locally
+    updatePermission({
+      modelId: toChange.modelId,
+      userId: toChange.id,
+      fridgeId: route.params.containerID,
+      permissionName: newPermission,
+    })
+      .unwrap()
+      .then(() => {
+        // Change permissions for a friend with given id:
+        const idx = owners.findIndex((e) => e.id === toChange.id);
+        const changedFriend = owners[idx];
+        changedFriend.permission = newPermission;
+        setOwners([
+          ...owners.slice(0, idx),
+          changedFriend,
+          ...owners.slice(idx + 1),
+        ]);
+      })
+      .catch((error) => {
+        const generalError = error.data?.non_field_errors;
+        if (generalError) {
+          const message = generalError.join(' ');
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+          } else {
+            AlertIOS.alert(message);
+          }
+        }
+      });
 
     // Hide Bottom Sheet:
     refBS.current.close();
@@ -118,8 +138,6 @@ const EditPermissions = ({ route, navigation }) => {
         setOwners([...owners.slice(0, idx), ...owners.slice(idx + 1)]);
       })
       .catch((error) => {
-        console.log(toRemove.modelId);
-        console.log(error);
         const generalError = error.data?.non_field_errors;
         if (generalError) {
           const message = generalError.join(' ');
@@ -205,14 +223,14 @@ const EditPermissions = ({ route, navigation }) => {
           icon={!!toChange && toChange.permission === 'can view' ? check : null}
           text='Can view'
           onPress={() => {
-            changePermission('can view');
+            changePermission('READ');
           }}
         />
         <SheetRow
           icon={!!toChange && toChange.permission === 'can edit' ? check : null}
           text='Can edit'
           onPress={() => {
-            changePermission('can edit');
+            changePermission('WRITE');
           }}
         />
         <SheetRow
@@ -221,7 +239,7 @@ const EditPermissions = ({ route, navigation }) => {
           }
           text='Administrator'
           onPress={() => {
-            changePermission('administrator');
+            changePermission('ADMIN');
           }}
         />
       </BottomSheet>

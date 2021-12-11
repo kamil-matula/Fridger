@@ -22,8 +22,8 @@ const fridgesOwnershipsApi = fridgerApi.injectEndpoints({
       invalidatesTags: ['FridgeOwnership'],
     }),
     updatePermission: builder.mutation({
-      query: ({ userId, fridgeId, permissionName }) => ({
-        url: `fridges-ownerships/${id}`,
+      query: ({ modelId, userId, fridgeId, permissionName }) => ({
+        url: `fridges-ownerships/${modelId}`,
         method: 'PUT',
         body: {
           user: userId,
