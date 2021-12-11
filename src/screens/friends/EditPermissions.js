@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, useTheme, TouchableRipple } from 'react-native-paper';
@@ -7,14 +7,47 @@ import { Divider, useTheme, TouchableRipple } from 'react-native-paper';
 import { makeStyles } from 'utils';
 import { UserInfo, AppBar, BottomSheet, SheetRow, Dialog } from 'components';
 import { forward, deleteIcon, check } from 'assets/icons';
-import { friendsList } from 'tmpData';
+
+import { useFridgeOwnersQuery } from 'services/fridger/fridgesOwnerships';
 
 const EditPermissions = ({ route, navigation }) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const [creator, setCreator] = useState(friendsList[0]);
-  const [friends, setFriends] = useState(friendsList);
+  const [creator, setCreator] = useState([]);
+  const [owners, setOwners] = useState([]);
+
+  const ownersQuery = useFridgeOwnersQuery(route.params.containerID);
+  // Update list of owners when data is fetched:
+  useEffect(() => {
+    if (ownersQuery.data) {
+      setOwners(
+        ownersQuery.data
+          .filter((e) => {
+            if (e.permission === 'CREATOR') {
+              setCreator({
+                id: e.user.id,
+                username: e.user.username,
+                firstName: e.user.first_name,
+                lastName: e.user.last_name,
+                avatar: e.user.avatar,
+                permission: e.permission,
+              });
+              return false;
+            }
+            return true;
+          })
+          .map((e) => ({
+            id: e.user.id,
+            username: e.user.username,
+            firstName: e.user.first_name,
+            lastName: e.user.last_name,
+            avatar: e.user.avatar,
+            permission: e.permission,
+          }))
+      );
+    }
+  }, [ownersQuery.isSuccess]);
 
   // Changing permission - preparation:
   const [toChange, setToChange] = useState(null);
@@ -28,13 +61,13 @@ const EditPermissions = ({ route, navigation }) => {
   const refBS = useRef(null);
   const changePermission = (newPermission) => {
     // Change permissions for a friend with given id:
-    const idx = friends.findIndex((e) => e.id === toChange.id);
-    const changedFriend = friends[idx];
+    const idx = owners.findIndex((e) => e.id === toChange.id);
+    const changedFriend = owners[idx];
     changedFriend.permission = newPermission;
-    setFriends([
-      ...friends.slice(0, idx),
+    setOwners([
+      ...owners.slice(0, idx),
       changedFriend,
-      ...friends.slice(idx + 1),
+      ...owners.slice(idx + 1),
     ]);
 
     // TODO: Send request to API to change permissions globally instead of locally
@@ -57,8 +90,8 @@ const EditPermissions = ({ route, navigation }) => {
   // Removing friend from list - main methods:
   const removeFriend = () => {
     // Remove friend with given id:
-    const idx = friends.findIndex((e) => e.id === toRemove.id);
-    setFriends([...friends.slice(0, idx), ...friends.slice(idx + 1)]);
+    const idx = owners.findIndex((e) => e.id === toRemove.id);
+    setOwners([...owners.slice(0, idx), ...owners.slice(idx + 1)]);
 
     // TODO: Send request to API to remove friend globally instead of locally
 
@@ -100,26 +133,26 @@ const EditPermissions = ({ route, navigation }) => {
 
         {/* Creator of this fridge / shopping list */}
         <UserInfo
-          title={creator.nick}
-          subtitle='creator'
+          title={creator.username}
+          subtitle='CREATOR'
           avatarURI={creator.avatar}
           variant='small'
         />
 
         {/* List of people who have access to this fridge / shopping list */}
-        {friends.map((e) => (
+        {owners.map((user) => (
           <TouchableRipple
-            key={e.id}
-            onPress={() => prepareToChangePermission(e)}
+            key={user.id}
+            onPress={() => prepareToChangePermission(user)}
           >
             <UserInfo
-              title={e.nick}
-              subtitle={e.permission}
+              title={user.username}
+              subtitle={user.permission}
               subtitleTint={theme.colors.blueJeans}
-              avatarURI={e.avatar}
+              avatarURI={user.avatar}
               variant='small'
               icon1={deleteIcon}
-              onPressIcon1={() => prepareToRemove(e)}
+              onPressIcon1={() => prepareToRemove(user)}
               iconTint1={theme.colors.silverMetallic}
             />
           </TouchableRipple>
