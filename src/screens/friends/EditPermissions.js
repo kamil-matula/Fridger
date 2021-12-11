@@ -16,7 +16,7 @@ import {
 import { forward, deleteIcon, check } from 'assets/icons';
 
 import {
-  useFridgeOwnersQuery,
+  useLazyFridgeOwnersQuery,
   useRemoveUserMutation,
 } from 'services/fridger/fridgesOwnerships';
 
@@ -28,12 +28,21 @@ const EditPermissions = ({ route, navigation }) => {
   const [owners, setOwners] = useState([]);
 
   const [removeUser, removeUserStatus] = useRemoveUserMutation();
-  const ownersQuery = useFridgeOwnersQuery(route.params.containerID);
+  const [ownersQuery, ownersQueryStatus] = useLazyFridgeOwnersQuery();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      ownersQuery(route.params.containerID);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   // Update list of owners when data is fetched:
   useEffect(() => {
-    if (ownersQuery.data) {
+    if (ownersQueryStatus.data) {
       setOwners(
-        ownersQuery.data
+        ownersQueryStatus.data
           .filter((e) => {
             if (e.permission === 'CREATOR') {
               setCreator({
@@ -59,7 +68,7 @@ const EditPermissions = ({ route, navigation }) => {
           }))
       );
     }
-  }, [ownersQuery.isSuccess]);
+  }, [ownersQueryStatus.data]);
 
   // Changing permission - preparation:
   const [toChange, setToChange] = useState(null);
@@ -148,7 +157,7 @@ const EditPermissions = ({ route, navigation }) => {
     <View style={styles.container}>
       <AppBar label='edit permissions' />
       <Divider />
-      {ownersQuery.isLoading || removeUserStatus.isLoading ? (
+      {ownersQueryStatus.isLoading || removeUserStatus.isLoading ? (
         <LoadingOverlay />
       ) : (
         <ScrollView>

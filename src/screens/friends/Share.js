@@ -17,7 +17,7 @@ import { add, forward } from 'assets/icons';
 
 import { useFriendsQuery } from 'services/fridger/friends';
 import {
-  useFridgeOwnersQuery,
+  useLazyFridgeOwnersQuery,
   useAddUserMutation,
 } from 'services/fridger/fridgesOwnerships';
 
@@ -28,18 +28,27 @@ const Share = ({ route, navigation }) => {
   const [friends, setFriends] = useState([]);
   const [ownersCount, setOwnersCount] = useState(0);
 
-  const ownersQuery = useFridgeOwnersQuery(route.params.containerID);
+  const [ownersQuery, ownersQueryStatus] = useLazyFridgeOwnersQuery();
   const friendsQuery = useFriendsQuery(true);
-
   const AddUser = useAddUserMutation()[0];
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      ownersQuery(route.params.containerID);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   // Update list of friends when data is fetched:
   useEffect(() => {
-    if (friendsQuery.data && ownersQuery.data) {
+    if (friendsQuery.data && ownersQueryStatus.data) {
       setFriends(
         friendsQuery.data
           .filter(({ friend }) => {
-            if (ownersQuery.data.find(({ user }) => user.id === friend.id)) {
+            if (
+              ownersQueryStatus.data.find(({ user }) => user.id === friend.id)
+            ) {
               return false;
             }
             return true;
@@ -53,13 +62,13 @@ const Share = ({ route, navigation }) => {
           }))
       );
     }
-  }, [friendsQuery.isSuccess, ownersQuery.isSuccess]);
+  }, [friendsQuery.data, ownersQueryStatus.data]);
 
   useEffect(() => {
-    if (ownersQuery.data) {
-      setOwnersCount(ownersQuery.data.length - 1);
+    if (ownersQueryStatus.data) {
+      setOwnersCount(ownersQueryStatus.data.length - 1);
     }
-  }, [ownersQuery.isSuccess]);
+  }, [ownersQueryStatus.isSuccess]);
 
   const addFriend = (user) => {
     // Send request to API to share fridge/shopping list with friend
@@ -104,7 +113,9 @@ const Share = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       {/* Loading */}
-      {(friendsQuery.isLoading || ownersQuery.isLoading) && <LoadingOverlay />}
+      {(friendsQuery.isLoading || ownersQueryStatus.isLoading) && (
+        <LoadingOverlay />
+      )}
 
       <AppBar label='share with friends' />
       <Divider />

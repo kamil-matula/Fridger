@@ -44,7 +44,7 @@ const fridgesOwnershipsApi = fridgerApi.injectEndpoints({
 });
 
 export const {
-  useFridgeOwnersQuery,
+  useLazyFridgeOwnersQuery,
   useUpdatePermissionMutation,
   useAddUserMutation,
   useRemoveUserMutation,
