@@ -25,7 +25,11 @@ const Share = ({ route, navigation }) => {
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
-      navigation.navigate('EditPermissions', { behavior: 'pop' });
+      navigation.navigate('EditPermissions', {
+        behavior: 'pop',
+        type: route.params.type,
+        containerID: route.params.containerID,
+      });
     }
   };
 
