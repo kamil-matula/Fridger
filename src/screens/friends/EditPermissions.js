@@ -86,8 +86,6 @@ const EditPermissions = ({ route, navigation }) => {
   const changePermission = (newPermission) => {
     updatePermission({
       modelId: toChange.modelId,
-      userId: toChange.id,
-      fridgeId: route.params.containerID,
       permissionName: newPermission,
     })
       .unwrap()
