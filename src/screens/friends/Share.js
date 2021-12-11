@@ -113,42 +113,43 @@ const Share = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       {/* Loading */}
-      {(friendsQuery.isLoading || ownersQueryStatus.isLoading) && (
-        <LoadingOverlay />
-      )}
 
       <AppBar label='share with friends' />
       <Divider />
-      <ScrollView>
-        {/* Connection with Edit Permissions Screen */}
-        <TouchableRipple onPress={navigateToEditPermissions}>
-          <View style={styles.infoContainer}>
-            <Text style={styles.text}>
-              {`Shared with ${ownersCount} friends`}
-            </Text>
-            <Image style={styles.icon} source={forward} />
-          </View>
-        </TouchableRipple>
+      {friendsQuery.isLoading || ownersQueryStatus.isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <ScrollView>
+          {/* Connection with Edit Permissions Screen */}
+          <TouchableRipple onPress={navigateToEditPermissions}>
+            <View style={styles.infoContainer}>
+              <Text style={styles.text}>
+                {`Shared with ${ownersCount} friends`}
+              </Text>
+              <Image style={styles.icon} source={forward} />
+            </View>
+          </TouchableRipple>
 
-        {/* List of friends available to invite */}
-        <Divider />
-        {friends.map((user) => (
-          <UserInfo
-            key={user.id}
-            title={user.username}
-            subtitle={
-              user.firstName
-                ? `${user.firstName} ${user.lastName ? user.lastName : ''}`
-                : null
-            }
-            avatarURI={user.avatar}
-            variant='small'
-            icon1={add}
-            onPressIcon1={() => addFriend(user)}
-            iconTint1={theme.colors.silverMetallic}
-          />
-        ))}
-      </ScrollView>
+          {/* List of friends available to invite */}
+          <Divider />
+          {friends.map((user) => (
+            <UserInfo
+              key={user.id}
+              title={user.username}
+              subtitle={
+                user.firstName
+                  ? `${user.firstName} ${user.lastName ? user.lastName : ''}`
+                  : null
+              }
+              avatarURI={user.avatar}
+              variant='small'
+              icon1={add}
+              onPressIcon1={() => addFriend(user)}
+              iconTint1={theme.colors.silverMetallic}
+            />
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 };
