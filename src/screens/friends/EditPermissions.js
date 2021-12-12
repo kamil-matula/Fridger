@@ -1,20 +1,51 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, AlertIOS, Platform } from 'react';
 
 import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, useTheme, TouchableRipple } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { UserInfo, AppBar, BottomSheet, SheetRow, Dialog } from 'components';
+import {
+  UserInfo,
+  AppBar,
+  BottomSheet,
+  SheetRow,
+  Dialog,
+  LoadingOverlay,
+} from 'components';
 import { forward, deleteIcon, check } from 'assets/icons';
-import { friendsList } from 'tmpData';
+
+import {
+  useFridgeOwnersQuery,
+  useRemoveUserMutation,
+  useUpdatePermissionMutation,
+} from 'services/fridger/fridgesOwnerships';
 
 const EditPermissions = ({ route, navigation }) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const [creator, setCreator] = useState(friendsList[0]);
-  const [friends, setFriends] = useState(friendsList);
+  const [creator, setCreator] = useState({
+    username: '',
+    avatar: null,
+    permission: '',
+  });
+
+  const updatePermission = useUpdatePermissionMutation()[0];
+  const removeUser = useRemoveUserMutation()[0];
+  const owners = useFridgeOwnersQuery(route.params.containerID);
+
+  // Update list of owners when data is fetched:
+  useEffect(() => {
+    if (owners.data) {
+      const tmp = owners.data.find((e) => e.permission === 'CREATOR');
+      setCreator({
+        username: tmp.user.username,
+        avatar: tmp.user.avatar,
+        permission: tmp.permission,
+      });
+    }
+  }, [owners.data]);
 
   // Changing permission - preparation:
   const [toChange, setToChange] = useState(null);
@@ -27,17 +58,22 @@ const EditPermissions = ({ route, navigation }) => {
   // Changing permission - main methods:
   const refBS = useRef(null);
   const changePermission = (newPermission) => {
-    // Change permissions for a friend with given id:
-    const idx = friends.findIndex((e) => e.id === toChange.id);
-    const changedFriend = friends[idx];
-    changedFriend.permission = newPermission;
-    setFriends([
-      ...friends.slice(0, idx),
-      changedFriend,
-      ...friends.slice(idx + 1),
-    ]);
-
-    // TODO: Send request to API to change permissions globally instead of locally
+    updatePermission({
+      modelId: toChange.id,
+      permissionName: newPermission,
+    })
+      .unwrap()
+      .catch((error) => {
+        const generalError = error.data?.non_field_errors;
+        if (generalError) {
+          const message = generalError.join(' ');
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+          } else {
+            AlertIOS.alert(message);
+          }
+        }
+      });
 
     // Hide Bottom Sheet:
     refBS.current.close();
@@ -50,17 +86,25 @@ const EditPermissions = ({ route, navigation }) => {
   const prepareToRemove = (friend) => {
     // Display dialog with appropriate data:
     setToRemove(friend);
-    setToRemoveNick(friend.nick);
+    setToRemoveNick(friend.user.username);
     setDialogVisible(true);
   };
 
   // Removing friend from list - main methods:
   const removeFriend = () => {
-    // Remove friend with given id:
-    const idx = friends.findIndex((e) => e.id === toRemove.id);
-    setFriends([...friends.slice(0, idx), ...friends.slice(idx + 1)]);
-
-    // TODO: Send request to API to remove friend globally instead of locally
+    removeUser(toRemove.id)
+      .unwrap()
+      .catch((error) => {
+        const generalError = error.data?.non_field_errors;
+        if (generalError) {
+          const message = generalError.join(' ');
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+          } else {
+            AlertIOS.alert(message);
+          }
+        }
+      });
 
     // Hide dialog:
     setDialogVisible(false);
@@ -76,7 +120,12 @@ const EditPermissions = ({ route, navigation }) => {
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
-      navigation.navigate('Share', { behavior: 'pop' });
+      navigation.navigate('Share', {
+        behavior: 'pop',
+        type: route.params.type,
+        containerID: route.params.containerID,
+        containerName: route.params.containerName,
+      });
     }
   };
 
@@ -84,43 +133,49 @@ const EditPermissions = ({ route, navigation }) => {
     <View style={styles.container}>
       <AppBar label='edit permissions' />
       <Divider />
-      <ScrollView>
-        {/* Connection with Share Screen */}
-        <TouchableRipple onPress={navigateToShare}>
-          <View style={styles.infoContainer}>
-            <Text style={styles.text}>Add more friends</Text>
-            <Image style={styles.icon} source={forward} />
-          </View>
-        </TouchableRipple>
-        <Divider />
-
-        {/* Creator of this fridge / shopping list */}
-        <UserInfo
-          title={creator.nick}
-          subtitle='creator'
-          avatarURI={creator.avatar}
-          variant='small'
-        />
-
-        {/* List of people who have access to this fridge / shopping list */}
-        {friends.map((e) => (
-          <TouchableRipple
-            key={e.id}
-            onPress={() => prepareToChangePermission(e)}
-          >
-            <UserInfo
-              title={e.nick}
-              subtitle={e.permission}
-              subtitleTint={theme.colors.blueJeans}
-              avatarURI={e.avatar}
-              variant='small'
-              icon1={deleteIcon}
-              onPressIcon1={() => prepareToRemove(e)}
-              iconTint1={theme.colors.silverMetallic}
-            />
+      {owners.isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <ScrollView>
+          {/* Connection with Share Screen */}
+          <TouchableRipple onPress={navigateToShare}>
+            <View style={styles.infoContainer}>
+              <Text style={styles.text}>Add more friends</Text>
+              <Image style={styles.icon} source={forward} />
+            </View>
           </TouchableRipple>
-        ))}
-      </ScrollView>
+          <Divider />
+
+          {/* Creator of this fridge / shopping list */}
+          <UserInfo
+            title={creator.username}
+            subtitle={creator.permission}
+            avatarURI={creator.avatar}
+            variant='small'
+          />
+
+          {/* List of people who have access to this fridge / shopping list */}
+          {owners.data
+            .filter((user) => user.permission !== 'CREATOR')
+            .map((ownership) => (
+              <TouchableRipple
+                key={ownership.id}
+                onPress={() => prepareToChangePermission(ownership)}
+              >
+                <UserInfo
+                  title={ownership.user.username}
+                  subtitle={ownership.permission}
+                  subtitleTint={theme.colors.blueJeans}
+                  avatarURI={ownership.user.avatar}
+                  variant='small'
+                  icon1={deleteIcon}
+                  onPressIcon1={() => prepareToRemove(ownership)}
+                  iconTint1={theme.colors.silverMetallic}
+                />
+              </TouchableRipple>
+            ))}
+        </ScrollView>
+      )}
 
       {/* Permission actions */}
       <BottomSheet reference={refBS} title='Change permission'>
@@ -128,14 +183,14 @@ const EditPermissions = ({ route, navigation }) => {
           icon={!!toChange && toChange.permission === 'can view' ? check : null}
           text='Can view'
           onPress={() => {
-            changePermission('can view');
+            changePermission('READ');
           }}
         />
         <SheetRow
           icon={!!toChange && toChange.permission === 'can edit' ? check : null}
           text='Can edit'
           onPress={() => {
-            changePermission('can edit');
+            changePermission('WRITE');
           }}
         />
         <SheetRow
@@ -144,7 +199,7 @@ const EditPermissions = ({ route, navigation }) => {
           }
           text='Administrator'
           onPress={() => {
-            changePermission('administrator');
+            changePermission('ADMIN');
           }}
         />
       </BottomSheet>
@@ -153,7 +208,7 @@ const EditPermissions = ({ route, navigation }) => {
       {/* TODO: Pass Fridge/List name and display it in the dialog */}
       <Dialog
         title='Remove friend from list'
-        paragraph={`Are you sure you want to remove  ${toRemoveNick} from <list name>? This action cannot be undone.`}
+        paragraph={`Are you sure you want to remove ${toRemoveNick} from ${route.params.containerName}? This action cannot be undone.`}
         visibilityState={[dialogVisible, setDialogVisible]}
         label1='remove'
         onPressLabel1={removeFriend}

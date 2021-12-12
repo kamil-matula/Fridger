@@ -1,23 +1,53 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { View, Image, ScrollView, Text } from 'react-native';
+import {
+  View,
+  Image,
+  ScrollView,
+  Text,
+  AlertIOS,
+  Platform,
+} from 'react-native';
 import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { UserInfo, AppBar } from 'components';
+import { UserInfo, AppBar, LoadingOverlay } from 'components';
 import { add, forward } from 'assets/icons';
-import { friendsList } from 'tmpData';
+
+import { useFriendsQuery } from 'services/fridger/friends';
+import {
+  useFridgeOwnersQuery,
+  useAddUserMutation,
+} from 'services/fridger/fridgesOwnerships';
 
 const Share = ({ route, navigation }) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const [friends, setFriends] = useState(friendsList);
-  const [friendsCount, setFriendsCount] = useState(4);
+  const owners = useFridgeOwnersQuery(route.params.containerID);
+  const friends = useFriendsQuery(true);
+  const addUser = useAddUserMutation()[0];
 
-  const addFriend = () => {
-    // TODO: Send request to API to share fridge/shopping list with friend
+  const addFriend = (id) => {
+    // Send request to API to share fridge/shopping list with friend
+    addUser({
+      userId: id,
+      fridgeId: route.params.containerID,
+      permissionName: 'READ',
+    })
+      .unwrap()
+      .catch((error) => {
+        const generalError = error.data?.non_field_errors;
+        if (generalError) {
+          const message = generalError.join(' ');
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+          } else {
+            AlertIOS.alert(message);
+          }
+        }
+      });
   };
 
   const navigateToEditPermissions = () => {
@@ -25,40 +55,51 @@ const Share = ({ route, navigation }) => {
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
-      navigation.navigate('EditPermissions', { behavior: 'pop' });
+      navigation.navigate('EditPermissions', {
+        behavior: 'pop',
+        type: route.params.type,
+        containerID: route.params.containerID,
+        containerName: route.params.containerName,
+      });
     }
   };
 
   return (
     <View style={styles.container}>
+      {/* Loading */}
+
       <AppBar label='share with friends' />
       <Divider />
-      <ScrollView>
-        {/* Connection with Edit Permissions Screen */}
-        <TouchableRipple onPress={navigateToEditPermissions}>
-          <View style={styles.infoContainer}>
-            <Text style={styles.text}>
-              {`Shared with ${friendsCount} friends`}
-            </Text>
-            <Image style={styles.icon} source={forward} />
-          </View>
-        </TouchableRipple>
+      {friends.isLoading || owners.isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <ScrollView>
+          {/* Connection with Edit Permissions Screen */}
+          <TouchableRipple onPress={navigateToEditPermissions}>
+            <View style={styles.infoContainer}>
+              <Text style={styles.text}>
+                {`Shared with ${owners.data.length - 1} friends`}
+              </Text>
+              <Image style={styles.icon} source={forward} />
+            </View>
+          </TouchableRipple>
 
-        {/* List of friends available to invite */}
-        <Divider />
-        {friends.map((e) => (
-          <UserInfo
-            key={e.id}
-            title={e.nick}
-            subtitle={e.name ? `${e.name} ${e.surname ? e.surname : ''}` : null}
-            avatarURI={e.avatar}
-            variant='small'
-            icon1={add}
-            onPressIcon1={() => addFriend(e)}
-            iconTint1={theme.colors.silverMetallic}
-          />
-        ))}
-      </ScrollView>
+          {/* List of friends available to invite */}
+          <Divider />
+          {friends.data.map(({ friend }) => (
+            <UserInfo
+              key={friend.id}
+              title={friend.username}
+              subtitle={`${friend.first_name} ${friend.last_name}`.trim()}
+              avatarURI={friend.avatar}
+              variant='small'
+              icon1={add}
+              onPressIcon1={() => addFriend(friend.id)}
+              iconTint1={theme.colors.silverMetallic}
+            />
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 };
