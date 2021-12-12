@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable no-unused-vars */
 import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
@@ -30,7 +28,6 @@ const ShoppingListDetails = ({ route, navigation }) => {
   const editShoppingListName = useEditShoppingListNameMutation()[0];
 
   // FAB & Tabs conditions:
-  // const { isShared } = shoppingList;
   const [fabVisible, setFabVisible] = useState(true);
 
   // Deleting:
@@ -78,7 +75,7 @@ const ShoppingListDetails = ({ route, navigation }) => {
 
           {/* Tabs */}
           <ShoppingListDetailsTabNavigator
-            isShared={true}
+            isShared={shoppingList.data.is_shared}
             setFabVisible={setFabVisible}
           />
 

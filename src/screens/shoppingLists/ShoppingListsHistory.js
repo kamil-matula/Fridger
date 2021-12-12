@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-boolean-value */
 /* eslint-disable camelcase */
 import React from 'react';
 
@@ -28,6 +27,8 @@ const ShoppingListsHistory = ({ navigation }) => {
             bought_products_count,
             taken_products_count,
             free_products_count,
+            is_shared,
+            is_archived,
           }) => (
             <View key={id}>
               <ShoppingListRow
@@ -35,8 +36,8 @@ const ShoppingListsHistory = ({ navigation }) => {
                 unchecked={bought_products_count}
                 dips={taken_products_count}
                 checked={free_products_count}
-                isShared={true}
-                isActive={false}
+                isShared={is_shared}
+                isActive={!is_archived}
                 onPress={() => {
                   // Go to specific shopping list:
                   navigation.navigate('ShoppingListDetails', {
