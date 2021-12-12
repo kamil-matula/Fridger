@@ -3,9 +3,10 @@ import { fridgerApi } from './fridgerApi';
 const shoppingListApi = fridgerApi.injectEndpoints({
   endpoints: (builder) => ({
     shoppingLists: builder.query({
-      query: () => ({
+      query: ({ isArchived }) => ({
         url: `shopping-lists`,
         method: 'GET',
+        params: { is_archived: isArchived },
       }),
       providesTags: ['ShoppingLists'],
     }),

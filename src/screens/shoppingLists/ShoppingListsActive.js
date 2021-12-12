@@ -14,7 +14,7 @@ import { useShoppingListsQuery } from 'services/fridger/shoppingLists';
 const ShoppingListsActive = ({ navigation }) => {
   const styles = useStyles();
 
-  const shoppingLists = useShoppingListsQuery();
+  const shoppingLists = useShoppingListsQuery({ isArchived: false });
 
   console.log(shoppingLists.data);
 

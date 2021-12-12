@@ -14,7 +14,7 @@ import { useShoppingListsQuery } from 'services/fridger/shoppingLists';
 const ShoppingListsHistory = ({ navigation }) => {
   const styles = useStyles();
 
-  const shoppingLists = useShoppingListsQuery();
+  const shoppingLists = useShoppingListsQuery({ isArchived: true });
 
   return (
     <View style={styles.container}>
