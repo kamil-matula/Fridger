@@ -5,18 +5,13 @@ import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 
 import { AppBar, FloatingActionButton } from 'components';
 import { makeStyles } from 'utils';
-import { fridgesList } from 'tmpData';
 
 import { useAddShoppingListMutation } from 'services/fridger/shoppingLists';
 
-const AddShoppingList = ({ navigation }) => {
-  // TODO: Change it to useState (or something else) after adding Redux, because
-  // currently we are not able to pass [activeFridge, setActiveFridge]
-  // in route params and the docs suggest using useContext to have this
-  // variable both in AddShoppingList and ChooseFridge pages.
-  const activeFridge = fridgesList[0]; // alternative: const activeFridge = null;
+const AddShoppingList = ({ navigation, route }) => {
+  const activeFridge = route.params?.fridge;
 
-  const styles = useStyles({ activeFridge });
+  const styles = useStyles({ isFridge: !!route.params?.fridge });
   const { colors } = useTheme();
 
   const [name, setName] = useState('');
@@ -59,11 +54,11 @@ const AddShoppingList = ({ navigation }) => {
             </Text>
             {activeFridge && (
               <Text style={styles.connectedFridgeInfo}>
-                {activeFridge.people > 1
-                  ? `${activeFridge.items} items  •  shared with ${
-                      activeFridge.people - 1
+                {activeFridge.shared_with_count > 1
+                  ? `${activeFridge.products_count} items  •  shared with ${
+                      activeFridge.shared_with_count - 1
                     } friends`
-                  : `${activeFridge.items} items`}
+                  : `${activeFridge.products_count} items`}
               </Text>
             )}
           </View>
@@ -76,7 +71,7 @@ const AddShoppingList = ({ navigation }) => {
         centered
         label='add shopping list'
         onPress={() => {
-          addShoppingList(name)
+          addShoppingList({ name, fridge: activeFridge?.id })
             .unwrap()
             .then(() => {
               navigation.goBack();
@@ -87,7 +82,7 @@ const AddShoppingList = ({ navigation }) => {
   );
 };
 
-const useStyles = makeStyles((theme, { activeFridge }) => ({
+const useStyles = makeStyles((theme, { isFridge }) => ({
   // Required content:
   container: {
     flex: 1,
@@ -103,7 +98,7 @@ const useStyles = makeStyles((theme, { activeFridge }) => ({
   connectContainer: { padding: 16 },
   connectTitle: { fontSize: 20, color: theme.colors.white, paddingBottom: 4 },
   connectedFridgeName: {
-    color: activeFridge ? theme.colors.white : theme.colors.silverMetallic,
+    color: isFridge ? theme.colors.white : theme.colors.silverMetallic,
     fontSize: 14,
     includeFontPadding: false,
   },

@@ -18,11 +18,16 @@ const shoppingListApi = fridgerApi.injectEndpoints({
       providesTags: ['ShoppingList'],
     }),
     addShoppingList: builder.mutation({
-      query: (name) => ({
-        url: `shopping-lists`,
-        method: 'POST',
-        body: { name },
-      }),
+      query: ({ name, fridge }) => {
+        body = { name };
+        if (fridge) body.fridge = fridge;
+
+        return {
+          url: `shopping-lists`,
+          method: 'POST',
+          body,
+        };
+      },
       invalidatesTags: ['ShoppingLists'],
     }),
     editShoppingListName: builder.mutation({

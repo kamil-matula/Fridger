@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import React from 'react';
 
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
@@ -20,35 +20,37 @@ const ShoppingListsHistory = ({ navigation }) => {
       {shoppingLists.isLoading ? (
         <LoadingOverlay />
       ) : (
-        shoppingLists.data.map(
-          ({
-            id,
-            name,
-            bought_products_count,
-            taken_products_count,
-            free_products_count,
-            is_shared,
-            is_archived,
-          }) => (
-            <View key={id}>
-              <ShoppingListRow
-                label={name}
-                unchecked={bought_products_count}
-                dips={taken_products_count}
-                checked={free_products_count}
-                isShared={is_shared}
-                isActive={!is_archived}
-                onPress={() => {
-                  // Go to specific shopping list:
-                  navigation.navigate('ShoppingListDetails', {
-                    shoppingListID: id,
-                  });
-                }}
-              />
-              <Divider />
-            </View>
-          )
-        )
+        <ScrollView>
+          {shoppingLists.data.map(
+            ({
+              id,
+              name,
+              bought_products_count,
+              taken_products_count,
+              free_products_count,
+              is_shared,
+              is_archived,
+            }) => (
+              <View key={id}>
+                <ShoppingListRow
+                  label={name}
+                  unchecked={bought_products_count}
+                  dips={taken_products_count}
+                  checked={free_products_count}
+                  isShared={is_shared}
+                  isActive={!is_archived}
+                  onPress={() => {
+                    // Go to specific shopping list:
+                    navigation.navigate('ShoppingListDetails', {
+                      shoppingListID: id,
+                    });
+                  }}
+                />
+                <Divider />
+              </View>
+            )
+          )}
+        </ScrollView>
       )}
     </View>
   );
