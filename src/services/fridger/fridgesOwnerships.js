@@ -9,7 +9,7 @@ const fridgesOwnershipsApi = fridgerApi.injectEndpoints({
       }),
       providesTags: ['FridgeOwnership'],
     }),
-    AddUser: builder.mutation({
+    addFridgeUser: builder.mutation({
       query: ({ userId, fridgeId, permissionName }) => ({
         url: 'fridges-ownerships',
         method: 'POST',
@@ -21,7 +21,7 @@ const fridgesOwnershipsApi = fridgerApi.injectEndpoints({
       }),
       invalidatesTags: ['FridgeOwnership'],
     }),
-    updatePermission: builder.mutation({
+    updateFridgePermission: builder.mutation({
       query: ({ modelId, permissionName }) => ({
         url: `fridges-ownerships/${modelId}`,
         method: 'PATCH',
@@ -31,7 +31,7 @@ const fridgesOwnershipsApi = fridgerApi.injectEndpoints({
       }),
       invalidatesTags: ['FridgeOwnership'],
     }),
-    removeUser: builder.mutation({
+    removeFridgeUser: builder.mutation({
       query: (id) => ({
         url: `fridges-ownerships/${id}`,
         method: 'DELETE',
@@ -43,7 +43,7 @@ const fridgesOwnershipsApi = fridgerApi.injectEndpoints({
 
 export const {
   useFridgeOwnersQuery,
-  useUpdatePermissionMutation,
-  useAddUserMutation,
-  useRemoveUserMutation,
+  useUpdateFridgePermissionMutation,
+  useAddFridgeUserMutation,
+  useRemoveFridgeUserMutation,
 } = fridgesOwnershipsApi;

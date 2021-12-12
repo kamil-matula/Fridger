@@ -18,7 +18,7 @@ import { add, forward } from 'assets/icons';
 import { useFriendsQuery } from 'services/fridger/friends';
 import {
   useFridgeOwnersQuery,
-  useAddUserMutation,
+  useAddFridgeUserMutation,
 } from 'services/fridger/fridgesOwnerships';
 
 const Share = ({ route, navigation }) => {
@@ -27,7 +27,7 @@ const Share = ({ route, navigation }) => {
 
   const owners = useFridgeOwnersQuery(route.params.containerID);
   const friends = useFriendsQuery(true);
-  const addUser = useAddUserMutation()[0];
+  const addUser = useAddFridgeUserMutation()[0];
 
   const addFriend = (id) => {
     // Send request to API to share fridge/shopping list with friend

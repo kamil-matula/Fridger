@@ -17,8 +17,8 @@ import { forward, deleteIcon, check } from 'assets/icons';
 
 import {
   useFridgeOwnersQuery,
-  useRemoveUserMutation,
-  useUpdatePermissionMutation,
+  useRemoveFridgeUserMutation,
+  useUpdateFridgePermissionMutation,
 } from 'services/fridger/fridgesOwnerships';
 
 const EditPermissions = ({ route, navigation }) => {
@@ -31,8 +31,8 @@ const EditPermissions = ({ route, navigation }) => {
     permission: '',
   });
 
-  const updatePermission = useUpdatePermissionMutation()[0];
-  const removeUser = useRemoveUserMutation()[0];
+  const updatePermission = useUpdateFridgePermissionMutation()[0];
+  const removeUser = useRemoveFridgeUserMutation()[0];
   const owners = useFridgeOwnersQuery(route.params.containerID);
 
   // Update list of owners when data is fetched:
