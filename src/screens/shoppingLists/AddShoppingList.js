@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { View, TextInput, Text } from 'react-native';
 import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
@@ -6,6 +6,8 @@ import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 import { AppBar, FloatingActionButton } from 'components';
 import { makeStyles } from 'utils';
 import { fridgesList } from 'tmpData';
+
+import { useAddShoppingListMutation } from 'services/fridger/shoppingLists';
 
 const AddShoppingList = ({ navigation }) => {
   // TODO: Change it to useState (or something else) after adding Redux, because
@@ -17,6 +19,9 @@ const AddShoppingList = ({ navigation }) => {
   const styles = useStyles({ activeFridge });
   const { colors } = useTheme();
 
+  const [name, setName] = useState('');
+  const addShoppingList = useAddShoppingListMutation()[0];
+
   return (
     <View style={styles.container}>
       <AppBar label='Create new shopping list' />
@@ -25,6 +30,8 @@ const AddShoppingList = ({ navigation }) => {
       {/* Required content: shopping list name */}
       <TextInput
         style={styles.input}
+        value={name}
+        onChangeText={setName}
         placeholder='Write name'
         placeholderTextColor={colors.silverMetallic}
       />
@@ -69,10 +76,11 @@ const AddShoppingList = ({ navigation }) => {
         centered
         label='add shopping list'
         onPress={() => {
-          // TODO: Send request to API and add shopping list to user
-
-          // Go back to shopping lists list:
-          navigation.goBack();
+          addShoppingList(name)
+            .unwrap()
+            .then(() => {
+              navigation.goBack();
+            });
         }}
       />
     </View>

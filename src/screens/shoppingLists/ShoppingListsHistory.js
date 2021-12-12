@@ -1,38 +1,52 @@
+/* eslint-disable react/jsx-boolean-value */
+/* eslint-disable camelcase */
 import React from 'react';
 
 import { View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { shoppingListsList } from 'tmpData';
+import { LoadingOverlay } from 'components';
 import { ShoppingListRow } from 'components/shoppingLists';
+
+import { useShoppingListsQuery } from 'services/fridger/shoppingLists';
 
 const ShoppingListsHistory = ({ navigation }) => {
   const styles = useStyles();
-  const shoppingListsHistory = shoppingListsList.filter((e) => !e.isActive);
 
-  // TODO: Use list of inactive shopping lists from redux
+  const shoppingLists = useShoppingListsQuery();
+
   return (
     <View style={styles.container}>
-      {shoppingListsHistory.map(
-        ({ id, name, uncheck, dips, check, isShared, isActive }) => (
-          <View key={id}>
-            <ShoppingListRow
-              label={name}
-              unchecked={uncheck}
-              dips={dips}
-              checked={check}
-              isShared={isShared}
-              isActive={isActive}
-              onPress={() => {
-                // Go to specific shopping list:
-                navigation.navigate('ShoppingListDetails', {
-                  shoppingListID: id,
-                });
-              }}
-            />
-            <Divider />
-          </View>
+      {shoppingLists.isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        shoppingLists.data.map(
+          ({
+            id,
+            name,
+            bought_products_count,
+            taken_products_count,
+            free_products_count,
+          }) => (
+            <View key={id}>
+              <ShoppingListRow
+                label={name}
+                unchecked={bought_products_count}
+                dips={taken_products_count}
+                checked={free_products_count}
+                isShared={true}
+                isActive={false}
+                onPress={() => {
+                  // Go to specific shopping list:
+                  navigation.navigate('ShoppingListDetails', {
+                    shoppingListID: id,
+                  });
+                }}
+              />
+              <Divider />
+            </View>
+          )
         )
       )}
     </View>
