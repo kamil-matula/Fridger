@@ -1,12 +1,18 @@
+/* eslint-disable no-param-reassign */
 import { fridgerApi } from './fridgerApi';
 
 const friendsApi = fridgerApi.injectEndpoints({
   endpoints: (builder) => ({
     friends: builder.query({
-      query: (isAccepted) => ({
-        url: `friends?is_accepted=${isAccepted}`,
-        method: 'GET',
-      }),
+      query: ({ isAccepted, fridgeId, shoppingListId }) => {
+        isAccepted = isAccepted === undefined ? '' : isAccepted;
+        fridgeId = fridgeId === undefined ? '' : fridgeId;
+        shoppingListId = shoppingListId === undefined ? '' : shoppingListId;
+        return {
+          url: `friends?is_accepted=${isAccepted}&not_in_fridge=${fridgeId}&not_in_shopping_list=${shoppingListId}`,
+          method: 'GET',
+        };
+      },
       providesTags: ['Friends'],
     }),
     addToFriends: builder.mutation({

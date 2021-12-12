@@ -26,7 +26,10 @@ const Share = ({ route, navigation }) => {
   const theme = useTheme();
 
   const owners = useFridgeOwnersQuery(route.params.containerID);
-  const friends = useFriendsQuery(true);
+  const friends = useFriendsQuery({
+    isAccepted: true,
+    fridgeId: route.params.containerID,
+  });
   const addUser = useAddFridgeUserMutation()[0];
 
   const addFriend = (id) => {
@@ -86,7 +89,7 @@ const Share = ({ route, navigation }) => {
 
           {/* List of friends available to invite */}
           <Divider />
-          {friends.data.map(({ friend }) => (
+          {friends.data?.map(({ friend }) => (
             <UserInfo
               key={friend.id}
               title={friend.username}

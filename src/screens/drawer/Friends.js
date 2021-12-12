@@ -27,10 +27,12 @@ const Friends = ({ navigation }) => {
   // Queries:
   const deleteFriend = useDeleteFriendMutation()[0];
   const acceptFriend = useAcceptFriendMutation()[0];
-  const { data: requestsData, isLoading: requestsAreLoading } =
-    useFriendsQuery(false);
-  const { data: friendsData, isLoading: friendsAreLoading } =
-    useFriendsQuery(true);
+  const { data: requestsData, isLoading: requestsAreLoading } = useFriendsQuery(
+    { isAccepted: false }
+  );
+  const { data: friendsData, isLoading: friendsAreLoading } = useFriendsQuery({
+    isAccepted: true,
+  });
 
   // Lists:
   const [requests, setRequests] = useState([]);
