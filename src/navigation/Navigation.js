@@ -21,8 +21,10 @@ import {
 import {
   FriendProfile,
   AddFriend,
-  Share,
-  EditPermissions,
+  ShareFridge,
+  ShareShoppingList,
+  EditPermissionsFridge,
+  EditPermissionsShoppingList,
 } from 'screens/friends';
 import {
   EditProfile,
@@ -98,10 +100,18 @@ const MainStackNavigator = () => {
           <MainStack.Screen name='FriendProfile' component={FriendProfile} />
 
           {/* LEVEL 3 */}
-          <MainStack.Screen name='Share' component={Share} />
+          <MainStack.Screen name='ShareFridge' component={ShareFridge} />
           <MainStack.Screen
-            name='EditPermissions'
-            component={EditPermissions}
+            name='ShareShoppingList'
+            component={ShareShoppingList}
+          />
+          <MainStack.Screen
+            name='EditPermissionsFridge'
+            component={EditPermissionsFridge}
+          />
+          <MainStack.Screen
+            name='EditPermissionsShoppingList'
+            component={EditPermissionsShoppingList}
           />
           <MainStack.Screen
             name='AddProductManual'

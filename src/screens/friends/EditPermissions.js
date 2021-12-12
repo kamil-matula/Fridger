@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { useState, useRef, useEffect, AlertIOS, Platform } from 'react';
 
 import { View, Image, ScrollView, Text } from 'react-native';
@@ -20,8 +20,51 @@ import {
   useRemoveFridgeUserMutation,
   useUpdateFridgePermissionMutation,
 } from 'services/fridger/fridgesOwnerships';
+import {
+  useShoppingListOwnersQuery,
+  useUpdateShoppingListPermissionMutation,
+  useRemoveShoppingListUserMutation,
+} from 'services/fridger/shoppingListsOwnerships';
 
-const EditPermissions = ({ route, navigation }) => {
+export const EditPermissionsFridge = ({ route, navigation }) => {
+  const updatePermission = useUpdateFridgePermissionMutation()[0];
+  const removeUser = useRemoveFridgeUserMutation()[0];
+  const owners = useFridgeOwnersQuery(route.params.containerID);
+
+  return (
+    <EditPermissions
+      updatePermission={updatePermission}
+      removeUser={removeUser}
+      owners={owners}
+      route={route}
+      navigation={navigation}
+    />
+  );
+};
+
+export const EditPermissionsShoppingList = ({ route, navigation }) => {
+  const updatePermission = useUpdateShoppingListPermissionMutation()[0];
+  const removeUser = useRemoveShoppingListUserMutation()[0];
+  const owners = useShoppingListOwnersQuery(route.params.containerID);
+
+  return (
+    <EditPermissions
+      updatePermission={updatePermission}
+      removeUser={removeUser}
+      owners={owners}
+      route={route}
+      navigation={navigation}
+    />
+  );
+};
+
+const EditPermissions = ({
+  updatePermission,
+  removeUser,
+  owners,
+  route,
+  navigation,
+}) => {
   const styles = useStyles();
   const theme = useTheme();
 
@@ -30,10 +73,6 @@ const EditPermissions = ({ route, navigation }) => {
     avatar: null,
     permission: '',
   });
-
-  const updatePermission = useUpdateFridgePermissionMutation()[0];
-  const removeUser = useRemoveFridgeUserMutation()[0];
-  const owners = useFridgeOwnersQuery(route.params.containerID);
 
   // Update list of owners when data is fetched:
   useEffect(() => {
@@ -119,8 +158,15 @@ const EditPermissions = ({ route, navigation }) => {
     // Prevent loop Share-EditPermissions:
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
+    } else if (route.params.type === 'fridge') {
+      navigation.navigate('ShareFridge', {
+        behavior: 'pop',
+        type: route.params.type,
+        containerID: route.params.containerID,
+        containerName: route.params.containerName,
+      });
     } else {
-      navigation.navigate('Share', {
+      navigation.navigate('ShareShoppingList', {
         behavior: 'pop',
         type: route.params.type,
         containerID: route.params.containerID,
@@ -254,5 +300,3 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.colors.silverMetallic,
   },
 }));
-
-export default EditPermissions;

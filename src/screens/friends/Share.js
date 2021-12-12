@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 
@@ -21,22 +22,53 @@ import {
   useAddFridgeUserMutation,
 } from 'services/fridger/fridgesOwnerships';
 
-const Share = ({ route, navigation }) => {
-  const styles = useStyles();
-  const theme = useTheme();
-
+export const ShareFridge = ({ route, navigation }) => {
+  const addUser = useAddFridgeUserMutation()[0];
   const owners = useFridgeOwnersQuery(route.params.containerID);
   const friends = useFriendsQuery({
     isAccepted: true,
     fridgeId: route.params.containerID,
   });
+
+  return (
+    <Share
+      route={route}
+      navigation={navigation}
+      addUser={addUser}
+      owners={owners}
+      friends={friends}
+    />
+  );
+};
+
+export const ShareShoppingList = ({ route, navigation }) => {
   const addUser = useAddFridgeUserMutation()[0];
+  const owners = useFridgeOwnersQuery(route.params.containerID);
+  const friends = useFriendsQuery({
+    isAccepted: true,
+    fridgeId: route.params.containerID,
+  });
+
+  return (
+    <Share
+      route={route}
+      navigation={navigation}
+      addUser={addUser}
+      owners={owners}
+      friends={friends}
+    />
+  );
+};
+
+const Share = ({ addUser, owners, friends, route, navigation }) => {
+  const styles = useStyles();
+  const theme = useTheme();
 
   const addFriend = (id) => {
     // Send request to API to share fridge/shopping list with friend
     addUser({
       userId: id,
-      fridgeId: route.params.containerID,
+      containerId: route.params.containerID,
       permissionName: 'READ',
     })
       .unwrap()
@@ -57,8 +89,15 @@ const Share = ({ route, navigation }) => {
     // Prevent loop Share-EditPermissions:
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
+    } else if (route.params.type === 'fridge') {
+      navigation.navigate('EditPermissionsFridge', {
+        behavior: 'pop',
+        type: route.params.type,
+        containerID: route.params.containerID,
+        containerName: route.params.containerName,
+      });
     } else {
-      navigation.navigate('EditPermissions', {
+      navigation.navigate('EditPermissionsShoppingList', {
         behavior: 'pop',
         type: route.params.type,
         containerID: route.params.containerID,
@@ -142,5 +181,3 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.colors.silverMetallic,
   },
 }));
-
-export default Share;
