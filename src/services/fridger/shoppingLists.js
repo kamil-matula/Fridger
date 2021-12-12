@@ -7,14 +7,14 @@ const shoppingListApi = fridgerApi.injectEndpoints({
         url: `shopping-lists`,
         method: 'GET',
       }),
-      providesTags: ['ShoppingList'],
+      providesTags: ['ShoppingLists'],
     }),
     shoppingList: builder.query({
       query: (id) => ({
         url: `shopping-lists/${id}`,
         method: 'GET',
       }),
-      providesTags: ['ShoppingListProducts'],
+      providesTags: ['ShoppingList'],
     }),
     addShoppingList: builder.mutation({
       query: (name) => ({
@@ -22,14 +22,22 @@ const shoppingListApi = fridgerApi.injectEndpoints({
         method: 'POST',
         body: { name },
       }),
-      invalidatesTags: ['ShoppingList'],
+      invalidatesTags: ['ShoppingLists'],
+    }),
+    editShoppingListName: builder.mutation({
+      query: ({ id, name }) => ({
+        url: `shopping-lists/${id}`,
+        method: 'PATCH',
+        body: { name },
+      }),
+      invalidatesTags: ['ShoppingLists', 'ShoppingList'],
     }),
     deleteShoppingList: builder.mutation({
       query: (id) => ({
         url: `shopping-lists/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['ShoppingList'],
+      invalidatesTags: ['ShoppingLists'],
     }),
   }),
 });
@@ -38,5 +46,6 @@ export const {
   useShoppingListsQuery,
   useShoppingListQuery,
   useAddShoppingListMutation,
+  useEditShoppingListNameMutation,
   useDeleteShoppingListMutation,
 } = shoppingListApi;

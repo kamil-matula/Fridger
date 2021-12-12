@@ -20,12 +20,14 @@ import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNa
 import {
   useShoppingListQuery,
   useDeleteShoppingListMutation,
+  useEditShoppingListNameMutation,
 } from 'services/fridger/shoppingLists';
 
 const ShoppingListDetails = ({ route, navigation }) => {
   // Shopping list identifying
   const shoppingList = useShoppingListQuery(route.params.shoppingListID);
   const deleteShoppingList = useDeleteShoppingListMutation()[0];
+  const editShoppingListName = useEditShoppingListNameMutation()[0];
 
   // FAB & Tabs conditions:
   // const { isShared } = shoppingList;
@@ -67,7 +69,10 @@ const ShoppingListDetails = ({ route, navigation }) => {
             }}
             editable
             onSubmitEditing={(newName) => {
-              // TODO: Send request to API to change list's name
+              editShoppingListName({
+                id: route.params.shoppingListID,
+                name: newName,
+              });
             }}
           />
 

@@ -8,8 +8,8 @@ export const fridgerApi = createApi({
     'Fridges',
     'Products',
     'FridgeOwnership',
+    'ShoppingLists',
     'ShoppingList',
-    'ShoppingListProducts',
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: `https://fridger-api.herokuapp.com/api/v1`,
