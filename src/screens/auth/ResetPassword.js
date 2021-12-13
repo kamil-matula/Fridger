@@ -47,7 +47,7 @@ const ResetPassword = ({ navigation }) => {
         navigation.goBack();
       })
       .catch((error) => {
-        displayToast(error.data?.non_field_errors);
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
   };
 

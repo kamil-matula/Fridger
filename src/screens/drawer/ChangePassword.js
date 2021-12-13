@@ -71,7 +71,7 @@ const ChangePassword = ({ navigation }) => {
         }
 
         // ... or display toast if it's different kind of problem:
-        displayToast(error.data?.non_field_errors);
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
   };
 

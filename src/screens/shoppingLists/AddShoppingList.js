@@ -81,7 +81,10 @@ const AddShoppingList = ({ navigation, route }) => {
               // Display error connected with input field...
               if (error.data?.name) displayToast('Invalid name');
               // ... or other error:
-              else displayToast(error.data?.non_field_errors);
+              else
+                displayToast(
+                  error.data?.non_field_errors || 'Something went wrong'
+                );
             });
         }}
         isLoading={isLoading}
