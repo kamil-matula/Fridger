@@ -38,9 +38,9 @@ const Login = ({ navigation }) => {
 
   // Send data to api:
   const login = (data) => {
-    loginPost(data)
-      .unwrap()
-      .catch((error) => displayToast(error.data?.non_field_errors));
+    loginPost(data).catch((error) =>
+      displayToast(error.data?.non_field_errors)
+    );
   };
 
   return (
