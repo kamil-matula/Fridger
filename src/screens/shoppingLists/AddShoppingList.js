@@ -54,10 +54,8 @@ const AddShoppingList = ({ navigation, route }) => {
             </Text>
             {activeFridge && (
               <Text style={styles.connectedFridgeInfo}>
-                {activeFridge.shared_with_count > 1
-                  ? `${activeFridge.products_count} items  •  shared with ${
-                      activeFridge.shared_with_count - 1
-                    } friends`
+                {activeFridge.shared_with_count > 0
+                  ? `${activeFridge.products_count} items  •  shared with ${activeFridge.shared_with_count} friends`
                   : `${activeFridge.products_count} items`}
               </Text>
             )}
