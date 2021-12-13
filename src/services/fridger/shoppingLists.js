@@ -10,12 +10,12 @@ const shoppingListApi = fridgerApi.injectEndpoints({
       }),
       providesTags: ['ShoppingLists'],
     }),
-    shoppingList: builder.query({
+    specificShoppingList: builder.query({
       query: (id) => ({
         url: `shopping-lists/${id}`,
         method: 'GET',
       }),
-      providesTags: ['ShoppingList'],
+      providesTags: ['SpecificShoppingList'],
     }),
     addShoppingList: builder.mutation({
       query: ({ name, fridge }) => {
@@ -36,7 +36,7 @@ const shoppingListApi = fridgerApi.injectEndpoints({
         method: 'PATCH',
         body: { name },
       }),
-      invalidatesTags: ['ShoppingLists', 'ShoppingList'],
+      invalidatesTags: ['ShoppingLists', 'SpecificShoppingList'],
     }),
     deleteShoppingList: builder.mutation({
       query: (id) => ({
@@ -50,7 +50,7 @@ const shoppingListApi = fridgerApi.injectEndpoints({
 
 export const {
   useShoppingListsQuery,
-  useShoppingListQuery,
+  useSpecificShoppingListQuery,
   useAddShoppingListMutation,
   useEditShoppingListNameMutation,
   useDeleteShoppingListMutation,

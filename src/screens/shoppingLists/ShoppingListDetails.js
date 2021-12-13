@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-import { View } from 'react-native';
+import { View, ToastAndroid, AlertIOS } from 'react-native';
 
 import {
   AppBar,
@@ -16,19 +16,38 @@ import { more, group, groupAdd, deleteIcon } from 'assets/icons';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
 
 import {
-  useShoppingListQuery,
+  useSpecificShoppingListQuery,
   useDeleteShoppingListMutation,
   useEditShoppingListNameMutation,
 } from 'services/fridger/shoppingLists';
 
 const ShoppingListDetails = ({ route, navigation }) => {
   // Shopping list identifying
-  const shoppingList = useShoppingListQuery(route.params.shoppingListID);
+  const shoppingList = useSpecificShoppingListQuery(
+    route.params.shoppingListID
+  );
   const deleteShoppingList = useDeleteShoppingListMutation()[0];
   const editShoppingListName = useEditShoppingListNameMutation()[0];
 
   // FAB & Tabs conditions:
   const [fabVisible, setFabVisible] = useState(true);
+
+  // Rename shopping list
+  const renameShoppingList = (newName) => {
+    editShoppingListName({
+      id: route.params.shoppingListID,
+      name: newName,
+    })
+      .unwrap()
+      .then(() => {
+        const message = 'Shopping list renamed';
+        if (Platform.OS === 'android') {
+          ToastAndroid.show(message, ToastAndroid.SHORT);
+        } else {
+          AlertIOS.alert(message);
+        }
+      });
+  };
 
   // Deleting:
   const [deleteShoppingListDialogVisible, setDeleteShoppingListDialogVisible] =
@@ -65,12 +84,7 @@ const ShoppingListDetails = ({ route, navigation }) => {
               bottomSheet.current.open();
             }}
             editable
-            onSubmitEditing={(newName) => {
-              editShoppingListName({
-                id: route.params.shoppingListID,
-                name: newName,
-              });
-            }}
+            onSubmitEditing={renameShoppingList}
           />
 
           {/* Tabs */}

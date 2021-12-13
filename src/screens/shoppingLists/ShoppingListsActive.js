@@ -15,8 +15,6 @@ const ShoppingListsActive = ({ navigation }) => {
 
   const shoppingLists = useShoppingListsQuery({ isArchived: false });
 
-  console.log(shoppingLists.data);
-
   return (
     <View style={styles.container}>
       {shoppingLists.isLoading ? (
