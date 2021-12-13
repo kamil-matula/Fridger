@@ -25,7 +25,7 @@ const AddFridge = ({ navigation }) => {
         .then(() => navigation.goBack())
         .catch((error) => {
           // Display error connected with input field...
-          if (error.data?.name) displayToast(error.data?.name);
+          if (error.data?.name) displayToast('Invalid name');
           // ... or other error:
           else displayToast(error.data?.non_field_errors);
         });

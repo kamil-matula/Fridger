@@ -16,7 +16,7 @@ import {
   LoadingOverlay,
 } from 'components';
 import { FridgeDetailsRow } from 'components/fridges';
-import { makeStyles } from 'utils';
+import { makeStyles, displayToast } from 'utils';
 import {
   group,
   groupAdd,
@@ -63,28 +63,27 @@ const FridgeDetails = ({ route, navigation }) => {
   const editFridgeName = (name) => {
     editFridgeNameQuery({ id: fridge.id, name })
       .unwrap()
-      .then((response) => {
-        // TODO: Add displaying toast here?
-        console.log(response);
-      })
+      .then(() => displayToast('Fridge renamed'))
       .catch((error) => {
-        // TODO: Add error-handling after making sure what kind of errors can be here
-        console.log(error);
+        // Display error connected with input field...
+        if (error.data?.name) displayToast('Invalid name');
+        // ... or other error:
+        else displayToast(error.data?.non_field_errors);
       });
   };
   const deleteFridge = () => {
     deleteFridgeQuery(fridge.id)
       .unwrap()
       .then(() => {
-        // TODO: Add displaying toast here?
+        // Show toast:
+        displayToast('Fridge deleted');
 
         // Hide dialog and go back:
         setDeleteFridgeDialogVisible(false);
         navigation.pop();
       })
-      .catch((error) => {
-        // TODO: Add error-handling after making sure what kind of errors can be here
-        console.log(error);
+      .catch(() => {
+        displayToast('Unable to delete fridge');
       });
   };
 

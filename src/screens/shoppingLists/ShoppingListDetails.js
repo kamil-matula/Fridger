@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-import { View, ToastAndroid, AlertIOS } from 'react-native';
+import { View } from 'react-native';
 
 import {
   AppBar,
@@ -11,7 +11,7 @@ import {
   Separator,
   LoadingOverlay,
 } from 'components';
-import { makeStyles } from 'utils';
+import { displayToast, makeStyles } from 'utils';
 import { more, group, groupAdd, deleteIcon } from 'assets/icons';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
 
@@ -39,13 +39,12 @@ const ShoppingListDetails = ({ route, navigation }) => {
       name: newName,
     })
       .unwrap()
-      .then(() => {
-        const message = 'Shopping list renamed';
-        if (Platform.OS === 'android') {
-          ToastAndroid.show(message, ToastAndroid.SHORT);
-        } else {
-          AlertIOS.alert(message);
-        }
+      .then(() => displayToast('Shopping list renamed'))
+      .catch((error) => {
+        // Display error connected with input field...
+        if (error.data?.name) displayToast('Invalid name');
+        // ... or other error:
+        else displayToast(error.data?.non_field_errors);
       });
   };
 
@@ -56,9 +55,15 @@ const ShoppingListDetails = ({ route, navigation }) => {
     deleteShoppingList(route.params.shoppingListID)
       .unwrap()
       .then(() => {
+        // Show toast:
+        displayToast('Shopping list deleted');
+
         // Hide dialog and go back:
-        setDeleteShoppingListDialogVisible(false);
+        setDeleteFridgeDialogVisible(false);
         navigation.pop();
+      })
+      .catch(() => {
+        displayToast('Unable to delete shopping list');
       });
   };
   const cancelRemoveShoppingList = () => {
