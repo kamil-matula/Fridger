@@ -1,46 +1,49 @@
+/* eslint-disable camelcase */
 import React from 'react';
 
-import { FlatList, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { AppBar, FloatingActionButton } from 'components';
+import { AppBar, FloatingActionButton, LoadingOverlay } from 'components';
 import { FridgeRow } from 'components/fridges';
 import { makeStyles } from 'utils';
-import { fridgesList } from 'tmpData';
+
+import { useFridgesQuery } from 'services/fridger/fridges';
 
 const ChooseFridge = ({ route, navigation }) => {
   const { activeFridgeName } = route.params;
   const styles = useStyles();
+
+  const fridges = useFridgesQuery();
 
   return (
     <View style={styles.container}>
       <AppBar label='Choose fridge' />
       <Divider />
 
-      {/* List of available fridges (including active one) */}
-      <FlatList
-        style={styles.list}
-        data={fridgesList}
-        renderItem={({ item }) => (
-          <FridgeRow
-            isActive={item.name === activeFridgeName}
-            text={item.name}
-            subText={
-              item.people > 1
-                ? `${item.items} items  •  shared with ${
-                    item.people - 1
-                  } friends`
-                : `${item.items} items`
-            }
-            onPress={() => {
-              // TODO: Add connecting this fridge with shopping list
-              console.log(`Fridge ${item.name} has been selected as active`);
-              navigation.pop();
-            }}
-          />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      {fridges.isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <ScrollView>
+          {fridges.data.map((fridge) => (
+            <FridgeRow
+              key={fridge.id}
+              isActive={fridge.name === activeFridgeName}
+              text={fridge.name}
+              subText={
+                fridge.shared_with_count > 1
+                  ? `${fridge.products_count} items  •  shared with ${
+                      fridge.shared_with_count - 1
+                    } friends`
+                  : `${fridge.products_count} items`
+              }
+              onPress={() => {
+                navigation.navigate('AddShoppingList', { fridge });
+              }}
+            />
+          ))}
+        </ScrollView>
+      )}
 
       {/* Adding new fridge */}
       <FloatingActionButton
@@ -56,9 +59,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  list: {
-    width: '100%',
   },
 }));
 
