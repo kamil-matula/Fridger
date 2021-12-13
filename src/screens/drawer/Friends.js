@@ -58,6 +58,7 @@ const Friends = ({ navigation }) => {
 
     // Send request to api:
     deleteFriendQuery(relationship.id)
+      .unwrap()
       .then(() => displayToast('Friend has been deleted'))
       .catch(() => displayToast('Unable to remove friend'));
   };

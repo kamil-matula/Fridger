@@ -21,12 +21,15 @@ const FriendProfile = ({ navigation, route }) => {
   const removeFriend = () => {
     // Send request to api:
     deleteFriendQuery(relationshipID)
-      .then(() => displayToast('Friend has been deleted'))
+      .unwrap()
+      .then(() => {
+        displayToast('Friend has been deleted');
+        navigation.pop();
+      })
       .catch(() => displayToast('Unable to remove friend'));
 
     // Hide dialog and go back:
     setDialogVisible(false);
-    navigation.pop();
   };
   const cancelRemoveFriend = () => {
     setDialogVisible(false);
