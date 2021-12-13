@@ -153,14 +153,14 @@ const Friends = ({ navigation }) => {
   // Navigation:
   const navigateToFriendProfile = (userID, relationshipType) => {
     try {
+      // Find relationship:
       const relationship =
         relationshipType === 'request'
           ? requests.data.find((e) => e.friend.id === userID)
           : friends.data.find((e) => e.friend.id === userID);
       const user = relationship.friend;
-      console.log('friends');
-      console.log(relationship.id);
 
+      // Change page:
       navigation.navigate('FriendProfile', {
         relationshipType,
         relationshipID: relationship.id,
@@ -170,7 +170,6 @@ const Friends = ({ navigation }) => {
         avatarUri: user.avatar,
       });
     } catch (e) {
-      console.log(e);
       displayToast("Unable to navigate to friend's profile");
     }
   };
