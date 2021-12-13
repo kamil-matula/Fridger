@@ -21,6 +21,13 @@ const authApi = fridgerApi.injectEndpoints({
         url: 'auth/users/logout',
         method: 'POST',
       }),
+      invalidatesTags: [
+        'User',
+        'Friends',
+        'Fridges',
+        'Products',
+        'FridgeOwnership',
+      ],
     }),
     resetPassword: builder.mutation({
       query: ({ email }) => ({
