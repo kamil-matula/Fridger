@@ -21,6 +21,7 @@ const authApi = fridgerApi.injectEndpoints({
         url: 'auth/users/logout',
         method: 'POST',
       }),
+      // Reset everything:
       invalidatesTags: [
         'User',
         'Friends',

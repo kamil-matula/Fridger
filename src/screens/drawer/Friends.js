@@ -52,31 +52,14 @@ const Friends = ({ navigation }) => {
     setDialogVisible(true);
   };
 
-  const deleteInvitation = (id) => {
-    // Find relationship:
-    const relationship = requests.data.find((e) => e.friend.id === id);
-
-    // Send request to api:
-    deleteFriendQuery(relationship.id).catch(() => {
-      // Revert changes:
-      if (requests.data) {
-        setLocalRequests(requests.data.map((e) => e.friend));
-      }
-
-      // Display error:
-      displayToast('Unable to remove invitation');
-    });
-  };
-
   const deleteFriend = (id) => {
     // Find relationship:
     const relationship = friends.data.find((e) => e.friend.id === id);
 
     // Send request to api:
-    deleteFriendQuery(relationship.id).catch(() => {
-      // Display error:
-      displayToast('Unable to remove friend');
-    });
+    deleteFriendQuery(relationship.id)
+      .then(() => displayToast('Friend has been deleted'))
+      .catch(() => displayToast('Unable to remove friend'));
   };
 
   const confirmRemoveFriend = () => {
@@ -90,6 +73,17 @@ const Friends = ({ navigation }) => {
   const cancelRemoveFriend = () => {
     // Hide dialog:
     setDialogVisible(false);
+  };
+
+  // Accept invitation:
+  const acceptInvitation = (id) => {
+    // Find relationship:
+    const relationship = requests.data.find((e) => e.friend.id === id);
+
+    // Send request to API:
+    acceptFriendQuery(relationship.id).catch(() =>
+      displayToast('Unable to accept invitation')
+    );
   };
 
   // Reject invitation:
@@ -116,17 +110,6 @@ const Friends = ({ navigation }) => {
     setSnackbarVisible(false);
   };
 
-  // Accept invitation:
-  const acceptInvitation = (id) => {
-    // Find relationship:
-    const relationship = requests.data.find((e) => e.friend.id === id);
-
-    // Send request to API:
-    acceptFriendQuery(relationship.id)
-      .unwrap()
-      .catch(() => displayToast('Unable to accept invitation'));
-  };
-
   const rejectInvitation = (id) => {
     // Reject invitation locally:
     const idx = localRequests.findIndex((e) => e.id === id);
@@ -151,15 +134,45 @@ const Friends = ({ navigation }) => {
     setSnackbarVisible(false);
   };
 
-  // Navigation:
-  const navigateToFriendProfile = (user) => {
-    navigation.navigate('FriendProfile', {
-      userID: user.id,
-      nick: user.username,
-      name: user.firstName,
-      surname: user.lastName,
-      avatarUri: user.avatar,
+  const deleteInvitation = (id) => {
+    // Find relationship:
+    const relationship = requests.data.find((e) => e.friend.id === id);
+
+    // Send request to api:
+    deleteFriendQuery(relationship.id).catch(() => {
+      // Revert changes:
+      if (requests.data) {
+        setLocalRequests(requests.data.map((e) => e.friend));
+      }
+
+      // Display error:
+      displayToast('Unable to remove invitation');
     });
+  };
+
+  // Navigation:
+  const navigateToFriendProfile = (userID, relationshipType) => {
+    try {
+      const relationship =
+        relationshipType === 'request'
+          ? requests.data.find((e) => e.friend.id === userID)
+          : friends.data.find((e) => e.friend.id === userID);
+      const user = relationship.friend;
+      console.log('friends');
+      console.log(relationship.id);
+
+      navigation.navigate('FriendProfile', {
+        relationshipType,
+        relationshipID: relationship.id,
+        nick: user.username,
+        name: user.firstName,
+        surname: user.lastName,
+        avatarUri: user.avatar,
+      });
+    } catch (e) {
+      console.log(e);
+      displayToast("Unable to navigate to friend's profile");
+    }
   };
   const navigateToAddFriend = () => {
     navigation.navigate('AddFriend');
@@ -170,7 +183,6 @@ const Friends = ({ navigation }) => {
       <AppBar label='Friends' />
       <Divider />
 
-      {/* Loading */}
       {requests.isLoading || friends.isLoading ? (
         <LoadingOverlay />
       ) : (
@@ -185,7 +197,7 @@ const Friends = ({ navigation }) => {
                   title={user.username}
                   subtitle={`${user.first_name} ${user.last_name}`.trim()}
                   avatarURI={user.avatar}
-                  onClick={() => navigateToFriendProfile(user)}
+                  onClick={() => navigateToFriendProfile(user.id, 'request')}
                   variant='small'
                   icon1={clear}
                   onPressIcon1={() => rejectInvitation(user.id)}
@@ -213,7 +225,7 @@ const Friends = ({ navigation }) => {
                   title={user.username}
                   subtitle={`${user.first_name} ${user.last_name}`.trim()}
                   avatarURI={user.avatar}
-                  onClick={() => navigateToFriendProfile(user)}
+                  onClick={() => navigateToFriendProfile(user.id, 'friend')}
                   variant='small'
                   icon1={deleteIcon}
                   onPressIcon1={() => prepareToRemove(user)}
