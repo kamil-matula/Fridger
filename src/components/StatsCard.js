@@ -77,7 +77,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     width: '100%',
-    marginVertical: 2,
+    marginTop: 16,
+    marginBottom: 2,
   },
   subtitle: {
     color: theme.colors.silverMetallic,

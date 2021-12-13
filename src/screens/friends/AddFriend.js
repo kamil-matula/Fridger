@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { View, TextInput, Image, ToastAndroid, Platform } from 'react-native';
+import { View, TextInput, Image } from 'react-native';
 import { Divider, useTheme, ActivityIndicator } from 'react-native-paper';
 
 import {
@@ -10,7 +10,7 @@ import {
   ScrollViewLayout,
   Separator,
 } from 'components';
-import { makeStyles } from 'utils';
+import { displayToast, makeStyles } from 'utils';
 import { tmpPerson } from 'assets/images';
 
 import { useLazyFindUserQuery } from 'services/fridger/user';
@@ -43,27 +43,18 @@ const AddFriend = ({ navigation }) => {
       });
     }
     if (findUser.isError) {
-      const msg = 'User not found';
-      if (Platform.OS === 'android') {
-        ToastAndroid.show(msg, ToastAndroid.SHORT);
-      } else {
-        AlertIOS.alert(msg);
-      }
+      displayToast('User not found');
     }
   }, [findUser.isSuccess, findUser.isError]);
 
   // Handle with adding friend action:
   useEffect(() => {
     if (addToFriends.isSuccess) {
+      displayToast('Invitation has been sent');
       navigation.goBack();
     }
     if (addToFriends.isError) {
-      const msg = 'Something went wrong';
-      if (Platform.OS === 'android') {
-        ToastAndroid.show(msg, ToastAndroid.SHORT);
-      } else {
-        AlertIOS.alert(msg);
-      }
+      displayToast('Something went wrong');
     }
   }, [addToFriends.isSuccess, addToFriends.isError]);
 

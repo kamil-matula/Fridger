@@ -1,14 +1,17 @@
 import React from 'react';
 
-import { Text, View, ToastAndroid, AlertIOS, Platform } from 'react-native';
+import { Text, View } from 'react-native';
 import { useForm } from 'react-hook-form';
 
 import { InputField, Button, ScrollViewLayout, Separator } from 'components';
 import { useLoginMutation } from 'services/fridger/auth';
-import { makeStyles } from 'utils';
+import { displayToast, makeStyles } from 'utils';
 
 const Login = ({ navigation }) => {
   const styles = useStyles();
+
+  // Queries:
+  const [loginPost, { isLoading }] = useLoginMutation();
 
   // Form states:
   const { control, handleSubmit, setFocus } = useForm({
@@ -33,22 +36,12 @@ const Login = ({ navigation }) => {
     },
   };
 
-  // Connection with API:
-  const [loginPost, { isError, error, isLoading }] = useLoginMutation();
-  if (isError) {
-    if (error.status === 400) {
-      // Show toast:
-      const message = error.data.non_field_errors.join(' ');
-      if (Platform.OS === 'android') {
-        ToastAndroid.show(message, ToastAndroid.SHORT);
-      } else {
-        AlertIOS.alert(message);
-      }
-
-      // Additional debugging for cases if toast doesn't show up:
-      console.log(message);
-    }
-  }
+  // Send data to api:
+  const login = (data) => {
+    loginPost(data)
+      .unwrap()
+      .catch((error) => displayToast(error.data?.non_field_errors));
+  };
 
   return (
     <ScrollViewLayout>
@@ -92,10 +85,10 @@ const Login = ({ navigation }) => {
         <Button
           label='Login'
           variant='contained'
-          onPress={handleSubmit(loginPost)}
+          onPress={handleSubmit(login)}
           isLoading={isLoading}
         />
-        <Text style={styles.text}>Don’t have an account?</Text>
+        <Text style={styles.text}>Don&apos;t have an account?</Text>
         <Button
           label='Register'
           variant='outlined'

@@ -8,7 +8,7 @@ import {
   useUserInfoQuery,
   useUpdateUserInfoMutation,
 } from 'services/fridger/user';
-import { makeStyles } from 'utils';
+import { makeStyles, displayToast } from 'utils';
 import {
   InputField,
   Button,
@@ -79,7 +79,13 @@ const EditProfile = ({ navigation }) => {
   const saveChanges = (dataToSend) => {
     updateUser(dataToSend)
       .unwrap()
-      .then(() => navigation.goBack())
+      .then(() => {
+        // Confirm action:
+        displayToast('Profile successfully updated');
+
+        // Leave page:
+        navigation.goBack();
+      })
       .catch((error) => {
         // Display error under specific input field...
         const usernameError = error.data?.username;
@@ -105,15 +111,7 @@ const EditProfile = ({ navigation }) => {
         }
 
         // ... or display toast if it's different kind of problem:
-        const generalError = error.data?.non_field_errors;
-        if (generalError) {
-          const message = generalError.join(' ');
-          if (Platform.OS === 'android') {
-            ToastAndroid.show(message, ToastAndroid.SHORT);
-          } else {
-            AlertIOS.alert(message);
-          }
-        }
+        displayToast(error.data?.non_field_errors);
       });
   };
 
@@ -140,63 +138,67 @@ const EditProfile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar label='Edit profile' />
-      {userIsLoading && <LoadingOverlay />}
-      <ScrollViewLayout>
-        {/* Input fields and image picker */}
-        <View>
-          <View style={styles.imageContainer}>
-            <TouchableOpacity onPress={openImagePickerAsync}>
-              <Image
-                style={styles.avatar}
-                source={avatar ? { uri: avatar } : tmpPerson}
-              />
-              <View style={styles.badgeContainer}>
-                <Image style={styles.badge} source={edit} />
-              </View>
-            </TouchableOpacity>
-          </View>
-          <InputField
-            control={control}
-            rules={rules.username}
-            name='username'
-            label='Username'
-            returnKeyType='next'
-            placeholder='Enter your nick'
-            onSubmitEditing={() => setFocus('firstName')}
-          />
-          <Separator />
-          <InputField
-            control={control}
-            rules={rules.firstName}
-            name='firstName'
-            label='First Name (optional)'
-            returnKeyType='next'
-            placeholder='Enter your first name'
-            onSubmitEditing={() => setFocus('lastName')}
-          />
-          <Separator />
-          <InputField
-            control={control}
-            rules={rules.lastName}
-            name='lastName'
-            label='Last Name (optional)'
-            returnKeyType='done'
-            placeholder='Enter your last name'
-          />
-          <Separator height={32} />
-        </View>
 
-        {/* Button */}
-        <View>
-          <Button
-            label='save changes'
-            variant='contained'
-            onPress={handleSubmit(saveChanges)}
-            isLoading={updateUserIsLoading}
-          />
-          <Separator />
-        </View>
-      </ScrollViewLayout>
+      {userIsLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <ScrollViewLayout>
+          {/* Input fields and image picker */}
+          <View>
+            <View style={styles.imageContainer}>
+              <TouchableOpacity onPress={openImagePickerAsync}>
+                <Image
+                  style={styles.avatar}
+                  source={avatar ? { uri: avatar } : tmpPerson}
+                />
+                <View style={styles.badgeContainer}>
+                  <Image style={styles.badge} source={edit} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <InputField
+              control={control}
+              rules={rules.username}
+              name='username'
+              label='Username'
+              returnKeyType='next'
+              placeholder='Enter your nick'
+              onSubmitEditing={() => setFocus('firstName')}
+            />
+            <Separator />
+            <InputField
+              control={control}
+              rules={rules.firstName}
+              name='firstName'
+              label='First Name (optional)'
+              returnKeyType='next'
+              placeholder='Enter your first name'
+              onSubmitEditing={() => setFocus('lastName')}
+            />
+            <Separator />
+            <InputField
+              control={control}
+              rules={rules.lastName}
+              name='lastName'
+              label='Last Name (optional)'
+              returnKeyType='done'
+              placeholder='Enter your last name'
+            />
+            <Separator height={32} />
+          </View>
+
+          {/* Button */}
+          <View>
+            <Button
+              label='save changes'
+              variant='contained'
+              onPress={handleSubmit(saveChanges)}
+              isLoading={updateUserIsLoading}
+            />
+            <Separator />
+          </View>
+        </ScrollViewLayout>
+      )}
     </View>
   );
 };
