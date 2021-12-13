@@ -6,7 +6,7 @@ import { Divider } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
 import { LoadingOverlay } from 'components';
-import { ShoppingListRow } from 'components/shoppingLists';
+import ShoppingListRow from './ShoppingListRow';
 
 const ListOfShoppingLists = ({ shoppingLists, navigation }) => {
   const styles = useStyles();
