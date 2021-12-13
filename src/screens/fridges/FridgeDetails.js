@@ -69,6 +69,8 @@ const FridgeDetails = ({ route, navigation }) => {
         if (error.data?.name) displayToast('Invalid name');
         // ... or other error:
         else displayToast(error.data?.non_field_errors);
+
+        // TODO: Reset appbar's value
       });
   };
   const deleteFridge = () => {
