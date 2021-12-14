@@ -19,17 +19,14 @@ const AddFridge = ({ navigation }) => {
 
   // Send data to api:
   const addFridge = () => {
-    if (!isLoading)
-      addFridgeQuery(name)
-        .unwrap()
-        .then(() => navigation.goBack())
-        .catch((error) => {
-          if (error.data?.name) displayToast('Invalid name of fridge');
-          else
-            displayToast(
-              error.data?.non_field_errors || 'Unable to add fridge'
-            );
-        });
+    addFridgeQuery(name)
+      .unwrap()
+      .then(() => navigation.goBack())
+      .catch((error) => {
+        if (error.data?.name) displayToast('Invalid name of fridge');
+        else
+          displayToast(error.data?.non_field_errors || 'Unable to add fridge');
+      });
   };
 
   return (

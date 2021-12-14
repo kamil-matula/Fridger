@@ -12,11 +12,23 @@ import {
   SheetRow,
   FloatingActionButton,
 } from 'components';
-import { makeStyles } from 'utils';
+import { makeStyles, displayToast } from 'utils';
 import { scanner, calendar, expand, check } from 'assets/icons';
+import { useAddFridgeProductMutation } from 'services/fridger/fridgeProducts';
 
-const AddProductManual = ({ navigation }) => {
+const AddProductManual = ({ navigation, route }) => {
+  const { fridgeID } = route.params;
   const styles = useStyles();
+  const listOfUnits = [
+    { short: 'kg', long: 'kilograms' },
+    { short: 'g', long: 'grams' },
+    { short: 'l', long: 'liters' },
+    { short: 'ml', long: 'milliliters' },
+    { short: 'pcs', long: 'pieces' },
+  ];
+
+  // Queries:
+  const [addProductQuery, { isLoading }] = useAddFridgeProductMutation();
 
   // Form states:
   const { control, handleSubmit, setFocus, setValue, reset, watch } = useForm({
@@ -48,17 +60,12 @@ const AddProductManual = ({ navigation }) => {
 
   // Bottom sheet with quantity types:
   const refBS = useRef(null);
-  const showBottomSheet = () => {
-    refBS.current.open();
-  };
+  const showBottomSheet = () => refBS.current.open();
 
   // Quantity type:
   const unit = watch('unit');
   const changeUnit = (value) => {
-    // Update state:
     setValue('unit', value);
-
-    // Hide bottom sheet:
     refBS.current.close();
   };
 
@@ -66,7 +73,7 @@ const AddProductManual = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
 
-  const onDateChange = (event, selectedDate) => {
+  const onDateChange = (_, selectedDate) => {
     // Hide calendar:
     setDatepickerVisible(false);
 
@@ -79,7 +86,7 @@ const AddProductManual = ({ navigation }) => {
       setValue('expiration', '');
     }
 
-    // TODO: Make sure that it works on iOS devices
+    // TODO: Fix it on iOS devices
   };
 
   // Helper function for retrieving friendly date from datePicker:
@@ -93,20 +100,39 @@ const AddProductManual = ({ navigation }) => {
 
   // Submitting form:
   const addProduct = (data) => {
-    // TODO: Send request to API to add product to fridge
-    console.log(`Product ${JSON.stringify(data)} added to fridge`);
+    // Prepare unit name:
+    const validUnit = (data.unit === 'pcs' ? 'PIECE' : data.unit).toUpperCase();
+    data.unit = validUnit;
 
-    // Reset states:
-    reset({
-      name: '',
-      producer: '',
-      expiration: '',
-      quantity: '',
-      unit: 'pcs',
-    });
+    // Replace dd.mm.YYYY with YYYY-mm-dd:
+    const validDate = data.expiration
+      ? data.expiration.split('.').reverse().join('-')
+      : null;
+    data.expiration = validDate;
 
-    // Go back:
-    navigation.goBack();
+    // Add fridge id:
+    data.fridge = fridgeID;
+
+    // Send request to API:
+    addProductQuery(data)
+      .unwrap()
+      .then(() => {
+        // Reset states and go back:
+        reset({
+          name: '',
+          producer: '',
+          expiration: '',
+          quantity: '',
+          unit: 'pcs',
+        });
+        navigation.goBack();
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.data?.name) displayToast('Invalid name of fridge');
+        else
+          displayToast(error.data?.non_field_errors || 'Unable to add fridge');
+      });
   };
 
   return (
@@ -114,9 +140,7 @@ const AddProductManual = ({ navigation }) => {
       <AppBar
         label='Add product'
         icon1={scanner}
-        onPressIcon1={() => {
-          navigation.replace('AddProductAutomat');
-        }}
+        onPressIcon1={() => navigation.replace('AddProductAutomat')}
       />
 
       {/* Providing data */}
@@ -165,7 +189,7 @@ const AddProductManual = ({ navigation }) => {
             control={control}
             rules={rules.producer}
             name='producer'
-            label='Producer'
+            label='Producer (optional)'
             variant='data'
             returnKeyType='next'
             placeholder='Enter producer name'
@@ -175,7 +199,7 @@ const AddProductManual = ({ navigation }) => {
               control={control}
               rules={rules.expiration}
               name='expiration'
-              label='Expiration date'
+              label='Expiration date (optional)'
               variant='data'
               icon={calendar}
               onIconPress={showDatepicker}
@@ -194,41 +218,14 @@ const AddProductManual = ({ navigation }) => {
 
       {/* Quantity types */}
       <BottomSheet reference={refBS} title='Choose unit'>
-        <SheetRow
-          icon={unit === 'kg' ? check : null}
-          text='kilograms'
-          onPress={() => {
-            changeUnit('kg');
-          }}
-        />
-        <SheetRow
-          icon={unit === 'g' ? check : null}
-          text='grams'
-          onPress={() => {
-            changeUnit('g');
-          }}
-        />
-        <SheetRow
-          icon={unit === 'l' ? check : null}
-          text='liters'
-          onPress={() => {
-            changeUnit('l');
-          }}
-        />
-        <SheetRow
-          icon={unit === 'ml' ? check : null}
-          text='milliliters'
-          onPress={() => {
-            changeUnit('ml');
-          }}
-        />
-        <SheetRow
-          icon={unit === 'pcs' ? check : null}
-          text='pieces'
-          onPress={() => {
-            changeUnit('pcs');
-          }}
-        />
+        {listOfUnits.map((element) => (
+          <SheetRow
+            key={element.long}
+            icon={unit === element.short ? check : null}
+            text={element.long}
+            onPress={() => changeUnit(element.short)}
+          />
+        ))}
       </BottomSheet>
 
       {/* Button at the bottom */}
@@ -236,6 +233,7 @@ const AddProductManual = ({ navigation }) => {
         label='Add product'
         onPress={handleSubmit(addProduct)}
         centered
+        isLoading={isLoading}
       />
     </View>
   );
