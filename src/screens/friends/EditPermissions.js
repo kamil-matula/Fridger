@@ -103,11 +103,7 @@ const EditPermissions = ({
     })
       .unwrap()
       .catch((error) => {
-        // Display error connected with input field...
-        if (error.data?.name) displayToast('Invalid name');
-        // ... or other error:
-        else
-          displayToast(error.data?.non_field_errors || 'Something went wrong');
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
 
     // Hide Bottom Sheet:
@@ -130,11 +126,7 @@ const EditPermissions = ({
     removeUser(toRemove.id)
       .unwrap()
       .catch((error) => {
-        // Display error connected with input field...
-        if (error.data?.name) displayToast('Invalid name');
-        // ... or other error:
-        else
-          displayToast(error.data?.non_field_errors || 'Something went wrong');
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
 
     // Hide dialog:

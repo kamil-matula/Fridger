@@ -69,11 +69,7 @@ const Share = ({ addUser, owners, friends, route, navigation }) => {
     })
       .unwrap()
       .catch((error) => {
-        // Display error connected with input field...
-        if (error.data?.name) displayToast('Invalid name');
-        // ... or other error:
-        else
-          displayToast(error.data?.non_field_errors || 'Something went wrong');
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
   };
 
