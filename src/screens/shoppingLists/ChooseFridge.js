@@ -7,13 +7,13 @@ import { Divider } from 'react-native-paper';
 import { AppBar, FloatingActionButton, LoadingOverlay } from 'components';
 import { FridgeRow } from 'components/fridges';
 import { makeStyles } from 'utils';
-
 import { useFridgesQuery } from 'services/fridger/fridges';
 
 const ChooseFridge = ({ route, navigation }) => {
   const { activeFridgeName } = route.params;
   const styles = useStyles();
 
+  // Queries:
   const fridges = useFridgesQuery();
 
   return (
@@ -31,10 +31,8 @@ const ChooseFridge = ({ route, navigation }) => {
               isActive={fridge.name === activeFridgeName}
               text={fridge.name}
               subText={
-                fridge.shared_with_count > 1
-                  ? `${fridge.products_count} items  •  shared with ${
-                      fridge.shared_with_count - 1
-                    } friends`
+                fridge.shared_with_count > 0
+                  ? `${fridge.products_count} items  •  shared with ${fridge.shared_with_count} friends`
                   : `${fridge.products_count} items`
               }
               onPress={() => {

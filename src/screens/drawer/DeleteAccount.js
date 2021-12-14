@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, AlertIOS, Platform } from 'react-native';
+import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -10,8 +10,7 @@ import {
   ScrollViewLayout,
   Separator,
 } from 'components';
-import { makeStyles } from 'utils';
-
+import { makeStyles, displayToast } from 'utils';
 import { useDeleteAccountMutation } from 'services/fridger/user';
 import { useLogoutMutation } from 'services/fridger/auth';
 
@@ -60,15 +59,7 @@ const DeleteAccount = () => {
         }
 
         // ... or display toast if it's different kind of problem:
-        const generalError = error.data?.non_field_errors;
-        if (generalError) {
-          const message = generalError.join(' ');
-          if (Platform.OS === 'android') {
-            ToastAndroid.show(message, ToastAndroid.SHORT);
-          } else {
-            AlertIOS.alert(message);
-          }
-        }
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
   };
 

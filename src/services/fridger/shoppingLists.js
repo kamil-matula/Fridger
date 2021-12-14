@@ -1,6 +1,6 @@
 import { fridgerApi } from './fridgerApi';
 
-const shoppingListApi = fridgerApi.injectEndpoints({
+const shoppingListsApi = fridgerApi.injectEndpoints({
   endpoints: (builder) => ({
     shoppingLists: builder.query({
       query: ({ isArchived }) => ({
@@ -54,4 +54,4 @@ export const {
   useAddShoppingListMutation,
   useEditShoppingListNameMutation,
   useDeleteShoppingListMutation,
-} = shoppingListApi;
+} = shoppingListsApi;

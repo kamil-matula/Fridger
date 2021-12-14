@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { FlatList, View } from 'react-native';
 import { Divider } from 'react-native-paper';
@@ -17,24 +17,7 @@ const Fridges = ({ navigation }) => {
   const styles = useStyles();
 
   // Queries:
-  const { data, isLoading } = useFridgesQuery();
-
-  // Data:
-  const [fridges, setFridges] = useState([]);
-
-  // Update fridges when data is fetched:
-  useEffect(() => {
-    if (data) {
-      setFridges(
-        data.map((e) => ({
-          id: e.id,
-          name: e.name,
-          items: e.products_count,
-          people: e.shared_with_count,
-        }))
-      );
-    }
-  }, [data]);
+  const fridges = useFridgesQuery();
 
   return (
     <View style={styles.container}>
@@ -42,28 +25,30 @@ const Fridges = ({ navigation }) => {
       <Divider />
 
       {/* List of fridges */}
-      <FlatList
-        data={fridges}
-        renderItem={({ item }) => (
-          <FridgeRow
-            text={item.name}
-            subText={
-              item.people > 1
-                ? `${item.items} items  •  shared with ${
-                    item.people - 1
-                  } friends`
-                : `${item.items} items`
-            }
-            onPress={() => {
-              // Go to specific fridge:
-              navigation.navigate('FridgeDetails', {
-                fridgeID: item.id,
-              });
-            }}
-          />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      {fridges.isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <FlatList
+          data={fridges.data}
+          renderItem={({ item }) => (
+            <FridgeRow
+              text={item.name}
+              subText={
+                item.shared_with_count > 0
+                  ? `${item.products_count} items  •  shared with ${item.shared_with_count} friends`
+                  : `${item.products_count} items`
+              }
+              onPress={() => {
+                // Go to specific fridge:
+                navigation.navigate('FridgeDetails', {
+                  fridgeID: item.id,
+                });
+              }}
+            />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      )}
 
       {/* Space for bottom nav bar */}
       <Separator height={54} />
@@ -75,9 +60,6 @@ const Fridges = ({ navigation }) => {
         }}
         isBottomNavigationBar
       />
-
-      {/* Loading */}
-      {isLoading && <LoadingOverlay />}
     </View>
   );
 };

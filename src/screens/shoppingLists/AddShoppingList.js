@@ -4,7 +4,7 @@ import { View, TextInput, Text } from 'react-native';
 import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 
 import { AppBar, FloatingActionButton } from 'components';
-import { makeStyles } from 'utils';
+import { makeStyles, displayToast } from 'utils';
 
 import { useAddShoppingListMutation } from 'services/fridger/shoppingLists';
 
@@ -14,8 +14,11 @@ const AddShoppingList = ({ navigation, route }) => {
   const styles = useStyles({ isFridge: !!route.params?.fridge });
   const { colors } = useTheme();
 
+  // Text Input content:
   const [name, setName] = useState('');
-  const addShoppingList = useAddShoppingListMutation()[0];
+
+  // Queries:
+  const [addShoppingListQuery, { isLoading }] = useAddShoppingListMutation();
 
   return (
     <View style={styles.container}>
@@ -69,12 +72,22 @@ const AddShoppingList = ({ navigation, route }) => {
         centered
         label='add shopping list'
         onPress={() => {
-          addShoppingList({ name, fridge: activeFridge?.id })
+          addShoppingListQuery({ name, fridge: activeFridge?.id })
             .unwrap()
             .then(() => {
               navigation.goBack();
+            })
+            .catch((error) => {
+              // Display error connected with input field...
+              if (error.data?.name) displayToast('Invalid name');
+              // ... or other error:
+              else
+                displayToast(
+                  error.data?.non_field_errors || 'Something went wrong'
+                );
             });
         }}
+        isLoading={isLoading}
       />
     </View>
   );

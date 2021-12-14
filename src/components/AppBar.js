@@ -19,7 +19,7 @@ const AppBar = ({
   editable = false,
   onSubmitEditing = null,
 }) => {
-  const styles = useStyles(editable);
+  const styles = useStyles();
   const { colors } = useTheme();
   const navigation = useNavigation();
 
@@ -102,7 +102,7 @@ AppBar.propTypes = {
   onSubmitEditing: PropTypes.func,
 };
 
-const useStyles = makeStyles((theme, editable) => ({
+const useStyles = makeStyles((theme) => ({
   bar: {
     elevation: 0,
     backgroundColor: 'transparent',
@@ -113,7 +113,6 @@ const useStyles = makeStyles((theme, editable) => ({
     fontSize: 20,
     fontWeight: '500',
     color: theme.colors.white,
-    textTransform: editable ? 'none' : 'capitalize',
   },
 }));
 

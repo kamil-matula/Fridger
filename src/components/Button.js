@@ -27,9 +27,6 @@ const Button = ({
     hasIcon,
   });
 
-  // NOTE: For some reason creating activity indicator
-  // as separate component results in ignoring 'height' property
-  // and the indicator is bigger than it supposed to be.
   return !isLoading ? (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       {icon && <Image style={styles.icon} source={icon} />}
