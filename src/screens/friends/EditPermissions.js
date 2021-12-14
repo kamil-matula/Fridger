@@ -142,17 +142,9 @@ const EditPermissions = ({
     // Prevent loop Share-EditPermissions:
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
-    } else if (route.params.type === 'fridge') {
-      navigation.navigate('ShareFridge', {
-        behavior: 'pop',
-        type: route.params.type,
-        containerID: route.params.containerID,
-        containerName: route.params.containerName,
-      });
     } else {
       navigation.navigate('ShareShoppingList', {
         behavior: 'pop',
-        type: route.params.type,
         containerID: route.params.containerID,
         containerName: route.params.containerName,
       });

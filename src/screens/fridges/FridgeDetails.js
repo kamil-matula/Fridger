@@ -248,7 +248,6 @@ const FridgeDetails = ({ route, navigation }) => {
             refFridgeActions.current.close();
             if (fridge != null)
               navigation.navigate('ShareFridge', {
-                type: 'fridge',
                 containerID: fridge.id,
                 containerName: fridge.name,
               });
@@ -262,7 +261,6 @@ const FridgeDetails = ({ route, navigation }) => {
             refFridgeActions.current.close();
             if (fridge != null)
               navigation.navigate('EditPermissionsFridge', {
-                type: 'fridge',
                 containerID: fridge.id,
                 containerName: fridge.name,
               });

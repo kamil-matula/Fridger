@@ -122,7 +122,6 @@ const ShoppingListDetails = ({ route, navigation }) => {
                 // Hide bottom sheet and change screen:
                 bottomSheet.current.close();
                 navigation.navigate('ShareShoppingList', {
-                  type: 'shoppingList',
                   containerID: shoppingList.data.id,
                   containerName: shoppingList.data.name,
                 });
@@ -135,7 +134,6 @@ const ShoppingListDetails = ({ route, navigation }) => {
                 // Hide bottom sheet and change screen:
                 bottomSheet.current.close();
                 navigation.navigate('EditPermissionsShoppingList', {
-                  type: 'shoppingList',
                   containerID: shoppingList.data.id,
                   containerName: shoppingList.data.name,
                 });
