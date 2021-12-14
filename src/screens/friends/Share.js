@@ -1,14 +1,7 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-import {
-  View,
-  Image,
-  ScrollView,
-  Text,
-  AlertIOS,
-  Platform,
-} from 'react-native';
+import PropTypes from 'prop-types';
+import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
@@ -18,35 +11,65 @@ import { add, forward } from 'assets/icons';
 import { useFriendsQuery } from 'services/fridger/friends';
 import {
   useFridgeOwnersQuery,
-  useAddUserMutation,
+  useAddFridgeUserMutation,
 } from 'services/fridger/fridgesOwnerships';
+import {
+  useShoppingListOwnersQuery,
+  useAddShoppingListUserMutation,
+} from 'services/fridger/shoppingListsOwnerships';
 
-const Share = ({ route, navigation }) => {
+export const ShareFridge = ({ route, navigation }) => {
+  const addUser = useAddFridgeUserMutation()[0];
+  const owners = useFridgeOwnersQuery(route.params.containerID);
+  const friends = useFriendsQuery({
+    isAccepted: true,
+    fridgeId: route.params.containerID,
+  });
+
+  return (
+    <Share
+      route={route}
+      navigation={navigation}
+      addUser={addUser}
+      owners={owners}
+      friends={friends}
+    />
+  );
+};
+
+export const ShareShoppingList = ({ route, navigation }) => {
+  const addUser = useAddShoppingListUserMutation()[0];
+  const owners = useShoppingListOwnersQuery(route.params.containerID);
+  const friends = useFriendsQuery({
+    isAccepted: true,
+    shoppingListId: route.params.containerID,
+  });
+
+  return (
+    <Share
+      route={route}
+      navigation={navigation}
+      addUser={addUser}
+      owners={owners}
+      friends={friends}
+    />
+  );
+};
+
+const Share = ({ addUser, owners, friends, route, navigation }) => {
   const styles = useStyles();
   const theme = useTheme();
-
-  const owners = useFridgeOwnersQuery(route.params.containerID);
-  const friends = useFriendsQuery(true);
-  const addUser = useAddUserMutation()[0];
 
   const addFriend = (id) => {
     // Send request to API to share fridge/shopping list with friend
     addUser({
       userId: id,
-      fridgeId: route.params.containerID,
+      containerId: route.params.containerID,
       permissionName: 'READ',
     })
       .unwrap()
       .catch((error) => {
-        const generalError = error.data?.non_field_errors;
-        if (generalError) {
-          const message = generalError.join(' ');
-          if (Platform.OS === 'android') {
-            ToastAndroid.show(message, ToastAndroid.SHORT);
-          } else {
-            AlertIOS.alert(message);
-          }
-        }
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
   };
 
@@ -55,9 +78,8 @@ const Share = ({ route, navigation }) => {
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
-      navigation.navigate('EditPermissions', {
+      navigation.navigate('EditPermissionsShoppingList', {
         behavior: 'pop',
-        type: route.params.type,
         containerID: route.params.containerID,
         containerName: route.params.containerName,
       });
@@ -86,7 +108,7 @@ const Share = ({ route, navigation }) => {
 
           {/* List of friends available to invite */}
           <Divider />
-          {friends.data.map(({ friend }) => (
+          {friends.data?.map(({ friend }) => (
             <UserInfo
               key={friend.id}
               title={friend.username}
@@ -102,6 +124,12 @@ const Share = ({ route, navigation }) => {
       )}
     </View>
   );
+};
+
+Share.propTypes = {
+  addUser: PropTypes.func,
+  owners: PropTypes.object,
+  friends: PropTypes.object,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -139,5 +167,3 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.colors.silverMetallic,
   },
 }));
-
-export default Share;

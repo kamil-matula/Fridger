@@ -247,8 +247,7 @@ const FridgeDetails = ({ route, navigation }) => {
             // Hide bottom sheet and change screen:
             refFridgeActions.current.close();
             if (fridge != null)
-              navigation.navigate('Share', {
-                type: 'fridge',
+              navigation.navigate('ShareFridge', {
                 containerID: fridge.id,
                 containerName: fridge.name,
               });
@@ -261,8 +260,7 @@ const FridgeDetails = ({ route, navigation }) => {
             // Hide bottom sheet and change screen:
             refFridgeActions.current.close();
             if (fridge != null)
-              navigation.navigate('EditPermissions', {
-                type: 'fridge',
+              navigation.navigate('EditPermissionsFridge', {
                 containerID: fridge.id,
                 containerName: fridge.name,
               });

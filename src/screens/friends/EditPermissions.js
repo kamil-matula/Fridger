@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useRef, useEffect, AlertIOS, Platform } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
+import PropTypes from 'prop-types';
 import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, useTheme, TouchableRipple } from 'react-native-paper';
 
@@ -17,11 +17,54 @@ import { forward, deleteIcon, check } from 'assets/icons';
 
 import {
   useFridgeOwnersQuery,
-  useRemoveUserMutation,
-  useUpdatePermissionMutation,
+  useRemoveFridgeUserMutation,
+  useUpdateFridgePermissionMutation,
 } from 'services/fridger/fridgesOwnerships';
+import {
+  useShoppingListOwnersQuery,
+  useUpdateShoppingListPermissionMutation,
+  useRemoveShoppingListUserMutation,
+} from 'services/fridger/shoppingListsOwnerships';
 
-const EditPermissions = ({ route, navigation }) => {
+export const EditPermissionsFridge = ({ route, navigation }) => {
+  const updatePermission = useUpdateFridgePermissionMutation()[0];
+  const removeUser = useRemoveFridgeUserMutation()[0];
+  const owners = useFridgeOwnersQuery(route.params.containerID);
+
+  return (
+    <EditPermissions
+      updatePermission={updatePermission}
+      removeUser={removeUser}
+      owners={owners}
+      route={route}
+      navigation={navigation}
+    />
+  );
+};
+
+export const EditPermissionsShoppingList = ({ route, navigation }) => {
+  const updatePermission = useUpdateShoppingListPermissionMutation()[0];
+  const removeUser = useRemoveShoppingListUserMutation()[0];
+  const owners = useShoppingListOwnersQuery(route.params.containerID);
+
+  return (
+    <EditPermissions
+      updatePermission={updatePermission}
+      removeUser={removeUser}
+      owners={owners}
+      route={route}
+      navigation={navigation}
+    />
+  );
+};
+
+const EditPermissions = ({
+  updatePermission,
+  removeUser,
+  owners,
+  route,
+  navigation,
+}) => {
   const styles = useStyles();
   const theme = useTheme();
 
@@ -30,10 +73,6 @@ const EditPermissions = ({ route, navigation }) => {
     avatar: null,
     permission: '',
   });
-
-  const updatePermission = useUpdatePermissionMutation()[0];
-  const removeUser = useRemoveUserMutation()[0];
-  const owners = useFridgeOwnersQuery(route.params.containerID);
 
   // Update list of owners when data is fetched:
   useEffect(() => {
@@ -64,15 +103,7 @@ const EditPermissions = ({ route, navigation }) => {
     })
       .unwrap()
       .catch((error) => {
-        const generalError = error.data?.non_field_errors;
-        if (generalError) {
-          const message = generalError.join(' ');
-          if (Platform.OS === 'android') {
-            ToastAndroid.show(message, ToastAndroid.SHORT);
-          } else {
-            AlertIOS.alert(message);
-          }
-        }
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
 
     // Hide Bottom Sheet:
@@ -95,15 +126,7 @@ const EditPermissions = ({ route, navigation }) => {
     removeUser(toRemove.id)
       .unwrap()
       .catch((error) => {
-        const generalError = error.data?.non_field_errors;
-        if (generalError) {
-          const message = generalError.join(' ');
-          if (Platform.OS === 'android') {
-            ToastAndroid.show(message, ToastAndroid.SHORT);
-          } else {
-            AlertIOS.alert(message);
-          }
-        }
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
 
     // Hide dialog:
@@ -120,9 +143,8 @@ const EditPermissions = ({ route, navigation }) => {
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
-      navigation.navigate('Share', {
+      navigation.navigate('ShareShoppingList', {
         behavior: 'pop',
-        type: route.params.type,
         containerID: route.params.containerID,
         containerName: route.params.containerName,
       });
@@ -219,6 +241,12 @@ const EditPermissions = ({ route, navigation }) => {
   );
 };
 
+EditPermissions.propTypes = {
+  updatePermission: PropTypes.func,
+  removeUser: PropTypes.func,
+  owners: PropTypes.object,
+};
+
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
@@ -254,5 +282,3 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.colors.silverMetallic,
   },
 }));
-
-export default EditPermissions;

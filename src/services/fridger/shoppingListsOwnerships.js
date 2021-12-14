@@ -1,0 +1,49 @@
+import { fridgerApi } from './fridgerApi';
+
+const ShoppingListOwnershipsApi = fridgerApi.injectEndpoints({
+  endpoints: (builder) => ({
+    shoppingListOwners: builder.query({
+      query: (id) => ({
+        url: `shopping-lists/${id}/ownerships`,
+        method: 'GET',
+      }),
+      providesTags: ['ShoppingListOwnership'],
+    }),
+    addShoppingListUser: builder.mutation({
+      query: ({ userId, containerId, permissionName }) => ({
+        url: 'shopping-lists-ownerships',
+        method: 'POST',
+        body: {
+          user: userId,
+          shopping_list: containerId,
+          permission: permissionName,
+        },
+      }),
+      invalidatesTags: ['ShoppingListOwnership', 'Friends'],
+    }),
+    updateShoppingListPermission: builder.mutation({
+      query: ({ modelId, permissionName }) => ({
+        url: `shopping-lists-ownerships/${modelId}`,
+        method: 'PATCH',
+        body: {
+          permission: permissionName,
+        },
+      }),
+      invalidatesTags: ['ShoppingListOwnership'],
+    }),
+    removeShoppingListUser: builder.mutation({
+      query: (id) => ({
+        url: `shopping-lists-ownerships/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['ShoppingListOwnership', 'Friends'],
+    }),
+  }),
+});
+
+export const {
+  useShoppingListOwnersQuery,
+  useUpdateShoppingListPermissionMutation,
+  useAddShoppingListUserMutation,
+  useRemoveShoppingListUserMutation,
+} = ShoppingListOwnershipsApi;
