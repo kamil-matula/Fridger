@@ -5,3 +5,4 @@ export { default as PriceSummaryInteractive } from './PriceSummaryInteractive';
 export { default as ShoppingListRow } from './ShoppingListRow';
 export { default as ShoppingListItem } from './ShoppingListItem';
 export { default as ShoppingListItemInteractive } from './ShoppingListItemInteractive';
+export { default as ListOfShoppingLists } from './ListOfShoppingLists';

@@ -9,38 +9,65 @@ import {
   SheetRow,
   Dialog,
   Separator,
+  LoadingOverlay,
 } from 'components';
-import { makeStyles } from 'utils';
-import { more, group, groupAdd, hand, deleteIcon } from 'assets/icons';
-import { fridgeTab } from 'assets/icons/navigation';
-import { fridgesList, shoppingListsList } from 'tmpData';
+import { displayToast, makeStyles } from 'utils';
+import { more, group, groupAdd, deleteIcon } from 'assets/icons';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
+
+import {
+  useSpecificShoppingListQuery,
+  useDeleteShoppingListMutation,
+  useEditShoppingListNameMutation,
+} from 'services/fridger/shoppingLists';
 
 const ShoppingListDetails = ({ route, navigation }) => {
   // Shopping list identifying
-  // (TODO: Add error-handling for cases when route.params.shoppingListID doesn't exist):
-  const shoppingList = shoppingListsList.find(
-    (e) => e.id === route.params.shoppingListID
+  const shoppingList = useSpecificShoppingListQuery(
+    route.params.shoppingListID
   );
-
-  // Active fridge identifying:
-  const activeFridge = shoppingList.activeFridgeID
-    ? fridgesList.find((e) => e.id === shoppingList.activeFridgeID)
-    : null;
+  const deleteShoppingList = useDeleteShoppingListMutation()[0];
+  const editShoppingListName = useEditShoppingListNameMutation()[0];
 
   // FAB & Tabs conditions:
-  const { isShared } = shoppingList;
   const [fabVisible, setFabVisible] = useState(true);
+
+  // Rename shopping list
+  const renameShoppingList = (newName) => {
+    editShoppingListName({
+      id: route.params.shoppingListID,
+      name: newName,
+    })
+      .unwrap()
+      .then(() => displayToast('Shopping list renamed'))
+      .catch((error) => {
+        // Display error connected with input field...
+        if (error.data?.name) displayToast('Invalid name');
+        // ... or other error:
+        else
+          displayToast(error.data?.non_field_errors || 'Something went wrong');
+
+        // TODO: Reset appbar's value
+      });
+  };
 
   // Deleting:
   const [deleteShoppingListDialogVisible, setDeleteShoppingListDialogVisible] =
     useState(false);
   const confirmRemoveShoppingList = () => {
-    // TODO: Send request to API and wait for removing shopping list from the list
+    deleteShoppingList(route.params.shoppingListID)
+      .unwrap()
+      .then(() => {
+        // Show toast:
+        displayToast('Shopping list deleted');
 
-    // Hide dialog and go back:
-    setDeleteShoppingListDialogVisible(false);
-    navigation.pop();
+        // Hide dialog and go back:
+        setDeleteFridgeDialogVisible(false);
+        navigation.pop();
+      })
+      .catch(() => {
+        displayToast('Unable to delete shopping list');
+      });
   };
   const cancelRemoveShoppingList = () => {
     // Hide dialog:
@@ -54,110 +81,92 @@ const ShoppingListDetails = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <AppBar
-        label={shoppingList.name}
-        icon1={more}
-        onPressIcon1={() => {
-          bottomSheet.current.open();
-        }}
-        editable
-        onSubmitEditing={(newName) => {
-          // TODO: Send request to API to change list's name
-          console.log(
-            `Shopping List ${shoppingList.name} has been renamed to ${newName}`
-          );
-        }}
-      />
+      {shoppingList.isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <>
+          <AppBar
+            label={shoppingList.data.name}
+            icon1={more}
+            onPressIcon1={() => {
+              bottomSheet.current.open();
+            }}
+            editable
+            onSubmitEditing={renameShoppingList}
+          />
 
-      {/* Tabs */}
-      <ShoppingListDetailsTabNavigator
-        isShared={isShared}
-        setFabVisible={setFabVisible}
-      />
+          {/* Tabs */}
+          <ShoppingListDetailsTabNavigator
+            isShared={shoppingList.data.is_shared}
+            setFabVisible={setFabVisible}
+          />
 
-      {/* Space for bottom nav bar */}
-      <Separator height={54} />
+          {/* Space for bottom nav bar */}
+          <Separator height={54} />
 
-      {/* Adding new product */}
-      <FloatingActionButton
-        onPress={() => {
-          navigation.navigate('AddShoppingListProduct');
-        }}
-        visible={fabVisible}
-        isBottomNavigationBar
-      />
+          {/* Adding new product */}
+          <FloatingActionButton
+            onPress={() => {
+              navigation.navigate('AddShoppingListProduct');
+            }}
+            visible={fabVisible}
+            isBottomNavigationBar
+          />
 
-      {/* Shopping list actions */}
-      <BottomSheet reference={bottomSheet}>
-        <SheetRow
-          icon={groupAdd}
-          text='Share'
-          onPress={() => {
-            // Hide bottom sheet and change screen:
-            bottomSheet.current.close();
-            navigation.navigate('ShareShoppingList', {
-              type: 'shoppingList',
-              containerID: shoppingList.id,
-              containerName: shoppingList.name,
-            });
-          }}
-        />
-        <SheetRow
-          icon={group}
-          text='Manage people'
-          onPress={() => {
-            // Hide bottom sheet and change screen:
-            bottomSheet.current.close();
-            navigation.navigate('EditPermissionsShoppingList', {
-              type: 'shoppingList',
-              containerID: shoppingList.id,
-              containerName: shoppingList.name,
-            });
-          }}
-        />
-        <SheetRow
-          icon={hand}
-          text='Dibs'
-          onPress={() => {
-            // TODO: Add dibs feature
-          }}
-        />
-        <SheetRow
-          icon={fridgeTab}
-          text='Change fridge'
-          subText={activeFridge ? `   •   ${activeFridge.name}` : null}
-          onPress={() => {
-            // Hide bottom sheet and change screen:
-            bottomSheet.current.close();
-            navigation.navigate('ChooseFridge', {
-              activeFridgeName: activeFridge ? activeFridge.name : null,
-            });
-          }}
-        />
-        <SheetRow
-          icon={deleteIcon}
-          text='Delete List'
-          onPress={() => {
-            // Show dialog and hide bottom sheet:
-            bottomSheet.current.close();
-            setDeleteShoppingListDialogVisible(true);
-          }}
-        />
-      </BottomSheet>
+          {/* Shopping list actions */}
+          <BottomSheet reference={bottomSheet}>
+            <SheetRow
+              icon={groupAdd}
+              text='Share'
+              onPress={() => {
+                // Hide bottom sheet and change screen:
+                bottomSheet.current.close();
+                navigation.navigate('ShareShoppingList', {
+                  type: 'shoppingList',
+                  containerID: shoppingList.data.id,
+                  containerName: shoppingList.name,
+                });
+              }}
+            />
+            <SheetRow
+              icon={group}
+              text='Manage people'
+              onPress={() => {
+                // Hide bottom sheet and change screen:
+                bottomSheet.current.close();
+                navigation.navigate('EditPermissionsShoppingList', {
+                  type: 'shoppingList',
+                  containerID: shoppingList.data.id,
+                  containerName: shoppingList.name,
+                });
+              }}
+            />
+            <SheetRow
+              icon={deleteIcon}
+              text='Delete List'
+              onPress={() => {
+                // Show dialog and hide bottom sheet:
+                bottomSheet.current.close();
+                setDeleteShoppingListDialogVisible(true);
+              }}
+            />
+          </BottomSheet>
 
-      {/* Deleting shopping list */}
-      <Dialog
-        title='Delete shopping list'
-        paragraph={`Are you sure you want to delete shopping list ${shoppingList.name}? This action cannot be undone.`}
-        visibilityState={[
-          deleteShoppingListDialogVisible,
-          setDeleteShoppingListDialogVisible,
-        ]}
-        label1='delete'
-        onPressLabel1={confirmRemoveShoppingList}
-        label2='cancel'
-        onPressLabel2={cancelRemoveShoppingList}
-      />
+          {/* Deleting shopping list */}
+          <Dialog
+            title='Delete shopping list'
+            paragraph={`Are you sure you want to delete shopping list ${shoppingList.data.name}? This action cannot be undone.`}
+            visibilityState={[
+              deleteShoppingListDialogVisible,
+              setDeleteShoppingListDialogVisible,
+            ]}
+            label1='delete'
+            onPressLabel1={confirmRemoveShoppingList}
+            label2='cancel'
+            onPressLabel2={cancelRemoveShoppingList}
+          />
+        </>
+      )}
     </View>
   );
 };

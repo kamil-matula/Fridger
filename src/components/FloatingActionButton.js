@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { View } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { FAB, useTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
@@ -14,6 +14,7 @@ const FloatingActionButton = ({
   visible = true,
   confirm = false,
   isBottomNavigationBar = false,
+  isLoading = false,
 }) => {
   const [fabPosition, setFabPosition] = useState(null);
   const styles = useStyles({ centered, fabPosition, isBottomNavigationBar });
@@ -27,14 +28,20 @@ const FloatingActionButton = ({
         if (!fabPosition) setFabPosition(e.nativeEvent.layout.y);
       }}
     >
-      <FAB
-        visible={visible}
-        style={styles.fab}
-        icon={confirm ? check : add}
-        onPress={onPress}
-        color={colors.richBlack}
-        label={label}
-      />
+      {!isLoading ? (
+        <FAB
+          visible={visible}
+          style={styles.fab}
+          icon={confirm ? check : add}
+          onPress={onPress}
+          color={colors.richBlack}
+          label={label}
+        />
+      ) : (
+        <View style={styles.indicatorContainer}>
+          <ActivityIndicator size='large' color={colors.blueJeans} />
+        </View>
+      )}
     </View>
   );
 };
@@ -46,6 +53,7 @@ FloatingActionButton.propTypes = {
   visible: PropTypes.bool,
   confirm: PropTypes.bool,
   isBottomNavigationBar: PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
 
 const useStyles = makeStyles(
@@ -60,6 +68,11 @@ const useStyles = makeStyles(
         borderRadius: 32,
         margin: 16,
         right: 0,
+      },
+      indicatorContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 48,
       },
     };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme, Snackbar, Divider } from 'react-native-paper';
@@ -11,7 +11,7 @@ import {
   FloatingActionButton,
   LoadingOverlay,
 } from 'components';
-import { makeStyles } from 'utils';
+import { displayToast, makeStyles } from 'utils';
 import { done, clear, deleteIcon } from 'assets/icons';
 
 import {
@@ -25,76 +25,66 @@ const Friends = ({ navigation }) => {
   const styles = useStyles();
 
   // Queries:
-  const deleteFriend = useDeleteFriendMutation()[0];
-  const acceptFriend = useAcceptFriendMutation()[0];
-  const { data: requestsData, isLoading: requestsAreLoading } = useFriendsQuery(
-    { isAccepted: false }
-  );
-  const { data: friendsData, isLoading: friendsAreLoading } = useFriendsQuery({
-    isAccepted: true,
-  });
+  const deleteFriendQuery = useDeleteFriendMutation()[0];
+  const acceptFriendQuery = useAcceptFriendMutation()[0];
+  const requests = useFriendsQuery(false);
+  const friends = useFriendsQuery(true);
 
-  // Lists:
-  const [requests, setRequests] = useState([]);
-  const [friends, setFriends] = useState([]);
-
-  // Update requests when data is fetched:
+  // Local data:
+  const [localRequests, setLocalRequests] = useState([]);
+  const [localFriends, setLocalFriends] = useState([]);
   useEffect(() => {
-    if (requestsData) {
-      setRequests(
-        requestsData.map((e) => ({
-          id: e.id,
-          username: e.friend.username,
-          firstName: e.friend.first_name,
-          lastName: e.friend.last_name,
-          avatar: e.friend.avatar,
-        }))
-      );
+    if (requests.data) {
+      setLocalRequests(requests.data.map((e) => e.friend));
     }
-  }, [requestsData]);
-
-  // Update list of friends when data is fetched:
+  }, [requests.data]);
   useEffect(() => {
-    if (friendsData) {
-      setFriends(
-        friendsData.map((e) => ({
-          id: e.id,
-          username: e.friend.username,
-          firstName: e.friend.first_name,
-          lastName: e.friend.last_name,
-          avatar: e.friend.avatar,
-        }))
-      );
+    if (friends.data) {
+      setLocalFriends(friends.data.map((e) => e.friend));
     }
-  }, [friendsData]);
+  }, [friends.data]);
 
   // Remove friend:
   const [toRemove, setToRemove] = useState(null);
   const [dialogVisible, setDialogVisible] = useState(null);
-
   const prepareToRemove = (friend) => {
     setToRemove(friend);
     setDialogVisible(true);
   };
 
-  const confirmRemoveFriend = () => {
-    // Remove friend locally:
-    const idx = friends.findIndex((e) => e.id === toRemove.id);
-    setFriends([...friends.splice(0, idx), ...friends.splice(idx + 1)]);
+  const deleteFriend = (id) => {
+    // Find relationship:
+    const relationship = friends.data.find((e) => e.friend.id === id);
 
+    // Send request to api:
+    deleteFriendQuery(relationship.id)
+      .unwrap()
+      .then(() => displayToast('Friend has been deleted'))
+      .catch(() => displayToast('Unable to remove friend'));
+  };
+
+  const confirmRemoveFriend = () => {
     // Send request to API:
     deleteFriend(toRemove.id);
 
     // Hide dialog:
     setDialogVisible(false);
-
-    // TODO: Get rid of manipulating local data;
-    // it is better to refetch data after sending request to API
   };
 
   const cancelRemoveFriend = () => {
     // Hide dialog:
     setDialogVisible(false);
+  };
+
+  // Accept invitation:
+  const acceptInvitation = (id) => {
+    // Find relationship:
+    const relationship = requests.data.find((e) => e.friend.id === id);
+
+    // Send request to API:
+    acceptFriendQuery(relationship.id).catch(() =>
+      displayToast('Unable to accept invitation')
+    );
   };
 
   // Reject invitation:
@@ -113,7 +103,7 @@ const Friends = ({ navigation }) => {
   const onDismissSnackBar = () => {
     // If not undone, send request to API:
     if (!rejectCanceled()) {
-      deleteFriend(rejected.id);
+      deleteInvitation(rejected.id);
     }
 
     // Hide snackbar:
@@ -121,48 +111,68 @@ const Friends = ({ navigation }) => {
     setSnackbarVisible(false);
   };
 
-  // Accept invitation:
-  const accept = (id) => {
-    // Accept invitation locally:
-    const idx = requests.findIndex((e) => e.id === id);
-    setFriends([requests[idx], ...friends]);
-    setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
-
-    // Send request to API:
-    acceptFriend(id);
-
-    // TODO: Get rid of manipulating local data;
-    // it is better to refetch data after sending request to API
-  };
-
-  const reject = (id) => {
+  const rejectInvitation = (id) => {
     // Reject invitation locally:
-    const idx = requests.findIndex((e) => e.id === id);
-    setRequests([...requests.splice(0, idx), ...requests.splice(idx + 1)]);
+    const idx = localRequests.findIndex((e) => e.id === id);
+    setRejected(localRequests[idx]);
 
     // Give a chance to undo & send request to API on dismiss:
-    setRejected(requests[idx]);
+    setLocalRequests([
+      ...localRequests.slice(0, idx),
+      ...localRequests.slice(idx + 1),
+    ]);
     setSnackbarVisible(true);
   };
 
-  const undo = () => {
-    // Add rejected request back to the list:
-    setRequests([...requests, rejected]);
+  const undoRejection = () => {
+    // Return original state of the list:
+    if (requests.data) {
+      setLocalRequests(requests.data.map((e) => e.friend));
+    }
 
     // Hide snackbar:
     setRejectCanceled(true);
     setSnackbarVisible(false);
   };
 
-  // Navigation:
-  const navigateToFriendProfile = (user) => {
-    navigation.navigate('FriendProfile', {
-      userID: user.id,
-      nick: user.username,
-      name: user.firstName,
-      surname: user.lastName,
-      avatarUri: user.avatar,
+  const deleteInvitation = (id) => {
+    // Find relationship:
+    const relationship = requests.data.find((e) => e.friend.id === id);
+
+    // Send request to api:
+    deleteFriendQuery(relationship.id).catch(() => {
+      // Revert changes:
+      if (requests.data) {
+        setLocalRequests(requests.data.map((e) => e.friend));
+      }
+
+      // Display error:
+      displayToast('Unable to remove invitation');
     });
+  };
+
+  // Navigation:
+  const navigateToFriendProfile = (userID, relationshipType) => {
+    try {
+      // Find relationship:
+      const relationship =
+        relationshipType === 'request'
+          ? requests.data.find((e) => e.friend.id === userID)
+          : friends.data.find((e) => e.friend.id === userID);
+      const user = relationship.friend;
+
+      // Change page:
+      navigation.navigate('FriendProfile', {
+        relationshipType,
+        relationshipID: relationship.id,
+        nick: user.username,
+        name: user.firstName,
+        surname: user.lastName,
+        avatarUri: user.avatar,
+      });
+    } catch (e) {
+      displayToast("Unable to navigate to friend's profile");
+    }
   };
   const navigateToAddFriend = () => {
     navigation.navigate('AddFriend');
@@ -170,62 +180,65 @@ const Friends = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Main content */}
-      <AppBar label='friends' />
+      <AppBar label='Friends' />
       <Divider />
-      <ScrollView>
-        {/* Invitations */}
-        {requests.length !== 0 && (
-          <>
-            <Text style={styles.header}>Pending requests</Text>
-            {requests.map((user) => (
-              <UserInfo
-                key={user.id}
-                title={user.username}
-                subtitle={`${user.firstName} ${user.lastName}`.trim()}
-                avatarURI={user.avatar}
-                onClick={() => navigateToFriendProfile(user)}
-                variant='small'
-                icon1={clear}
-                onPressIcon1={() => reject(user.id)}
-                iconTint1={colors.tartOrange}
-                icon2={done}
-                onPressIcon2={() => accept(user.id)}
-                iconTint2={colors.darkGreen}
-              />
-            ))}
-          </>
-        )}
 
-        {/* Line between the lists */}
-        {requests.length !== 0 && friends.length !== 0 && <Divider />}
+      {requests.isLoading || friends.isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <ScrollView>
+          {/* Invitations */}
+          {localRequests.length !== 0 && (
+            <>
+              <Text style={styles.header}>Pending requests</Text>
+              {localRequests.map((user) => (
+                <UserInfo
+                  key={user.id}
+                  title={user.username}
+                  subtitle={`${user.first_name} ${user.last_name}`.trim()}
+                  avatarURI={user.avatar}
+                  onClick={() => navigateToFriendProfile(user.id, 'request')}
+                  variant='small'
+                  icon1={clear}
+                  onPressIcon1={() => rejectInvitation(user.id)}
+                  iconTint1={colors.tartOrange}
+                  icon2={done}
+                  onPressIcon2={() => acceptInvitation(user.id)}
+                  iconTint2={colors.darkGreen}
+                />
+              ))}
+            </>
+          )}
 
-        {/* Existing friends */}
-        {friends.length !== 0 && (
-          <>
-            <Text style={styles.header}>Accepted requests</Text>
-            {friends.map((user) => (
-              <UserInfo
-                key={user.id}
-                title={user.username}
-                subtitle={`${user.firstName} ${user.lastName}`.trim()}
-                avatarURI={user.avatar}
-                onClick={() => navigateToFriendProfile(user)}
-                variant='small'
-                icon1={deleteIcon}
-                onPressIcon1={() => prepareToRemove(user)}
-                iconTint1={colors.silverMetallic}
-              />
-            ))}
-          </>
-        )}
+          {/* Line between the lists */}
+          {localRequests.length !== 0 && localFriends.length !== 0 && (
+            <Divider />
+          )}
 
-        {/* Space for FAB */}
-        <Separator height={80} />
-      </ScrollView>
+          {/* Existing friends */}
+          {localFriends.length !== 0 && (
+            <>
+              <Text style={styles.header}>Accepted requests</Text>
+              {localFriends.map((user) => (
+                <UserInfo
+                  key={user.id}
+                  title={user.username}
+                  subtitle={`${user.first_name} ${user.last_name}`.trim()}
+                  avatarURI={user.avatar}
+                  onClick={() => navigateToFriendProfile(user.id, 'friend')}
+                  variant='small'
+                  icon1={deleteIcon}
+                  onPressIcon1={() => prepareToRemove(user)}
+                  iconTint1={colors.silverMetallic}
+                />
+              ))}
+            </>
+          )}
 
-      {/* Loading */}
-      {(requestsAreLoading || friendsAreLoading) && <LoadingOverlay />}
+          {/* Space for FAB */}
+          <Separator height={80} />
+        </ScrollView>
+      )}
 
       {/* Deleting friend */}
       <Dialog
@@ -246,7 +259,7 @@ const Friends = ({ navigation }) => {
         onDismiss={onDismissSnackBar}
         action={{
           label: 'undo',
-          onPress: undo,
+          onPress: undoRejection,
         }}
       >
         <Text style={styles.snackbarText}>Friend request rejected</Text>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, AlertIOS, Platform } from 'react-native';
+import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -10,8 +10,7 @@ import {
   ScrollViewLayout,
   Separator,
 } from 'components';
-import { makeStyles } from 'utils';
-
+import { makeStyles, displayToast } from 'utils';
 import { useChangePasswordMutation } from 'services/fridger/user';
 
 const ChangePassword = ({ navigation }) => {
@@ -47,7 +46,13 @@ const ChangePassword = ({ navigation }) => {
   const changePassword = (data) => {
     changePasswordQuery(data)
       .unwrap()
-      .then(() => navigation.goBack())
+      .then(() => {
+        // Confirm action:
+        displayToast('Password successfully changed');
+
+        // Leave page:
+        navigation.goBack();
+      })
       .catch((error) => {
         // Display error under specific input field...
         const currentPasswordError = error.data?.current_password;
@@ -66,21 +71,13 @@ const ChangePassword = ({ navigation }) => {
         }
 
         // ... or display toast if it's different kind of problem:
-        const generalError = error.data?.non_field_errors;
-        if (generalError) {
-          const message = generalError.join(' ');
-          if (Platform.OS === 'android') {
-            ToastAndroid.show(message, ToastAndroid.SHORT);
-          } else {
-            AlertIOS.alert(message);
-          }
-        }
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
   };
 
   return (
     <View style={styles.container}>
-      <AppBar label='change password' />
+      <AppBar label='Change password' />
       <ScrollViewLayout>
         {/* Input fields */}
         <View>

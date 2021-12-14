@@ -1,6 +1,6 @@
 import { fridgerApi } from './fridgerApi';
 
-const userApi = fridgerApi.injectEndpoints({
+const usersApi = fridgerApi.injectEndpoints({
   endpoints: (builder) => ({
     deleteAccount: builder.mutation({
       query: ({ password }) => ({
@@ -60,4 +60,4 @@ export const {
   useLazyUserInfoQuery,
   useUpdateUserInfoMutation,
   useLazyFindUserQuery,
-} = userApi;
+} = usersApi;

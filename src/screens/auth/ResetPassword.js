@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Text, View, ToastAndroid, AlertIOS, Platform } from 'react-native';
+import { Text, View } from 'react-native';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -10,11 +10,14 @@ import {
   ScrollViewLayout,
   Separator,
 } from 'components';
-import { makeStyles } from 'utils';
+import { makeStyles, displayToast } from 'utils';
 import { useResetPasswordMutation } from 'services/fridger/auth';
 
 const ResetPassword = ({ navigation }) => {
   const styles = useStyles();
+
+  // Queries:
+  const [resetPasswordPost, { isLoading }] = useResetPasswordMutation();
 
   // Form states:
   const { control, handleSubmit } = useForm({
@@ -35,24 +38,16 @@ const ResetPassword = ({ navigation }) => {
     },
   };
 
-  // Connection with API:
-  const [resetPasswordPost, { isLoading }] = useResetPasswordMutation();
+  // Send data to api:
   const resetPassword = (data) => {
     resetPasswordPost(data)
       .unwrap()
       .then(() => {
+        displayToast('Email has been sent with the link.');
         navigation.goBack();
-        const message = 'Email has been sent with the link.';
-        if (Platform.OS === 'android') {
-          ToastAndroid.show(message, ToastAndroid.SHORT);
-        } else {
-          AlertIOS.alert(message);
-        }
       })
       .catch((error) => {
-        // There shouldn't be any error. Even if email doesn't exists in api, we don't
-        // give this info everytime we should have HTTP 204 no content.
-        console.error(error);
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
   };
 

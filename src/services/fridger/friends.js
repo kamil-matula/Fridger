@@ -9,8 +9,13 @@ const friendsApi = fridgerApi.injectEndpoints({
         fridgeId = fridgeId === undefined ? '' : fridgeId;
         shoppingListId = shoppingListId === undefined ? '' : shoppingListId;
         return {
-          url: `friends?is_accepted=${isAccepted}&not_in_fridge=${fridgeId}&not_in_shopping_list=${shoppingListId}`,
+          url: `friends`,
           method: 'GET',
+          params: {
+            is_accepted: isAccepted,
+            not_in_fridge: fridgeId,
+            not_in_shopping_list: shoppingListId,
+          },
         };
       },
       providesTags: ['Friends'],

@@ -8,6 +8,8 @@ export const fridgerApi = createApi({
     'Fridges',
     'Products',
     'FridgeOwnership',
+    'ShoppingLists',
+    'SpecificShoppingList',
     'ShoppingListOwnership',
   ],
   baseQuery: fetchBaseQuery({

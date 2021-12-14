@@ -4,7 +4,7 @@ import { View, TextInput } from 'react-native';
 import { Divider, useTheme } from 'react-native-paper';
 
 import { AppBar, FloatingActionButton } from 'components';
-import { makeStyles } from 'utils';
+import { makeStyles, displayToast } from 'utils';
 import { useAddFridgeMutation } from 'services/fridger/fridges';
 
 const AddFridge = ({ navigation }) => {
@@ -24,14 +24,19 @@ const AddFridge = ({ navigation }) => {
         .unwrap()
         .then(() => navigation.goBack())
         .catch((error) => {
-          // TODO: Add error-handling after making sure what kind of errors can be here
-          console.log(error);
+          // Display error connected with input field...
+          if (error.data?.name) displayToast('Invalid name');
+          // ... or other error:
+          else
+            displayToast(
+              error.data?.non_field_errors || 'Something went wrong'
+            );
         });
   };
 
   return (
     <View style={styles.container}>
-      <AppBar label='Create New Fridge' />
+      <AppBar label='Create new fridge' />
       <Divider />
       <TextInput
         style={styles.input}
@@ -42,8 +47,12 @@ const AddFridge = ({ navigation }) => {
       />
       <Divider />
 
-      {/* TODO: Add loader */}
-      <FloatingActionButton centered label='Add fridge' onPress={addFridge} />
+      <FloatingActionButton
+        centered
+        label='Add fridge'
+        onPress={addFridge}
+        isLoading={isLoading}
+      />
     </View>
   );
 };

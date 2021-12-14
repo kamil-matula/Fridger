@@ -1,14 +1,17 @@
 import React from 'react';
 
-import { Text, View, ToastAndroid, AlertIOS, Platform } from 'react-native';
+import { Text, View } from 'react-native';
 import { useForm } from 'react-hook-form';
 
 import { InputField, Button, ScrollViewLayout, Separator } from 'components';
-import { makeStyles } from 'utils';
+import { makeStyles, displayToast } from 'utils';
 import { useRegisterMutation } from 'services/fridger/auth';
 
 const Register = ({ navigation }) => {
   const styles = useStyles();
+
+  // Queries:
+  const [registerPost, { isLoading }] = useRegisterMutation();
 
   // Form states:
   const { control, handleSubmit, setFocus, getValues, setError } = useForm({
@@ -46,9 +49,8 @@ const Register = ({ navigation }) => {
     },
   };
 
-  // Connection with API:
-  const [registerPost, { isLoading }] = useRegisterMutation();
-  const handleRegister = ({ email, username, password }) => {
+  // Send data to api:
+  const register = ({ email, username, password }) => {
     registerPost({ email, username, password })
       .unwrap()
       .then(() =>
@@ -58,10 +60,10 @@ const Register = ({ navigation }) => {
         })
       )
       .catch((error) => {
+        // Display error under specific input field...
         const usernameError = error.data?.username;
         const emailError = error.data?.email;
         const passwordError = error.data?.password;
-        const generalError = error.data?.non_field_errors;
         if (emailError) {
           setError('email', { type: 'server', message: emailError.join(' ') });
         }
@@ -77,14 +79,9 @@ const Register = ({ navigation }) => {
             message: passwordError.join(' '),
           });
         }
-        if (generalError) {
-          const message = generalError.join(' ');
-          if (Platform.OS === 'android') {
-            ToastAndroid.show(message, ToastAndroid.SHORT);
-          } else {
-            AlertIOS.alert(message);
-          }
-        }
+
+        // ... or display toast if it's different kind of problem:
+        displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
   };
 
@@ -144,7 +141,7 @@ const Register = ({ navigation }) => {
         <Button
           label='Register'
           variant='contained'
-          onPress={handleSubmit(handleRegister)}
+          onPress={handleSubmit(register)}
           isLoading={isLoading}
         />
         <Text style={styles.text}>Already have an account?</Text>

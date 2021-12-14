@@ -1,21 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { View, TextInput, Text } from 'react-native';
 import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 
 import { AppBar, FloatingActionButton } from 'components';
-import { makeStyles } from 'utils';
-import { fridgesList } from 'tmpData';
+import { makeStyles, displayToast } from 'utils';
 
-const AddShoppingList = ({ navigation }) => {
-  // TODO: Change it to useState (or something else) after adding Redux, because
-  // currently we are not able to pass [activeFridge, setActiveFridge]
-  // in route params and the docs suggest using useContext to have this
-  // variable both in AddShoppingList and ChooseFridge pages.
-  const activeFridge = fridgesList[0]; // alternative: const activeFridge = null;
+import { useAddShoppingListMutation } from 'services/fridger/shoppingLists';
 
-  const styles = useStyles({ activeFridge });
+const AddShoppingList = ({ navigation, route }) => {
+  const activeFridge = route.params?.fridge;
+
+  const styles = useStyles({ isFridge: !!route.params?.fridge });
   const { colors } = useTheme();
+
+  // Text Input content:
+  const [name, setName] = useState('');
+
+  // Queries:
+  const [addShoppingListQuery, { isLoading }] = useAddShoppingListMutation();
 
   return (
     <View style={styles.container}>
@@ -25,6 +28,8 @@ const AddShoppingList = ({ navigation }) => {
       {/* Required content: shopping list name */}
       <TextInput
         style={styles.input}
+        value={name}
+        onChangeText={setName}
         placeholder='Write name'
         placeholderTextColor={colors.silverMetallic}
       />
@@ -52,11 +57,9 @@ const AddShoppingList = ({ navigation }) => {
             </Text>
             {activeFridge && (
               <Text style={styles.connectedFridgeInfo}>
-                {activeFridge.people > 1
-                  ? `${activeFridge.items} items  •  shared with ${
-                      activeFridge.people - 1
-                    } friends`
-                  : `${activeFridge.items} items`}
+                {activeFridge.shared_with_count > 0
+                  ? `${activeFridge.products_count} items  •  shared with ${activeFridge.shared_with_count} friends`
+                  : `${activeFridge.products_count} items`}
               </Text>
             )}
           </View>
@@ -69,17 +72,28 @@ const AddShoppingList = ({ navigation }) => {
         centered
         label='add shopping list'
         onPress={() => {
-          // TODO: Send request to API and add shopping list to user
-
-          // Go back to shopping lists list:
-          navigation.goBack();
+          addShoppingListQuery({ name, fridge: activeFridge?.id })
+            .unwrap()
+            .then(() => {
+              navigation.goBack();
+            })
+            .catch((error) => {
+              // Display error connected with input field...
+              if (error.data?.name) displayToast('Invalid name');
+              // ... or other error:
+              else
+                displayToast(
+                  error.data?.non_field_errors || 'Something went wrong'
+                );
+            });
         }}
+        isLoading={isLoading}
       />
     </View>
   );
 };
 
-const useStyles = makeStyles((theme, { activeFridge }) => ({
+const useStyles = makeStyles((theme, { isFridge }) => ({
   // Required content:
   container: {
     flex: 1,
@@ -95,7 +109,7 @@ const useStyles = makeStyles((theme, { activeFridge }) => ({
   connectContainer: { padding: 16 },
   connectTitle: { fontSize: 20, color: theme.colors.white, paddingBottom: 4 },
   connectedFridgeName: {
-    color: activeFridge ? theme.colors.white : theme.colors.silverMetallic,
+    color: isFridge ? theme.colors.white : theme.colors.silverMetallic,
     fontSize: 14,
     includeFontPadding: false,
   },

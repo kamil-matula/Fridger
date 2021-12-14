@@ -2,31 +2,34 @@ import React, { useState } from 'react';
 
 import { View, Image, ScrollView } from 'react-native';
 
-import { makeStyles } from 'utils';
+import { makeStyles, displayToast } from 'utils';
 import { UserDataRow, AppBar, Separator, Dialog } from 'components';
 import { deleteIcon } from 'assets/icons';
 import { tmpPerson } from 'assets/images';
+import { useDeleteFriendMutation } from 'services/fridger/friends';
 
 const FriendProfile = ({ navigation, route }) => {
   const styles = useStyles();
-  const { userID, nick, name, surname, avatarUri } = route.params;
+  const { relationshipType, relationshipID, nick, name, surname, avatarUri } =
+    route.params;
 
-  const friend = {
-    avatarUri,
-    nick,
-    name,
-    surname,
-  };
+  // Queries:
+  const deleteFriendQuery = useDeleteFriendMutation()[0];
 
-  // Deleting:
+  // Deleting friend:
   const [dialogVisible, setDialogVisible] = useState(false);
   const removeFriend = () => {
-    // TODO: Send request to API and wait for removing friend from the list
-    console.log(`Friend with ID ${userID} has been deleted`);
+    // Send request to api:
+    deleteFriendQuery(relationshipID)
+      .unwrap()
+      .then(() => {
+        displayToast('Friend has been deleted');
+        navigation.pop();
+      })
+      .catch(() => displayToast('Unable to remove friend'));
 
     // Hide dialog and go back:
     setDialogVisible(false);
-    navigation.pop();
   };
   const cancelRemoveFriend = () => {
     setDialogVisible(false);
@@ -34,28 +37,35 @@ const FriendProfile = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
+      {/* Friend can be deleted only if the invitation has been already accepted */}
+      {relationshipType === 'request' ? (
+        <AppBar />
+      ) : (
+        <AppBar
+          icon1={deleteIcon}
+          onPressIcon1={() => setDialogVisible(true)}
+        />
+      )}
+
       {/* Main content */}
-      <AppBar icon1={deleteIcon} onPressIcon1={() => setDialogVisible(true)} />
       <ScrollView style={styles.SVcontainer}>
         <View style={styles.imageContainer}>
           <Image
             style={styles.avatar}
-            source={
-              friend.avatarUri !== null ? { uri: friend.avatarUri } : tmpPerson
-            }
+            source={avatarUri !== null ? { uri: avatarUri } : tmpPerson}
           />
         </View>
-        <UserDataRow label='Nick' data={friend.nick} />
+        <UserDataRow label='Nick' data={nick} />
         <Separator height={32} />
-        <UserDataRow label='Name' data={friend.name} />
+        <UserDataRow label='Name' data={name} />
         <Separator height={32} />
-        <UserDataRow label='Surname' data={friend.surname} />
+        <UserDataRow label='Surname' data={surname} />
       </ScrollView>
 
       {/* Deleting friend */}
       <Dialog
         title='Remove from friends'
-        paragraph={`Are you sure you want to remove ${friend.nick} from friends? This action cannot be undone.`}
+        paragraph={`Are you sure you want to remove ${nick} from friends? This action cannot be undone.`}
         visibilityState={[dialogVisible, setDialogVisible]}
         label1='remove'
         onPressLabel1={removeFriend}

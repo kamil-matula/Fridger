@@ -1,6 +1,6 @@
-/* eslint-disable react/prop-types */
-import React, { useState, useRef, useEffect, AlertIOS, Platform } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
+import PropTypes from 'prop-types';
 import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, useTheme, TouchableRipple } from 'react-native-paper';
 
@@ -103,15 +103,11 @@ const EditPermissions = ({
     })
       .unwrap()
       .catch((error) => {
-        const generalError = error.data?.non_field_errors;
-        if (generalError) {
-          const message = generalError.join(' ');
-          if (Platform.OS === 'android') {
-            ToastAndroid.show(message, ToastAndroid.SHORT);
-          } else {
-            AlertIOS.alert(message);
-          }
-        }
+        // Display error connected with input field...
+        if (error.data?.name) displayToast('Invalid name');
+        // ... or other error:
+        else
+          displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
 
     // Hide Bottom Sheet:
@@ -134,15 +130,11 @@ const EditPermissions = ({
     removeUser(toRemove.id)
       .unwrap()
       .catch((error) => {
-        const generalError = error.data?.non_field_errors;
-        if (generalError) {
-          const message = generalError.join(' ');
-          if (Platform.OS === 'android') {
-            ToastAndroid.show(message, ToastAndroid.SHORT);
-          } else {
-            AlertIOS.alert(message);
-          }
-        }
+        // Display error connected with input field...
+        if (error.data?.name) displayToast('Invalid name');
+        // ... or other error:
+        else
+          displayToast(error.data?.non_field_errors || 'Something went wrong');
       });
 
     // Hide dialog:
@@ -263,6 +255,12 @@ const EditPermissions = ({
       />
     </View>
   );
+};
+
+EditPermissions.propTypes = {
+  updatePermission: PropTypes.func,
+  removeUser: PropTypes.func,
+  owners: PropTypes.object,
 };
 
 const useStyles = makeStyles((theme) => ({
