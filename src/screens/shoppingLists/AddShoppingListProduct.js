@@ -104,10 +104,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
     setDeleteProductDialogVisible(false);
     navigation.pop();
   };
-  const cancelRemoveProduct = () => {
-    // Hide dialog:
-    setDeleteProductDialogVisible(false);
-  };
+  const cancelRemoveProduct = () => setDeleteProductDialogVisible(false);
 
   return (
     <View style={styles.container}>

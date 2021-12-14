@@ -111,7 +111,10 @@ const EditProfile = ({ navigation }) => {
         }
 
         // ... or display toast if it's different kind of problem:
-        displayToast(error.data?.non_field_errors || 'Something went wrong');
+        if (!usernameError && !firstNameError && !lastNameError)
+          displayToast(
+            error.data?.non_field_errors || 'Unable to update profile'
+          );
       });
   };
 

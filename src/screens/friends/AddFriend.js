@@ -54,7 +54,7 @@ const AddFriend = ({ navigation }) => {
       navigation.goBack();
     }
     if (addToFriends.isError) {
-      displayToast('Something went wrong');
+      displayToast('Unable to add friend');
     }
   }, [addToFriends.isSuccess, addToFriends.isError]);
 

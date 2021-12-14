@@ -46,9 +46,9 @@ const ResetPassword = ({ navigation }) => {
         displayToast('Email has been sent with the link.');
         navigation.goBack();
       })
-      .catch((error) => {
-        displayToast(error.data?.non_field_errors || 'Something went wrong');
-      });
+      .catch(() =>
+        displayToast(error.data?.non_field_errors || 'Unable to reset password')
+      );
   };
 
   return (

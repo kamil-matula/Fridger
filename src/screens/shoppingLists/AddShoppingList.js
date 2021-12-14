@@ -74,16 +74,12 @@ const AddShoppingList = ({ navigation, route }) => {
         onPress={() => {
           addShoppingListQuery({ name, fridge: activeFridge?.id })
             .unwrap()
-            .then(() => {
-              navigation.goBack();
-            })
+            .then(() => navigation.goBack())
             .catch((error) => {
-              // Display error connected with input field...
               if (error.data?.name) displayToast('Invalid name');
-              // ... or other error:
               else
                 displayToast(
-                  error.data?.non_field_errors || 'Something went wrong'
+                  error.data?.non_field_errors || 'Unable to add shopping list'
                 );
             });
         }}

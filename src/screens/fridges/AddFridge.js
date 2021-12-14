@@ -24,12 +24,10 @@ const AddFridge = ({ navigation }) => {
         .unwrap()
         .then(() => navigation.goBack())
         .catch((error) => {
-          // Display error connected with input field...
-          if (error.data?.name) displayToast('Invalid name');
-          // ... or other error:
+          if (error.data?.name) displayToast('Invalid name of fridge');
           else
             displayToast(
-              error.data?.non_field_errors || 'Something went wrong'
+              error.data?.non_field_errors || 'Unable to add fridge'
             );
         });
   };

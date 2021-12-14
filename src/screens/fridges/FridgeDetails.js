@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { FlatList, View, Text, Image } from 'react-native';
 import { Divider, TouchableRipple } from 'react-native-paper';
@@ -26,7 +26,6 @@ import {
   down,
   up,
 } from 'assets/icons';
-import { productsInFridgeList } from 'tmpData';
 import {
   useDeleteFridgeMutation,
   useEditFridgeNameMutation,
@@ -40,34 +39,18 @@ const FridgeDetails = ({ route, navigation }) => {
   const fridgeID = route.params ? route.params.fridgeID : null;
 
   // Queries:
-  const { data, isLoading } = useSpecificFridgeQuery(fridgeID);
+  const { data: fridge, isLoading } = useSpecificFridgeQuery(fridgeID);
   const [editFridgeNameQuery] = useEditFridgeNameMutation();
   const [deleteFridgeQuery] = useDeleteFridgeMutation();
 
-  // Data:
-  const [fridge, setFridge] = useState(null);
-
-  // Update fridge when data is fetched:
-  useEffect(() => {
-    if (data) {
-      setFridge({
-        id: data.id,
-        name: data.name,
-        items: data.products_count,
-        people: data.shared_with_count,
-      });
-    }
-  }, [data]);
-
   // Send data to api:
   const editFridgeName = (name) => {
+    if (fridge == null) return;
     editFridgeNameQuery({ id: fridge.id, name })
       .unwrap()
       .then(() => displayToast('Fridge renamed'))
       .catch((error) => {
-        // Display error connected with input field...
         if (error.data?.name) displayToast('Invalid name');
-        // ... or other error:
         else
           displayToast(error.data?.non_field_errors || 'Something went wrong');
 
@@ -78,16 +61,13 @@ const FridgeDetails = ({ route, navigation }) => {
     deleteFridgeQuery(fridge.id)
       .unwrap()
       .then(() => {
-        // Show toast:
         displayToast('Fridge deleted');
-
-        // Hide dialog and go back:
         setDeleteFridgeDialogVisible(false);
         navigation.pop();
       })
-      .catch(() => {
-        displayToast('Unable to delete fridge');
-      });
+      .catch((error) =>
+        displayToast(error.data?.non_field_errors || 'Unable to delete fridge')
+      );
   };
 
   // Sorting:
@@ -113,13 +93,8 @@ const FridgeDetails = ({ route, navigation }) => {
   // Deleting:
   const [deleteFridgeDialogVisible, setDeleteFridgeDialogVisible] =
     useState(false);
-  const confirmRemoveFridge = () => {
-    deleteFridge();
-  };
-  const cancelRemoveFridge = () => {
-    // Hide dialog:
-    setDeleteFridgeDialogVisible(false);
-  };
+  const confirmRemoveFridge = () => deleteFridge();
+  const cancelRemoveFridge = () => setDeleteFridgeDialogVisible(false);
 
   // Reducing quantity - states:
   const [reduceQuantityVisible, setReduceQuantityVisible] = useState(false);
@@ -175,26 +150,14 @@ const FridgeDetails = ({ route, navigation }) => {
       <AppBar
         label={fridge?.name ?? ''}
         icon1={more}
+        onPressIcon1={() => refFridgeActions.current.open()}
+        onSubmitEditing={editFridgeName}
         editable
-        onPressIcon1={() => {
-          // Open bottom sheet with fridge actions:
-          refFridgeActions.current.open();
-        }}
-        onSubmitEditing={(newName) => {
-          if (fridge != null) {
-            editFridgeName(newName);
-          }
-        }}
       />
       <Divider />
 
       {/* Sorting products */}
-      <TouchableRipple
-        onPress={() => {
-          // Open bottom sheet with sorting actions:
-          refSorting.current.open();
-        }}
-      >
+      <TouchableRipple onPress={() => refSorting.current.open()}>
         <View style={styles.sortingLabel}>
           <Text style={styles.text}>{sortingCategoryName}</Text>
           <Image
@@ -205,26 +168,29 @@ const FridgeDetails = ({ route, navigation }) => {
       </TouchableRipple>
 
       {/* List of products */}
-      {/* TODO: Use products from API instead of mocked data */}
-      <FlatList
-        data={productsInFridgeList}
-        renderItem={({ item }) => (
-          <FridgeDetailsRow
-            product={item}
-            onPressIcon={() => reduceQuantityOpen(item)}
-            onPressRow={() => {
-              // Go to appropriate page:
-              if (fridge != null)
-                navigation.navigate('ProductDetails', {
-                  productID: item.id,
-                  fridgeID: fridge.id,
-                  fridgeName: fridge.name,
-                });
-            }}
-          />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      {isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <FlatList
+          data={fridge.products}
+          renderItem={({ item }) => (
+            <FridgeDetailsRow
+              product={item}
+              onPressIcon={() => reduceQuantityOpen(item)}
+              onPressRow={() => {
+                // Go to appropriate page:
+                if (fridge != null)
+                  navigation.navigate('ProductDetails', {
+                    productID: item.id,
+                    fridgeID: fridge.id,
+                    fridgeName: fridge.name,
+                  });
+              }}
+            />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      )}
 
       {/* Space for bottom nav bar */}
       <Separator height={54} />
@@ -366,9 +332,6 @@ const FridgeDetails = ({ route, navigation }) => {
           </View>
         </Dialog>
       )}
-
-      {/* Loading */}
-      {isLoading && <LoadingOverlay />}
     </View>
   );
 };

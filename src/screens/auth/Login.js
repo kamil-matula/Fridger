@@ -38,9 +38,11 @@ const Login = ({ navigation }) => {
 
   // Send data to api:
   const login = (data) => {
-    loginPost(data).catch((error) =>
-      displayToast(error.data?.non_field_errors || 'Something went wrong')
-    );
+    loginPost(data)
+      .unwrap()
+      .catch((error) =>
+        displayToast(error.data?.non_field_errors || 'Unable to login')
+      );
   };
 
   return (

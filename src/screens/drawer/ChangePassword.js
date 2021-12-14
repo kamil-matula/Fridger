@@ -71,7 +71,10 @@ const ChangePassword = ({ navigation }) => {
         }
 
         // ... or display toast if it's different kind of problem:
-        displayToast(error.data?.non_field_errors || 'Something went wrong');
+        if (!currentPasswordError && !newPasswordError)
+          displayToast(
+            error.data?.non_field_errors || 'Unable to change password'
+          );
       });
   };
 

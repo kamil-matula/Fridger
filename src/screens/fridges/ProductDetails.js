@@ -58,10 +58,7 @@ const ProductDetails = ({ route, navigation }) => {
     setDeleteProductDialogVisible(false);
     navigation.pop();
   };
-  const cancelRemoveProduct = () => {
-    // Hide dialog:
-    setDeleteProductDialogVisible(false);
-  };
+  const cancelRemoveProduct = () => setDeleteProductDialogVisible(false);
 
   // Changing product's expiration date:
   const [changeExpDateDialogVisible, setChangeExpDateDialogVisible] =

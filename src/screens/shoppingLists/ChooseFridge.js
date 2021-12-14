@@ -35,20 +35,14 @@ const ChooseFridge = ({ route, navigation }) => {
                   ? `${fridge.products_count} items  •  shared with ${fridge.shared_with_count} friends`
                   : `${fridge.products_count} items`
               }
-              onPress={() => {
-                navigation.navigate('AddShoppingList', { fridge });
-              }}
+              onPress={() => navigation.navigate('AddShoppingList', { fridge })}
             />
           ))}
         </ScrollView>
       )}
 
       {/* Adding new fridge */}
-      <FloatingActionButton
-        onPress={() => {
-          navigation.navigate('AddFridge');
-        }}
-      />
+      <FloatingActionButton onPress={() => navigation.navigate('AddFridge')} />
     </View>
   );
 };

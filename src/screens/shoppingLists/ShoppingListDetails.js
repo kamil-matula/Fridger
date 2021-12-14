@@ -41,11 +41,11 @@ const ShoppingListDetails = ({ route, navigation }) => {
       .unwrap()
       .then(() => displayToast('Shopping list renamed'))
       .catch((error) => {
-        // Display error connected with input field...
         if (error.data?.name) displayToast('Invalid name');
-        // ... or other error:
         else
-          displayToast(error.data?.non_field_errors || 'Something went wrong');
+          displayToast(
+            error.data?.non_field_errors || 'Unable to rename shopping list'
+          );
 
         // TODO: Reset appbar's value
       });
@@ -58,21 +58,14 @@ const ShoppingListDetails = ({ route, navigation }) => {
     deleteShoppingList(route.params.shoppingListID)
       .unwrap()
       .then(() => {
-        // Show toast:
         displayToast('Shopping list deleted');
-
-        // Hide dialog and go back:
         setDeleteFridgeDialogVisible(false);
         navigation.pop();
       })
-      .catch(() => {
-        displayToast('Unable to delete shopping list');
-      });
+      .catch(() => displayToast('Unable to delete shopping list'));
   };
-  const cancelRemoveShoppingList = () => {
-    // Hide dialog:
+  const cancelRemoveShoppingList = () =>
     setDeleteShoppingListDialogVisible(false);
-  };
 
   // Shopping List Actions:
   const bottomSheet = useRef(null);
@@ -88,11 +81,9 @@ const ShoppingListDetails = ({ route, navigation }) => {
           <AppBar
             label={shoppingList.data.name}
             icon1={more}
-            onPressIcon1={() => {
-              bottomSheet.current.open();
-            }}
-            editable
+            onPressIcon1={() => bottomSheet.current.open()}
             onSubmitEditing={renameShoppingList}
+            editable
           />
 
           {/* Tabs */}
@@ -106,9 +97,7 @@ const ShoppingListDetails = ({ route, navigation }) => {
 
           {/* Adding new product */}
           <FloatingActionButton
-            onPress={() => {
-              navigation.navigate('AddShoppingListProduct');
-            }}
+            onPress={() => navigation.navigate('AddShoppingListProduct')}
             visible={fabVisible}
             isBottomNavigationBar
           />

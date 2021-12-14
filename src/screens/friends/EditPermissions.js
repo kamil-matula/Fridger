@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, useTheme, TouchableRipple } from 'react-native-paper';
 
-import { makeStyles } from 'utils';
+import { makeStyles, displayToast } from 'utils';
 import {
   UserInfo,
   AppBar,
@@ -16,12 +16,12 @@ import {
 import { forward, deleteIcon, check } from 'assets/icons';
 
 import {
-  useFridgeOwnersQuery,
+  useFridgeOwnershipsQuery,
   useRemoveFridgeUserMutation,
   useUpdateFridgePermissionMutation,
 } from 'services/fridger/fridgesOwnerships';
 import {
-  useShoppingListOwnersQuery,
+  useShoppingListOwnershipsQuery,
   useUpdateShoppingListPermissionMutation,
   useRemoveShoppingListUserMutation,
 } from 'services/fridger/shoppingListsOwnerships';
@@ -29,13 +29,13 @@ import {
 export const EditPermissionsFridge = ({ route, navigation }) => {
   const updatePermission = useUpdateFridgePermissionMutation()[0];
   const removeUser = useRemoveFridgeUserMutation()[0];
-  const owners = useFridgeOwnersQuery(route.params.containerID);
+  const ownerships = useFridgeOwnershipsQuery(route.params.containerID);
 
   return (
     <EditPermissions
       updatePermission={updatePermission}
       removeUser={removeUser}
-      owners={owners}
+      ownerships={ownerships}
       route={route}
       navigation={navigation}
     />
@@ -45,13 +45,13 @@ export const EditPermissionsFridge = ({ route, navigation }) => {
 export const EditPermissionsShoppingList = ({ route, navigation }) => {
   const updatePermission = useUpdateShoppingListPermissionMutation()[0];
   const removeUser = useRemoveShoppingListUserMutation()[0];
-  const owners = useShoppingListOwnersQuery(route.params.containerID);
+  const ownerships = useShoppingListOwnershipsQuery(route.params.containerID);
 
   return (
     <EditPermissions
       updatePermission={updatePermission}
       removeUser={removeUser}
-      owners={owners}
+      ownerships={ownerships}
       route={route}
       navigation={navigation}
     />
@@ -61,7 +61,7 @@ export const EditPermissionsShoppingList = ({ route, navigation }) => {
 const EditPermissions = ({
   updatePermission,
   removeUser,
-  owners,
+  ownerships,
   route,
   navigation,
 }) => {
@@ -74,17 +74,17 @@ const EditPermissions = ({
     permission: '',
   });
 
-  // Update list of owners when data is fetched:
+  // Update creator when data is fetched:
   useEffect(() => {
-    if (owners.data) {
-      const tmp = owners.data.find((e) => e.permission === 'CREATOR');
+    if (ownerships.data) {
+      const tmp = ownerships.data.find((e) => e.permission === 'CREATOR');
       setCreator({
         username: tmp.user.username,
         avatar: tmp.user.avatar,
         permission: tmp.permission,
       });
     }
-  }, [owners.data]);
+  }, [ownerships.data]);
 
   // Changing permission - preparation:
   const [toChange, setToChange] = useState(null);
@@ -102,9 +102,11 @@ const EditPermissions = ({
       permissionName: newPermission,
     })
       .unwrap()
-      .catch((error) => {
-        displayToast(error.data?.non_field_errors || 'Something went wrong');
-      });
+      .catch((error) =>
+        displayToast(
+          error.data?.non_field_errors || 'Unable to update permission'
+        )
+      );
 
     // Hide Bottom Sheet:
     refBS.current.close();
@@ -113,11 +115,9 @@ const EditPermissions = ({
   // Removing friend from list - preparation:
   const [dialogVisible, setDialogVisible] = useState(null);
   const [toRemove, setToRemove] = useState(null);
-  const [toRemoveNick, setToRemoveNick] = useState('');
   const prepareToRemove = (friend) => {
     // Display dialog with appropriate data:
     setToRemove(friend);
-    setToRemoveNick(friend.user.username);
     setDialogVisible(true);
   };
 
@@ -125,17 +125,14 @@ const EditPermissions = ({
   const removeFriend = () => {
     removeUser(toRemove.id)
       .unwrap()
-      .catch((error) => {
-        displayToast(error.data?.non_field_errors || 'Something went wrong');
-      });
+      .catch((error) =>
+        displayToast(error.data?.non_field_errors || 'Unable to remove friend')
+      );
 
     // Hide dialog:
     setDialogVisible(false);
   };
-  const cancelRemoveFriend = () => {
-    // Hide dialog:
-    setDialogVisible(false);
-  };
+  const cancelRemoveFriend = () => setDialogVisible(false);
 
   // Navigation:
   const navigateToShare = () => {
@@ -155,7 +152,7 @@ const EditPermissions = ({
     <View style={styles.container}>
       <AppBar label='edit permissions' />
       <Divider />
-      {owners.isLoading ? (
+      {ownerships.isLoading ? (
         <LoadingOverlay />
       ) : (
         <ScrollView>
@@ -177,8 +174,8 @@ const EditPermissions = ({
           />
 
           {/* List of people who have access to this fridge / shopping list */}
-          {owners.data
-            .filter((user) => user.permission !== 'CREATOR')
+          {ownerships.data
+            .filter((ownership) => ownership.permission !== 'CREATOR')
             .map((ownership) => (
               <TouchableRipple
                 key={ownership.id}
@@ -204,33 +201,26 @@ const EditPermissions = ({
         <SheetRow
           icon={!!toChange && toChange.permission === 'can view' ? check : null}
           text='Can view'
-          onPress={() => {
-            changePermission('READ');
-          }}
+          onPress={() => changePermission('READ')}
         />
         <SheetRow
           icon={!!toChange && toChange.permission === 'can edit' ? check : null}
           text='Can edit'
-          onPress={() => {
-            changePermission('WRITE');
-          }}
+          onPress={() => changePermission('WRITE')}
         />
         <SheetRow
           icon={
             !!toChange && toChange.permission === 'administrator' ? check : null
           }
           text='Administrator'
-          onPress={() => {
-            changePermission('ADMIN');
-          }}
+          onPress={() => changePermission('ADMIN')}
         />
       </BottomSheet>
 
-      {/* Removing friend from list */}
-      {/* TODO: Pass Fridge/List name and display it in the dialog */}
+      {/* Removing friend from fridge / shopping list */}
       <Dialog
-        title='Remove friend from list'
-        paragraph={`Are you sure you want to remove ${toRemoveNick} from ${route.params.containerName}? This action cannot be undone.`}
+        title="Remove friend's access"
+        paragraph={`Are you sure you want to remove ${toRemove.user.username} from ${route.params.containerName}? This action cannot be undone.`}
         visibilityState={[dialogVisible, setDialogVisible]}
         label1='remove'
         onPressLabel1={removeFriend}
@@ -244,7 +234,7 @@ const EditPermissions = ({
 EditPermissions.propTypes = {
   updatePermission: PropTypes.func,
   removeUser: PropTypes.func,
-  owners: PropTypes.object,
+  ownerships: PropTypes.object,
 };
 
 const useStyles = makeStyles((theme) => ({

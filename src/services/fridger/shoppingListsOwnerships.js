@@ -2,7 +2,7 @@ import { fridgerApi } from './fridgerApi';
 
 const ShoppingListOwnershipsApi = fridgerApi.injectEndpoints({
   endpoints: (builder) => ({
-    shoppingListOwners: builder.query({
+    shoppingListOwnerships: builder.query({
       query: (id) => ({
         url: `shopping-lists/${id}/ownerships`,
         method: 'GET',
@@ -42,7 +42,7 @@ const ShoppingListOwnershipsApi = fridgerApi.injectEndpoints({
 });
 
 export const {
-  useShoppingListOwnersQuery,
+  useShoppingListOwnershipsQuery,
   useUpdateShoppingListPermissionMutation,
   useAddShoppingListUserMutation,
   useRemoveShoppingListUserMutation,
