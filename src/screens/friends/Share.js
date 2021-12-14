@@ -33,6 +33,7 @@ export const ShareFridge = ({ route, navigation }) => {
       addUser={addFridgeUser}
       ownerships={ownerships}
       friends={friends}
+      containerType='fridge'
     />
   );
 };
@@ -52,11 +53,19 @@ export const ShareShoppingList = ({ route, navigation }) => {
       addUser={addShoppingListUser}
       ownerships={ownerships}
       friends={friends}
+      containerType='shoppingList'
     />
   );
 };
 
-const Share = ({ addUser, ownerships, friends, route, navigation }) => {
+const Share = ({
+  addUser,
+  ownerships,
+  friends,
+  route,
+  navigation,
+  containerType,
+}) => {
   const styles = useStyles();
   const theme = useTheme();
 
@@ -76,11 +85,16 @@ const Share = ({ addUser, ownerships, friends, route, navigation }) => {
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
-      navigation.navigate('EditPermissionsShoppingList', {
-        behavior: 'pop',
-        containerID: route.params.containerID,
-        containerName: route.params.containerName,
-      });
+      navigation.navigate(
+        containerType === 'fridge'
+          ? 'EditPermissionsFridge'
+          : 'EditPermissionsShoppingList',
+        {
+          behavior: 'pop',
+          containerID: route.params.containerID,
+          containerName: route.params.containerName,
+        }
+      );
     }
   };
 
@@ -88,7 +102,7 @@ const Share = ({ addUser, ownerships, friends, route, navigation }) => {
     <View style={styles.container}>
       {/* Loading */}
 
-      <AppBar label='share with friends' />
+      <AppBar label='Share with friends' />
       <Divider />
       {friends.isLoading || ownerships.isLoading ? (
         <LoadingOverlay />
@@ -98,7 +112,7 @@ const Share = ({ addUser, ownerships, friends, route, navigation }) => {
           <TouchableRipple onPress={navigateToEditPermissions}>
             <View style={styles.infoContainer}>
               <Text style={styles.text}>
-                {`Shared with ${owners.data.length - 1} friends`}
+                {`Shared with ${ownerships.data.length - 1} friends`}
               </Text>
               <Image style={styles.icon} source={forward} />
             </View>
@@ -125,9 +139,10 @@ const Share = ({ addUser, ownerships, friends, route, navigation }) => {
 };
 
 Share.propTypes = {
-  addUser: PropTypes.func,
-  ownerships: PropTypes.object,
-  friends: PropTypes.object,
+  addUser: PropTypes.func.isRequired,
+  ownerships: PropTypes.object.isRequired,
+  friends: PropTypes.object.isRequired,
+  containerType: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({

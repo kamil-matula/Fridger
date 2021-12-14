@@ -134,11 +134,9 @@ const FridgeDetails = ({ route, navigation }) => {
     reset();
   };
   const reduceQuantityOpen = (item) => {
-    // Set item:
+    // Set item and display dialog:
     setReduceQuantityItem(item);
     setValue('quantity', item.currentQuantity.toString());
-
-    // Display dialog:
     setReduceQuantityVisible(true);
   };
 

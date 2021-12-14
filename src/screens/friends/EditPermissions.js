@@ -38,6 +38,7 @@ export const EditPermissionsFridge = ({ route, navigation }) => {
       ownerships={ownerships}
       route={route}
       navigation={navigation}
+      containerType='fridge'
     />
   );
 };
@@ -54,6 +55,7 @@ export const EditPermissionsShoppingList = ({ route, navigation }) => {
       ownerships={ownerships}
       route={route}
       navigation={navigation}
+      containerType='shoppingList'
     />
   );
 };
@@ -64,6 +66,7 @@ const EditPermissions = ({
   ownerships,
   route,
   navigation,
+  containerType,
 }) => {
   const styles = useStyles();
   const theme = useTheme();
@@ -140,18 +143,22 @@ const EditPermissions = ({
     if (!!route.params && route.params.behavior === 'pop') {
       navigation.pop();
     } else {
-      navigation.navigate('ShareShoppingList', {
-        behavior: 'pop',
-        containerID: route.params.containerID,
-        containerName: route.params.containerName,
-      });
+      navigation.navigate(
+        containerType === 'fridge' ? 'ShareFridge' : 'ShareShoppingList',
+        {
+          behavior: 'pop',
+          containerID: route.params.containerID,
+          containerName: route.params.containerName,
+        }
+      );
     }
   };
 
   return (
     <View style={styles.container}>
-      <AppBar label='edit permissions' />
+      <AppBar label='Edit permissions' />
       <Divider />
+
       {ownerships.isLoading ? (
         <LoadingOverlay />
       ) : (
@@ -219,8 +226,8 @@ const EditPermissions = ({
 
       {/* Removing friend from fridge / shopping list */}
       <Dialog
-        title="Remove friend's access"
-        paragraph={`Are you sure you want to remove ${toRemove.user.username} from ${route.params.containerName}? This action cannot be undone.`}
+        title='Remove friend'
+        paragraph={`Are you sure you want to remove ${toRemove?.user.username} from ${route.params.containerName}? This action cannot be undone.`}
         visibilityState={[dialogVisible, setDialogVisible]}
         label1='remove'
         onPressLabel1={removeFriend}
@@ -232,9 +239,10 @@ const EditPermissions = ({
 };
 
 EditPermissions.propTypes = {
-  updatePermission: PropTypes.func,
-  removeUser: PropTypes.func,
-  ownerships: PropTypes.object,
+  updatePermission: PropTypes.func.isRequired,
+  removeUser: PropTypes.func.isRequired,
+  ownerships: PropTypes.object.isRequired,
+  containerType: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
