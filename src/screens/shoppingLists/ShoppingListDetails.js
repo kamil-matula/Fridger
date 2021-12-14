@@ -124,7 +124,7 @@ const ShoppingListDetails = ({ route, navigation }) => {
                 navigation.navigate('ShareShoppingList', {
                   type: 'shoppingList',
                   containerID: shoppingList.data.id,
-                  containerName: shoppingList.name,
+                  containerName: shoppingList.data.name,
                 });
               }}
             />
@@ -137,7 +137,7 @@ const ShoppingListDetails = ({ route, navigation }) => {
                 navigation.navigate('EditPermissionsShoppingList', {
                   type: 'shoppingList',
                   containerID: shoppingList.data.id,
-                  containerName: shoppingList.name,
+                  containerName: shoppingList.data.name,
                 });
               }}
             />
