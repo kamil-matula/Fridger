@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Image } from 'react-native';
 
-import { N1, N2, N3, N4, A, B, C, D, E } from 'assets/icons/nova-nutri';
+import { N0, N1, N2, N3, N4, A, B, C, D, E, F } from 'assets/icons/nova-nutri';
 
 const ScoresContainer = ({
   nutriScore,
@@ -13,21 +13,21 @@ const ScoresContainer = ({
 }) => {
   // Nova-Score icon:
   const novaIcon = (() => {
-    if (novaScore === 'N1') return N1;
-    if (novaScore === 'N2') return N2;
-    if (novaScore === 'N3') return N3;
-    if (novaScore === 'N4') return N4;
-    return null;
+    if (novaScore === '1') return N1;
+    if (novaScore === '2') return N2;
+    if (novaScore === '3') return N3;
+    if (novaScore === '4') return N4;
+    return N0;
   })();
 
   // Nutri-Score icon:
   const nutriIcon = (() => {
-    if (nutriScore === 'A') return A;
-    if (nutriScore === 'B') return B;
-    if (nutriScore === 'C') return C;
-    if (nutriScore === 'D') return D;
-    if (nutriScore === 'E') return E;
-    return null;
+    if (nutriScore === 'a') return A;
+    if (nutriScore === 'b') return B;
+    if (nutriScore === 'c') return C;
+    if (nutriScore === 'd') return D;
+    if (nutriScore === 'e') return E;
+    return F;
   })();
 
   return (
@@ -39,8 +39,8 @@ const ScoresContainer = ({
 };
 
 ScoresContainer.propTypes = {
-  nutriScore: PropTypes.oneOf(['A', 'B', 'C', 'D', 'E']).isRequired,
-  novaScore: PropTypes.oneOf(['N1', 'N2', 'N3', 'N4']).isRequired,
+  nutriScore: PropTypes.oneOf([undefined, 'a', 'b', 'c', 'd', 'e']),
+  novaScore: PropTypes.oneOf([undefined, '1', '2', '3', '4']),
   iconStyle: PropTypes.object.isRequired,
   containerStyle: PropTypes.object.isRequired,
 };

@@ -18,12 +18,16 @@ import { ProductInfo } from 'components/fridges';
 import { makeStyles } from 'utils';
 import { edit, calendar } from 'assets/icons';
 
+import { useLazyProductQuery } from 'services/openFoodFacts/product';
+
 const AddProductAutomat = ({ navigation }) => {
   const styles = useStyles();
 
   // Scanner states:
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+
+  const [productQuery, product] = useLazyProductQuery();
 
   // Requesting camera permission on launch:
   useEffect(() => {
@@ -34,12 +38,10 @@ const AddProductAutomat = ({ navigation }) => {
   }, []);
 
   // Handling with data from barcode:
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = ({ data }) => {
     // Update state:
     setScanned(true);
-
-    // TODO: Send data to OpenFoodFacts API to retrieve information about product + update UI
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    productQuery(data);
   };
 
   // Form states:
@@ -139,14 +141,13 @@ const AddProductAutomat = ({ navigation }) => {
         )}
       </View>
 
-      {/* TODO: Display data from API instead of hardcoded one */}
       {/* Product data from API */}
       <ProductInfo
-        text='Lorem ipsum dolor sit amet, consectetur adipiscing elit .Proin ornare eros vel ullamcorper pretium.'
-        subtext1='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare eros vel ullamcorper pretium.'
-        subtext2='500 g'
-        nutri='A'
-        nova='N1'
+        text={product.data?.product?.product_name}
+        subtext1={product.data?.product?.brands}
+        subtext2={product.data?.product?.quantity}
+        nutri={product.data?.product?.nutriscore_grade}
+        nova={product.data?.product?.nova_groups}
       />
       <Divider />
 

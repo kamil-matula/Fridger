@@ -27,11 +27,11 @@ const ProductInfo = ({ text, subtext1, subtext2, nova, nutri }) => {
 };
 
 ProductInfo.propTypes = {
-  text: PropTypes.string.isRequired,
-  subtext1: PropTypes.string.isRequired,
-  subtext2: PropTypes.string.isRequired,
-  nova: PropTypes.string.isRequired,
-  nutri: PropTypes.string.isRequired,
+  text: PropTypes.string,
+  subtext1: PropTypes.string,
+  subtext2: PropTypes.string,
+  nova: PropTypes.string,
+  nutri: PropTypes.string,
 };
 
 const useStyles = makeStyles((theme) => ({
