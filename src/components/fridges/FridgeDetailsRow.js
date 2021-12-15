@@ -22,8 +22,8 @@ const FridgeDetailsRow = ({ product, onPressIcon, onPressRow }) => {
         </View>
         <View style={styles.textsContainer}>
           <Text style={styles.name}>{product.name}</Text>
-          {product.producer && (
-            <Text style={styles.producer}>{product.producer}</Text>
+          {product.producer_name !== '' && (
+            <Text style={styles.producer}>{product.producer_name}</Text>
           )}
           <Text style={styles.quantity}>
             {product.quantity_left} / {product.quantity_base}{' '}
