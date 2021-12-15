@@ -16,21 +16,37 @@ import {
 import { ScoresContainer } from 'components/fridges';
 import { makeStyles } from 'utils';
 import { deleteIcon, time, calendar } from 'assets/icons';
-import { productsInFridgeList } from 'tmpData';
 
 const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
-  // Identifying product:
-  const { productID, fridgeID, fridgeName } = route.params;
-  const product = productsInFridgeList.find((e) => e.id === productID);
+  // Data from previous screen:
+  const {
+    fridgeID,
+    fridgeName,
+    productID,
+    productName,
+    productProducer,
+    productBarcode,
+    productExpirationDate,
+  } = route.params;
+
+  // Data from Open Food Facts API:
+  const retrieveProductDetails = (code) => {
+    if (code) {
+      // TODO: Send request to API:
+      return null;
+    }
+    return null;
+  };
+  const productWithBarcode = retrieveProductDetails(productBarcode);
 
   // Form states:
   const { control, handleSubmit, setFocus, setValue, reset } = useForm({
     defaultValues: {
-      name: product.name,
-      producer: product.producer,
-      expirationDate: product.expirationDate,
+      name: productName,
+      producer: productProducer,
+      expirationDate: productExpirationDate,
     },
   });
   const rules = {
@@ -66,7 +82,7 @@ const ProductDetails = ({ route, navigation }) => {
   const confirmChangeExpDate = (data) => {
     // TODO: Send request to API and wait for changing expiration date
     console.log(
-      `Product #${productID}'s expiration date has been changed from ${product.expirationDate} to ${data.expirationDate}`
+      `Product #${productID}'s expiration date has been changed from ${productExpirationDate} to ${data.expirationDate}`
     );
 
     // Hide dialog and go back:
@@ -82,11 +98,11 @@ const ProductDetails = ({ route, navigation }) => {
   // Submitting form:
   const editProduct = (data) => {
     // TODO: Send request to API to edit product
-    if (data.name !== product.name || data.producer !== product.producer)
+    if (data.name !== productName || data.producer !== productProducer)
       console.log(
         `Product ${JSON.stringify({
-          name: product.name,
-          producer: product.producer,
+          name: productName,
+          producer: productProducer,
         })} has been updated to ${JSON.stringify({
           name: data.name,
           producer: data.producer,
@@ -104,7 +120,7 @@ const ProductDetails = ({ route, navigation }) => {
   // Changing expiration date:
   const [date, setDate] = useState(new Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
-  const onDateChange = (event, selectedDate) => {
+  const onDateChange = (_, selectedDate) => {
     // Hide calendar:
     setDatepickerVisible(false);
 
@@ -117,27 +133,21 @@ const ProductDetails = ({ route, navigation }) => {
       setValue('expirationDate', '');
     }
 
-    // TODO: Make sure that it works on iOS devices
+    // TODO: Fix it on iOS devices
   };
 
   return (
     <View style={styles.container}>
       <AppBar
         icon1={time}
+        onPressIcon1={() => setChangeExpDateDialogVisible(true)}
         icon2={deleteIcon}
-        onPressIcon1={() => {
-          // Open dialog responsible for changing expiration date
-          setChangeExpDateDialogVisible(true);
-        }}
-        onPressIcon2={() => {
-          // Open dialog responsible for deleting product
-          setDeleteProductDialogVisible(true);
-        }}
+        onPressIcon2={() => setDeleteProductDialogVisible(true)}
       />
 
       {/* Rendering appropriate content: details for products with barcodes, 
           editable input fields for other ones */}
-      {product.barcode ? (
+      {productWithBarcode ? (
         <ScrollViewLayout addPadding={false}>
           {/* Basic information */}
           <View style={styles.basicInfoContainer}>
@@ -223,7 +233,7 @@ const ProductDetails = ({ route, navigation }) => {
             control={control}
             rules={rules.producer}
             name='producer'
-            label='Producer'
+            label='Producer (optional)'
             variant='data'
             returnKeyType='next'
             placeholder='Enter producer name'
@@ -242,7 +252,7 @@ const ProductDetails = ({ route, navigation }) => {
       {/* Deleting product from fridge */}
       <Dialog
         title='Delete product'
-        paragraph={`Are you sure you want to delete product ${product.name} from fridge ${fridgeName}? This action cannot be undone.`}
+        paragraph={`Are you sure you want to delete product ${productName} from fridge ${fridgeName}? This action cannot be undone.`}
         visibilityState={[
           deleteProductDialogVisible,
           setDeleteProductDialogVisible,
@@ -273,9 +283,7 @@ const ProductDetails = ({ route, navigation }) => {
             name='expirationDate'
             variant='data'
             icon={calendar}
-            onIconPress={() => {
-              setDatepickerVisible(true);
-            }}
+            onIconPress={() => setDatepickerVisible(true)}
             placeholder='dd.MM.rrrr'
             returnKeyType='done'
             keyboardType='numeric'

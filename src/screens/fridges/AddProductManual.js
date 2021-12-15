@@ -12,7 +12,12 @@ import {
   SheetRow,
   FloatingActionButton,
 } from 'components';
-import { makeStyles, displayToast } from 'utils';
+import {
+  makeStyles,
+  displayToast,
+  unitFromFrontToBack,
+  dateFromFrontToBack,
+} from 'utils';
 import { scanner, calendar, expand, check } from 'assets/icons';
 import { useAddFridgeProductMutation } from 'services/fridger/fridgeProducts';
 
@@ -94,23 +99,13 @@ const AddProductManual = ({ navigation, route }) => {
     `${numDate.getDate()}.${numDate.getMonth()}.${numDate.getFullYear()}`;
 
   // Display calendar:
-  const showDatepicker = () => {
-    setDatepickerVisible(true);
-  };
+  const showDatepicker = () => setDatepickerVisible(true);
 
   // Submitting form:
   const addProduct = (data) => {
-    // Prepare unit name:
-    const validUnit = (data.unit === 'pcs' ? 'PIECE' : data.unit).toUpperCase();
-    data.unit = validUnit;
-
-    // Replace dd.mm.YYYY with YYYY-mm-dd:
-    const validDate = data.expiration
-      ? data.expiration.split('.').reverse().join('-')
-      : null;
-    data.expiration = validDate;
-
-    // Add fridge id:
+    // Prepare data for API:
+    data.unit = unitFromFrontToBack(data.unit);
+    data.expiration = dateFromFrontToBack(data.expiration);
     data.fridge = fridgeID;
 
     // Send request to API:
@@ -128,7 +123,6 @@ const AddProductManual = ({ navigation, route }) => {
         navigation.goBack();
       })
       .catch((error) => {
-        console.log(error);
         if (error.data?.name) displayToast('Invalid name of fridge');
         else
           displayToast(error.data?.non_field_errors || 'Unable to add fridge');

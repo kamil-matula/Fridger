@@ -16,7 +16,7 @@ import {
   LoadingOverlay,
 } from 'components';
 import { FridgeDetailsRow } from 'components/fridges';
-import { makeStyles, displayToast } from 'utils';
+import { makeStyles, displayToast, dateFromBackToFront } from 'utils';
 import {
   group,
   groupAdd,
@@ -36,7 +36,7 @@ const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
   // Fridge identifying:
-  const fridgeID = route.params ? route.params.fridgeID : null;
+  const { fridgeID } = route.params;
 
   // Queries:
   const { data: fridge, isLoading } = useSpecificFridgeQuery(fridgeID);
@@ -179,9 +179,14 @@ const FridgeDetails = ({ route, navigation }) => {
                 // Go to appropriate page:
                 if (fridge != null)
                   navigation.navigate('ProductDetails', {
-                    productID: item.id,
                     fridgeID: fridge.id,
                     fridgeName: fridge.name,
+                    productID: item.id,
+                    productName: item.name,
+                    productProducer: item.producer,
+                    productExpirationDate: dateFromBackToFront(
+                      item.expiration_date
+                    ),
                   });
               }}
             />
