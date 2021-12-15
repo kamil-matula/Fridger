@@ -107,6 +107,9 @@ const AddProductManual = ({ navigation, route }) => {
     data.unit = unitFromFrontToBack(data.unit);
     data.expiration = dateFromFrontToBack(data.expiration);
     data.fridge = fridgeID;
+    data.barcode = '3033710065066';
+    data.image =
+      'https://world.openfoodfacts.org/images/products/303/371/006/5066/front_en.233.full.jpg';
 
     // Send request to API:
     addProductQuery(data)

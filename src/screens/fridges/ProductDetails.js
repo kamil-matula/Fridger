@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { View, Image, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import {
   AppBar,
-  ScrollViewLayout,
   Dialog,
   FloatingActionButton,
   InputField,
   Separator,
+  LoadingOverlay,
 } from 'components';
 import { ScoresContainer } from 'components/fridges';
 import { displayToast, makeStyles, dateFromFrontToBack } from 'utils';
@@ -20,13 +21,10 @@ import {
   useDeleteFridgeProductMutation,
   useEditFridgeProductMutation,
 } from 'services/fridger/fridgeProducts';
+import { useLazyProductQuery } from 'services/openFoodFacts/openFoodFactsApi';
 
 const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
-
-  // Queries:
-  const [editProductQuery, { isLoading }] = useEditFridgeProductMutation();
-  const [deleteProductQuery] = useDeleteFridgeProductMutation();
 
   // Data from previous screen:
   const {
@@ -38,15 +36,27 @@ const ProductDetails = ({ route, navigation }) => {
     productExpirationDate,
   } = route.params;
 
-  // Data from Open Food Facts API:
-  const retrieveProductDetails = (code) => {
-    if (code) {
-      // TODO: Send request to API:
-      return null;
+  // Queries:
+  const [editProductQuery, { isLoading: isEditLoading }] =
+    useEditFridgeProductMutation();
+  const [deleteProductQuery] = useDeleteFridgeProductMutation();
+  const [productQuery, product] = useLazyProductQuery();
+
+  // Open Food Facts stuff:
+  const [productWithBarcode, setProductWithBarcode] = useState(null);
+  useEffect(() => {
+    if (product.isSuccess) {
+      setProductWithBarcode(product.data?.product);
     }
-    return null;
-  };
-  const productWithBarcode = retrieveProductDetails(productBarcode);
+    if (product.isError) {
+      displayToast('Unable to get product details');
+    }
+  }, [product.isSuccess, product.isError]);
+  useEffect(() => {
+    if (productWithBarcode == null && !!productBarcode) {
+      productQuery(productBarcode);
+    }
+  }, []);
 
   // Form states:
   const { control, handleSubmit, setFocus, setValue, reset } = useForm({
@@ -162,42 +172,32 @@ const ProductDetails = ({ route, navigation }) => {
 
       {/* Rendering appropriate content: details for products with barcodes, 
           editable input fields for other ones */}
-      {productWithBarcode ? (
-        <ScrollViewLayout addPadding={false}>
+      {!!productBarcode && productWithBarcode == null && <LoadingOverlay />}
+      {!!productBarcode && productWithBarcode != null && (
+        <ScrollView>
           {/* Basic information */}
           <View style={styles.basicInfoContainer}>
             <View style={styles.imageContainer}>
-              <Image source={{ uri: product.image }} style={styles.image} />
+              <Image
+                source={{ uri: productWithBarcode.image_front_small_url }}
+                style={styles.image}
+              />
             </View>
             <View style={styles.textsContainer}>
-              <Text style={styles.name}>{product.name}</Text>
-              <Text style={styles.producer}>{product.producer}</Text>
-              <Text style={styles.quantity}>
-                {product.maxQuantity} {product.quantityType}
-              </Text>
+              <Text style={styles.name}>{productWithBarcode.product_name}</Text>
+              <Text style={styles.producer}>{productWithBarcode.brands}</Text>
+              <Text style={styles.quantity}>{productWithBarcode.quantity}</Text>
             </View>
           </View>
           <Divider />
 
           {/* Rating */}
           <ScoresContainer
-            novaScore={product.nova}
-            nutriScore={product.nutri}
+            novaScore={productWithBarcode.nova_groups}
+            nutriScore={productWithBarcode.nutriscore_grade}
             containerStyle={styles.ratingContainer}
             iconStyle={styles.icon}
           />
-          <Divider />
-
-          {/* Additives */}
-          <View style={styles.additivesContainer}>
-            <Text style={styles.additivesTitle}>Additives</Text>
-            {product.additives.map((element) => (
-              <Text key={element.code} style={styles.additivesRow}>
-                {'   '}•{'   '}
-                {element.code} - {element.description}
-              </Text>
-            ))}
-          </View>
           <Divider />
 
           {/* Nutrients */}
@@ -208,17 +208,23 @@ const ProductDetails = ({ route, navigation }) => {
             </View>
             <Divider />
             {[
-              ['Energy (kJ)', `${product.nutritions.energy} kJ`],
-              ['Fat', `${product.nutritions.fat} g`],
+              ['Energy (kJ)', `${productWithBarcode.nutriments.energy} kJ`],
+              ['Fat', `${productWithBarcode.nutriments.fat} g`],
               [
                 '   •   Saturated fat',
-                `${product.nutritions['saturated-fat']} g`,
+                `${productWithBarcode.nutriments['saturated-fat']} g`,
               ],
-              ['Carbohydrates', `${product.nutritions.carbohydrates} g`],
-              ['   •   Sugars', `${product.nutritions.sugars} g`],
-              ['Proteins', `${product.nutritions['saturated-fat']} g`],
-              ['Salt', `${product.nutritions.salt} g`],
-              ['   •   Sodium', `${product.nutritions.sodium} g`],
+              [
+                'Carbohydrates',
+                `${productWithBarcode.nutriments.carbohydrates} g`,
+              ],
+              ['   •   Sugars', `${productWithBarcode.nutriments.sugars} g`],
+              [
+                'Proteins',
+                `${productWithBarcode.nutriments['saturated-fat']} g`,
+              ],
+              ['Salt', `${productWithBarcode.nutriments.salt} g`],
+              ['   •   Sodium', `${productWithBarcode.nutriments.sodium} g`],
             ].map((element) => (
               <View key={element[0]}>
                 <View style={styles.nutrientRow}>
@@ -229,8 +235,10 @@ const ProductDetails = ({ route, navigation }) => {
               </View>
             ))}
           </View>
-        </ScrollViewLayout>
-      ) : (
+        </ScrollView>
+      )}
+
+      {!productBarcode && (
         <View style={styles.noBarcodeContainer}>
           {/* Providing data */}
           <InputField
@@ -260,7 +268,7 @@ const ProductDetails = ({ route, navigation }) => {
             onPress={handleSubmit(editProduct)}
             centered
             confirm
-            isLoading={!changeExpDateDialogVisible && isLoading}
+            isLoading={!changeExpDateDialogVisible && isEditLoading}
           />
         </View>
       )}

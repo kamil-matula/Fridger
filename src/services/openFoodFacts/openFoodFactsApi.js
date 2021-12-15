@@ -15,4 +15,4 @@ export const openFoodFactsApi = createApi({
   }),
 });
 
-export const { useLazyProductQuery } = openFoodFactsApi;
+export const { useProductQuery, useLazyProductQuery } = openFoodFactsApi;

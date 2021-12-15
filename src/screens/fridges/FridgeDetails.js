@@ -188,6 +188,7 @@ const FridgeDetails = ({ route, navigation }) => {
                     productExpirationDate: dateFromBackToFront(
                       item.expiration_date
                     ),
+                    productBarcode: item.barcode,
                   });
               }}
             />
