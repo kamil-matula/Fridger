@@ -35,6 +35,11 @@ import { useFridgeProductsQuery } from 'services/fridger/fridgeProducts';
 
 const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
+  const listOfSortingOptions = [
+    { option: 'name', label: 'Name' },
+    { option: 'producer_name', label: 'Producer' },
+    { option: 'expiration_date', label: 'Expiration date' },
+  ];
 
   // Fridge identifying:
   const { fridgeID } = route.params;
@@ -163,8 +168,10 @@ const FridgeDetails = ({ route, navigation }) => {
       <TouchableRipple onPress={() => refSorting.current.open()}>
         <View style={styles.sortingLabel}>
           <Text style={styles.text}>
-            {sortingCategoryName.charAt(0).toUpperCase() +
-              sortingCategoryName.slice(1)}
+            {
+              listOfSortingOptions.find((e) => e.option === sortingCategoryName)
+                .label
+            }
           </Text>
           <Image
             source={sortingDirection === '' ? up : down}
@@ -190,7 +197,7 @@ const FridgeDetails = ({ route, navigation }) => {
                     fridgeName: fridge.name,
                     productID: item.id,
                     productName: item.name,
-                    productProducer: item.producer,
+                    productProducer: item.producer_name,
                     productExpirationDate: dateFromBackToFront(
                       item.expiration_date
                     ),
@@ -261,12 +268,12 @@ const FridgeDetails = ({ route, navigation }) => {
 
       {/* Sorting products */}
       <BottomSheet title='Sort by' reference={refSorting}>
-        {['name', 'producer', 'expiration date'].map((element) => (
+        {listOfSortingOptions.map((element) => (
           <SheetRow
-            key={element}
-            icon={displaySortIcon(element)}
-            text={element.charAt(0).toUpperCase() + element.slice(1)}
-            onPress={() => onSortPress(element)}
+            key={element.option}
+            icon={displaySortIcon(element.option)}
+            text={element.label}
+            onPress={() => onSortPress(element.option)}
           />
         ))}
       </BottomSheet>
