@@ -52,7 +52,9 @@ const FridgeDetails = ({ route, navigation }) => {
       .catch((error) => {
         if (error.data?.name) displayToast('Invalid name');
         else
-          displayToast(error.data?.non_field_errors || 'Something went wrong');
+          displayToast(
+            error.data?.non_field_errors || 'Unable to rename fridge'
+          );
 
         // TODO: Reset appbar's value
       });

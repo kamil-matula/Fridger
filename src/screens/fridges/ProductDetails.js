@@ -14,11 +14,15 @@ import {
   Separator,
 } from 'components';
 import { ScoresContainer } from 'components/fridges';
-import { makeStyles } from 'utils';
+import { displayToast, makeStyles, dateFromFrontToBack } from 'utils';
 import { deleteIcon, time, calendar } from 'assets/icons';
+import { useEditFridgeProductMutation } from 'services/fridger/fridgeProducts';
 
 const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
+
+  // Queries:
+  const [editProductQuery] = useEditFridgeProductMutation();
 
   // Data from previous screen:
   const {
@@ -46,14 +50,14 @@ const ProductDetails = ({ route, navigation }) => {
     defaultValues: {
       name: productName,
       producer: productProducer,
-      expirationDate: productExpirationDate,
+      expiration: productExpirationDate,
     },
   });
   const rules = {
     name: {
       required: 'Name is required',
     },
-    expirationDate: {
+    expiration: {
       pattern: {
         value: /^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.\d{4}$/,
         message: 'Invalid date format',
@@ -61,7 +65,7 @@ const ProductDetails = ({ route, navigation }) => {
     },
   };
 
-  // Deleting fridge:
+  // Deleting product from fridge:
   const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
     useState(false);
   const confirmRemoveProduct = () => {
@@ -80,17 +84,24 @@ const ProductDetails = ({ route, navigation }) => {
   const [changeExpDateDialogVisible, setChangeExpDateDialogVisible] =
     useState(false);
   const confirmChangeExpDate = (data) => {
-    // TODO: Send request to API and wait for changing expiration date
-    console.log(
-      `Product #${productID}'s expiration date has been changed from ${productExpirationDate} to ${data.expirationDate}`
-    );
+    // Prepare data for API:
+    data.expiration = dateFromFrontToBack(data.expiration);
+    data.id = productID;
 
-    // Hide dialog and go back:
-    setChangeExpDateDialogVisible(false);
-    navigation.pop();
+    // Send request to API:
+    editProductQuery(data)
+      .unwrap()
+      .then(() => {
+        displayToast('Expiration date changed');
+        setChangeExpDateDialogVisible(false);
+      })
+      .catch((error) =>
+        displayToast(
+          error.data?.non_field_errors || 'Unable to change expiration date'
+        )
+      );
   };
   const cancelChangeExpDate = () => {
-    // Hide dialog:
     setChangeExpDateDialogVisible(false);
     reset();
   };
@@ -127,10 +138,10 @@ const ProductDetails = ({ route, navigation }) => {
     // Retrieve date:
     if (selectedDate !== undefined) {
       setDate(selectedDate);
-      setValue('expirationDate', dateToString(selectedDate));
+      setValue('expiration', dateToString(selectedDate));
     } else {
       setDate(new Date());
-      setValue('expirationDate', '');
+      setValue('expiration', '');
     }
 
     // TODO: Fix it on iOS devices
@@ -279,8 +290,8 @@ const ProductDetails = ({ route, navigation }) => {
         <View style={styles.calendarFieldContainer}>
           <InputField
             control={control}
-            rules={rules.expirationDate}
-            name='expirationDate'
+            rules={rules.expiration}
+            name='expiration'
             variant='data'
             icon={calendar}
             onIconPress={() => setDatepickerVisible(true)}

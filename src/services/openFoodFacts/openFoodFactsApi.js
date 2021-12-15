@@ -5,5 +5,14 @@ export const openFoodFactsApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `https://world.openfoodfacts.org/api/v0`,
   }),
-  endpoints: () => ({}),
+  endpoints: (builder) => ({
+    product: builder.query({
+      query: (barCode) => ({
+        url: `product/${barCode}`,
+        method: 'GET',
+      }),
+    }),
+  }),
 });
+
+export const { useLazyProductQuery } = openFoodFactsApi;

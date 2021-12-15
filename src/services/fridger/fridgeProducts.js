@@ -40,7 +40,7 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
     }),
     editFridgeProduct: builder.mutation({
       query: ({ id, name, expiration }) => ({
-        url: `fridge-products/${id}`,
+        url: `fridges-products/${id}`,
         method: 'PATCH',
         body: { name, expiration_date: expiration },
       }),
@@ -48,7 +48,7 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
     }),
     deleteFridgeProduct: builder.mutation({
       query: (id) => ({
-        url: `fridge-products/${id}`,
+        url: `fridges-products/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Fridges', 'SpecificFridge'],
