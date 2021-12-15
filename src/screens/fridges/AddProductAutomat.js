@@ -41,7 +41,7 @@ const AddProductAutomat = ({ navigation }) => {
   const handleBarCodeScanned = ({ data }) => {
     // Update state:
     setScanned(true);
-    productQuery(data);
+    productQuery(data); // TODO: Add error-handling
   };
 
   // Form states:

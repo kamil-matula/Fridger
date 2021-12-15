@@ -31,6 +31,7 @@ import {
   useEditFridgeNameMutation,
   useSpecificFridgeQuery,
 } from 'services/fridger/fridges';
+import { useFridgeProductsQuery } from 'services/fridger/fridgeProducts';
 
 const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
@@ -38,15 +39,37 @@ const FridgeDetails = ({ route, navigation }) => {
   // Fridge identifying:
   const { fridgeID } = route.params;
 
+  // Sorting:
+  const [sortingCategoryName, setSortingCategoryName] = useState('name');
+  const [sortingDirection, setSortingDirection] = useState('');
+  const refSorting = useRef(null);
+  const onSortPress = (category) => {
+    // Hide bottom sheet and set new sorting:
+    if (sortingCategoryName === category)
+      setSortingDirection((it) => (it === '' ? '-' : ''));
+    else setSortingCategoryName(category);
+    refSorting.current.close();
+  };
+  const displaySortIcon = (category) => {
+    if (sortingCategoryName === category)
+      return sortingDirection === '' ? up : down;
+    return null;
+  };
+
   // Queries:
-  const { data: fridge, isLoading } = useSpecificFridgeQuery(fridgeID);
+  const { data: fridge, isLoading: isFridgeLoading } =
+    useSpecificFridgeQuery(fridgeID);
+  const { data: fridgeProducts, isLoading: areProductsLoading } =
+    useFridgeProductsQuery({
+      fridge: fridgeID,
+      ordering: sortingDirection + sortingCategoryName,
+    });
   const [editFridgeNameQuery] = useEditFridgeNameMutation();
   const [deleteFridgeQuery] = useDeleteFridgeMutation();
 
   // Send data to api:
   const editFridgeName = (name) => {
-    if (fridge == null) return;
-    editFridgeNameQuery({ id: fridge.id, name })
+    editFridgeNameQuery({ id: fridgeID, name })
       .unwrap()
       .then(() => displayToast('Fridge renamed'))
       .catch((error) => {
@@ -60,7 +83,7 @@ const FridgeDetails = ({ route, navigation }) => {
       });
   };
   const deleteFridge = () => {
-    deleteFridgeQuery(fridge.id)
+    deleteFridgeQuery(fridgeID)
       .unwrap()
       .then(() => {
         displayToast('Fridge deleted');
@@ -70,26 +93,6 @@ const FridgeDetails = ({ route, navigation }) => {
       .catch((error) =>
         displayToast(error.data?.non_field_errors || 'Unable to delete fridge')
       );
-  };
-
-  // Sorting:
-  const [sortingCategoryName, setSortingCategoryName] = useState('Name');
-  const [sortingDirection, setSortingDirection] = useState('asc');
-  const refSorting = useRef(null);
-  const onSortPress = (category) => {
-    // TODO: Send request to API and refresh products
-    console.log(`Sorting products by ${category}`);
-
-    // Hide bottom sheet and set new sorting:
-    if (sortingCategoryName === category)
-      setSortingDirection((it) => (it === 'asc' ? 'desc' : 'asc'));
-    else setSortingCategoryName(category);
-    refSorting.current.close();
-  };
-  const displaySortIcon = (category) => {
-    if (sortingCategoryName === category)
-      return sortingDirection === 'asc' ? up : down;
-    return null;
   };
 
   // Deleting:
@@ -159,20 +162,23 @@ const FridgeDetails = ({ route, navigation }) => {
       {/* Sorting products */}
       <TouchableRipple onPress={() => refSorting.current.open()}>
         <View style={styles.sortingLabel}>
-          <Text style={styles.text}>{sortingCategoryName}</Text>
+          <Text style={styles.text}>
+            {sortingCategoryName.charAt(0).toUpperCase() +
+              sortingCategoryName.slice(1)}
+          </Text>
           <Image
-            source={sortingDirection === 'asc' ? up : down}
+            source={sortingDirection === '' ? up : down}
             style={styles.icon}
           />
         </View>
       </TouchableRipple>
 
       {/* List of products */}
-      {isLoading ? (
+      {isFridgeLoading || areProductsLoading ? (
         <LoadingOverlay />
       ) : (
         <FlatList
-          data={fridge.products}
+          data={fridgeProducts}
           renderItem={({ item }) => (
             <FridgeDetailsRow
               product={item}
@@ -202,10 +208,7 @@ const FridgeDetails = ({ route, navigation }) => {
 
       {/* Adding new product */}
       <FloatingActionButton
-        onPress={() => {
-          if (fridge != null)
-            navigation.navigate('AddProductManual', { fridgeID: fridge.id });
-        }}
+        onPress={() => navigation.navigate('AddProductManual', { fridgeID })}
         isBottomNavigationBar
       />
 
@@ -258,34 +261,14 @@ const FridgeDetails = ({ route, navigation }) => {
 
       {/* Sorting products */}
       <BottomSheet title='Sort by' reference={refSorting}>
-        <SheetRow
-          icon={displaySortIcon('Name')}
-          text='Name'
-          onPress={() => {
-            onSortPress('Name');
-          }}
-        />
-        <SheetRow
-          icon={displaySortIcon('Producer')}
-          text='Producer'
-          onPress={() => {
-            onSortPress('Producer');
-          }}
-        />
-        <SheetRow
-          icon={displaySortIcon('Quantity')}
-          text='Quantity'
-          onPress={() => {
-            onSortPress('Quantity');
-          }}
-        />
-        <SheetRow
-          icon={displaySortIcon('Expiration date')}
-          text='Expiration date'
-          onPress={() => {
-            onSortPress('Expiration date');
-          }}
-        />
+        {['name', 'producer', 'expiration date'].map((element) => (
+          <SheetRow
+            key={element}
+            icon={displaySortIcon(element)}
+            text={element.charAt(0).toUpperCase() + element.slice(1)}
+            onPress={() => onSortPress(element)}
+          />
+        ))}
       </BottomSheet>
 
       {/* Deleting fridge */}

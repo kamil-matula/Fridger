@@ -1,19 +1,22 @@
 import { fridgerApi } from './fridgerApi';
 
-// TODO: Add producer to 'addFridgeProduct' and 'editFridgeProduct',
-// TODO: Remove 'SpecificFridge' tag after implementing GET
 const fridgeProductsApi = fridgerApi.injectEndpoints({
   endpoints: (builder) => ({
     fridgeProducts: builder.query({
-      query: () => ({
+      query: ({ fridge, ordering }) => ({
         url: 'fridges-products',
         method: 'GET',
+        params: {
+          fridge,
+          ordering,
+        },
       }),
       providesTags: ['FridgeProducts'],
     }),
     addFridgeProduct: builder.mutation({
       query: ({
         name,
+        producer,
         barcode,
         image,
         fridge,
@@ -25,6 +28,7 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
         method: 'POST',
         body: {
           name,
+          producer_name: producer,
           barcode,
           image,
           fridge,
@@ -36,22 +40,22 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
           },
         },
       }),
-      invalidatesTags: ['FridgeProducts', 'SpecificFridge'],
+      invalidatesTags: ['Fridges', 'FridgeProducts'],
     }),
     editFridgeProduct: builder.mutation({
-      query: ({ id, name, expiration }) => ({
+      query: ({ id, name, producer, expiration }) => ({
         url: `fridges-products/${id}`,
         method: 'PATCH',
-        body: { name, expiration_date: expiration },
+        body: { name, producer_name: producer, expiration_date: expiration },
       }),
-      invalidatesTags: ['Fridges', 'SpecificFridge'],
+      invalidatesTags: ['FridgeProducts'],
     }),
     deleteFridgeProduct: builder.mutation({
       query: (id) => ({
         url: `fridges-products/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Fridges', 'SpecificFridge'],
+      invalidatesTags: ['Fridges', 'FridgeProducts'],
     }),
     updateFridgeProductQuantity: builder.mutation({
       query: ({ product, status, quantity }) => ({
@@ -59,7 +63,7 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
         method: 'POST',
         body: { product, status, quantity },
       }),
-      invalidatesTags: ['Fridges', 'SpecificFridge'],
+      invalidatesTags: ['Fridges', 'FridgeProducts'],
     }),
   }),
 });
