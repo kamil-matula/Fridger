@@ -1,3 +1,4 @@
+export { default as N0 } from './N0.png';
 export { default as N1 } from './N1.png';
 export { default as N2 } from './N2.png';
 export { default as N3 } from './N3.png';
@@ -7,3 +8,4 @@ export { default as B } from './B.png';
 export { default as C } from './C.png';
 export { default as D } from './D.png';
 export { default as E } from './E.png';
+export { default as F } from './F.png';
