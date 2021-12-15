@@ -181,7 +181,6 @@ const FridgeDetails = ({ route, navigation }) => {
                 // Go to appropriate page:
                 if (fridge != null)
                   navigation.navigate('ProductDetails', {
-                    fridgeID: fridge.id,
                     fridgeName: fridge.name,
                     productID: item.id,
                     productName: item.name,

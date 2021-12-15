@@ -16,17 +16,20 @@ import {
 import { ScoresContainer } from 'components/fridges';
 import { displayToast, makeStyles, dateFromFrontToBack } from 'utils';
 import { deleteIcon, time, calendar } from 'assets/icons';
-import { useEditFridgeProductMutation } from 'services/fridger/fridgeProducts';
+import {
+  useDeleteFridgeProductMutation,
+  useEditFridgeProductMutation,
+} from 'services/fridger/fridgeProducts';
 
 const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
   // Queries:
   const [editProductQuery, { isLoading }] = useEditFridgeProductMutation();
+  const [deleteProductQuery] = useDeleteFridgeProductMutation();
 
   // Data from previous screen:
   const {
-    fridgeID,
     fridgeName,
     productID,
     productName,
@@ -69,14 +72,16 @@ const ProductDetails = ({ route, navigation }) => {
   const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
     useState(false);
   const confirmRemoveProduct = () => {
-    // TODO: Send request to API and wait for removing product from the fridge
-    console.log(
-      `Product #${productID} has been deleted from fridge #${fridgeID}`
-    );
-
-    // Hide dialog and go back:
-    setDeleteProductDialogVisible(false);
-    navigation.pop();
+    deleteProductQuery(productID)
+      .unwrap()
+      .then(() => {
+        displayToast('Product deleted');
+        setDeleteProductDialogVisible(false);
+        navigation.pop();
+      })
+      .catch((error) =>
+        displayToast(error.data?.non_field_errors || 'Unable to delete product')
+      );
   };
   const cancelRemoveProduct = () => setDeleteProductDialogVisible(false);
 
