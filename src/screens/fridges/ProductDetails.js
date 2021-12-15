@@ -22,7 +22,7 @@ const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
   // Queries:
-  const [editProductQuery] = useEditFridgeProductMutation();
+  const [editProductQuery, { isLoading }] = useEditFridgeProductMutation();
 
   // Data from previous screen:
   const {
@@ -84,12 +84,10 @@ const ProductDetails = ({ route, navigation }) => {
   const [changeExpDateDialogVisible, setChangeExpDateDialogVisible] =
     useState(false);
   const confirmChangeExpDate = (data) => {
-    // Prepare data for API:
-    data.expiration = dateFromFrontToBack(data.expiration);
-    data.id = productID;
-
-    // Send request to API:
-    editProductQuery(data)
+    editProductQuery({
+      id: productID,
+      expiration: dateFromFrontToBack(data.expiration),
+    })
       .unwrap()
       .then(() => {
         displayToast('Expiration date changed');
@@ -108,20 +106,21 @@ const ProductDetails = ({ route, navigation }) => {
 
   // Submitting form:
   const editProduct = (data) => {
-    // TODO: Send request to API to edit product
-    if (data.name !== productName || data.producer !== productProducer)
-      console.log(
-        `Product ${JSON.stringify({
-          name: productName,
-          producer: productProducer,
-        })} has been updated to ${JSON.stringify({
-          name: data.name,
-          producer: data.producer,
-        })}`
+    editProductQuery({
+      id: productID,
+      name: data.name,
+      producer: data.producer,
+    })
+      .unwrap()
+      .then(() => {
+        displayToast('Product details changed');
+        navigation.goBack();
+      })
+      .catch((error) =>
+        displayToast(
+          error.data?.non_field_errors || 'Unable to edit product details'
+        )
       );
-
-    // Go back:
-    navigation.goBack();
   };
 
   // Helper function for retrieving friendly date from datePicker:
@@ -256,6 +255,7 @@ const ProductDetails = ({ route, navigation }) => {
             onPress={handleSubmit(editProduct)}
             centered
             confirm
+            isLoading={!changeExpDateDialogVisible && isLoading}
           />
         </View>
       )}
