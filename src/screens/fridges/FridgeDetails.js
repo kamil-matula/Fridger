@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { FlatList, View, Text, Image } from 'react-native';
 import { Divider, TouchableRipple } from 'react-native-paper';
@@ -81,7 +81,11 @@ const FridgeDetails = ({ route, navigation }) => {
   const [deleteFridgeQuery] = useDeleteFridgeMutation();
   const [editFridgeQuantityQuery] = useUpdateFridgeProductQuantityMutation();
 
-  // Send data to api:
+  // Renaming:
+  const [fridgeName, setFridgeName] = useState('');
+  useEffect(() => {
+    if (fridge) setFridgeName(fridge.name);
+  }, [fridge]);
   const editFridgeName = (name) => {
     editFridgeNameQuery({ id: fridgeID, name })
       .unwrap()
@@ -93,9 +97,17 @@ const FridgeDetails = ({ route, navigation }) => {
             error.data?.non_field_errors || 'Unable to rename fridge'
           );
 
-        // TODO: Reset appbar's value
+        // Rebuild appbar:
+        setFridgeName(`${fridge.name} `);
+        setFridgeName(fridge.name);
       });
   };
+
+  // Deleting:
+  const [deleteFridgeDialogVisible, setDeleteFridgeDialogVisible] =
+    useState(false);
+  const confirmRemoveFridge = () => deleteFridge();
+  const cancelRemoveFridge = () => setDeleteFridgeDialogVisible(false);
   const deleteFridge = () => {
     deleteFridgeQuery(fridgeID)
       .unwrap()
@@ -108,12 +120,6 @@ const FridgeDetails = ({ route, navigation }) => {
         displayToast(error.data?.non_field_errors || 'Unable to delete fridge')
       );
   };
-
-  // Deleting:
-  const [deleteFridgeDialogVisible, setDeleteFridgeDialogVisible] =
-    useState(false);
-  const confirmRemoveFridge = () => deleteFridge();
-  const cancelRemoveFridge = () => setDeleteFridgeDialogVisible(false);
 
   // Reducing quantity - states:
   const [reduceQuantityVisible, setReduceQuantityVisible] = useState(false);
@@ -202,7 +208,7 @@ const FridgeDetails = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar
-        label={fridge?.name ?? ''}
+        label={fridgeName}
         icon1={more}
         onPressIcon1={() => refFridgeActions.current.open()}
         onSubmitEditing={editFridgeName}
