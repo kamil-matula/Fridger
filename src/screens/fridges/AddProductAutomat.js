@@ -27,7 +27,19 @@ const AddProductAutomat = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
+  // Details from Open Food Facts API:
   const [productQuery, product] = useLazyProductQuery();
+  useEffect(() => {
+    if (product.isSuccess) {
+      console.log('RECEIVED:');
+      console.log(product);
+      if (!product.data?.product)
+        displayToast("Sorry! This product doesn't exist in the database");
+    }
+    if (product.isError) {
+      displayToast('Unable to get product details');
+    }
+  }, [product.isSuccess, product.isError]);
 
   // Requesting camera permission on launch:
   useEffect(() => {
@@ -39,9 +51,10 @@ const AddProductAutomat = ({ navigation }) => {
 
   // Handling with data from barcode:
   const handleBarCodeScanned = ({ data }) => {
-    // Update state:
+    console.log('SCANNED:');
+    console.log(data);
     setScanned(true);
-    productQuery(data); // TODO: Add error-handling
+    productQuery(data);
   };
 
   // Form states:

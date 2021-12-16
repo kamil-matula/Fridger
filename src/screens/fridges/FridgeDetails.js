@@ -16,7 +16,12 @@ import {
   LoadingOverlay,
 } from 'components';
 import { FridgeDetailsRow } from 'components/fridges';
-import { makeStyles, displayToast, dateFromBackToFront } from 'utils';
+import {
+  makeStyles,
+  displayToast,
+  dateFromBackToFront,
+  reasonFromFrontToBack,
+} from 'utils';
 import {
   group,
   groupAdd,
@@ -31,7 +36,10 @@ import {
   useEditFridgeNameMutation,
   useSpecificFridgeQuery,
 } from 'services/fridger/fridges';
-import { useFridgeProductsQuery } from 'services/fridger/fridgeProducts';
+import {
+  useFridgeProductsQuery,
+  useUpdateFridgeProductQuantityMutation,
+} from 'services/fridger/fridgeProducts';
 
 const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
@@ -71,6 +79,7 @@ const FridgeDetails = ({ route, navigation }) => {
     });
   const [editFridgeNameQuery] = useEditFridgeNameMutation();
   const [deleteFridgeQuery] = useDeleteFridgeMutation();
+  const [editFridgeQuantityQuery] = useUpdateFridgeProductQuantityMutation();
 
   // Send data to api:
   const editFridgeName = (name) => {
@@ -118,23 +127,54 @@ const FridgeDetails = ({ route, navigation }) => {
 
   // Reducing quantity - dialog actions:
   const confirmReduceQuantity = () => {
-    const newValue = getValues('quantity');
-    // TODO: Validate the input on the frontend and display snackbar or error.
-    // 1. Quantity should be lower than previous value.
-    // 2. Reason shouldn't be null.
+    // Validate data:
+    const newQuantity = parseInt(getValues('quantity'), 10);
+    if (Number.isNaN(newQuantity)) {
+      displayToast('Please provide quantity.');
+      return;
+    }
+    if (newQuantity > reduceQuantityItem.currentQuantity) {
+      displayToast(
+        "You can't increase the quantity.\nPlease provide lower number."
+      );
+      return;
+    }
+    if (newQuantity === reduceQuantityItem.currentQuantity) {
+      // Just close:
+      setReduceQuantityVisible(false);
+      setReduceQuantityReason(null);
+      setReduceQuantityItem(null);
+      reset();
+      return;
+    }
+    if (reduceQuantityReason == null) {
+      displayToast(
+        'Please choose the reason of reducing quantity. It will be used in your statistics.'
+      );
+      return;
+    }
 
-    // TODO: Send request to API and wait for reducing product's quantity
-    console.log(
-      `Quanity of product ${reduceQuantityItem.name} has been reduced due to: ${reduceQuantityReason}.` +
-        `\nPrevious value: ${reduceQuantityItem.currentQuantity} ${reduceQuantityItem.quantityType}.` +
-        `\nCurrent value: ${newValue} ${reduceQuantityItem.quantityType}.`
-    );
+    // Send request to API:
+    editFridgeQuantityQuery({
+      product: reduceQuantityItem.id,
+      status: reasonFromFrontToBack(reduceQuantityReason),
+      quantity: reduceQuantityItem.currentQuantity - newQuantity,
+    })
+      .unwrap()
+      .then(() => {
+        displayToast('Quantity reduced');
 
-    // Hide dialog and reset state:
-    setReduceQuantityVisible(false);
-    setReduceQuantityReason(null);
-    setReduceQuantityItem(null);
-    reset();
+        // Hide dialog and reset state:
+        setReduceQuantityVisible(false);
+        setReduceQuantityReason(null);
+        setReduceQuantityItem(null);
+        reset();
+      })
+      .catch((error) =>
+        displayToast(
+          error.data?.non_field_errors || 'Unable to reduce quantity'
+        )
+      );
   };
   const cancelReduceQuantity = () => {
     // Hide dialog and reset state:
@@ -145,8 +185,14 @@ const FridgeDetails = ({ route, navigation }) => {
   };
   const reduceQuantityOpen = (item) => {
     // Set item and display dialog:
-    setReduceQuantityItem(item);
-    setValue('quantity', item.currentQuantity.toString());
+    setReduceQuantityItem({
+      id: item.id,
+      name: item.name,
+      currentQuantity: item.quantity_left,
+      maxQuantity: item.quantity_base,
+      quantityType: item.quantity_type.toLowerCase(),
+    });
+    setValue('quantity', item.quantity_left.toString());
     setReduceQuantityVisible(true);
   };
 

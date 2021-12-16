@@ -9,3 +9,10 @@ export const unitFromFrontToBack = (unitFromFront) =>
 
 export const unitFromBackToFront = (unitFromBack) =>
   (unitFromBack === 'PIECE' ? 'pcs' : unitFromBack).toLowerCase();
+
+export const reasonFromFrontToBack = (reasonFromFront) => {
+  if (reasonFromFront === 'eaten') return 'USED';
+  if (reasonFromFront === 'wasted') return 'WASTED';
+  if (reasonFromFront === 'disappeared') return 'UNTRACKED';
+  return '';
+};

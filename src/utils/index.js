@@ -5,4 +5,5 @@ export {
   dateFromBackToFront,
   unitFromFrontToBack,
   unitFromBackToFront,
+  reasonFromFrontToBack,
 } from './dataConverting';
