@@ -26,14 +26,14 @@ const FriendProfile = ({ navigation, route }) => {
         displayToast('Friend has been deleted');
         navigation.pop();
       })
-      .catch(() => displayToast('Unable to remove friend'));
+      .catch((error) =>
+        displayToast(error.data?.non_field_errors || 'Unable to remove friend')
+      );
 
     // Hide dialog and go back:
     setDialogVisible(false);
   };
-  const cancelRemoveFriend = () => {
-    setDialogVisible(false);
-  };
+  const cancelRemoveFriend = () => setDialogVisible(false);
 
   return (
     <View style={styles.container}>

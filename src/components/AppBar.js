@@ -29,10 +29,7 @@ const AppBar = ({
       label,
     },
   });
-  const submit = (data) => {
-    // Update name:
-    onSubmitEditing(data);
-  };
+  const submit = (data) => onSubmitEditing(data);
 
   // Update label when data is fetched:
   useEffect(() => {

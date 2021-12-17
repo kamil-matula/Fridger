@@ -17,12 +17,19 @@ const fridgesApi = fridgerApi.injectEndpoints({
       }),
       invalidatesTags: ['Fridges'],
     }),
+    deleteFridge: builder.mutation({
+      query: (id) => ({
+        url: `fridges/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Fridges'],
+    }),
     specificFridge: builder.query({
       query: (id) => ({
         url: `fridges/${id}`,
         method: 'GET',
       }),
-      providesTags: ['Products'],
+      providesTags: ['SpecificFridge'],
     }),
     editFridgeName: builder.mutation({
       query: ({ id, name }) => ({
@@ -30,14 +37,7 @@ const fridgesApi = fridgerApi.injectEndpoints({
         method: 'PUT',
         body: { name },
       }),
-      invalidatesTags: ['Fridges', 'Products'],
-    }),
-    deleteFridge: builder.mutation({
-      query: (id) => ({
-        url: `fridges/${id}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Fridges'],
+      invalidatesTags: ['Fridges', 'SpecificFridge'],
     }),
   }),
 });

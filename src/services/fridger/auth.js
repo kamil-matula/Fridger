@@ -20,10 +20,12 @@ const authApi = fridgerApi.injectEndpoints({
         'User',
         'Friends',
         'Fridges',
-        'Products',
+        'SpecificFridge',
+        'FridgeProducts',
         'FridgeOwnership',
         'ShoppingLists',
         'SpecificShoppingList',
+        'ShoppingListOwnership',
       ],
     }),
     logout: builder.mutation({

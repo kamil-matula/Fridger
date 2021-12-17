@@ -11,6 +11,7 @@
     "lint": "eslint --ext .js,.jsx,.json ./src"
   },
   "dependencies": {
+    "@babel/preset-typescript": "^7.16.5",
     "@react-native-async-storage/async-storage": "^1.15.11",
     "@react-native-community/datetimepicker": "^3.5.2",
     "@react-native-community/netinfo": "6.0.0",
@@ -36,7 +37,7 @@
     "react-native-pager-view": "5.0.12",
     "react-native-paper": "^4.9.2",
     "react-native-raw-bottom-sheet": "^2.2.0",
-    "react-native-reanimated": "^2.2.2",
+    "react-native-reanimated": "~2.2.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-tab-view": "2.16.0",

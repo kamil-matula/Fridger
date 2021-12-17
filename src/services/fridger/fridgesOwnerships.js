@@ -2,7 +2,7 @@ import { fridgerApi } from './fridgerApi';
 
 const fridgesOwnershipsApi = fridgerApi.injectEndpoints({
   endpoints: (builder) => ({
-    fridgeOwners: builder.query({
+    fridgeOwnerships: builder.query({
       query: (id) => ({
         url: `fridges/${id}/ownerships`,
         method: 'GET',
@@ -42,7 +42,7 @@ const fridgesOwnershipsApi = fridgerApi.injectEndpoints({
 });
 
 export const {
-  useFridgeOwnersQuery,
+  useFridgeOwnershipsQuery,
   useUpdateFridgePermissionMutation,
   useAddFridgeUserMutation,
   useRemoveFridgeUserMutation,

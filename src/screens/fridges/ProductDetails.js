@@ -1,43 +1,76 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { View, Image, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import {
   AppBar,
-  ScrollViewLayout,
   Dialog,
   FloatingActionButton,
   InputField,
   Separator,
+  LoadingOverlay,
 } from 'components';
 import { ScoresContainer } from 'components/fridges';
-import { makeStyles } from 'utils';
+import { displayToast, makeStyles, dateFromFrontToBack } from 'utils';
 import { deleteIcon, time, calendar } from 'assets/icons';
-import { productsInFridgeList } from 'tmpData';
+import {
+  useDeleteFridgeProductMutation,
+  useEditFridgeProductMutation,
+} from 'services/fridger/fridgeProducts';
+import { useLazyProductQuery } from 'services/openFoodFacts/openFoodFactsApi';
 
 const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
-  // Identifying product:
-  const { productID, fridgeID, fridgeName } = route.params;
-  const product = productsInFridgeList.find((e) => e.id === productID);
+  // Data from previous screen:
+  const {
+    fridgeName,
+    productID,
+    productName,
+    productProducer,
+    productBarcode,
+    productExpirationDate,
+  } = route.params;
+
+  // Queries:
+  const [editProductQuery, { isLoading: isEditLoading }] =
+    useEditFridgeProductMutation();
+  const [deleteProductQuery] = useDeleteFridgeProductMutation();
+  const [productQuery, product] = useLazyProductQuery();
+
+  // Open Food Facts stuff:
+  const [productWithBarcode, setProductWithBarcode] = useState(null);
+  useEffect(() => {
+    if (product.isSuccess) {
+      setProductWithBarcode(product.data?.product);
+    }
+    if (product.isError) {
+      displayToast('Unable to get product details');
+    }
+  }, [product.isSuccess, product.isError]);
+  useEffect(() => {
+    if (productWithBarcode == null && !!productBarcode) {
+      productQuery(productBarcode);
+    }
+  }, []);
 
   // Form states:
   const { control, handleSubmit, setFocus, setValue, reset } = useForm({
     defaultValues: {
-      name: product.name,
-      producer: product.producer,
-      expirationDate: product.expirationDate,
+      name: productName,
+      producer: productProducer,
+      expiration: productExpirationDate,
     },
   });
   const rules = {
     name: {
       required: 'Name is required',
     },
-    expirationDate: {
+    expiration: {
       pattern: {
         value: /^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.\d{4}$/,
         message: 'Invalid date format',
@@ -45,59 +78,64 @@ const ProductDetails = ({ route, navigation }) => {
     },
   };
 
-  // Deleting fridge:
+  // Deleting product from fridge:
   const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
     useState(false);
   const confirmRemoveProduct = () => {
-    // TODO: Send request to API and wait for removing product from the fridge
-    console.log(
-      `Product #${productID} has been deleted from fridge #${fridgeID}`
-    );
-
-    // Hide dialog and go back:
-    setDeleteProductDialogVisible(false);
-    navigation.pop();
+    deleteProductQuery(productID)
+      .unwrap()
+      .then(() => {
+        displayToast('Product deleted');
+        setDeleteProductDialogVisible(false);
+        navigation.pop();
+      })
+      .catch((error) =>
+        displayToast(error.data?.non_field_errors || 'Unable to delete product')
+      );
   };
-  const cancelRemoveProduct = () => {
-    // Hide dialog:
-    setDeleteProductDialogVisible(false);
-  };
+  const cancelRemoveProduct = () => setDeleteProductDialogVisible(false);
 
   // Changing product's expiration date:
   const [changeExpDateDialogVisible, setChangeExpDateDialogVisible] =
     useState(false);
   const confirmChangeExpDate = (data) => {
-    // TODO: Send request to API and wait for changing expiration date
-    console.log(
-      `Product #${productID}'s expiration date has been changed from ${product.expirationDate} to ${data.expirationDate}`
-    );
-
-    // Hide dialog and go back:
-    setChangeExpDateDialogVisible(false);
-    navigation.pop();
+    editProductQuery({
+      id: productID,
+      expiration: dateFromFrontToBack(data.expiration),
+    })
+      .unwrap()
+      .then(() => {
+        displayToast('Expiration date changed');
+        setChangeExpDateDialogVisible(false);
+      })
+      .catch((error) =>
+        displayToast(
+          error.data?.non_field_errors || 'Unable to change expiration date'
+        )
+      );
   };
   const cancelChangeExpDate = () => {
-    // Hide dialog:
     setChangeExpDateDialogVisible(false);
     reset();
   };
 
   // Submitting form:
   const editProduct = (data) => {
-    // TODO: Send request to API to edit product
-    if (data.name !== product.name || data.producer !== product.producer)
-      console.log(
-        `Product ${JSON.stringify({
-          name: product.name,
-          producer: product.producer,
-        })} has been updated to ${JSON.stringify({
-          name: data.name,
-          producer: data.producer,
-        })}`
+    editProductQuery({
+      id: productID,
+      name: data.name,
+      producer: data.producer,
+    })
+      .unwrap()
+      .then(() => {
+        displayToast('Product details changed');
+        navigation.goBack();
+      })
+      .catch((error) =>
+        displayToast(
+          error.data?.non_field_errors || 'Unable to edit product details'
+        )
       );
-
-    // Go back:
-    navigation.goBack();
   };
 
   // Helper function for retrieving friendly date from datePicker:
@@ -107,75 +145,59 @@ const ProductDetails = ({ route, navigation }) => {
   // Changing expiration date:
   const [date, setDate] = useState(new Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
-  const onDateChange = (event, selectedDate) => {
+  const onDateChange = (_, selectedDate) => {
     // Hide calendar:
     setDatepickerVisible(false);
 
     // Retrieve date:
     if (selectedDate !== undefined) {
       setDate(selectedDate);
-      setValue('expirationDate', dateToString(selectedDate));
+      setValue('expiration', dateToString(selectedDate));
     } else {
       setDate(new Date());
-      setValue('expirationDate', '');
+      setValue('expiration', '');
     }
 
-    // TODO: Make sure that it works on iOS devices
+    // TODO: Fix it on iOS devices
   };
 
   return (
     <View style={styles.container}>
       <AppBar
         icon1={time}
+        onPressIcon1={() => setChangeExpDateDialogVisible(true)}
         icon2={deleteIcon}
-        onPressIcon1={() => {
-          // Open dialog responsible for changing expiration date
-          setChangeExpDateDialogVisible(true);
-        }}
-        onPressIcon2={() => {
-          // Open dialog responsible for deleting product
-          setDeleteProductDialogVisible(true);
-        }}
+        onPressIcon2={() => setDeleteProductDialogVisible(true)}
       />
 
       {/* Rendering appropriate content: details for products with barcodes, 
           editable input fields for other ones */}
-      {product.barcode ? (
-        <ScrollViewLayout addPadding={false}>
+      {!!productBarcode && productWithBarcode == null && <LoadingOverlay />}
+      {!!productBarcode && productWithBarcode != null && (
+        <ScrollView>
           {/* Basic information */}
           <View style={styles.basicInfoContainer}>
             <View style={styles.imageContainer}>
-              <Image source={{ uri: product.image }} style={styles.image} />
+              <Image
+                source={{ uri: productWithBarcode.image_front_small_url }}
+                style={styles.image}
+              />
             </View>
             <View style={styles.textsContainer}>
-              <Text style={styles.name}>{product.name}</Text>
-              <Text style={styles.producer}>{product.producer}</Text>
-              <Text style={styles.quantity}>
-                {product.maxQuantity} {product.quantityType}
-              </Text>
+              <Text style={styles.name}>{productWithBarcode.product_name}</Text>
+              <Text style={styles.producer}>{productWithBarcode.brands}</Text>
+              <Text style={styles.quantity}>{productWithBarcode.quantity}</Text>
             </View>
           </View>
           <Divider />
 
           {/* Rating */}
           <ScoresContainer
-            novaScore={product.nova}
-            nutriScore={product.nutri}
+            novaScore={productWithBarcode.nova_groups}
+            nutriScore={productWithBarcode.nutriscore_grade}
             containerStyle={styles.ratingContainer}
             iconStyle={styles.icon}
           />
-          <Divider />
-
-          {/* Additives */}
-          <View style={styles.additivesContainer}>
-            <Text style={styles.additivesTitle}>Additives</Text>
-            {product.additives.map((element) => (
-              <Text key={element.code} style={styles.additivesRow}>
-                {'   '}•{'   '}
-                {element.code} - {element.description}
-              </Text>
-            ))}
-          </View>
           <Divider />
 
           {/* Nutrients */}
@@ -186,17 +208,23 @@ const ProductDetails = ({ route, navigation }) => {
             </View>
             <Divider />
             {[
-              ['Energy (kJ)', `${product.nutritions.energy} kJ`],
-              ['Fat', `${product.nutritions.fat} g`],
+              ['Energy (kJ)', `${productWithBarcode.nutriments.energy} kJ`],
+              ['Fat', `${productWithBarcode.nutriments.fat} g`],
               [
                 '   •   Saturated fat',
-                `${product.nutritions['saturated-fat']} g`,
+                `${productWithBarcode.nutriments['saturated-fat']} g`,
               ],
-              ['Carbohydrates', `${product.nutritions.carbohydrates} g`],
-              ['   •   Sugars', `${product.nutritions.sugars} g`],
-              ['Proteins', `${product.nutritions['saturated-fat']} g`],
-              ['Salt', `${product.nutritions.salt} g`],
-              ['   •   Sodium', `${product.nutritions.sodium} g`],
+              [
+                'Carbohydrates',
+                `${productWithBarcode.nutriments.carbohydrates} g`,
+              ],
+              ['   •   Sugars', `${productWithBarcode.nutriments.sugars} g`],
+              [
+                'Proteins',
+                `${productWithBarcode.nutriments['saturated-fat']} g`,
+              ],
+              ['Salt', `${productWithBarcode.nutriments.salt} g`],
+              ['   •   Sodium', `${productWithBarcode.nutriments.sodium} g`],
             ].map((element) => (
               <View key={element[0]}>
                 <View style={styles.nutrientRow}>
@@ -207,8 +235,10 @@ const ProductDetails = ({ route, navigation }) => {
               </View>
             ))}
           </View>
-        </ScrollViewLayout>
-      ) : (
+        </ScrollView>
+      )}
+
+      {!productBarcode && (
         <View style={styles.noBarcodeContainer}>
           {/* Providing data */}
           <InputField
@@ -226,7 +256,7 @@ const ProductDetails = ({ route, navigation }) => {
             control={control}
             rules={rules.producer}
             name='producer'
-            label='Producer'
+            label='Producer (optional)'
             variant='data'
             returnKeyType='next'
             placeholder='Enter producer name'
@@ -238,6 +268,7 @@ const ProductDetails = ({ route, navigation }) => {
             onPress={handleSubmit(editProduct)}
             centered
             confirm
+            isLoading={!changeExpDateDialogVisible && isEditLoading}
           />
         </View>
       )}
@@ -245,7 +276,7 @@ const ProductDetails = ({ route, navigation }) => {
       {/* Deleting product from fridge */}
       <Dialog
         title='Delete product'
-        paragraph={`Are you sure you want to delete product ${product.name} from fridge ${fridgeName}? This action cannot be undone.`}
+        paragraph={`Are you sure you want to delete product ${productName} from fridge ${fridgeName}? This action cannot be undone.`}
         visibilityState={[
           deleteProductDialogVisible,
           setDeleteProductDialogVisible,
@@ -272,13 +303,11 @@ const ProductDetails = ({ route, navigation }) => {
         <View style={styles.calendarFieldContainer}>
           <InputField
             control={control}
-            rules={rules.expirationDate}
-            name='expirationDate'
+            rules={rules.expiration}
+            name='expiration'
             variant='data'
             icon={calendar}
-            onIconPress={() => {
-              setDatepickerVisible(true);
-            }}
+            onIconPress={() => setDatepickerVisible(true)}
             placeholder='dd.MM.rrrr'
             returnKeyType='done'
             keyboardType='numeric'

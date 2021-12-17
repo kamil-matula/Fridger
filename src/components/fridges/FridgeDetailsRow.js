@@ -4,7 +4,7 @@ import { View, Text, Image } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from 'utils';
+import { makeStyles, dateFromBackToFront } from 'utils';
 import { reduce } from 'assets/icons';
 
 const FridgeDetailsRow = ({ product, onPressIcon, onPressRow }) => {
@@ -22,16 +22,16 @@ const FridgeDetailsRow = ({ product, onPressIcon, onPressRow }) => {
         </View>
         <View style={styles.textsContainer}>
           <Text style={styles.name}>{product.name}</Text>
-          {product.producer && (
-            <Text style={styles.producer}>{product.producer}</Text>
+          {product.producer_name !== '' && (
+            <Text style={styles.producer}>{product.producer_name}</Text>
           )}
           <Text style={styles.quantity}>
-            {product.currentQuantity} / {product.maxQuantity}{' '}
-            {product.quantityType}
+            {product.quantity_left} / {product.quantity_base}{' '}
+            {product.quantity_type.toLowerCase()}
           </Text>
-          {product.expirationDate && (
+          {product.expiration_date && (
             <Text style={styles.expirationDate}>
-              expiration date: {product.expirationDate}
+              expiration date: {dateFromBackToFront(product.expiration_date)}
             </Text>
           )}
         </View>

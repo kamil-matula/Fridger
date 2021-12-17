@@ -18,7 +18,7 @@ import { ProductInfo } from 'components/fridges';
 import { makeStyles } from 'utils';
 import { edit, calendar } from 'assets/icons';
 
-import { useLazyProductQuery } from 'services/openFoodFacts/product';
+import { useLazyProductQuery } from 'services/openFoodFacts/openFoodFactsApi';
 
 const AddProductAutomat = ({ navigation }) => {
   const styles = useStyles();
@@ -27,7 +27,19 @@ const AddProductAutomat = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
+  // Details from Open Food Facts API:
   const [productQuery, product] = useLazyProductQuery();
+  useEffect(() => {
+    if (product.isSuccess) {
+      console.log('RECEIVED:');
+      console.log(product);
+      if (!product.data?.product)
+        displayToast("Sorry! This product doesn't exist in the database");
+    }
+    if (product.isError) {
+      displayToast('Unable to get product details');
+    }
+  }, [product.isSuccess, product.isError]);
 
   // Requesting camera permission on launch:
   useEffect(() => {
@@ -39,7 +51,8 @@ const AddProductAutomat = ({ navigation }) => {
 
   // Handling with data from barcode:
   const handleBarCodeScanned = ({ data }) => {
-    // Update state:
+    console.log('SCANNED:');
+    console.log(data);
     setScanned(true);
     productQuery(data);
   };
@@ -80,7 +93,7 @@ const AddProductAutomat = ({ navigation }) => {
       setValue('expiration', '');
     }
 
-    // TODO: Make sure that it works on iOS devices
+    // TODO: Fix it on iOS
   };
 
   // Helper function for retrieving friendly date from datePicker:
@@ -107,9 +120,7 @@ const AddProductAutomat = ({ navigation }) => {
       <AppBar
         label='Add product'
         icon1={edit}
-        onPressIcon1={() => {
-          navigation.replace('AddProductManual');
-        }}
+        onPressIcon1={() => navigation.replace('AddProductManual')}
       />
 
       {/* TODO: Add possibility to request permissions once again by clicking the label */}
@@ -178,9 +189,7 @@ const AddProductAutomat = ({ navigation }) => {
               keyboardType='numeric'
               placeholder='dd.MM.rrrr'
               icon={calendar}
-              onIconPress={() => {
-                setDatepickerVisible(true);
-              }}
+              onIconPress={() => setDatepickerVisible(true)}
             />
           </View>
         </View>
