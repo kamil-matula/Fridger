@@ -12,28 +12,37 @@ import {
   FloatingActionButton,
   Dialog,
 } from 'components';
-import { makeStyles } from 'utils';
+import { makeStyles, displayToast } from 'utils';
 import { deleteIcon, expand, check } from 'assets/icons';
-import { shoppingListItems } from 'tmpData';
+import { unitFromFrontToBack, unitFromBackToFront } from 'utils/dataConverting';
+
+import {
+  useAddShoppingListProductMutation,
+  useEditShoppingListProductMutation,
+  useDeleteShoppingListProductMutation,
+} from 'services/fridger/shoppingListProducts';
 
 const AddShoppingListProduct = ({ route, navigation }) => {
   const styles = useStyles();
+  const { mode } = route.params;
+  const { product } = route.params;
 
-  // Product identifying:
-  const product = route.params
-    ? shoppingListItems.find((e) => e.id === route.params.productID)
-    : null;
-  const mode = product ? 'edit' : 'add';
+  const addProductQuery = useAddShoppingListProductMutation()[0];
+  const editProductQuery = useEditShoppingListProductMutation()[0];
+  const deleteProductQuery = useDeleteShoppingListProductMutation()[0];
 
   // Form states:
-  const { control, handleSubmit, setFocus, setValue, reset, watch } = useForm({
-    defaultValues: {
-      name: product ? product.name : '',
-      quantity: product ? product.quantity.toString() : '',
-      unit: product ? product.unit : 'pcs',
-      note: product ? product.note ?? '' : '',
-    },
-  });
+  const { control, handleSubmit, setFocus, setValue, setError, watch } =
+    useForm({
+      defaultValues: {
+        name: product?.name || '',
+        quantity: product?.quantity.toString() || '',
+        unit: product?.quantity_type
+          ? unitFromBackToFront(product?.quantity_type)
+          : 'pcs',
+        note: product?.note || '',
+      },
+    });
   const rules = {
     name: {
       required: 'Name is required',
@@ -44,6 +53,50 @@ const AddShoppingListProduct = ({ route, navigation }) => {
     unit: {
       required: 'Unit is required',
     },
+  };
+
+  const errorHandler = (error, text) => {
+    const nameError = error.data?.name;
+    const noteError = error.data?.note;
+    const quantityError = error.data?.quantity;
+    const quantityTypeError = error.data?.quantity_type;
+    const nonFieldErrors = error.data?.non_field_errors;
+
+    console.log(error);
+
+    if (nameError) {
+      setError('name', { type: 'server', message: nameError.join(' ') });
+    }
+    if (noteError) {
+      setError('note', {
+        type: 'server',
+        message: noteError.join(' '),
+      });
+    }
+    if (quantityError) {
+      setError('quantity', {
+        type: 'server',
+        message: quantityError.join(' '),
+      });
+    }
+    if (quantityTypeError) {
+      setError('unit', {
+        type: 'server',
+        message: quantityTypeError.join(' '),
+      });
+    }
+    if (nonFieldErrors) {
+      displayToast(nonFieldErrors.join(' '));
+    }
+    if (
+      !nameError &&
+      !noteError &&
+      !quantityError &&
+      !quantityTypeError &&
+      !nonFieldErrors
+    ) {
+      displayToast(text);
+    }
   };
 
   // Bottom sheet with quantity types:
@@ -64,45 +117,51 @@ const AddShoppingListProduct = ({ route, navigation }) => {
 
   // Submitting form:
   const addProduct = (data) => {
-    // TODO: Send request to API to add product to shopping list
-    console.log(`Product ${JSON.stringify(data)} added to shopping list`);
-
-    // Reset states:
-    reset({
-      name: '',
-      producer: '',
-      quantity: '',
-      unit: 'pcs',
-    });
-
-    // Go back:
-    navigation.goBack();
+    addProductQuery({
+      shoppingList: route.params.shoppingListID,
+      name: data.name,
+      note: data.note,
+      quantity: data.quantity,
+      quantityType: unitFromFrontToBack(data.unit),
+    })
+      .unwrap()
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch((error) => {
+        errorHandler(error, 'Unable to add product');
+      });
   };
   const editProduct = (data) => {
-    // TODO: Send request to API to edit shopping list's product
-    console.log(`Product has been changed to ${JSON.stringify(data)}`);
-
-    // Reset states:
-    reset({
-      name: '',
-      producer: '',
-      quantity: '',
-      unit: 'pcs',
-    });
-
-    // Go back:
-    navigation.goBack();
+    editProductQuery({
+      productId: product.id,
+      name: data.name,
+      note: data.note,
+      quantity: data.quantity,
+      quantityType: unitFromFrontToBack(data.unit),
+    })
+      .unwrap()
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch((error) => {
+        errorHandler(error, 'Unable to edit product');
+      });
   };
 
   // Deleting product:
   const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
     useState(false);
   const confirmRemoveProduct = () => {
-    // TODO: Send request to API and wait for removing fridge from the list
-
-    // Hide dialog and go back:
-    setDeleteProductDialogVisible(false);
-    navigation.pop();
+    deleteProductQuery({ id: product.id })
+      .unwrap()
+      .then(() => {
+        setDeleteProductDialogVisible(false);
+        navigation.goBack();
+      })
+      .catch((error) => {
+        errorHandler(error, 'Unable to delete product');
+      });
   };
   const cancelRemoveProduct = () => setDeleteProductDialogVisible(false);
 
@@ -234,20 +293,18 @@ const AddShoppingListProduct = ({ route, navigation }) => {
       )}
 
       {/* Deleting product */}
-      {product && (
-        <Dialog
-          title='Delete product'
-          paragraph={`Are you sure you want to delete ${product.name} from this shopping list? This action cannot be undone.`}
-          visibilityState={[
-            deleteProductDialogVisible,
-            setDeleteProductDialogVisible,
-          ]}
-          label1='delete'
-          onPressLabel1={confirmRemoveProduct}
-          label2='cancel'
-          onPressLabel2={cancelRemoveProduct}
-        />
-      )}
+      <Dialog
+        title='Delete product'
+        paragraph={`Are you sure you want to delete ${product?.name} from this shopping list? This action cannot be undone.`}
+        visibilityState={[
+          deleteProductDialogVisible,
+          setDeleteProductDialogVisible,
+        ]}
+        label1='delete'
+        onPressLabel1={confirmRemoveProduct}
+        label2='cancel'
+        onPressLabel2={cancelRemoveProduct}
+      />
     </View>
   );
 };

@@ -1,62 +1,70 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { View, ScrollView } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { Separator } from 'components';
+import { LoadingOverlay, Separator } from 'components';
 import { ShoppingListItem } from 'components/shoppingLists';
+import {
+  unitFromBackToFront,
+  quantityFromBackToFront,
+} from 'utils/dataConverting';
 import { makeStyles } from 'utils';
-import { shoppingListItems } from 'tmpData';
 
-const ShoppingListAll = ({ navigation }) => {
+import {
+  useShoppingListAllProductsQuery,
+  // useEditShoppingListProductMutation,
+} from 'services/fridger/shoppingListProducts';
+
+const ShoppingListAll = ({ route, navigation }) => {
   const styles = useStyles();
 
-  // eslint-disable-next-line no-unused-vars
-  const [mode, setMode] = useState('edit');
+  const shoppingListProducts = useShoppingListAllProductsQuery({
+    id: route.params.shoppingListID,
+  });
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        {/* List of clickable items */}
-        {shoppingListItems.map(
-          (
-            { id, avatarURI, name, note, quantity, unit, price, status },
-            idx
-          ) => (
+      {shoppingListProducts.isLoading ? (
+        <LoadingOverlay />
+      ) : (
+        <ScrollView>
+          {shoppingListProducts.data.map((product) => (
             <TouchableRipple
-              key={idx}
+              key={product.id}
               onPress={() => {
-                // Standard mode: Click to edit product
-                if (mode === 'edit') {
-                  navigation.navigate('AddShoppingListProduct', {
-                    productID: id,
-                  });
-                }
-
-                // Mode available only in shared lists: Click to reserve product
-                if (mode === 'dips') {
-                  // TODO: Add possibility to reserve a product.
-                  // NOTE: The avatars should be replaced with custom checkboxes if this mode is on.
-                }
+                navigation.navigate('AddShoppingListProduct', {
+                  shoppingListID: route.params.shoppingListID,
+                  product,
+                  mode: 'edit',
+                });
               }}
             >
               <ShoppingListItem
-                avatarURI={status !== 'unchecked' ? avatarURI : null}
-                text={name}
-                subText={
-                  note
-                    ? `${quantity} ${unit}  •  ${note}`
-                    : `${quantity} ${unit}`
+                avatarURI={
+                  product.status !== 'FREE' ? product.created_by.avatar : null
                 }
-                boxText={status === 'checked' ? `${price} PLN` : null}
+                text={product.name}
+                subText={
+                  product.note
+                    ? `${quantityFromBackToFront(
+                        product.quantity
+                      )} ${unitFromBackToFront(product.quantity_type)}  •  ${
+                        product.note
+                      }`
+                    : `${quantityFromBackToFront(
+                        product.quantity
+                      )} ${unitFromBackToFront(product.quantity_type)}`
+                }
+                // boxText={`PLN`}
               />
             </TouchableRipple>
-          )
-        )}
+          ))}
 
-        {/* Space for FAB */}
-        <Separator height={80} />
-      </ScrollView>
+          {/* Space for FAB */}
+          <Separator height={80} />
+        </ScrollView>
+      )}
     </View>
   );
 };

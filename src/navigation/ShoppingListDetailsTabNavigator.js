@@ -12,7 +12,11 @@ import {
 import { makeStyles } from 'utils';
 
 const ShoppingListTab = createMaterialTopTabNavigator();
-const ShoppingListDetailsTabNavigator = ({ isShared, setFabVisible }) => {
+const ShoppingListDetailsTabNavigator = ({
+  isShared,
+  shoppingListID,
+  setFabVisible,
+}) => {
   const styles = useStyles();
   const { colors } = useTheme();
 
@@ -43,20 +47,27 @@ const ShoppingListDetailsTabNavigator = ({ isShared, setFabVisible }) => {
       {isShared && (
         <ShoppingListTab.Screen
           name='All Products'
+          initialParams={{ shoppingListID }}
           component={ShoppingListAll}
         />
       )}
       <ShoppingListTab.Screen
         name='Your Products'
+        initialParams={{ shoppingListID }}
         component={ShoppingListYour}
       />
-      <ShoppingListTab.Screen name='Summary' component={ShoppingListSummary} />
+      <ShoppingListTab.Screen
+        name='Summary'
+        initialParams={{ shoppingListID }}
+        component={ShoppingListSummary}
+      />
     </ShoppingListTab.Navigator>
   );
 };
 
 ShoppingListDetailsTabNavigator.propTypes = {
   isShared: PropTypes.bool.isRequired,
+  shoppingListID: PropTypes.string.isRequired,
   setFabVisible: PropTypes.func.isRequired,
 };
 

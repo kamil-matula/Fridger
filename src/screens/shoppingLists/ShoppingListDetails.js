@@ -89,6 +89,7 @@ const ShoppingListDetails = ({ route, navigation }) => {
           {/* Tabs */}
           <ShoppingListDetailsTabNavigator
             isShared={shoppingList.data.is_shared}
+            shoppingListID={route.params.shoppingListID}
             setFabVisible={setFabVisible}
           />
 
@@ -97,7 +98,12 @@ const ShoppingListDetails = ({ route, navigation }) => {
 
           {/* Adding new product */}
           <FloatingActionButton
-            onPress={() => navigation.navigate('AddShoppingListProduct')}
+            onPress={() => {
+              navigation.navigate('AddShoppingListProduct', {
+                shoppingListID: route.params.shoppingListID,
+                mode: 'add',
+              });
+            }}
             visible={fabVisible}
             isBottomNavigationBar
           />

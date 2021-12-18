@@ -16,3 +16,6 @@ export const reasonFromFrontToBack = (reasonFromFront) => {
   if (reasonFromFront === 'disappeared') return 'UNTRACKED';
   return '';
 };
+
+export const quantityFromBackToFront = (quantityFromBack) =>
+  parseFloat(quantityFromBack);
