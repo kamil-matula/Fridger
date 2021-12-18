@@ -14,7 +14,11 @@ import {
 } from 'components';
 import { makeStyles, displayToast } from 'utils';
 import { deleteIcon, expand, check } from 'assets/icons';
-import { unitFromFrontToBack, unitFromBackToFront } from 'utils/dataConverting';
+import {
+  unitFromFrontToBack,
+  unitFromBackToFront,
+  quantityFromBackToFront,
+} from 'utils/dataConverting';
 
 import {
   useAddShoppingListProductMutation,
@@ -36,7 +40,9 @@ const AddShoppingListProduct = ({ route, navigation }) => {
     useForm({
       defaultValues: {
         name: product?.name || '',
-        quantity: product?.quantity.toString() || '',
+        quantity: product?.quantity
+          ? quantityFromBackToFront(product?.quantity).toString()
+          : '',
         unit: product?.quantity_type
           ? unitFromBackToFront(product?.quantity_type)
           : 'pcs',

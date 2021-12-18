@@ -9,12 +9,13 @@ import {
   unitFromBackToFront,
   quantityFromBackToFront,
 } from 'utils/dataConverting';
-import { makeStyles } from 'utils';
+import { displayToast, makeStyles } from 'utils';
 
 import {
   useShoppingListAllProductsQuery,
-  // useEditShoppingListProductMutation,
+  useEditShoppingListProductMutation,
 } from 'services/fridger/shoppingListProducts';
+import { useUserInfoQuery } from 'services/fridger/user';
 
 const ShoppingListAll = ({ route, navigation }) => {
   const styles = useStyles();
@@ -22,10 +23,19 @@ const ShoppingListAll = ({ route, navigation }) => {
   const shoppingListProducts = useShoppingListAllProductsQuery({
     id: route.params.shoppingListID,
   });
+  const editShoppingListProductQuery = useEditShoppingListProductMutation()[0];
+  const user = useUserInfoQuery();
+
+  const dips = ({ id, status }) => {
+    editShoppingListProductQuery({
+      productId: id,
+      status: status === 'FREE' ? 'TAKER' : 'FREE',
+    });
+  };
 
   return (
     <View style={styles.container}>
-      {shoppingListProducts.isLoading ? (
+      {shoppingListProducts.isLoading || user.isLoading ? (
         <LoadingOverlay />
       ) : (
         <ScrollView>
@@ -33,11 +43,15 @@ const ShoppingListAll = ({ route, navigation }) => {
             <TouchableRipple
               key={product.id}
               onPress={() => {
-                navigation.navigate('AddShoppingListProduct', {
-                  shoppingListID: route.params.shoppingListID,
-                  product,
-                  mode: 'edit',
-                });
+                if (product.created_by.username === user.data.username) {
+                  navigation.navigate('AddShoppingListProduct', {
+                    shoppingListID: route.params.shoppingListID,
+                    product,
+                    mode: 'edit',
+                  });
+                } else {
+                  displayToast('Can not edit. Product is taken');
+                }
               }}
             >
               <ShoppingListItem
@@ -56,7 +70,11 @@ const ShoppingListAll = ({ route, navigation }) => {
                         product.quantity
                       )} ${unitFromBackToFront(product.quantity_type)}`
                 }
-                // boxText={`PLN`}
+                onPressIcon={() => dips(product)}
+                showHand={
+                  product.status === 'FREE' ||
+                  product.created_by.username === user.data.username
+                }
               />
             </TouchableRipple>
           ))}
