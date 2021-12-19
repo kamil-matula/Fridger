@@ -23,19 +23,15 @@ import DeleteShoppingList from 'dialogs/DeleteShoppingList';
 const ShoppingListDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
-  // Shopping list identifying
+  // Queries:
   const { data: shoppingList, isLoading } = useSpecificShoppingListQuery(
     route.params.shoppingListID
   );
   const editShoppingListName = useEditShoppingListNameMutation()[0];
 
-  // FAB & Tabs conditions:
+  // Visibility conditions:
   const [fabVisible, setFabVisible] = useState(true);
-
-  // Deleting:
   const [deletingDialogVisible, setDeletingDialogVisible] = useState(false);
-
-  // Shopping List Actions:
   const bottomSheet = useRef(null);
 
   return (

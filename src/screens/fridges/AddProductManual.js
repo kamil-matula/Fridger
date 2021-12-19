@@ -100,7 +100,9 @@ const AddProductManual = ({ navigation, route }) => {
       <AppBar
         label='Add product'
         icon1={scanner}
-        onPressIcon1={() => navigation.replace('AddProductAutomat')}
+        onPressIcon1={() =>
+          navigation.replace('AddProductAutomat', { fridgeID })
+        }
       />
 
       {/* Providing data */}
