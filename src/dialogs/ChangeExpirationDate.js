@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { View } from 'react-native';
+import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
 import { Dialog, InputField, DatePicker } from 'components';
@@ -15,7 +16,7 @@ const ChangeExpirationDate = ({
   expiration,
 }) => {
   // Form states:
-  const { control, handleSubmit, reset } = useForm({
+  const { control, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
       expiration,
     },

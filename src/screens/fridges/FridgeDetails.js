@@ -45,7 +45,7 @@ const FridgeDetails = ({ route, navigation }) => {
   };
   const displaySortIcon = (category) => {
     if (sortingCategoryName === category)
-      return sortingDirection === '' ? up : down;
+      return sortingDirection === '' ? down : up;
     return null;
   };
 
@@ -64,15 +64,7 @@ const FridgeDetails = ({ route, navigation }) => {
 
   // Reducing quantity:
   const [reduceQuantityItem, setReduceQuantityItem] = useState(null);
-  const reduceQuantityOpen = (item) => {
-    setReduceQuantityItem({
-      id: item.id,
-      name: item.name,
-      currentQuantity: item.quantity_left,
-      maxQuantity: quantity_base,
-      unit: item.quantity_type,
-    });
-  };
+  const reduceQuantityOpen = (item) => setReduceQuantityItem(item);
 
   // Other actions:
   const refFridgeActions = useRef(null);
@@ -99,7 +91,7 @@ const FridgeDetails = ({ route, navigation }) => {
             }
           </Text>
           <Image
-            source={sortingDirection === '' ? up : down}
+            source={sortingDirection === '' ? down : up}
             style={styles.icon}
           />
         </View>

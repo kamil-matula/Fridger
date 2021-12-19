@@ -32,7 +32,7 @@ const Friends = ({ navigation }) => {
 
   // Prepare to remove friend:
   const [relationshipToRemove, setRelationshipToRemove] = useState(null);
-  const [dialogVisible, setDialogVisible] = useState(null);
+  const [dialogVisible, setDialogVisible] = useState(false);
   const prepareToRemove = (relationship) => {
     setRelationshipToRemove(relationship);
     setDialogVisible(true);
@@ -51,7 +51,7 @@ const Friends = ({ navigation }) => {
 
   // Reject invitation:
   const [rejectedInvitationID, setRejectedInvitationID] = useState(null);
-  const [snackbarVisible, setSnackbarVisible] = useState(null);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [rejectCanceled, setRejectCanceled] = useMemo(() => {
     let state = false;
     return [

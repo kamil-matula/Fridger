@@ -116,7 +116,7 @@ const EditPermissions = ({
   };
 
   // Removing friend from list - preparation:
-  const [dialogVisible, setDialogVisible] = useState(null);
+  const [dialogVisible, setDialogVisible] = useState(false);
   const [toRemove, setToRemove] = useState(null);
   const prepareToRemove = (friend) => {
     // Display dialog with appropriate data:
