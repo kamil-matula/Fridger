@@ -3,16 +3,16 @@ import React, { useState, useRef } from 'react';
 import { View } from 'react-native';
 
 import {
-  AppBar,
   FloatingActionButton,
   BottomSheet,
   SheetRow,
   Dialog,
   Separator,
   LoadingOverlay,
+  AppBarRenamer,
 } from 'components';
 import { displayToast, makeStyles } from 'utils';
-import { more, group, groupAdd, deleteIcon } from 'assets/icons';
+import { group, groupAdd, deleteIcon } from 'assets/icons';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
 
 import {
@@ -22,8 +22,10 @@ import {
 } from 'services/fridger/shoppingLists';
 
 const ShoppingListDetails = ({ route, navigation }) => {
+  const styles = useStyles();
+
   // Shopping list identifying
-  const shoppingList = useSpecificShoppingListQuery(
+  const { data: shoppingList, isLoading } = useSpecificShoppingListQuery(
     route.params.shoppingListID
   );
   const deleteShoppingList = useDeleteShoppingListMutation()[0];
@@ -31,25 +33,6 @@ const ShoppingListDetails = ({ route, navigation }) => {
 
   // FAB & Tabs conditions:
   const [fabVisible, setFabVisible] = useState(true);
-
-  // Rename shopping list
-  const renameShoppingList = (newName) => {
-    editShoppingListName({
-      id: route.params.shoppingListID,
-      name: newName,
-    })
-      .unwrap()
-      .then(() => displayToast('Shopping list renamed'))
-      .catch((error) => {
-        if (error.data?.name) displayToast('Invalid name');
-        else
-          displayToast(
-            error.data?.non_field_errors || 'Unable to rename shopping list'
-          );
-
-        // TODO: Reset appbar's value
-      });
-  };
 
   // Deleting:
   const [deleteShoppingListDialogVisible, setDeleteShoppingListDialogVisible] =
@@ -70,25 +53,24 @@ const ShoppingListDetails = ({ route, navigation }) => {
   // Shopping List Actions:
   const bottomSheet = useRef(null);
 
-  const styles = useStyles();
-
   return (
     <View style={styles.container}>
-      {shoppingList.isLoading ? (
+      {isLoading ? (
         <LoadingOverlay />
       ) : (
         <>
-          <AppBar
-            label={shoppingList.data.name}
-            icon1={more}
-            onPressIcon1={() => bottomSheet.current.open()}
-            onSubmitEditing={renameShoppingList}
-            editable
+          <AppBarRenamer
+            label={shoppingList?.name}
+            onPressIcon={() => bottomSheet.current.open()}
+            query={editShoppingListName}
+            confirmMessage='Shopping list renamed'
+            errorMessage='Unable to rename shopping list'
+            containerID={shoppingList?.id}
           />
 
           {/* Tabs */}
           <ShoppingListDetailsTabNavigator
-            isShared={shoppingList.data.is_shared}
+            isShared={shoppingList.is_shared}
             setFabVisible={setFabVisible}
           />
 
@@ -111,8 +93,8 @@ const ShoppingListDetails = ({ route, navigation }) => {
                 // Hide bottom sheet and change screen:
                 bottomSheet.current.close();
                 navigation.navigate('ShareShoppingList', {
-                  containerID: shoppingList.data.id,
-                  containerName: shoppingList.data.name,
+                  containerID: shoppingList.id,
+                  containerName: shoppingList.name,
                 });
               }}
             />
@@ -123,8 +105,8 @@ const ShoppingListDetails = ({ route, navigation }) => {
                 // Hide bottom sheet and change screen:
                 bottomSheet.current.close();
                 navigation.navigate('EditPermissionsShoppingList', {
-                  containerID: shoppingList.data.id,
-                  containerName: shoppingList.data.name,
+                  containerID: shoppingList.id,
+                  containerName: shoppingList.name,
                 });
               }}
             />
@@ -142,7 +124,7 @@ const ShoppingListDetails = ({ route, navigation }) => {
           {/* Deleting shopping list */}
           <Dialog
             title='Delete shopping list'
-            paragraph={`Are you sure you want to delete shopping list ${shoppingList.data.name}? This action cannot be undone.`}
+            paragraph={`Are you sure you want to delete shopping list ${shoppingList.name}? This action cannot be undone.`}
             visibilityState={[
               deleteShoppingListDialogVisible,
               setDeleteShoppingListDialogVisible,

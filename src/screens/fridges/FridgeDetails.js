@@ -1,27 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { FlatList, View, Text, Image } from 'react-native';
 import { Divider, TouchableRipple } from 'react-native-paper';
 
 import {
-  AppBar,
   FloatingActionButton,
   BottomSheet,
   SheetRow,
   Separator,
   LoadingOverlay,
+  AppBarRenamer,
 } from 'components';
 import { FridgeDetailsRow } from 'components/fridges';
-import { makeStyles, displayToast } from 'utils';
-import {
-  group,
-  groupAdd,
-  deleteIcon,
-  logout,
-  more,
-  down,
-  up,
-} from 'assets/icons';
+import { makeStyles } from 'utils';
+import { group, groupAdd, deleteIcon, logout, down, up } from 'assets/icons';
 import {
   useEditFridgeNameMutation,
   useSpecificFridgeQuery,
@@ -67,30 +59,8 @@ const FridgeDetails = ({ route, navigation }) => {
     });
   const [editFridgeNameQuery] = useEditFridgeNameMutation();
 
-  // Dialog states:
+  // Deleting fridge:
   const [deletingDialogVisible, setDeletingDialogVisible] = useState(false);
-
-  // Renaming:
-  const [fridgeName, setFridgeName] = useState('');
-  useEffect(() => {
-    if (fridge) setFridgeName(fridge.name);
-  }, [fridge]);
-  const editFridgeName = (name) => {
-    editFridgeNameQuery({ id: fridgeID, name })
-      .unwrap()
-      .then(() => displayToast('Fridge renamed'))
-      .catch((error) => {
-        if (error.data?.name) displayToast('Invalid name');
-        else
-          displayToast(
-            error.data?.non_field_errors || 'Unable to rename fridge'
-          );
-
-        // Rebuild appbar:
-        setFridgeName(`${fridge.name} `);
-        setFridgeName(fridge.name);
-      });
-  };
 
   // Reducing quantity:
   const [reduceQuantityItem, setReduceQuantityItem] = useState(null);
@@ -109,12 +79,13 @@ const FridgeDetails = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <AppBar
-        label={fridgeName}
-        icon1={more}
-        onPressIcon1={() => refFridgeActions.current.open()}
-        onSubmitEditing={editFridgeName}
-        editable
+      <AppBarRenamer
+        label={fridge?.name}
+        onPressIcon={() => refFridgeActions.current.open()}
+        query={editFridgeNameQuery}
+        confirmMessage='Fridge renamed'
+        errorMessage='Unable to rename fridge'
+        containerID={fridge?.id}
       />
       <Divider />
 
