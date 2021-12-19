@@ -14,23 +14,16 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
       providesTags: ['FridgeProducts'],
       transformResponse: (rawData) =>
         // Convert data for frontend purposes:
-        rawData.map((element) => ({
-          id: element.id,
-          name: element.name,
-          producer_name: element.producer_name,
-          image: element.image,
-          barcode: element.barcode,
-          quantity_base: element.quantity_base,
-          quantity_left: element.quantity_left,
-          quantity_type: (element.quantity_type === 'PIECE'
-            ? 'pcs'
-            : element.quantity_type
-          ).toLowerCase(),
-          expiration_date: element.expiration_date
+        rawData.map((element) => {
+          element.quantity_type = (
+            element.quantity_type === 'PIECE' ? 'pcs' : element.quantity_type
+          ).toLowerCase();
+          element.expiration_date = element.expiration_date
             ?.split('-')
             .reverse()
-            .join('.'),
-        })),
+            .join('.');
+          return element;
+        }),
     }),
     addFridgeProduct: builder.mutation({
       query: ({
