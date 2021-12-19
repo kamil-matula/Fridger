@@ -6,7 +6,6 @@ import { useTheme, Snackbar, Divider } from 'react-native-paper';
 import {
   AppBar,
   UserInfo,
-  Dialog,
   Separator,
   FloatingActionButton,
   LoadingOverlay,
@@ -19,6 +18,7 @@ import {
   useDeleteFriendMutation,
   useAcceptFriendMutation,
 } from 'services/fridger/friends';
+import { DeleteFriend } from 'dialogs';
 
 const Friends = ({ navigation }) => {
   const { colors } = useTheme();
@@ -37,23 +37,6 @@ const Friends = ({ navigation }) => {
     setRelationshipToRemove(relationship);
     setDialogVisible(true);
   };
-
-  // Send request to api to remove a friend:
-  const deleteFriend = (relationshipID) => {
-    deleteFriendQuery(relationshipID)
-      .unwrap()
-      .then(() => displayToast('Friend has been deleted'))
-      .catch((error) =>
-        displayToast(error.data?.non_field_errors || 'Unable to remove friend')
-      );
-  };
-
-  // Handle with dialog decision:
-  const confirmRemoveFriend = () => {
-    deleteFriend(relationshipToRemove.id);
-    setDialogVisible(false);
-  };
-  const cancelRemoveFriend = () => setDialogVisible(false);
 
   // Accept invitation:
   const acceptInvitation = (relationshipID) => {
@@ -205,14 +188,11 @@ const Friends = ({ navigation }) => {
       )}
 
       {/* Deleting friend */}
-      <Dialog
-        title='Remove from friends'
-        paragraph={`Are you sure you want to remove ${relationshipToRemove?.friend.username} from friends? This action cannot be undone.`}
-        visibilityState={[dialogVisible, setDialogVisible]}
-        label1='remove'
-        onPressLabel1={confirmRemoveFriend}
-        label2='cancel'
-        onPressLabel2={cancelRemoveFriend}
+      <DeleteFriend
+        visible={dialogVisible}
+        setVisible={setDialogVisible}
+        relationshipID={relationshipToRemove?.id}
+        friendUsername={relationshipToRemove?.friend.username}
       />
 
       {/* Undoing request rejection */}
