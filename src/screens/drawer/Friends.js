@@ -8,7 +8,8 @@ import {
   UserInfo,
   Separator,
   FloatingActionButton,
-  LoadingOverlay,
+  ActivityIndicator,
+  Placeholder,
 } from 'components';
 import { displayToast, makeStyles } from 'utils';
 import { done, clear, deleteIcon } from 'assets/icons';
@@ -127,64 +128,70 @@ const Friends = ({ navigation }) => {
       <Divider />
 
       {requests.isLoading || friends.isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
-        <ScrollView>
-          {/* Invitations */}
-          {validRequests.length !== 0 && (
-            <>
-              <Text style={styles.header}>Pending requests</Text>
-              {validRequests.map((relationship) => (
-                <UserInfo
-                  key={relationship.id}
-                  title={relationship.friend.username}
-                  subtitle={`${relationship.friend.first_name} ${relationship.friend.last_name}`.trim()}
-                  avatarURI={relationship.friend.avatar}
-                  onClick={() =>
-                    navigateToFriendProfile(relationship, 'request')
-                  }
-                  variant='small'
-                  icon1={clear}
-                  onPressIcon1={() => rejectInvitation(relationship.id)}
-                  iconTint1={colors.tartOrange}
-                  icon2={done}
-                  onPressIcon2={() => acceptInvitation(relationship.id)}
-                  iconTint2={colors.darkGreen}
-                />
-              ))}
-            </>
-          )}
+        <>
+          {validRequests.length > 0 || friends.data.length > 0 ? (
+            <ScrollView>
+              {/* Invitations */}
+              {validRequests.length !== 0 && (
+                <>
+                  <Text style={styles.header}>Pending requests</Text>
+                  {validRequests.map((relationship) => (
+                    <UserInfo
+                      key={relationship.id}
+                      title={relationship.friend.username}
+                      subtitle={`${relationship.friend.first_name} ${relationship.friend.last_name}`.trim()}
+                      avatarURI={relationship.friend.avatar}
+                      onClick={() =>
+                        navigateToFriendProfile(relationship, 'request')
+                      }
+                      variant='small'
+                      icon1={clear}
+                      onPressIcon1={() => rejectInvitation(relationship.id)}
+                      iconTint1={colors.tartOrange}
+                      icon2={done}
+                      onPressIcon2={() => acceptInvitation(relationship.id)}
+                      iconTint2={colors.darkGreen}
+                    />
+                  ))}
+                </>
+              )}
 
-          {/* Line between the lists */}
-          {validRequests.length !== 0 && friends.data.length !== 0 && (
-            <Divider />
-          )}
+              {/* Line between the lists */}
+              {validRequests.length !== 0 && friends.data.length !== 0 && (
+                <Divider />
+              )}
 
-          {/* Existing friends */}
-          {friends.data.length !== 0 && (
-            <>
-              <Text style={styles.header}>Accepted requests</Text>
-              {friends.data.map((relationship) => (
-                <UserInfo
-                  key={relationship.id}
-                  title={relationship.friend.username}
-                  subtitle={`${relationship.friend.first_name} ${relationship.friend.last_name}`.trim()}
-                  avatarURI={relationship.friend.avatar}
-                  onClick={() =>
-                    navigateToFriendProfile(relationship, 'friend')
-                  }
-                  variant='small'
-                  icon1={deleteIcon}
-                  onPressIcon1={() => prepareToRemove(relationship)}
-                  iconTint1={colors.silverMetallic}
-                />
-              ))}
-            </>
-          )}
+              {/* Existing friends */}
+              {friends.data.length !== 0 && (
+                <>
+                  <Text style={styles.header}>Accepted requests</Text>
+                  {friends.data.map((relationship) => (
+                    <UserInfo
+                      key={relationship.id}
+                      title={relationship.friend.username}
+                      subtitle={`${relationship.friend.first_name} ${relationship.friend.last_name}`.trim()}
+                      avatarURI={relationship.friend.avatar}
+                      onClick={() =>
+                        navigateToFriendProfile(relationship, 'friend')
+                      }
+                      variant='small'
+                      icon1={deleteIcon}
+                      onPressIcon1={() => prepareToRemove(relationship)}
+                      iconTint1={colors.silverMetallic}
+                    />
+                  ))}
+                </>
+              )}
 
-          {/* Space for FAB */}
-          <Separator height={80} />
-        </ScrollView>
+              {/* Space for FAB */}
+              <Separator height={80} />
+            </ScrollView>
+          ) : (
+            <Placeholder content='No friends to display' />
+          )}
+        </>
       )}
 
       {/* Deleting friend */}

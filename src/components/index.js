@@ -15,3 +15,5 @@ export { default as LoadingOverlay } from './LoadingOverlay';
 export { default as StatsCard } from './StatsCard';
 export { default as DatePicker } from './DatePicker';
 export { default as AppBarRenamer } from './AppBarRenamer';
+export { default as ActivityIndicator } from './ActivityIndicator';
+export { default as Placeholder } from './Placeholder';

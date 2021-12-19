@@ -10,6 +10,7 @@ const ShoppingListsHistory = ({ navigation }) => {
     <ListOfShoppingLists
       shoppingLists={shoppingLists}
       navigation={navigation}
+      placeholderContent={`You have no inactive\nshopping lists to display`}
     />
   );
 };
