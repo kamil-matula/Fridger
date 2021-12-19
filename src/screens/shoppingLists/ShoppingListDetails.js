@@ -6,20 +6,19 @@ import {
   FloatingActionButton,
   BottomSheet,
   SheetRow,
-  Dialog,
   Separator,
   LoadingOverlay,
   AppBarRenamer,
 } from 'components';
-import { displayToast, makeStyles } from 'utils';
+import { makeStyles } from 'utils';
 import { group, groupAdd, deleteIcon } from 'assets/icons';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
 
 import {
   useSpecificShoppingListQuery,
-  useDeleteShoppingListMutation,
   useEditShoppingListNameMutation,
 } from 'services/fridger/shoppingLists';
+import DeleteShoppingList from 'dialogs/DeleteShoppingList';
 
 const ShoppingListDetails = ({ route, navigation }) => {
   const styles = useStyles();
@@ -28,27 +27,13 @@ const ShoppingListDetails = ({ route, navigation }) => {
   const { data: shoppingList, isLoading } = useSpecificShoppingListQuery(
     route.params.shoppingListID
   );
-  const deleteShoppingList = useDeleteShoppingListMutation()[0];
   const editShoppingListName = useEditShoppingListNameMutation()[0];
 
   // FAB & Tabs conditions:
   const [fabVisible, setFabVisible] = useState(true);
 
   // Deleting:
-  const [deleteShoppingListDialogVisible, setDeleteShoppingListDialogVisible] =
-    useState(false);
-  const confirmRemoveShoppingList = () => {
-    deleteShoppingList(route.params.shoppingListID)
-      .unwrap()
-      .then(() => {
-        displayToast('Shopping list deleted');
-        setDeleteFridgeDialogVisible(false);
-        navigation.pop();
-      })
-      .catch(() => displayToast('Unable to delete shopping list'));
-  };
-  const cancelRemoveShoppingList = () =>
-    setDeleteShoppingListDialogVisible(false);
+  const [deletingDialogVisible, setDeletingDialogVisible] = useState(false);
 
   // Shopping List Actions:
   const bottomSheet = useRef(null);
@@ -116,23 +101,17 @@ const ShoppingListDetails = ({ route, navigation }) => {
               onPress={() => {
                 // Show dialog and hide bottom sheet:
                 bottomSheet.current.close();
-                setDeleteShoppingListDialogVisible(true);
+                setDeletingDialogVisible(true);
               }}
             />
           </BottomSheet>
 
           {/* Deleting shopping list */}
-          <Dialog
-            title='Delete shopping list'
-            paragraph={`Are you sure you want to delete shopping list ${shoppingList.name}? This action cannot be undone.`}
-            visibilityState={[
-              deleteShoppingListDialogVisible,
-              setDeleteShoppingListDialogVisible,
-            ]}
-            label1='delete'
-            onPressLabel1={confirmRemoveShoppingList}
-            label2='cancel'
-            onPressLabel2={cancelRemoveShoppingList}
+          <DeleteShoppingList
+            visible={deletingDialogVisible}
+            setVisible={setDeletingDialogVisible}
+            shoppingList={shoppingList}
+            navigation={navigation}
           />
         </>
       )}

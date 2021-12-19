@@ -1,9 +1,10 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import { Dialog } from 'components';
 import { displayToast } from 'utils';
 import { useDeleteFridgeMutation } from 'services/fridger/fridges';
-import PropTypes from 'prop-types';
 
 const DeleteFridge = ({ visible, setVisible, fridge, navigation }) => {
   // Queries:
