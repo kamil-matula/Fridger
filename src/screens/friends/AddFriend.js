@@ -27,9 +27,7 @@ const AddFriend = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [friend, setFriend] = useState(null);
 
-  const find = () => {
-    findUserQuery(username);
-  };
+  const find = () => findUserQuery(username);
 
   // Update states when data is fetched or display error message:
   useEffect(() => {
@@ -105,9 +103,7 @@ const AddFriend = ({ navigation }) => {
                 <Button
                   label='add to friends'
                   variant='contained'
-                  onPress={() => {
-                    addToFriendsQuery(friend.id);
-                  }}
+                  onPress={() => addToFriendsQuery(friend.id)}
                   isLoading={addToFriends.isLoading}
                 />
                 <Separator />
@@ -140,12 +136,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 80,
     borderWidth: 2,
     borderColor: theme.colors.silverMetallic,
-  },
-  snackbar: {
-    backgroundColor: theme.colors.primary,
-  },
-  snackbarText: {
-    color: theme.colors.white,
   },
 }));
 

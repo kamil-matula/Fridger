@@ -55,9 +55,7 @@ const Fridges = ({ navigation }) => {
 
       {/* Adding new fridge */}
       <FloatingActionButton
-        onPress={() => {
-          navigation.navigate('AddFridge');
-        }}
+        onPress={() => navigation.navigate('AddFridge')}
         isBottomNavigationBar
       />
     </View>

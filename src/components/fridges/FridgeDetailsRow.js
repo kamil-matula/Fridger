@@ -4,7 +4,7 @@ import { View, Text, Image } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
-import { makeStyles, dateFromBackToFront } from 'utils';
+import { makeStyles } from 'utils';
 import { reduce } from 'assets/icons';
 
 const FridgeDetailsRow = ({ product, onPressIcon, onPressRow }) => {
@@ -31,7 +31,7 @@ const FridgeDetailsRow = ({ product, onPressIcon, onPressRow }) => {
           </Text>
           {product.expiration_date && (
             <Text style={styles.expirationDate}>
-              expiration date: {dateFromBackToFront(product.expiration_date)}
+              expiration date: {product.expiration_date}
             </Text>
           )}
         </View>

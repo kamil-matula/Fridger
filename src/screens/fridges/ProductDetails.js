@@ -45,13 +45,11 @@ const ProductDetails = ({ route, navigation }) => {
   // Open Food Facts stuff:
   const [productWithBarcode, setProductWithBarcode] = useState(null);
   useEffect(() => {
-    if (product.isSuccess) {
-      setProductWithBarcode(product.data?.product);
-    }
-    if (product.isError) {
-      displayToast('Unable to get product details');
-    }
-  }, [product.isSuccess, product.isError]);
+    setProductWithBarcode(product.data?.product);
+  }, [product.isSuccess]);
+  useEffect(() => {
+    displayToast('Unable to get product details');
+  }, [product.isError]);
   useEffect(() => {
     if (productWithBarcode == null && !!productBarcode) {
       productQuery(productBarcode);
@@ -367,20 +365,6 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     height: 48,
     resizeMode: 'contain',
-  },
-
-  // Additives:
-  additivesContainer: {
-    margin: 16,
-  },
-  additivesTitle: {
-    fontSize: 14,
-    color: theme.colors.silverMetallic,
-    paddingBottom: 4,
-  },
-  additivesRow: {
-    fontSize: 14,
-    color: theme.colors.white,
   },
 
   // Nutrients:

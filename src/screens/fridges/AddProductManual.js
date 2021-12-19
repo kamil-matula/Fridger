@@ -12,12 +12,7 @@ import {
   SheetRow,
   FloatingActionButton,
 } from 'components';
-import {
-  makeStyles,
-  displayToast,
-  unitFromFrontToBack,
-  dateFromFrontToBack,
-} from 'utils';
+import { makeStyles, displayToast } from 'utils';
 import { scanner, calendar, expand, check } from 'assets/icons';
 import { useAddFridgeProductMutation } from 'services/fridger/fridgeProducts';
 
@@ -103,12 +98,7 @@ const AddProductManual = ({ navigation, route }) => {
 
   // Submitting form:
   const addProduct = (data) => {
-    // Prepare data for API:
-    data.unit = unitFromFrontToBack(data.unit);
-    data.expiration = dateFromFrontToBack(data.expiration);
     data.fridge = fridgeID;
-
-    // Send request to API:
     addProductQuery(data)
       .unwrap()
       .then(() => {
