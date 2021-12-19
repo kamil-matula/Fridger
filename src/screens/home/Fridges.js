@@ -30,7 +30,7 @@ const Fridges = ({ navigation }) => {
         <ActivityIndicator />
       ) : (
         <>
-          {fridges.data.length > 0 ? (
+          {fridges.data?.length > 0 ? (
             <FlatList
               data={fridges.data}
               renderItem={({ item }) => (
@@ -52,7 +52,7 @@ const Fridges = ({ navigation }) => {
               keyExtractor={(item) => item.id.toString()}
             />
           ) : (
-            <Placeholder content='You have no fridges to display' />
+            <Placeholder content='No fridges to display' />
           )}
         </>
       )}
