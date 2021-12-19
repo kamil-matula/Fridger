@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 import {
@@ -13,6 +12,7 @@ import {
   FloatingActionButton,
   Separator,
   Button,
+  DatePicker,
 } from 'components';
 import { ProductInfo } from 'components/fridges';
 import { makeStyles } from 'utils';
@@ -76,29 +76,8 @@ const AddProductAutomat = ({ navigation }) => {
     },
   };
 
-  // Date picker states:
-  const [date, setDate] = useState(new Date());
+  // Calendar states:
   const [datepickerVisible, setDatepickerVisible] = useState(false);
-
-  const onDateChange = (event, selectedDate) => {
-    // Hide calendar:
-    setDatepickerVisible(false);
-
-    // Retrieve date:
-    if (selectedDate !== undefined) {
-      setDate(selectedDate);
-      setValue('expiration', dateToString(selectedDate));
-    } else {
-      setDate(new Date());
-      setValue('expiration', '');
-    }
-
-    // TODO: Fix it on iOS
-  };
-
-  // Helper function for retrieving friendly date from datePicker:
-  const dateToString = (numDate) =>
-    `${numDate.getDate()}.${numDate.getMonth()}.${numDate.getFullYear()}`;
 
   // Submitting form:
   const addProduct = (data) => {
@@ -197,9 +176,11 @@ const AddProductAutomat = ({ navigation }) => {
       </ScrollViewLayout>
 
       {/* Calendar */}
-      {datepickerVisible && (
-        <DateTimePicker value={date} mode='date' onChange={onDateChange} />
-      )}
+      <DatePicker
+        setExpirationDate={(value) => setValue('expiration', value)}
+        visible={datepickerVisible}
+        setVisible={setDatepickerVisible}
+      />
 
       {/* Button at the bottom */}
       <FloatingActionButton

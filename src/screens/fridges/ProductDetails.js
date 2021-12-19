@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import {
@@ -13,9 +12,10 @@ import {
   InputField,
   Separator,
   LoadingOverlay,
+  DatePicker,
 } from 'components';
 import { ScoresContainer } from 'components/fridges';
-import { displayToast, makeStyles, dateFromFrontToBack } from 'utils';
+import { displayToast, makeStyles } from 'utils';
 import { deleteIcon, time, calendar } from 'assets/icons';
 import {
   useDeleteFridgeProductMutation,
@@ -99,7 +99,7 @@ const ProductDetails = ({ route, navigation }) => {
   const confirmChangeExpDate = (data) => {
     editProductQuery({
       id: productID,
-      expiration: dateFromFrontToBack(data.expiration),
+      expiration: data.expiration,
     })
       .unwrap()
       .then(() => {
@@ -136,28 +136,8 @@ const ProductDetails = ({ route, navigation }) => {
       );
   };
 
-  // Helper function for retrieving friendly date from datePicker:
-  const dateToString = (numDate) =>
-    `${numDate.getDate()}.${numDate.getMonth()}.${numDate.getFullYear()}`;
-
   // Changing expiration date:
-  const [date, setDate] = useState(new Date());
   const [datepickerVisible, setDatepickerVisible] = useState(false);
-  const onDateChange = (_, selectedDate) => {
-    // Hide calendar:
-    setDatepickerVisible(false);
-
-    // Retrieve date:
-    if (selectedDate !== undefined) {
-      setDate(selectedDate);
-      setValue('expiration', dateToString(selectedDate));
-    } else {
-      setDate(new Date());
-      setValue('expiration', '');
-    }
-
-    // TODO: Fix it on iOS devices
-  };
 
   return (
     <View style={styles.container}>
@@ -314,9 +294,11 @@ const ProductDetails = ({ route, navigation }) => {
       </Dialog>
 
       {/* Calendar */}
-      {datepickerVisible && (
-        <DateTimePicker value={date} mode='date' onChange={onDateChange} />
-      )}
+      <DatePicker
+        setExpirationDate={(value) => setValue('expiration', value)}
+        visible={datepickerVisible}
+        setVisible={setDatepickerVisible}
+      />
     </View>
   );
 };

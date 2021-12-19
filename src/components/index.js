@@ -13,3 +13,4 @@ export { default as SheetRow } from './SheetRow';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as LoadingOverlay } from './LoadingOverlay';
 export { default as StatsCard } from './StatsCard';
+export { default as DatePicker } from './DatePicker';

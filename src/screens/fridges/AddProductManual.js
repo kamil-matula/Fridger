@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {
   InputField,
@@ -11,6 +10,7 @@ import {
   BottomSheet,
   SheetRow,
   FloatingActionButton,
+  DatePicker,
 } from 'components';
 import { makeStyles, displayToast } from 'utils';
 import { scanner, calendar, expand, check } from 'assets/icons';
@@ -69,32 +69,8 @@ const AddProductManual = ({ navigation, route }) => {
     refBS.current.close();
   };
 
-  // Date picker states:
-  const [date, setDate] = useState(new Date());
+  // Calendar states:
   const [datepickerVisible, setDatepickerVisible] = useState(false);
-
-  const onDateChange = (_, selectedDate) => {
-    // Hide calendar:
-    setDatepickerVisible(false);
-
-    // Retrieve date:
-    if (selectedDate !== undefined) {
-      setDate(selectedDate);
-      setValue('expiration', dateToString(selectedDate));
-    } else {
-      setDate(new Date());
-      setValue('expiration', '');
-    }
-
-    // TODO: Fix it on iOS devices
-  };
-
-  // Helper function for retrieving friendly date from datePicker:
-  const dateToString = (numDate) =>
-    `${numDate.getDate()}.${numDate.getMonth()}.${numDate.getFullYear()}`;
-
-  // Display calendar:
-  const showDatepicker = () => setDatepickerVisible(true);
 
   // Submitting form:
   const addProduct = (data) => {
@@ -186,7 +162,7 @@ const AddProductManual = ({ navigation, route }) => {
               label='Expiration date (optional)'
               variant='data'
               icon={calendar}
-              onIconPress={showDatepicker}
+              onIconPress={() => setDatepickerVisible(true)}
               returnKeyType='done'
               keyboardType='numeric'
               placeholder='dd.MM.rrrr'
@@ -196,9 +172,11 @@ const AddProductManual = ({ navigation, route }) => {
       </ScrollViewLayout>
 
       {/* Calendar */}
-      {datepickerVisible && (
-        <DateTimePicker value={date} mode='date' onChange={onDateChange} />
-      )}
+      <DatePicker
+        setExpirationDate={(value) => setValue('expiration', value)}
+        visible={datepickerVisible}
+        setVisible={setDatepickerVisible}
+      />
 
       {/* Quantity types */}
       <BottomSheet reference={refBS} title='Choose unit'>
