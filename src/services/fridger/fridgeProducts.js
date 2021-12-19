@@ -49,7 +49,10 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
             quantity,
           },
           // Convert data for backend purposes ('dd.mm.YYYY -> YYYY-mm-dd, ...
-          expiration_date: expiration?.split('.').reverse().join('-'),
+          expiration_date:
+            expiration !== ''
+              ? expiration?.split('.').reverse().join('-')
+              : null,
           // ... pcs -> PIECE, ml -> ML, g -> G, kg -> KG, l - L):
           quantity_type: (unit === 'pcs' ? 'PIECE' : unit).toUpperCase(),
         },
