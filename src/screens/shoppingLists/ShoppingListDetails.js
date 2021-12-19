@@ -13,12 +13,11 @@ import {
 import { makeStyles } from 'utils';
 import { group, groupAdd, deleteIcon } from 'assets/icons';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
-
 import {
   useSpecificShoppingListQuery,
   useEditShoppingListNameMutation,
 } from 'services/fridger/shoppingLists';
-import DeleteShoppingList from 'dialogs/DeleteShoppingList';
+import { DeleteShoppingList } from 'dialogs';
 
 const ShoppingListDetails = ({ route, navigation }) => {
   const styles = useStyles();

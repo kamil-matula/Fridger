@@ -89,7 +89,8 @@ const AddProductAutomat = ({ navigation, route }) => {
     data.image = product.data?.product.image_front_small_url;
     data.fridge = fridgeID;
     data.unit = 'pcs';
-    // TODO: Replace hardcoded unit with some calculations or input field with suggested value
+    // TODO: Replace hardcoded unit with some calculations OR remove displaying
+    // quantity from ProductInfo and add input field with suggested value
 
     // Send request to API:
     addProductQuery(data)
@@ -119,7 +120,6 @@ const AddProductAutomat = ({ navigation, route }) => {
         }
       />
 
-      {/* TODO: Add possibility to request permissions once again by clicking the label */}
       {/* Scanning barcode */}
       <View style={styles.scannerContainer}>
         {hasPermission === null && (
