@@ -8,8 +8,9 @@ import {
   BottomSheet,
   SheetRow,
   Separator,
-  LoadingOverlay,
+  ActivityIndicator,
   AppBarRenamer,
+  Placeholder,
 } from 'components';
 import { FridgeDetailsRow } from 'components/fridges';
 import { makeStyles } from 'utils';
@@ -102,30 +103,36 @@ const FridgeDetails = ({ route, navigation }) => {
 
       {/* List of products */}
       {isFridgeLoading || areProductsLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
-        <FlatList
-          data={fridgeProducts}
-          renderItem={({ item }) => (
-            <FridgeDetailsRow
-              product={item}
-              onPressIcon={() => reduceQuantityOpen(item)}
-              onPressRow={() => {
-                // Go to appropriate page:
-                if (fridge != null)
-                  navigation.navigate('ProductDetails', {
-                    fridgeName: fridge.name,
-                    productID: item.id,
-                    productName: item.name,
-                    productProducer: item.producer_name,
-                    productExpirationDate: item.expiration_date,
-                    productBarcode: item.barcode,
-                  });
-              }}
+        <>
+          {fridgeProducts.length > 0 ? (
+            <FlatList
+              data={fridgeProducts}
+              renderItem={({ item }) => (
+                <FridgeDetailsRow
+                  product={item}
+                  onPressIcon={() => reduceQuantityOpen(item)}
+                  onPressRow={() => {
+                    // Go to appropriate page:
+                    if (fridge != null)
+                      navigation.navigate('ProductDetails', {
+                        fridgeName: fridge.name,
+                        productID: item.id,
+                        productName: item.name,
+                        productProducer: item.producer_name,
+                        productExpirationDate: item.expiration_date,
+                        productBarcode: item.barcode,
+                      });
+                  }}
+                />
+              )}
+              keyExtractor={(item) => item.id.toString()}
             />
+          ) : (
+            <Placeholder content='No products to display' />
           )}
-          keyExtractor={(item) => item.id.toString()}
-        />
+        </>
       )}
 
       {/* Space for bottom nav bar */}

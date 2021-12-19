@@ -5,7 +5,7 @@ import { View, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { LoadingOverlay, Placeholder } from 'components';
+import { ActivityIndicator, Placeholder } from 'components';
 import ShoppingListRow from './ShoppingListRow';
 
 const ListOfShoppingLists = ({
@@ -18,7 +18,7 @@ const ListOfShoppingLists = ({
   return (
     <View style={styles.container}>
       {shoppingLists.isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
         <>
           {shoppingLists.data.length > 0 ? (

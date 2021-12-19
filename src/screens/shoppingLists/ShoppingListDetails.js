@@ -7,7 +7,7 @@ import {
   BottomSheet,
   SheetRow,
   Separator,
-  LoadingOverlay,
+  ActivityIndicator,
   AppBarRenamer,
 } from 'components';
 import { makeStyles } from 'utils';
@@ -36,7 +36,7 @@ const ShoppingListDetails = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       {isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
         <>
           <AppBarRenamer

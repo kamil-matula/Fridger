@@ -10,7 +10,7 @@ import {
   FloatingActionButton,
   InputField,
   Separator,
-  LoadingOverlay,
+  ActivityIndicator,
 } from 'components';
 import { ScoresContainer } from 'components/fridges';
 import { displayToast, makeStyles } from 'utils';
@@ -99,7 +99,7 @@ const ProductDetails = ({ route, navigation }) => {
 
       {/* Rendering appropriate content: details for products with barcodes, 
           editable input fields for other ones */}
-      {!!productBarcode && productWithBarcode == null && <LoadingOverlay />}
+      {!!productBarcode && productWithBarcode == null && <ActivityIndicator />}
       {!!productBarcode && productWithBarcode != null && (
         <ScrollView>
           {/* Basic information */}

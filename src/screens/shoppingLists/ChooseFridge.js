@@ -1,10 +1,9 @@
-/* eslint-disable camelcase */
 import React from 'react';
 
 import { ScrollView, View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { AppBar, FloatingActionButton, LoadingOverlay } from 'components';
+import { AppBar, FloatingActionButton, ActivityIndicator } from 'components';
 import { FridgeRow } from 'components/fridges';
 import { makeStyles } from 'utils';
 import { useFridgesQuery } from 'services/fridger/fridges';
@@ -22,7 +21,7 @@ const ChooseFridge = ({ route, navigation }) => {
       <Divider />
 
       {fridges.isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
         <ScrollView>
           {fridges.data.map((fridge) => (
