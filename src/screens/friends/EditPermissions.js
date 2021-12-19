@@ -11,7 +11,7 @@ import {
   BottomSheet,
   SheetRow,
   Dialog,
-  LoadingOverlay,
+  ActivityIndicator,
 } from 'components';
 import { forward, deleteIcon, check } from 'assets/icons';
 
@@ -71,21 +71,18 @@ const EditPermissions = ({
   const styles = useStyles();
   const theme = useTheme();
 
-  const [creator, setCreator] = useState({
-    username: '',
-    avatar: null,
-    permission: '',
-  });
+  const [creator, setCreator] = useState(null);
 
   // Update creator when data is fetched:
   useEffect(() => {
     if (ownerships.data) {
       const tmp = ownerships.data.find((e) => e.permission === 'CREATOR');
-      setCreator({
-        username: tmp.user.username,
-        avatar: tmp.user.avatar,
-        permission: tmp.permission,
-      });
+      if (tmp)
+        setCreator({
+          username: tmp.user.username,
+          avatar: tmp.user.avatar,
+          permission: tmp.permission,
+        });
     }
   }, [ownerships.data]);
 
@@ -160,7 +157,7 @@ const EditPermissions = ({
       <Divider />
 
       {ownerships.isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
         <ScrollView>
           {/* Connection with Share Screen */}
@@ -173,12 +170,14 @@ const EditPermissions = ({
           <Divider />
 
           {/* Creator of this fridge / shopping list */}
-          <UserInfo
-            title={creator.username}
-            subtitle={creator.permission}
-            avatarURI={creator.avatar}
-            variant='small'
-          />
+          {creator && (
+            <UserInfo
+              title={creator.username}
+              subtitle={creator.permission}
+              avatarURI={creator.avatar}
+              variant='small'
+            />
+          )}
 
           {/* List of people who have access to this fridge / shopping list */}
           {ownerships.data

@@ -19,7 +19,7 @@ import {
   useSpecificFridgeQuery,
 } from 'services/fridger/fridges';
 import { useFridgeProductsQuery } from 'services/fridger/fridgeProducts';
-import { DeleteFridge, ReduceQuantity } from 'dialogs';
+import { DeleteFridge, LeaveFridge, ReduceQuantity } from 'dialogs';
 
 const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
@@ -65,6 +65,9 @@ const FridgeDetails = ({ route, navigation }) => {
   // Reducing quantity:
   const [reduceQuantityItem, setReduceQuantityItem] = useState(null);
   const reduceQuantityOpen = (item) => setReduceQuantityItem(item);
+
+  // Leaving fridge:
+  const [leavingDialogVisible, setLeavingDialogVisible] = useState(false);
 
   // Other actions:
   const refFridgeActions = useRef(null);
@@ -173,10 +176,11 @@ const FridgeDetails = ({ route, navigation }) => {
         />
         <SheetRow
           icon={logout}
-          text='Quit'
+          text='Leave'
           onPress={() => {
-            // TODO: Send request to API to lose access to current fridge
-            console.log('Quitted');
+            // Hide bottom sheet and show dialog responsible for deleting fridge:
+            refFridgeActions.current.close();
+            setLeavingDialogVisible(true);
           }}
         />
       </BottomSheet>
@@ -205,6 +209,14 @@ const FridgeDetails = ({ route, navigation }) => {
       <ReduceQuantity
         item={reduceQuantityItem}
         setItem={setReduceQuantityItem}
+      />
+
+      {/* Leaving fridge */}
+      <LeaveFridge
+        visible={leavingDialogVisible}
+        setVisible={setLeavingDialogVisible}
+        fridge={fridge}
+        navigation={navigation}
       />
     </View>
   );
