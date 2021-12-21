@@ -1,45 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { FlatList, View, Text, Image } from 'react-native';
 import { Divider, TouchableRipple } from 'react-native-paper';
-import { useForm } from 'react-hook-form';
 
 import {
-  AppBar,
   FloatingActionButton,
   BottomSheet,
   SheetRow,
-  Dialog,
-  RadioButtonGroup,
   Separator,
-  InputField,
-  LoadingOverlay,
+  ActivityIndicator,
+  AppBarRenamer,
+  Placeholder,
 } from 'components';
 import { FridgeDetailsRow } from 'components/fridges';
+import { makeStyles } from 'utils';
+import { group, groupAdd, deleteIcon, logout, down, up } from 'assets/icons';
 import {
-  makeStyles,
-  displayToast,
-  dateFromBackToFront,
-  reasonFromFrontToBack,
-} from 'utils';
-import {
-  group,
-  groupAdd,
-  deleteIcon,
-  logout,
-  more,
-  down,
-  up,
-} from 'assets/icons';
-import {
-  useDeleteFridgeMutation,
   useEditFridgeNameMutation,
   useSpecificFridgeQuery,
 } from 'services/fridger/fridges';
-import {
-  useFridgeProductsQuery,
-  useUpdateFridgeProductQuantityMutation,
-} from 'services/fridger/fridgeProducts';
+import { useFridgeProductsQuery } from 'services/fridger/fridgeProducts';
+import { DeleteFridge, LeaveFridge, ReduceQuantity } from 'dialogs';
 
 const FridgeDetails = ({ route, navigation }) => {
   const styles = useStyles();
@@ -65,7 +46,7 @@ const FridgeDetails = ({ route, navigation }) => {
   };
   const displaySortIcon = (category) => {
     if (sortingCategoryName === category)
-      return sortingDirection === '' ? up : down;
+      return sortingDirection === '' ? down : up;
     return null;
   };
 
@@ -78,141 +59,29 @@ const FridgeDetails = ({ route, navigation }) => {
       ordering: sortingDirection + sortingCategoryName,
     });
   const [editFridgeNameQuery] = useEditFridgeNameMutation();
-  const [deleteFridgeQuery] = useDeleteFridgeMutation();
-  const [editFridgeQuantityQuery] = useUpdateFridgeProductQuantityMutation();
 
-  // Renaming:
-  const [fridgeName, setFridgeName] = useState('');
-  useEffect(() => {
-    if (fridge) setFridgeName(fridge.name);
-  }, [fridge]);
-  const editFridgeName = (name) => {
-    editFridgeNameQuery({ id: fridgeID, name })
-      .unwrap()
-      .then(() => displayToast('Fridge renamed'))
-      .catch((error) => {
-        if (error.data?.name) displayToast('Invalid name');
-        else
-          displayToast(
-            error.data?.non_field_errors || 'Unable to rename fridge'
-          );
+  // Deleting fridge:
+  const [deletingDialogVisible, setDeletingDialogVisible] = useState(false);
 
-        // Rebuild appbar:
-        setFridgeName(`${fridge.name} `);
-        setFridgeName(fridge.name);
-      });
-  };
-
-  // Deleting:
-  const [deleteFridgeDialogVisible, setDeleteFridgeDialogVisible] =
-    useState(false);
-  const confirmRemoveFridge = () => deleteFridge();
-  const cancelRemoveFridge = () => setDeleteFridgeDialogVisible(false);
-  const deleteFridge = () => {
-    deleteFridgeQuery(fridgeID)
-      .unwrap()
-      .then(() => {
-        displayToast('Fridge deleted');
-        setDeleteFridgeDialogVisible(false);
-        navigation.pop();
-      })
-      .catch((error) =>
-        displayToast(error.data?.non_field_errors || 'Unable to delete fridge')
-      );
-  };
-
-  // Reducing quantity - states:
-  const [reduceQuantityVisible, setReduceQuantityVisible] = useState(false);
-  const [reduceQuantityReason, setReduceQuantityReason] = useState(null);
+  // Reducing quantity:
   const [reduceQuantityItem, setReduceQuantityItem] = useState(null);
-  const { control, reset, setValue, getValues } = useForm({
-    defaultValues: {
-      quantity: '',
-    },
-  });
+  const reduceQuantityOpen = (item) => setReduceQuantityItem(item);
 
-  // Reducing quantity - dialog actions:
-  const confirmReduceQuantity = () => {
-    // Validate data:
-    const newQuantity = parseInt(getValues('quantity'), 10);
-    if (Number.isNaN(newQuantity)) {
-      displayToast('Please provide quantity.');
-      return;
-    }
-    if (newQuantity > reduceQuantityItem.currentQuantity) {
-      displayToast(
-        "You can't increase the quantity.\nPlease provide lower number."
-      );
-      return;
-    }
-    if (newQuantity === reduceQuantityItem.currentQuantity) {
-      // Just close:
-      setReduceQuantityVisible(false);
-      setReduceQuantityReason(null);
-      setReduceQuantityItem(null);
-      reset();
-      return;
-    }
-    if (reduceQuantityReason == null) {
-      displayToast(
-        'Please choose the reason of reducing quantity. It will be used in your statistics.'
-      );
-      return;
-    }
-
-    // Send request to API:
-    editFridgeQuantityQuery({
-      product: reduceQuantityItem.id,
-      status: reasonFromFrontToBack(reduceQuantityReason),
-      quantity: reduceQuantityItem.currentQuantity - newQuantity,
-    })
-      .unwrap()
-      .then(() => {
-        displayToast('Quantity reduced');
-
-        // Hide dialog and reset state:
-        setReduceQuantityVisible(false);
-        setReduceQuantityReason(null);
-        setReduceQuantityItem(null);
-        reset();
-      })
-      .catch((error) =>
-        displayToast(
-          error.data?.non_field_errors || 'Unable to reduce quantity'
-        )
-      );
-  };
-  const cancelReduceQuantity = () => {
-    // Hide dialog and reset state:
-    setReduceQuantityVisible(false);
-    setReduceQuantityReason(null);
-    setReduceQuantityItem(null);
-    reset();
-  };
-  const reduceQuantityOpen = (item) => {
-    // Set item and display dialog:
-    setReduceQuantityItem({
-      id: item.id,
-      name: item.name,
-      currentQuantity: item.quantity_left,
-      maxQuantity: item.quantity_base,
-      quantityType: item.quantity_type.toLowerCase(),
-    });
-    setValue('quantity', item.quantity_left.toString());
-    setReduceQuantityVisible(true);
-  };
+  // Leaving fridge:
+  const [leavingDialogVisible, setLeavingDialogVisible] = useState(false);
 
   // Other actions:
   const refFridgeActions = useRef(null);
 
   return (
     <View style={styles.container}>
-      <AppBar
-        label={fridgeName}
-        icon1={more}
-        onPressIcon1={() => refFridgeActions.current.open()}
-        onSubmitEditing={editFridgeName}
-        editable
+      <AppBarRenamer
+        label={fridge?.name}
+        onPressIcon={() => refFridgeActions.current.open()}
+        query={editFridgeNameQuery}
+        confirmMessage='Fridge renamed'
+        errorMessage='Unable to rename fridge'
+        containerID={fridge?.id}
       />
       <Divider />
 
@@ -226,7 +95,7 @@ const FridgeDetails = ({ route, navigation }) => {
             }
           </Text>
           <Image
-            source={sortingDirection === '' ? up : down}
+            source={sortingDirection === '' ? down : up}
             style={styles.icon}
           />
         </View>
@@ -234,32 +103,36 @@ const FridgeDetails = ({ route, navigation }) => {
 
       {/* List of products */}
       {isFridgeLoading || areProductsLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
-        <FlatList
-          data={fridgeProducts}
-          renderItem={({ item }) => (
-            <FridgeDetailsRow
-              product={item}
-              onPressIcon={() => reduceQuantityOpen(item)}
-              onPressRow={() => {
-                // Go to appropriate page:
-                if (fridge != null)
-                  navigation.navigate('ProductDetails', {
-                    fridgeName: fridge.name,
-                    productID: item.id,
-                    productName: item.name,
-                    productProducer: item.producer_name,
-                    productExpirationDate: dateFromBackToFront(
-                      item.expiration_date
-                    ),
-                    productBarcode: item.barcode,
-                  });
-              }}
+        <>
+          {fridgeProducts.length > 0 ? (
+            <FlatList
+              data={fridgeProducts}
+              renderItem={({ item }) => (
+                <FridgeDetailsRow
+                  product={item}
+                  onPressIcon={() => reduceQuantityOpen(item)}
+                  onPressRow={() => {
+                    // Go to appropriate page:
+                    if (fridge != null)
+                      navigation.navigate('ProductDetails', {
+                        fridgeName: fridge.name,
+                        productID: item.id,
+                        productName: item.name,
+                        productProducer: item.producer_name,
+                        productExpirationDate: item.expiration_date,
+                        productBarcode: item.barcode,
+                      });
+                  }}
+                />
+              )}
+              keyExtractor={(item) => item.id.toString()}
             />
+          ) : (
+            <Placeholder content='No products to display' />
           )}
-          keyExtractor={(item) => item.id.toString()}
-        />
+        </>
       )}
 
       {/* Space for bottom nav bar */}
@@ -305,15 +178,16 @@ const FridgeDetails = ({ route, navigation }) => {
           onPress={() => {
             // Hide bottom sheet and show dialog responsible for deleting fridge:
             refFridgeActions.current.close();
-            setDeleteFridgeDialogVisible(true);
+            setDeletingDialogVisible(true);
           }}
         />
         <SheetRow
           icon={logout}
-          text='Quit'
+          text='Leave'
           onPress={() => {
-            // TODO: Send request to API to lose access to current fridge
-            console.log('Quitted');
+            // Hide bottom sheet and show dialog responsible for deleting fridge:
+            refFridgeActions.current.close();
+            setLeavingDialogVisible(true);
           }}
         />
       </BottomSheet>
@@ -331,54 +205,26 @@ const FridgeDetails = ({ route, navigation }) => {
       </BottomSheet>
 
       {/* Deleting fridge */}
-      <Dialog
-        title='Delete fridge'
-        paragraph={`Are you sure you want to delete fridge ${
-          fridge?.name ?? 'Unknown'
-        }? This action cannot be undone.`}
-        visibilityState={[
-          deleteFridgeDialogVisible,
-          setDeleteFridgeDialogVisible,
-        ]}
-        label1='delete'
-        onPressLabel1={confirmRemoveFridge}
-        label2='cancel'
-        onPressLabel2={cancelRemoveFridge}
+      <DeleteFridge
+        visible={deletingDialogVisible}
+        setVisible={setDeletingDialogVisible}
+        fridge={fridge}
+        navigation={navigation}
       />
 
       {/* Reducing quantity */}
-      {reduceQuantityItem && (
-        <Dialog
-          title='Reduce quantity'
-          visibilityState={[reduceQuantityVisible, setReduceQuantityVisible]}
-          label1='cancel'
-          onPressLabel1={cancelReduceQuantity}
-          label2='ok'
-          onPressLabel2={confirmReduceQuantity}
-        >
-          <View style={styles.reduceQuantityContent}>
-            <RadioButtonGroup
-              items={['eaten', 'wasted', 'disappeared']}
-              checkedState={[reduceQuantityReason, setReduceQuantityReason]}
-            />
-            <Separator />
-            <InputField
-              control={control}
-              name='quantity'
-              returnKeyType='done'
-              variant='quantity'
-              postfix={
-                reduceQuantityItem.maxQuantity
-                  ? ` / ${reduceQuantityItem.maxQuantity} ${reduceQuantityItem.quantityType}`
-                  : null
-              }
-              keyboardType='numeric'
-              textAlign='right'
-              paddings={false}
-            />
-          </View>
-        </Dialog>
-      )}
+      <ReduceQuantity
+        item={reduceQuantityItem}
+        setItem={setReduceQuantityItem}
+      />
+
+      {/* Leaving fridge */}
+      <LeaveFridge
+        visible={leavingDialogVisible}
+        setVisible={setLeavingDialogVisible}
+        fridge={fridge}
+        navigation={navigation}
+      />
     </View>
   );
 };
@@ -398,9 +244,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.silverMetallic,
   },
   icon: { height: 16, width: 16, marginLeft: 10 },
-  reduceQuantityContent: {
-    paddingHorizontal: 24,
-  },
 }));
 
 export default FridgeDetails;

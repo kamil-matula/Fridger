@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-import { TextInput } from 'react-native';
+import { Text } from 'react-native';
 import { Appbar, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
-import { useForm, Controller } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
 import { back, drawer } from 'assets/icons';
@@ -16,25 +15,10 @@ const AppBar = ({
   onPressIcon1 = null,
   icon2 = null,
   onPressIcon2 = null,
-  editable = false,
-  onSubmitEditing = null,
 }) => {
   const styles = useStyles();
   const { colors } = useTheme();
   const navigation = useNavigation();
-
-  // Editing fridge / shopping list's name:
-  const { control, handleSubmit, setValue } = useForm({
-    defaultValues: {
-      label,
-    },
-  });
-  const submit = (data) => onSubmitEditing(data);
-
-  // Update label when data is fetched:
-  useEffect(() => {
-    setValue('label', label);
-  }, [label]);
 
   return (
     <Appbar.Header style={styles.bar}>
@@ -53,21 +37,8 @@ const AppBar = ({
         />
       )}
 
-      {/* Name of current page / input field responsible for changing name */}
-      <Controller
-        control={control}
-        name='label'
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            style={styles.title}
-            editable={editable}
-            value={value}
-            onChangeText={onChange}
-            returnKeyType='done'
-            onEndEditing={() => handleSubmit(submit(value))}
-          />
-        )}
-      />
+      {/* Name of current page */}
+      <Text style={styles.title}>{label}</Text>
 
       {/* Additional actions */}
       {icon1 && (
@@ -95,8 +66,6 @@ AppBar.propTypes = {
   onPressIcon1: PropTypes.func,
   icon2: PropTypes.number,
   onPressIcon2: PropTypes.func,
-  editable: PropTypes.bool,
-  onSubmitEditing: PropTypes.func,
 };
 
 const useStyles = makeStyles((theme) => ({

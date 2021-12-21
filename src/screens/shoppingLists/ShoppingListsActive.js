@@ -10,6 +10,7 @@ const ShoppingListsActive = ({ navigation }) => {
     <ListOfShoppingLists
       shoppingLists={shoppingLists}
       navigation={navigation}
+      placeholderContent={`No active\nshopping lists to display`}
     />
   );
 };

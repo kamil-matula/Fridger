@@ -4,9 +4,10 @@ import { FlatList, View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import {
+  ActivityIndicator,
   AppBar,
   FloatingActionButton,
-  LoadingOverlay,
+  Placeholder,
   Separator,
 } from 'components';
 import { FridgeRow } from 'components/fridges';
@@ -26,28 +27,34 @@ const Fridges = ({ navigation }) => {
 
       {/* List of fridges */}
       {fridges.isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
-        <FlatList
-          data={fridges.data}
-          renderItem={({ item }) => (
-            <FridgeRow
-              text={item.name}
-              subText={
-                item.shared_with_count > 0
-                  ? `${item.products_count} items  •  shared with ${item.shared_with_count} friends`
-                  : `${item.products_count} items`
-              }
-              onPress={() => {
-                // Go to specific fridge:
-                navigation.navigate('FridgeDetails', {
-                  fridgeID: item.id,
-                });
-              }}
+        <>
+          {fridges.data?.length > 0 ? (
+            <FlatList
+              data={fridges.data}
+              renderItem={({ item }) => (
+                <FridgeRow
+                  text={item.name}
+                  subText={
+                    item.shared_with_count > 0
+                      ? `${item.products_count} items  •  shared with ${item.shared_with_count} friends`
+                      : `${item.products_count} items`
+                  }
+                  onPress={() => {
+                    // Go to specific fridge:
+                    navigation.navigate('FridgeDetails', {
+                      fridgeID: item.id,
+                    });
+                  }}
+                />
+              )}
+              keyExtractor={(item) => item.id.toString()}
             />
+          ) : (
+            <Placeholder content='No fridges to display' />
           )}
-          keyExtractor={(item) => item.id.toString()}
-        />
+        </>
       )}
 
       {/* Space for bottom nav bar */}
@@ -55,9 +62,7 @@ const Fridges = ({ navigation }) => {
 
       {/* Adding new fridge */}
       <FloatingActionButton
-        onPress={() => {
-          navigation.navigate('AddFridge');
-        }}
+        onPress={() => navigation.navigate('AddFridge')}
         isBottomNavigationBar
       />
     </View>

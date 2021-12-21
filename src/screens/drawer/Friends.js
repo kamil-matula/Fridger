@@ -6,10 +6,10 @@ import { useTheme, Snackbar, Divider } from 'react-native-paper';
 import {
   AppBar,
   UserInfo,
-  Dialog,
   Separator,
   FloatingActionButton,
-  LoadingOverlay,
+  ActivityIndicator,
+  Placeholder,
 } from 'components';
 import { displayToast, makeStyles } from 'utils';
 import { done, clear, deleteIcon } from 'assets/icons';
@@ -19,6 +19,7 @@ import {
   useDeleteFriendMutation,
   useAcceptFriendMutation,
 } from 'services/fridger/friends';
+import { DeleteFriend } from 'dialogs';
 
 const Friends = ({ navigation }) => {
   const { colors } = useTheme();
@@ -32,28 +33,11 @@ const Friends = ({ navigation }) => {
 
   // Prepare to remove friend:
   const [relationshipToRemove, setRelationshipToRemove] = useState(null);
-  const [dialogVisible, setDialogVisible] = useState(null);
+  const [dialogVisible, setDialogVisible] = useState(false);
   const prepareToRemove = (relationship) => {
     setRelationshipToRemove(relationship);
     setDialogVisible(true);
   };
-
-  // Send request to api to remove a friend:
-  const deleteFriend = (relationshipID) => {
-    deleteFriendQuery(relationshipID)
-      .unwrap()
-      .then(() => displayToast('Friend has been deleted'))
-      .catch((error) =>
-        displayToast(error.data?.non_field_errors || 'Unable to remove friend')
-      );
-  };
-
-  // Handle with dialog decision:
-  const confirmRemoveFriend = () => {
-    deleteFriend(relationshipToRemove.id);
-    setDialogVisible(false);
-  };
-  const cancelRemoveFriend = () => setDialogVisible(false);
 
   // Accept invitation:
   const acceptInvitation = (relationshipID) => {
@@ -68,7 +52,7 @@ const Friends = ({ navigation }) => {
 
   // Reject invitation:
   const [rejectedInvitationID, setRejectedInvitationID] = useState(null);
-  const [snackbarVisible, setSnackbarVisible] = useState(null);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [rejectCanceled, setRejectCanceled] = useMemo(() => {
     let state = false;
     return [
@@ -144,75 +128,78 @@ const Friends = ({ navigation }) => {
       <Divider />
 
       {requests.isLoading || friends.isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
-        <ScrollView>
-          {/* Invitations */}
-          {validRequests.length !== 0 && (
-            <>
-              <Text style={styles.header}>Pending requests</Text>
-              {validRequests.map((relationship) => (
-                <UserInfo
-                  key={relationship.id}
-                  title={relationship.friend.username}
-                  subtitle={`${relationship.friend.first_name} ${relationship.friend.last_name}`.trim()}
-                  avatarURI={relationship.friend.avatar}
-                  onClick={() =>
-                    navigateToFriendProfile(relationship, 'request')
-                  }
-                  variant='small'
-                  icon1={clear}
-                  onPressIcon1={() => rejectInvitation(relationship.id)}
-                  iconTint1={colors.tartOrange}
-                  icon2={done}
-                  onPressIcon2={() => acceptInvitation(relationship.id)}
-                  iconTint2={colors.darkGreen}
-                />
-              ))}
-            </>
-          )}
+        <>
+          {validRequests.length > 0 || friends.data.length > 0 ? (
+            <ScrollView>
+              {/* Invitations */}
+              {validRequests.length !== 0 && (
+                <>
+                  <Text style={styles.header}>Pending requests</Text>
+                  {validRequests.map((relationship) => (
+                    <UserInfo
+                      key={relationship.id}
+                      title={relationship.friend.username}
+                      subtitle={`${relationship.friend.first_name} ${relationship.friend.last_name}`.trim()}
+                      avatarURI={relationship.friend.avatar}
+                      onClick={() =>
+                        navigateToFriendProfile(relationship, 'request')
+                      }
+                      variant='small'
+                      icon1={clear}
+                      onPressIcon1={() => rejectInvitation(relationship.id)}
+                      iconTint1={colors.tartOrange}
+                      icon2={done}
+                      onPressIcon2={() => acceptInvitation(relationship.id)}
+                      iconTint2={colors.darkGreen}
+                    />
+                  ))}
+                </>
+              )}
 
-          {/* Line between the lists */}
-          {validRequests.length !== 0 && friends.data.length !== 0 && (
-            <Divider />
-          )}
+              {/* Line between the lists */}
+              {validRequests.length !== 0 && friends.data.length !== 0 && (
+                <Divider />
+              )}
 
-          {/* Existing friends */}
-          {friends.data.length !== 0 && (
-            <>
-              <Text style={styles.header}>Accepted requests</Text>
-              {friends.data.map((relationship) => (
-                <UserInfo
-                  key={relationship.id}
-                  title={relationship.friend.username}
-                  subtitle={`${relationship.friend.first_name} ${relationship.friend.last_name}`.trim()}
-                  avatarURI={relationship.friend.avatar}
-                  onClick={() =>
-                    navigateToFriendProfile(relationship, 'friend')
-                  }
-                  variant='small'
-                  icon1={deleteIcon}
-                  onPressIcon1={() => prepareToRemove(relationship)}
-                  iconTint1={colors.silverMetallic}
-                />
-              ))}
-            </>
-          )}
+              {/* Existing friends */}
+              {friends.data.length !== 0 && (
+                <>
+                  <Text style={styles.header}>Accepted requests</Text>
+                  {friends.data.map((relationship) => (
+                    <UserInfo
+                      key={relationship.id}
+                      title={relationship.friend.username}
+                      subtitle={`${relationship.friend.first_name} ${relationship.friend.last_name}`.trim()}
+                      avatarURI={relationship.friend.avatar}
+                      onClick={() =>
+                        navigateToFriendProfile(relationship, 'friend')
+                      }
+                      variant='small'
+                      icon1={deleteIcon}
+                      onPressIcon1={() => prepareToRemove(relationship)}
+                      iconTint1={colors.silverMetallic}
+                    />
+                  ))}
+                </>
+              )}
 
-          {/* Space for FAB */}
-          <Separator height={80} />
-        </ScrollView>
+              {/* Space for FAB */}
+              <Separator height={80} />
+            </ScrollView>
+          ) : (
+            <Placeholder content='No friends to display' />
+          )}
+        </>
       )}
 
       {/* Deleting friend */}
-      <Dialog
-        title='Remove from friends'
-        paragraph={`Are you sure you want to remove ${relationshipToRemove?.friend.username} from friends? This action cannot be undone.`}
-        visibilityState={[dialogVisible, setDialogVisible]}
-        label1='remove'
-        onPressLabel1={confirmRemoveFriend}
-        label2='cancel'
-        onPressLabel2={cancelRemoveFriend}
+      <DeleteFriend
+        visible={dialogVisible}
+        setVisible={setDialogVisible}
+        relationshipID={relationshipToRemove?.id}
+        friendUsername={relationshipToRemove?.friend.username}
       />
 
       {/* Undoing request rejection */}
