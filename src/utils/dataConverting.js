@@ -19,3 +19,10 @@ export const reasonFromFrontToBack = (reasonFromFront) => {
 
 export const quantityFromBackToFront = (quantityFromBack) =>
   parseFloat(quantityFromBack);
+
+export const statusFromBackToFront = (statusFromBack) => {
+  if (statusFromBack === 'TAKER') return 'unchecked';
+  if (statusFromBack === 'TAKER_MARKED') return 'indeterminate';
+  if (statusFromBack === 'BUYER') return 'checked';
+  return 'unchecked';
+};

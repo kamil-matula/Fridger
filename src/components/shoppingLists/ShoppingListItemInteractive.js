@@ -1,31 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 import { Text, View, TextInput } from 'react-native';
 import { Checkbox, useTheme } from 'react-native-paper';
-import { useController } from 'react-hook-form';
 
 import { makeStyles } from 'utils';
+import { statusFromBackToFront } from 'utils/dataConverting';
 
 // This component is used in second tab of Shopping List Details
 const ShoppingListItemInteractive = ({
-  control,
   text,
   subText,
-  boxName,
-  checkBoxName,
-  setValue,
-  onEndEditing,
+  status,
+  price,
   onChangeStatus,
+  onChangePrice,
   currency,
 }) => {
-  // Controllers:
-  const box = useController({ name: boxName, control, rules: {} });
-  const checkbox = useController({ name: checkBoxName, control, rules: {} });
-
   // Styling:
   const { colors } = useTheme();
-  const styles = useStyles({ fieldValue: checkbox.field.value });
+  const styles = useStyles({ fieldValue: status });
+
+  const [currentPrice, setCurrentPrice] = useState(price);
 
   return (
     <View style={styles.container}>
@@ -35,15 +31,8 @@ const ShoppingListItemInteractive = ({
         <Checkbox
           color={colors.silverMetallic}
           uncheckedColor={colors.silverMetallic}
-          status={checkbox.field.value}
-          onPress={() => {
-            if (checkbox.field.value === 'unchecked') {
-              setValue(checkBoxName, 'indeterminate');
-            } else if (checkbox.field.value === 'indeterminate') {
-              setValue(checkBoxName, 'unchecked');
-            }
-            onChangeStatus();
-          }}
+          status={statusFromBackToFront(status)}
+          onPress={onChangeStatus}
         />
       </View>
 
@@ -55,18 +44,17 @@ const ShoppingListItemInteractive = ({
 
       {/* Temporary price of indeterminate product */}
       <View style={styles.priceContainer}>
-        {checkbox.field.value === 'indeterminate' && (
+        {status === 'TAKER_MARKED' && (
           <>
             <TextInput
-              name={box.field.name}
-              onChangeText={box.field.onChange}
-              value={box.field.value.toString()}
+              onEndEditing={() => onChangePrice(currentPrice)}
+              onChangeText={setCurrentPrice}
+              value={currentPrice}
               style={styles.inputField}
               placeholderTextColor={colors.silverMetallic}
               placeholder='0'
               keyboardType='numeric'
               maxLength={5}
-              onEndEditing={onEndEditing}
             />
             <Text style={styles.text}>{currency}</Text>
           </>
@@ -79,12 +67,10 @@ const ShoppingListItemInteractive = ({
 ShoppingListItemInteractive.propTypes = {
   text: PropTypes.string.isRequired,
   subText: PropTypes.string,
-  control: PropTypes.object.isRequired,
-  boxName: PropTypes.string,
-  checkBoxName: PropTypes.string.isRequired,
-  setValue: PropTypes.func.isRequired,
-  onEndEditing: PropTypes.func,
+  status: PropTypes.string,
+  price: PropTypes.string,
   onChangeStatus: PropTypes.func,
+  onChangePrice: PropTypes.func,
   currency: PropTypes.string.isRequired,
 };
 
@@ -126,7 +112,7 @@ const useStyles = makeStyles((theme, { fieldValue }) => {
   };
 
   // Container for price:
-  if (fieldValue === 'indeterminate') {
+  if (fieldValue === 'TAKER_MARKED') {
     obj.priceContainer.borderRadius = 5;
     obj.priceContainer.borderWidth = 1;
     obj.priceContainer.borderColor = theme.colors.silverMetallic;

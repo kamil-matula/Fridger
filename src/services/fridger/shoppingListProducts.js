@@ -26,20 +26,26 @@ const shoppingListsApi = fridgerApi.injectEndpoints({
         price,
         quantity,
         quantityType,
-      }) => {
-        body = {};
-        if (status) body.status = status;
-        if (name) body.name = name;
-        if (note) body.note = note;
-        if (price) body.price = price;
-        if (quantity) body.quantity = quantity;
-        if (quantityType) body.quantityType = quantityType;
-        return {
-          url: `shopping-list-products/${productId}`,
-          method: 'PATCH',
-          body,
-        };
-      },
+      }) => ({
+        url: `shopping-list-products/${productId}`,
+        method: 'PATCH',
+        body: {
+          status,
+          name,
+          note,
+          price,
+          quantity,
+          quantity_type: quantityType,
+        },
+      }),
+      invalidatesTags: ['ShoppingListProducts'],
+    }),
+    buyProducts: builder.mutation({
+      query: ({ shoppingList, products }) => ({
+        url: `shopping-lists/${shoppingList}/buy-products`,
+        method: 'POST',
+        body: { products },
+      }),
       invalidatesTags: ['ShoppingListProducts'],
     }),
     deleteShoppingListProduct: builder.mutation({
@@ -51,14 +57,14 @@ const shoppingListsApi = fridgerApi.injectEndpoints({
     }),
     shoppingListAllProducts: builder.query({
       query: ({ id }) => ({
-        url: `shopping-lists/${id}/all_products`,
+        url: `shopping-lists/${id}/all-products`,
         method: 'GET',
       }),
       providesTags: ['ShoppingListProducts'],
     }),
     shoppingListYourProducts: builder.query({
       query: ({ id }) => ({
-        url: `shopping-lists/${id}/your_products`,
+        url: `shopping-lists/${id}/your-products`,
         method: 'GET',
       }),
       providesTags: ['ShoppingListProducts'],
@@ -76,6 +82,7 @@ const shoppingListsApi = fridgerApi.injectEndpoints({
 export const {
   useAddShoppingListProductMutation,
   useEditShoppingListProductMutation,
+  useBuyProductsMutation,
   useDeleteShoppingListProductMutation,
   useShoppingListAllProductsQuery,
   useShoppingListYourProductsQuery,

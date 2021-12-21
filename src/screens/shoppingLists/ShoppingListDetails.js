@@ -88,7 +88,6 @@ const ShoppingListDetails = ({ route, navigation }) => {
 
           {/* Tabs */}
           <ShoppingListDetailsTabNavigator
-            isShared={shoppingList.data.is_shared}
             shoppingListID={route.params.shoppingListID}
             setFabVisible={setFabVisible}
           />

@@ -17,6 +17,7 @@ import { CustomTheme } from 'theme';
 import { loadToken, authenticate } from 'services/authSlice';
 import { store } from 'services/store';
 import { useLazyUserInfoQuery } from 'services/fridger/user';
+import { setState } from 'services/ShoppingListYourProductsSlice';
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -65,12 +66,31 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
       if (token) {
         await AsyncStorage.setItem('token', token);
       } else {
-        await AsyncStorage.removeItem('token');
+        dispatch(setState({ value: {} }));
+        await AsyncStorage.multiRemove(['token', 'shoppingListsProducts']);
       }
     };
     if (isUninitialized || isLoading) return;
     updateToken();
   }, [token, isUninitialized, isLoading]);
+
+  // Store shopping lists products in AsyncStorage
+  useEffect(() => {
+    AsyncStorage.getItem('shoppingListsProducts').then((obj) => {
+      if (obj) {
+        dispatch(setState(JSON.parse(obj)));
+      }
+    });
+
+    const unsubscribe = store.subscribe(() => {
+      const shoppingListsProducts = JSON.stringify(
+        store.getState().shoppingListYourProducts
+      );
+      AsyncStorage.setItem('shoppingListsProducts', shoppingListsProducts);
+    });
+
+    return unsubscribe;
+  }, []);
 
   if (isAppLoading) return null;
   return (

@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { fridgerApi } from './fridger/fridgerApi';
 import { openFoodFactsApi } from './openFoodFacts/openFoodFactsApi';
 import authReducer from './authSlice';
+import shoppingListYourProductsReducer from './ShoppingListYourProductsSlice';
 import { unauthenticatedMiddleware } from './middleware';
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
     [fridgerApi.reducerPath]: fridgerApi.reducer, // RTK Query config needs this
     [openFoodFactsApi.reducerPath]: openFoodFactsApi.reducer,
     auth: authReducer, // auth
+    shoppingListYourProducts: shoppingListYourProductsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
