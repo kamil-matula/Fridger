@@ -45,19 +45,19 @@ const ShoppingListItem = ({
       </View>
 
       {/* Price of bought product or button */}
-      {variant === 'avatar' ? (
-        showHand && (
-          <View style={styles.iconContainer}>
-            <TouchableRipple onPress={onPressIcon}>
-              <Image source={hand} style={styles.icon} />
-            </TouchableRipple>
-          </View>
-        )
-      ) : (
-        <View style={styles.priceContainer}>
-          <Text style={styles.text}>{boxText}</Text>
-        </View>
-      )}
+      {variant === 'avatar'
+        ? showHand && (
+            <View style={styles.iconContainer}>
+              <TouchableRipple onPress={onPressIcon}>
+                <Image source={hand} style={styles.icon} />
+              </TouchableRipple>
+            </View>
+          )
+        : boxText && (
+            <View style={styles.priceContainer}>
+              <Text style={styles.text}>{boxText}</Text>
+            </View>
+          )}
     </View>
   );
 };

@@ -86,5 +86,5 @@ export const {
   useDeleteShoppingListProductMutation,
   useShoppingListAllProductsQuery,
   useShoppingListYourProductsQuery,
-  useLazyShoppingListSummaryQuery,
+  useShoppingListSummaryQuery,
 } = shoppingListsApi;
