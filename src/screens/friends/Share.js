@@ -5,7 +5,7 @@ import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, TouchableRipple, useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { UserInfo, AppBar, LoadingOverlay } from 'components';
+import { UserInfo, AppBar, ActivityIndicator } from 'components';
 import { add, forward } from 'assets/icons';
 
 import { useFriendsQuery } from 'services/fridger/friends';
@@ -105,7 +105,7 @@ const Share = ({
       <AppBar label='Share with friends' />
       <Divider />
       {friends.isLoading || ownerships.isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
         <ScrollView>
           {/* Connection with Edit Permissions Screen */}

@@ -5,7 +5,6 @@ import { Text, View, TextInput } from 'react-native';
 import { Checkbox, useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { statusFromBackToFront } from 'utils/dataConverting';
 
 // This component is used in second tab of Shopping List Details
 const ShoppingListItemInteractive = ({
@@ -31,7 +30,7 @@ const ShoppingListItemInteractive = ({
         <Checkbox
           color={colors.silverMetallic}
           uncheckedColor={colors.silverMetallic}
-          status={statusFromBackToFront(status)}
+          status={status}
           onPress={onChangeStatus}
         />
       </View>
@@ -44,7 +43,7 @@ const ShoppingListItemInteractive = ({
 
       {/* Temporary price of indeterminate product */}
       <View style={styles.priceContainer}>
-        {status === 'TAKER_MARKED' && (
+        {status === 'indeterminate' && (
           <>
             <TextInput
               onEndEditing={() => onChangePrice(currentPrice)}
@@ -112,7 +111,7 @@ const useStyles = makeStyles((theme, { fieldValue }) => {
   };
 
   // Container for price:
-  if (fieldValue === 'TAKER_MARKED') {
+  if (fieldValue === 'indeterminate') {
     obj.priceContainer.borderRadius = 5;
     obj.priceContainer.borderWidth = 1;
     obj.priceContainer.borderColor = theme.colors.silverMetallic;

@@ -14,11 +14,6 @@ import {
 } from 'components';
 import { makeStyles, displayToast } from 'utils';
 import { deleteIcon, expand, check } from 'assets/icons';
-import {
-  unitFromFrontToBack,
-  unitFromBackToFront,
-  quantityFromBackToFront,
-} from 'utils/dataConverting';
 
 import {
   useAddShoppingListProductMutation,
@@ -40,12 +35,8 @@ const AddShoppingListProduct = ({ route, navigation }) => {
     useForm({
       defaultValues: {
         name: product?.name || '',
-        quantity: product?.quantity
-          ? quantityFromBackToFront(product?.quantity).toString()
-          : '',
-        unit: product?.quantity_type
-          ? unitFromBackToFront(product?.quantity_type)
-          : 'pcs',
+        quantity: product?.quantity || '',
+        unit: product?.quantity_type || 'pcs',
         note: product?.note || '',
       },
     });
@@ -128,7 +119,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
       name: data.name,
       note: data.note,
       quantity: data.quantity,
-      quantityType: unitFromFrontToBack(data.unit),
+      quantityType: data.unit,
     })
       .unwrap()
       .then(() => {
@@ -144,7 +135,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
       name: data.name,
       note: data.note,
       quantity: data.quantity,
-      quantityType: unitFromFrontToBack(data.unit),
+      quantityType: data.unit,
     })
       .unwrap()
       .then(() => {

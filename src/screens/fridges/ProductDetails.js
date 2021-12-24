@@ -3,25 +3,21 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import {
   AppBar,
-  Dialog,
   FloatingActionButton,
   InputField,
   Separator,
-  LoadingOverlay,
+  ActivityIndicator,
 } from 'components';
 import { ScoresContainer } from 'components/fridges';
-import { displayToast, makeStyles, dateFromFrontToBack } from 'utils';
-import { deleteIcon, time, calendar } from 'assets/icons';
-import {
-  useDeleteFridgeProductMutation,
-  useEditFridgeProductMutation,
-} from 'services/fridger/fridgeProducts';
+import { displayToast, makeStyles } from 'utils';
+import { deleteIcon, time } from 'assets/icons';
+import { useEditFridgeProductMutation } from 'services/fridger/fridgeProducts';
 import { useLazyProductQuery } from 'services/openFoodFacts/openFoodFactsApi';
+import { ChangeExpirationDate, DeleteFridgeProduct } from 'dialogs';
 
 const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
@@ -39,19 +35,16 @@ const ProductDetails = ({ route, navigation }) => {
   // Queries:
   const [editProductQuery, { isLoading: isEditLoading }] =
     useEditFridgeProductMutation();
-  const [deleteProductQuery] = useDeleteFridgeProductMutation();
   const [productQuery, product] = useLazyProductQuery();
 
   // Open Food Facts stuff:
   const [productWithBarcode, setProductWithBarcode] = useState(null);
   useEffect(() => {
-    if (product.isSuccess) {
-      setProductWithBarcode(product.data?.product);
-    }
-    if (product.isError) {
-      displayToast('Unable to get product details');
-    }
-  }, [product.isSuccess, product.isError]);
+    if (product.isSuccess) setProductWithBarcode(product.data?.product);
+  }, [product.isSuccess]);
+  useEffect(() => {
+    if (product.isError) displayToast('Unable to get product details');
+  }, [product.isError]);
   useEffect(() => {
     if (productWithBarcode == null && !!productBarcode) {
       productQuery(productBarcode);
@@ -59,67 +52,23 @@ const ProductDetails = ({ route, navigation }) => {
   }, []);
 
   // Form states:
-  const { control, handleSubmit, setFocus, setValue, reset } = useForm({
+  const { control, handleSubmit, setFocus, reset } = useForm({
     defaultValues: {
       name: productName,
       producer: productProducer,
-      expiration: productExpirationDate,
     },
   });
   const rules = {
     name: {
       required: 'Name is required',
     },
-    expiration: {
-      pattern: {
-        value: /^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.\d{4}$/,
-        message: 'Invalid date format',
-      },
-    },
   };
 
-  // Deleting product from fridge:
-  const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
-    useState(false);
-  const confirmRemoveProduct = () => {
-    deleteProductQuery(productID)
-      .unwrap()
-      .then(() => {
-        displayToast('Product deleted');
-        setDeleteProductDialogVisible(false);
-        navigation.pop();
-      })
-      .catch((error) =>
-        displayToast(error.data?.non_field_errors || 'Unable to delete product')
-      );
-  };
-  const cancelRemoveProduct = () => setDeleteProductDialogVisible(false);
+  // Visibilities:
+  const [deletingDialogVisible, setDeletingDialogVisible] = useState(false);
+  const [expDateDialogVisible, setExpDateDialogVisible] = useState(false);
 
-  // Changing product's expiration date:
-  const [changeExpDateDialogVisible, setChangeExpDateDialogVisible] =
-    useState(false);
-  const confirmChangeExpDate = (data) => {
-    editProductQuery({
-      id: productID,
-      expiration: dateFromFrontToBack(data.expiration),
-    })
-      .unwrap()
-      .then(() => {
-        displayToast('Expiration date changed');
-        setChangeExpDateDialogVisible(false);
-      })
-      .catch((error) =>
-        displayToast(
-          error.data?.non_field_errors || 'Unable to change expiration date'
-        )
-      );
-  };
-  const cancelChangeExpDate = () => {
-    setChangeExpDateDialogVisible(false);
-    reset();
-  };
-
-  // Submitting form:
+  // Editing name & producer:
   const editProduct = (data) => {
     editProductQuery({
       id: productID,
@@ -129,6 +78,7 @@ const ProductDetails = ({ route, navigation }) => {
       .unwrap()
       .then(() => {
         displayToast('Product details changed');
+        reset();
         navigation.goBack();
       })
       .catch((error) =>
@@ -138,41 +88,18 @@ const ProductDetails = ({ route, navigation }) => {
       );
   };
 
-  // Helper function for retrieving friendly date from datePicker:
-  const dateToString = (numDate) =>
-    `${numDate.getDate()}.${numDate.getMonth()}.${numDate.getFullYear()}`;
-
-  // Changing expiration date:
-  const [date, setDate] = useState(new Date());
-  const [datepickerVisible, setDatepickerVisible] = useState(false);
-  const onDateChange = (_, selectedDate) => {
-    // Hide calendar:
-    setDatepickerVisible(false);
-
-    // Retrieve date:
-    if (selectedDate !== undefined) {
-      setDate(selectedDate);
-      setValue('expiration', dateToString(selectedDate));
-    } else {
-      setDate(new Date());
-      setValue('expiration', '');
-    }
-
-    // TODO: Fix it on iOS devices
-  };
-
   return (
     <View style={styles.container}>
       <AppBar
         icon1={time}
-        onPressIcon1={() => setChangeExpDateDialogVisible(true)}
+        onPressIcon1={() => setExpDateDialogVisible(true)}
         icon2={deleteIcon}
         onPressIcon2={() => setDeleteProductDialogVisible(true)}
       />
 
       {/* Rendering appropriate content: details for products with barcodes, 
           editable input fields for other ones */}
-      {!!productBarcode && productWithBarcode == null && <LoadingOverlay />}
+      {!!productBarcode && productWithBarcode == null && <ActivityIndicator />}
       {!!productBarcode && productWithBarcode != null && (
         <ScrollView>
           {/* Basic information */}
@@ -268,57 +195,28 @@ const ProductDetails = ({ route, navigation }) => {
             onPress={handleSubmit(editProduct)}
             centered
             confirm
-            isLoading={!changeExpDateDialogVisible && isEditLoading}
+            isLoading={isEditLoading}
           />
         </View>
       )}
 
       {/* Deleting product from fridge */}
-      <Dialog
-        title='Delete product'
-        paragraph={`Are you sure you want to delete product ${productName} from fridge ${fridgeName}? This action cannot be undone.`}
-        visibilityState={[
-          deleteProductDialogVisible,
-          setDeleteProductDialogVisible,
-        ]}
-        label1='delete'
-        onPressLabel1={confirmRemoveProduct}
-        label2='cancel'
-        onPressLabel2={cancelRemoveProduct}
+      <DeleteFridgeProduct
+        visible={deletingDialogVisible}
+        setVisible={setDeletingDialogVisible}
+        productID={productID}
+        productName={productName}
+        fridgeName={fridgeName}
+        navigation={navigation}
       />
 
       {/* Changing expiration date */}
-      <Dialog
-        title='Set expiration date'
-        visibilityState={[
-          changeExpDateDialogVisible,
-          setChangeExpDateDialogVisible,
-        ]}
-        label1='cancel'
-        onPressLabel1={cancelChangeExpDate}
-        label2='ok'
-        onPressLabel2={handleSubmit(confirmChangeExpDate)}
-        titlePaddingBottom={0}
-      >
-        <View style={styles.calendarFieldContainer}>
-          <InputField
-            control={control}
-            rules={rules.expiration}
-            name='expiration'
-            variant='data'
-            icon={calendar}
-            onIconPress={() => setDatepickerVisible(true)}
-            placeholder='dd.MM.rrrr'
-            returnKeyType='done'
-            keyboardType='numeric'
-          />
-        </View>
-      </Dialog>
-
-      {/* Calendar */}
-      {datepickerVisible && (
-        <DateTimePicker value={date} mode='date' onChange={onDateChange} />
-      )}
+      <ChangeExpirationDate
+        visible={expDateDialogVisible}
+        setVisible={setExpDateDialogVisible}
+        productID={productID}
+        expiration={productExpirationDate}
+      />
     </View>
   );
 };
@@ -369,20 +267,6 @@ const useStyles = makeStyles((theme) => ({
     resizeMode: 'contain',
   },
 
-  // Additives:
-  additivesContainer: {
-    margin: 16,
-  },
-  additivesTitle: {
-    fontSize: 14,
-    color: theme.colors.silverMetallic,
-    paddingBottom: 4,
-  },
-  additivesRow: {
-    fontSize: 14,
-    color: theme.colors.white,
-  },
-
   // Nutrients:
   nutrientsContainer: {
     margin: 16,
@@ -400,9 +284,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     color: theme.colors.white,
   },
-
-  // Changing expiration date:
-  calendarFieldContainer: { paddingHorizontal: 16, height: 70 },
 
   // No-barcode variant's container:
   noBarcodeContainer: { marginHorizontal: 16, flex: 1 },

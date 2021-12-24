@@ -3,11 +3,10 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { LoadingOverlay, Separator } from 'components';
+import { ActivityIndicator, Separator } from 'components';
 import { PriceSummary, ShoppingListItem, Chip } from 'components/shoppingLists';
 import { makeStyles } from 'utils';
 
-import { statusFromBackToFront } from 'utils/dataConverting';
 import { useShoppingListSummaryQuery } from 'services/fridger/shoppingListProducts';
 
 const ShoppingListSummary = ({ route }) => {
@@ -29,25 +28,25 @@ const ShoppingListSummary = ({ route }) => {
         }
         boxText={product.price ? `${product.price} PLN` : null}
         variant='checkbox'
-        status={statusFromBackToFront(product.status)}
+        status={product.status}
       />
     ));
 
   return (
     <View style={styles.container}>
       {summary.isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
         <ScrollView>
           <View>
             {summary?.data.users.map((user, idx) => {
               const notBoughtProducts = user.products.filter(
                 (product) =>
-                  product.status === 'TAKER' ||
-                  product.status === 'TAKER_MARKED'
+                  product.status === 'unchecked' ||
+                  product.status === 'indeterminate'
               );
               const boughtProducts = user.products.filter(
-                (product) => product.status === 'BUYER'
+                (product) => product.status === 'checked'
               );
 
               return (

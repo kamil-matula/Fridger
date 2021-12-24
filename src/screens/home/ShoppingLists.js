@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 
 import { makeStyles } from 'utils';
-import { AppBar, FloatingActionButton } from 'components';
+import { AppBar, FloatingActionButton, Separator } from 'components';
 import ShoppingListTabNavigator from 'navigation/ShoppingListTabNavigator';
 
 const ShoppingLists = ({ navigation }) => {
@@ -15,7 +15,14 @@ const ShoppingLists = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <AppBar isDrawer label='Shopping Lists' />
+
+      {/* Main content */}
       <ShoppingListTabNavigator setFabVisible={setFabVisible} />
+
+      {/* Space for bottom nav bar */}
+      <Separator height={54} />
+
+      {/* Adding new shopping list */}
       <FloatingActionButton
         visible={fabVisible}
         onPress={() => navigation.navigate('AddShoppingList')}

@@ -15,7 +15,7 @@ import {
   AppBar,
   ScrollViewLayout,
   Separator,
-  LoadingOverlay,
+  ActivityIndicator,
 } from 'components';
 import { tmpPerson } from 'assets/images';
 import { edit } from 'assets/icons';
@@ -143,7 +143,7 @@ const EditProfile = ({ navigation }) => {
       <AppBar label='Edit profile' />
 
       {userIsLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
         <ScrollViewLayout>
           {/* Input fields and image picker */}

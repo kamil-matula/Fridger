@@ -3,12 +3,8 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { LoadingOverlay, Separator } from 'components';
+import { ActivityIndicator, Separator } from 'components';
 import { ShoppingListItem } from 'components/shoppingLists';
-import {
-  unitFromBackToFront,
-  quantityFromBackToFront,
-} from 'utils/dataConverting';
 import { displayToast, makeStyles } from 'utils';
 
 import {
@@ -26,20 +22,20 @@ const ShoppingListAll = ({ route, navigation }) => {
   const editShoppingListProductQuery = useEditShoppingListProductMutation()[0];
   const user = useUserInfoQuery();
 
-  const dips = ({ id, status }) => {
+  const dips = (product) => {
     editShoppingListProductQuery({
-      productId: id,
-      status: status === 'FREE' ? 'TAKER' : 'FREE',
+      productId: product.id,
+      status: product.status === 'free' ? 'unchecked' : 'free',
     });
   };
 
   return (
     <View style={styles.container}>
       {shoppingListProducts.isLoading || user.isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
         <ScrollView>
-          {shoppingListProducts.data.map((product) => (
+          {shoppingListProducts?.data.map((product) => (
             <TouchableRipple
               key={product.id}
               onPress={() => {
@@ -56,23 +52,17 @@ const ShoppingListAll = ({ route, navigation }) => {
             >
               <ShoppingListItem
                 avatarURI={
-                  product.status !== 'FREE' ? product.created_by.avatar : null
+                  product.status !== 'free' ? product.created_by.avatar : null
                 }
                 text={product.name}
                 subText={
                   product.note
-                    ? `${quantityFromBackToFront(
-                        product.quantity
-                      )} ${unitFromBackToFront(product.quantity_type)}  •  ${
-                        product.note
-                      }`
-                    : `${quantityFromBackToFront(
-                        product.quantity
-                      )} ${unitFromBackToFront(product.quantity_type)}`
+                    ? `${product.quantity} ${product.quantity_type}  •  ${product.note}`
+                    : `${product.quantity} ${product.quantity_type}`
                 }
                 onPressIcon={() => dips(product)}
                 showHand={
-                  product.status === 'FREE' ||
+                  product.status === 'free' ||
                   product.created_by.username === user.data.username
                 }
               />

@@ -36,7 +36,7 @@ const fridgesOwnershipsApi = fridgerApi.injectEndpoints({
         url: `fridges-ownerships/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['FridgeOwnership', 'Friends'],
+      invalidatesTags: ['FridgeOwnership', 'Friends', 'Fridges'],
     }),
   }),
 });

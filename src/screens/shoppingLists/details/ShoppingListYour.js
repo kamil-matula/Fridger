@@ -7,7 +7,7 @@ import { setPrice, setStatus } from 'services/ShoppingListYourProductsSlice';
 
 import {
   Button,
-  LoadingOverlay,
+  ActivityIndicator,
   ScrollViewLayout,
   Separator,
 } from 'components';
@@ -44,17 +44,19 @@ const ShoppingListYour = ({ route }) => {
   };
 
   // Lists with matching states + total price:
-  const unchecked = shoppingList?.products.filter((e) => e.status === 'TAKER');
+  const unchecked = shoppingList?.products.filter(
+    (e) => e.status === 'unchecked'
+  );
   const indeterminate =
-    shoppingList?.products.filter((e) => e.status === 'TAKER_MARKED') || [];
+    shoppingList?.products.filter((e) => e.status === 'indeterminate') || [];
   const sum = sumList(indeterminate);
 
   const changeStatus = (item) => {
     let newStatus;
-    if (item.status === 'TAKER') {
-      newStatus = 'TAKER_MARKED';
-    } else if (item.status === 'TAKER_MARKED') {
-      newStatus = 'TAKER';
+    if (item.status === 'unchecked') {
+      newStatus = 'indeterminate';
+    } else if (item.status === 'indeterminate') {
+      newStatus = 'unchecked';
     }
     dispatch(
       setStatus({
@@ -95,7 +97,7 @@ const ShoppingListYour = ({ route }) => {
   return (
     <View style={styles.container}>
       {yourProducts.isLoading ? (
-        <LoadingOverlay />
+        <ActivityIndicator />
       ) : (
         <ScrollViewLayout addPadding={false}>
           <View>

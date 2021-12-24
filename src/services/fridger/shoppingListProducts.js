@@ -1,3 +1,4 @@
+import { convertStatus, convertQuantityType } from 'services/dataConverters';
 import { fridgerApi } from './fridgerApi';
 
 const shoppingListsApi = fridgerApi.injectEndpoints({
@@ -12,7 +13,7 @@ const shoppingListsApi = fridgerApi.injectEndpoints({
           note,
           price,
           quantity,
-          quantity_type: quantityType,
+          quantity_type: convertQuantityType(quantityType),
         },
       }),
       invalidatesTags: ['ShoppingListProducts'],
@@ -30,12 +31,14 @@ const shoppingListsApi = fridgerApi.injectEndpoints({
         url: `shopping-list-products/${productId}`,
         method: 'PATCH',
         body: {
-          status,
+          status: status ? convertStatus(status) : status,
           name,
           note,
           price,
           quantity,
-          quantity_type: quantityType,
+          quantity_type: quantityType
+            ? convertQuantityType(quantityType)
+            : quantityType,
         },
       }),
       invalidatesTags: ['ShoppingListProducts'],
@@ -60,6 +63,13 @@ const shoppingListsApi = fridgerApi.injectEndpoints({
         url: `shopping-lists/${id}/all-products`,
         method: 'GET',
       }),
+      transformResponse: (response) =>
+        response.map((product) => {
+          product.status = convertStatus(product.status);
+          product.quantity_type = convertQuantityType(product.quantity_type);
+          product.quantity = parseFloat(product.quantity).toString();
+          return product;
+        }),
       providesTags: ['ShoppingListProducts'],
     }),
     shoppingListYourProducts: builder.query({
@@ -67,6 +77,15 @@ const shoppingListsApi = fridgerApi.injectEndpoints({
         url: `shopping-lists/${id}/your-products`,
         method: 'GET',
       }),
+      transformResponse: (response) => {
+        response.products = response.products.map((product) => {
+          product.status = convertStatus(product.status);
+          product.quantity_type = convertQuantityType(product.quantity_type);
+          product.quantity = parseFloat(product.quantity).toString();
+          return product;
+        });
+        return response;
+      },
       providesTags: ['ShoppingListProducts'],
     }),
     shoppingListSummary: builder.query({
@@ -74,6 +93,19 @@ const shoppingListsApi = fridgerApi.injectEndpoints({
         url: `shopping-lists/${id}/summary`,
         method: 'GET',
       }),
+      transformResponse: (response) => {
+        response.users = response.users.map((user) => {
+          user.products = user.products.map((product) => {
+            product.status = convertStatus(product.status);
+            product.quantity_type = convertQuantityType(product.quantity_type);
+            product.quantity = parseFloat(product.quantity).toString();
+            return product;
+          });
+          return user;
+        });
+
+        return response;
+      },
       providesTags: ['ShoppingListProducts'],
     }),
   }),
