@@ -16,30 +16,48 @@ import { useUserInfoQuery } from 'services/fridger/user';
 const ShoppingListAll = ({ route, navigation }) => {
   const styles = useStyles();
 
-  const shoppingListProducts = useShoppingListAllProductsQuery({
+  const shoppingListProductsQuery = useShoppingListAllProductsQuery({
     id: route.params.shoppingListID,
   });
   const editShoppingListProductQuery = useEditShoppingListProductMutation()[0];
-  const user = useUserInfoQuery();
+  const userInfoQuery = useUserInfoQuery();
 
   const dips = (product) => {
     editShoppingListProductQuery({
       productId: product.id,
       status: product.status === 'free' ? 'unchecked' : 'free',
-    });
+    })
+      .unwrap()
+      .catch((error) => {
+        const notFoundError = error.data?.detail;
+        const statusError = error.data?.status;
+        const nonFieldErrors = error.data?.non_field_errors;
+
+        if (notFoundError) {
+          displayToast('Product not found');
+        }
+        if (statusError) {
+          displayToast(statusError);
+        }
+        if (nonFieldErrors) {
+          displayToast(nonFieldErrors);
+        }
+      });
   };
 
   return (
     <View style={styles.container}>
-      {shoppingListProducts.isLoading || user.isLoading ? (
+      {shoppingListProductsQuery.isLoading || userInfoQuery.isLoading ? (
         <ActivityIndicator />
       ) : (
         <ScrollView>
-          {shoppingListProducts?.data.map((product) => (
+          {shoppingListProductsQuery?.data.map((product) => (
             <TouchableRipple
               key={product.id}
               onPress={() => {
-                if (product.created_by.username === user.data.username) {
+                if (
+                  product.created_by.username === userInfoQuery.data.username
+                ) {
                   navigation.navigate('AddShoppingListProduct', {
                     shoppingListID: route.params.shoppingListID,
                     product,
@@ -63,7 +81,7 @@ const ShoppingListAll = ({ route, navigation }) => {
                 onPressIcon={() => dips(product)}
                 showHand={
                   product.status === 'free' ||
-                  product.created_by.username === user.data.username
+                  product.created_by.username === userInfoQuery.data.username
                 }
               />
             </TouchableRipple>

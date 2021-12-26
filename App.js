@@ -17,7 +17,7 @@ import { CustomTheme } from 'theme';
 import { loadToken, authenticate } from 'services/authSlice';
 import { store } from 'services/store';
 import { useLazyUserInfoQuery } from 'services/fridger/user';
-import { setState } from 'services/ShoppingListYourProductsSlice';
+import { setShoppingListYourProducts } from 'services/ShoppingListYourProductsSlice';
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +66,7 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
       if (token) {
         await AsyncStorage.setItem('token', token);
       } else {
-        dispatch(setState({ value: {} }));
+        dispatch(setShoppingListYourProducts({ value: {} }));
         await AsyncStorage.multiRemove(['token', 'shoppingListsProducts']);
       }
     };
@@ -78,7 +78,7 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
   useEffect(() => {
     AsyncStorage.getItem('shoppingListsProducts').then((obj) => {
       if (obj) {
-        dispatch(setState(JSON.parse(obj)));
+        dispatch(setShoppingListYourProducts(JSON.parse(obj)));
       }
     });
 

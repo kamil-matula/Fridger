@@ -25,6 +25,13 @@ const AddShoppingListProduct = ({ route, navigation }) => {
   const styles = useStyles();
   const { mode } = route.params;
   const { product } = route.params;
+  const listOfUnits = [
+    { short: 'kg', long: 'kilograms' },
+    { short: 'g', long: 'grams' },
+    { short: 'l', long: 'liters' },
+    { short: 'ml', long: 'milliliters' },
+    { short: 'pcs', long: 'pieces' },
+  ];
 
   const addProductQuery = useAddShoppingListProductMutation()[0];
   const editProductQuery = useEditShoppingListProductMutation()[0];
@@ -82,17 +89,8 @@ const AddShoppingListProduct = ({ route, navigation }) => {
         message: quantityTypeError.join(' '),
       });
     }
-    if (nonFieldErrors) {
-      displayToast(nonFieldErrors.join(' '));
-    }
-    if (
-      !nameError &&
-      !noteError &&
-      !quantityError &&
-      !quantityTypeError &&
-      !nonFieldErrors
-    ) {
-      displayToast(text);
+    if (!nameError && !noteError && !quantityError && !quantityTypeError) {
+      displayToast(nonFieldErrors || text);
     }
   };
 
@@ -236,41 +234,14 @@ const AddShoppingListProduct = ({ route, navigation }) => {
 
       {/* Quantity types */}
       <BottomSheet reference={refBS} title='Choose unit'>
-        <SheetRow
-          icon={unit === 'kg' ? check : null}
-          text='kilograms'
-          onPress={() => {
-            changeUnit('kg');
-          }}
-        />
-        <SheetRow
-          icon={unit === 'g' ? check : null}
-          text='grams'
-          onPress={() => {
-            changeUnit('g');
-          }}
-        />
-        <SheetRow
-          icon={unit === 'l' ? check : null}
-          text='liters'
-          onPress={() => {
-            changeUnit('l');
-          }}
-        />
-        <SheetRow
-          icon={unit === 'ml' ? check : null}
-          text='milliliters'
-          onPress={() => {
-            changeUnit('ml');
-          }}
-        />
-        <SheetRow
-          icon={unit === 'pcs' ? check : null}
-          text='pieces'
-          onPress={() => {
-            changeUnit('pcs');
-          }}
-        />
+        {listOfUnits.map((element) => (
+          <SheetRow
+            icon={unit === element.short ? check : null}
+            key={element.long}
+            text={element.long}
+            onPress={() => changeUnit(element.short)}
+          />
+        ))}
       </BottomSheet>
 
       {/* Button at the bottom */}

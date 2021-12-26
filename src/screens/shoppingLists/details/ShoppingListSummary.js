@@ -12,7 +12,7 @@ import { useShoppingListSummaryQuery } from 'services/fridger/shoppingListProduc
 const ShoppingListSummary = ({ route }) => {
   const styles = useStyles();
 
-  const summary = useShoppingListSummaryQuery({
+  const shoppingListSummaryQuery = useShoppingListSummaryQuery({
     id: route.params.shoppingListID,
   });
 
@@ -34,12 +34,12 @@ const ShoppingListSummary = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      {summary.isLoading ? (
+      {shoppingListSummaryQuery.isLoading ? (
         <ActivityIndicator />
       ) : (
         <ScrollView>
           <View>
-            {summary?.data.users.map((user, idx) => {
+            {shoppingListSummaryQuery?.data.users.map((user, idx) => {
               const notBoughtProducts = user.products.filter(
                 (product) =>
                   product.status === 'unchecked' ||

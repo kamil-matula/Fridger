@@ -5,7 +5,7 @@ const ShoppingListYourProductsSlice = createSlice({
   name: 'shoppingListYourProducts',
   initialState: { value: {} },
   reducers: {
-    setState: (state, action) => {
+    setShoppingListYourProducts: (state, action) => {
       state.value = action.payload.value;
     },
     setStatus: (state, action) => {
@@ -75,5 +75,5 @@ const ShoppingListYourProductsSlice = createSlice({
 
 export default ShoppingListYourProductsSlice.reducer;
 
-export const { setStatus, setPrice, updateState, setState } =
+export const { setStatus, setPrice, setShoppingListYourProducts } =
   ShoppingListYourProductsSlice.actions;

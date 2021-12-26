@@ -26,7 +26,7 @@ const ShoppingListYour = ({ route }) => {
   const styles = useStyles();
   const dispatch = useDispatch();
 
-  const yourProducts = useShoppingListYourProductsQuery({
+  const shoppingListYourProductsQuery = useShoppingListYourProductsQuery({
     id: route.params.shoppingListID,
   });
   const buyProducts = useBuyProductsMutation()[0];
@@ -96,7 +96,7 @@ const ShoppingListYour = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      {yourProducts.isLoading ? (
+      {shoppingListYourProductsQuery.isLoading ? (
         <ActivityIndicator />
       ) : (
         <ScrollViewLayout addPadding={false}>
