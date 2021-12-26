@@ -53,7 +53,7 @@ const AppBarRenamer = ({
       <Appbar.Action
         icon={back}
         onPress={() => navigation.goBack()}
-        color={colors.white}
+        color={colors.silverMetallic}
       />
 
       {/* Name of current page / input field responsible for changing name */}
