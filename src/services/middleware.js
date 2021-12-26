@@ -9,7 +9,9 @@ export const unauthenticatedMiddleware =
   (next) =>
   (action) => {
     if (isRejectedWithValue(action) && action.payload.status === 401) {
-      AsyncStorage.removeItem('token').then(() => dispatch(logout()));
+      AsyncStorage.multiRemove(['token', 'shoppingListsProducts']).then(() =>
+        dispatch(logout())
+      );
     }
     return next(action);
   };

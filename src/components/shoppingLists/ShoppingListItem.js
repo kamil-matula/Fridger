@@ -2,9 +2,10 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { Image, Text, View, StyleSheet } from 'react-native';
-import { Checkbox } from 'react-native-paper';
+import { Checkbox, TouchableRipple } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
+import { hand } from 'assets/icons';
 
 const ShoppingListItem = ({
   avatarURI,
@@ -12,6 +13,8 @@ const ShoppingListItem = ({
   subText,
   boxText,
   variant = 'avatar',
+  onPressIcon,
+  showHand,
   status,
 }) => {
   const styles = useStyles({ boxText });
@@ -41,10 +44,20 @@ const ShoppingListItem = ({
         {subText && <Text style={styles.subText}>{subText}</Text>}
       </View>
 
-      {/* Price of bought product */}
-      <View style={styles.priceContainer}>
-        {boxText && <Text style={styles.text}>{boxText}</Text>}
-      </View>
+      {/* Price of bought product or button */}
+      {variant === 'avatar'
+        ? showHand && (
+            <View style={styles.iconContainer}>
+              <TouchableRipple onPress={onPressIcon}>
+                <Image source={hand} style={styles.icon} />
+              </TouchableRipple>
+            </View>
+          )
+        : boxText && (
+            <View style={styles.priceContainer}>
+              <Text style={styles.text}>{boxText}</Text>
+            </View>
+          )}
     </View>
   );
 };
@@ -54,6 +67,8 @@ ShoppingListItem.propTypes = {
   text: PropTypes.string.isRequired,
   subText: PropTypes.string.isRequired,
   boxText: PropTypes.string,
+  onPressIcon: PropTypes.func,
+  showHand: PropTypes.bool,
   variant: PropTypes.oneOf(['avatar', 'checkbox']),
   status: PropTypes.oneOf(['checked', 'unchecked', 'indeterminate']),
 };
@@ -102,6 +117,13 @@ const useStyles = makeStyles((theme, { boxText }) => {
       justifyContent: 'center',
       marginLeft: 16,
       marginVertical: 4,
+    },
+    iconContainer: { borderRadius: 64, overflow: 'hidden' },
+    icon: {
+      width: 32,
+      height: 32,
+      tintColor: theme.colors.silverMetallic,
+      margin: 4,
     },
   };
 

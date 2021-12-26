@@ -243,7 +243,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     color: theme.colors.silverMetallic,
   },
-  icon: { height: 16, width: 16, marginLeft: 10 },
+  icon: {
+    height: 16,
+    width: 16,
+    marginLeft: 10,
+    tintColor: theme.colors.silverMetallic,
+  },
 }));
 
 export default FridgeDetails;

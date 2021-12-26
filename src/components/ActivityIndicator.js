@@ -1,9 +1,12 @@
 import React from 'react';
 
 import { View } from 'react-native';
-import { ActivityIndicator, useTheme } from 'react-native-paper';
+import {
+  ActivityIndicator as PaperActivityIndicator,
+  useTheme,
+} from 'react-native-paper';
 
-const CustomActivityIndicator = () => {
+const ActivityIndicator = () => {
   const { colors } = useTheme();
 
   return (
@@ -13,9 +16,9 @@ const CustomActivityIndicator = () => {
         justifyContent: 'center',
       }}
     >
-      <ActivityIndicator color={colors.accent} size='large' />
+      <PaperActivityIndicator color={colors.accent} size='large' />
     </View>
   );
 };
 
-export default CustomActivityIndicator;
+export default ActivityIndicator;

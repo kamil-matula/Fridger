@@ -11,6 +11,7 @@ export const fridgerApi = createApi({
     'FridgeOwnership',
     'ShoppingLists',
     'SpecificShoppingList',
+    'ShoppingListProducts',
     'ShoppingListOwnership',
   ],
   baseQuery: fetchBaseQuery({

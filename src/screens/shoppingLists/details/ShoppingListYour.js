@@ -1,173 +1,170 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { View } from 'react-native';
 import { Divider } from 'react-native-paper';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPrice, setStatus } from 'services/ShoppingListYourProductsSlice';
 
-import { Button, ScrollViewLayout, Separator } from 'components';
 import {
-  PriceSummaryInteractive,
+  Button,
+  ActivityIndicator,
+  ScrollViewLayout,
+  Separator,
+} from 'components';
+import {
+  PriceSummary,
   ShoppingListItemInteractive,
 } from 'components/shoppingLists';
-import { makeStyles } from 'utils';
-import { shoppingListItems } from 'tmpData';
+import { makeStyles, displayToast } from 'utils';
 
-const ShoppingListYour = () => {
+import {
+  useShoppingListYourProductsQuery,
+  useBuyProductsMutation,
+} from 'services/fridger/shoppingListProducts';
+
+const ShoppingListYour = ({ route }) => {
   const styles = useStyles();
+  const dispatch = useDispatch();
+
+  const shoppingListYourProductsQuery = useShoppingListYourProductsQuery({
+    id: route.params.shoppingListID,
+  });
+  const buyProducts = useBuyProductsMutation()[0];
+
+  const shoppingList = useSelector(
+    (state) => state.shoppingListYourProducts.value[route.params.shoppingListID]
+  );
 
   // Calculating total price:
   const sumList = (list) => {
     let sum = 0;
-    for (let i = 0; i < list.length; i += 1) sum += parseFloat(list[i].price);
+    for (let i = 0; i < list.length; i += 1)
+      sum += parseFloat(list[i].price || 0);
     return sum;
   };
 
-  // Form states:
-  const { control, handleSubmit, setValue, getValues, watch } = useForm({
-    defaultValues: {
-      unchecked: shoppingListItems.filter((e) => e.status === 'unchecked'),
-      indeterminate: shoppingListItems.filter(
-        (e) => e.status === 'indeterminate'
-      ),
-      summary: sumList(
-        shoppingListItems.filter((e) => e.status === 'indeterminate')
-      ),
-    },
-  });
-  const unchecked = useFieldArray({
-    control,
-    name: 'unchecked',
-    keyName: 'key',
-  });
-  const indeterminate = useFieldArray({
-    control,
-    name: 'indeterminate',
-    keyName: 'key',
-  });
-
   // Lists with matching states + total price:
-  const uncheckedItems = watch('unchecked');
-  const indeterminateItems = watch('indeterminate');
-  const sum = sumList(indeterminateItems);
+  const unchecked = shoppingList?.products.filter(
+    (e) => e.status === 'unchecked'
+  );
+  const indeterminate =
+    shoppingList?.products.filter((e) => e.status === 'indeterminate') || [];
+  const sum = sumList(indeterminate);
 
-  // Function which changes product state:
-  const changePlace = (idx, origin, destination) => {
-    if (destination === 'indeterminate') {
-      indeterminate.prepend(getValues(origin)[idx]);
-      unchecked.remove(idx);
+  const changeStatus = (item) => {
+    let newStatus;
+    if (item.status === 'unchecked') {
+      newStatus = 'indeterminate';
+    } else if (item.status === 'indeterminate') {
+      newStatus = 'unchecked';
     }
-
-    if (destination === 'unchecked') {
-      unchecked.append(getValues(origin)[idx]);
-      indeterminate.remove(idx);
-    }
+    dispatch(
+      setStatus({
+        shoppingListId: route.params.shoppingListID,
+        productId: item.id,
+        status: newStatus,
+      })
+    );
   };
 
-  // Recalculating sum:
-  const [isSumOverridden, setIsSumOverridden] = useState(false);
-  useEffect(() => {
-    if (!isSumOverridden) {
-      setValue('summary', sum);
-    }
-  }, [isSumOverridden, sum]);
+  const changePrice = (id, newPrice) => {
+    dispatch(
+      setPrice({
+        shoppingListId: route.params.shoppingListID,
+        productId: id,
+        price: newPrice,
+      })
+    );
+  };
 
-  const submit = (data) => {
-    // TODO: set status to checked and remove from list
-    console.log(data);
+  const submit = () => {
+    buyProducts({
+      shoppingList: route.params.shoppingListID,
+      products: indeterminate.map((product) => ({
+        id: product.id,
+        price: product.price,
+      })),
+    })
+      .unwrap()
+      .then(() => {
+        displayToast('Products bought');
+      })
+      .catch((error) => {
+        displayToast(error.data?.non_field_errors || 'Unable to buy products');
+      });
   };
 
   return (
     <View style={styles.container}>
-      <ScrollViewLayout addPadding={false}>
-        <View>
-          {/* List of products that can be placed in basket */}
-          {unchecked.fields.map((item, index) => (
-            <ShoppingListItemInteractive
-              key={item.key}
-              text={item.name}
-              subText={
-                item.note
-                  ? `${item.quantity} ${item.unit}  •  ${item.note}`
-                  : `${item.quantity} ${item.unit}`
-              }
-              control={control}
-              boxName={`unchecked.${index}.price`}
-              checkBoxName={`unchecked.${index}.status`}
-              setValue={setValue}
-              onChangeStatus={() => {
-                changePlace(index, 'unchecked', 'indeterminate');
-              }}
-              currency='PLN'
-            />
-          ))}
-
-          {uncheckedItems.length > 0 && indeterminateItems.length > 0 && (
-            <Divider style={styles.divider} />
-          )}
-
-          {/* List of products that are in basket */}
-          {indeterminate.fields.map((item, index) => (
-            <ShoppingListItemInteractive
-              key={item.key}
-              text={item.name}
-              subText={
-                item.note
-                  ? `${item.quantity} ${item.unit}  •  ${item.note}`
-                  : `${item.quantity} ${item.unit}`
-              }
-              control={control}
-              boxName={`indeterminate.${index}.price`}
-              checkBoxName={`indeterminate.${index}.status`}
-              setValue={setValue}
-              onChangeStatus={() => {
-                changePlace(index, 'indeterminate', 'unchecked');
-              }}
-              currency='PLN'
-            />
-          ))}
-
-          {/* Rendering sum of prices and button only 
-              if there are products in the basket */}
-          {indeterminateItems.length > 0 && (
-            <>
-              <Separator />
-              {/* Editable sum of prices */}
-              <PriceSummaryInteractive
-                control={control}
-                name='summary'
-                onEndEditing={() => setIsSumOverridden(true)}
+      {shoppingListYourProductsQuery.isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <ScrollViewLayout addPadding={false}>
+          <View>
+            {/* List of products that can be placed in basket */}
+            {unchecked?.map((item) => (
+              <ShoppingListItemInteractive
+                key={item.id}
+                text={item.name}
+                subText={
+                  item.note
+                    ? `${item.quantity} ${item.quantity_type}  •  ${item.note}`
+                    : `${item.quantity} ${item.quantity_type}`
+                }
+                status={item.status}
+                onChangeStatus={() => {
+                  changeStatus(item);
+                }}
                 currency='PLN'
               />
+            ))}
 
-              {/* Possiblity to recalculate sum */}
-              {isSumOverridden ? (
-                <View style={styles.reset}>
+            {unchecked?.length > 0 && indeterminate?.length > 0 && (
+              <Divider style={styles.divider} />
+            )}
+
+            {/* List of products that are in basket */}
+            {indeterminate?.map((item) => (
+              <ShoppingListItemInteractive
+                key={item.id}
+                text={item.name}
+                subText={
+                  item.note
+                    ? `${item.quantity} ${item.quantity_type}  •  ${item.note}`
+                    : `${item.quantity} ${item.quantity_type}`
+                }
+                status={item.status}
+                price={item.price}
+                onChangeStatus={() => {
+                  changeStatus(item);
+                }}
+                onChangePrice={(newPrice) => changePrice(item.id, newPrice)}
+                currency='PLN'
+              />
+            ))}
+
+            {/* Rendering sum of prices and button only 
+              if there are products in the basket */}
+            {indeterminate.length > 0 && (
+              <>
+                <Separator />
+                <PriceSummary value={sum} currency='PLN' />
+
+                <Separator height={32} />
+
+                <View style={{ alignItems: 'center' }}>
                   <Button
-                    label='reset input override'
-                    variant='pureText'
-                    onPress={() => {
-                      setIsSumOverridden(false);
-                    }}
+                    label='confirm'
+                    variant='contained'
+                    onPress={submit}
                   />
                 </View>
-              ) : (
                 <Separator height={16} />
-              )}
-              <Separator height={32} />
-
-              {/* Confirming changes */}
-              <View style={{ alignItems: 'center' }}>
-                <Button
-                  label='confirm'
-                  variant='contained'
-                  onPress={handleSubmit(submit)}
-                />
-              </View>
-              <Separator height={16} />
-            </>
-          )}
-        </View>
-      </ScrollViewLayout>
+              </>
+            )}
+          </View>
+        </ScrollViewLayout>
+      )}
     </View>
   );
 };

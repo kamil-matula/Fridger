@@ -33,7 +33,7 @@ const AppBar = ({
         <Appbar.Action
           icon={back}
           onPress={() => navigation.goBack()}
-          color={colors.white}
+          color={colors.silverMetallic}
         />
       )}
 

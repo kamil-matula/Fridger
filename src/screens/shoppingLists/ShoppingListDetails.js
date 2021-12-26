@@ -11,19 +11,19 @@ import {
   AppBarRenamer,
 } from 'components';
 import { makeStyles } from 'utils';
-import { group, groupAdd, deleteIcon } from 'assets/icons';
+import { group, groupAdd, deleteIcon, logout } from 'assets/icons';
 import ShoppingListDetailsTabNavigator from 'navigation/ShoppingListDetailsTabNavigator';
 import {
   useSpecificShoppingListQuery,
   useEditShoppingListNameMutation,
 } from 'services/fridger/shoppingLists';
-import { DeleteShoppingList } from 'dialogs';
+import { DeleteShoppingList, LeaveShoppingList } from 'dialogs';
 
 const ShoppingListDetails = ({ route, navigation }) => {
   const styles = useStyles();
 
   // Queries:
-  const { data: shoppingList, isLoading } = useSpecificShoppingListQuery(
+  const specificShoppingList = useSpecificShoppingListQuery(
     route.params.shoppingListID
   );
   const editShoppingListName = useEditShoppingListNameMutation()[0];
@@ -31,26 +31,28 @@ const ShoppingListDetails = ({ route, navigation }) => {
   // Visibility conditions:
   const [fabVisible, setFabVisible] = useState(true);
   const [deletingDialogVisible, setDeletingDialogVisible] = useState(false);
+  const [leaveShoppingListDialogVisible, setLeaveShoppingListDialogVisible] =
+    useState(false);
   const bottomSheet = useRef(null);
 
   return (
     <View style={styles.container}>
-      {isLoading ? (
+      {specificShoppingList.isLoading ? (
         <ActivityIndicator />
       ) : (
         <>
           <AppBarRenamer
-            label={shoppingList?.name}
+            label={specificShoppingList?.data.name}
             onPressIcon={() => bottomSheet.current.open()}
             query={editShoppingListName}
             confirmMessage='Shopping list renamed'
             errorMessage='Unable to rename shopping list'
-            containerID={shoppingList?.id}
+            containerID={specificShoppingList?.data.id}
           />
 
           {/* Tabs */}
           <ShoppingListDetailsTabNavigator
-            isShared={shoppingList.is_shared}
+            shoppingListID={route.params.shoppingListID}
             setFabVisible={setFabVisible}
           />
 
@@ -59,7 +61,12 @@ const ShoppingListDetails = ({ route, navigation }) => {
 
           {/* Adding new product */}
           <FloatingActionButton
-            onPress={() => navigation.navigate('AddShoppingListProduct')}
+            onPress={() => {
+              navigation.navigate('AddShoppingListProduct', {
+                shoppingListID: route.params.shoppingListID,
+                mode: 'add',
+              });
+            }}
             visible={fabVisible}
             isBottomNavigationBar
           />
@@ -73,8 +80,8 @@ const ShoppingListDetails = ({ route, navigation }) => {
                 // Hide bottom sheet and change screen:
                 bottomSheet.current.close();
                 navigation.navigate('ShareShoppingList', {
-                  containerID: shoppingList.id,
-                  containerName: shoppingList.name,
+                  containerID: specificShoppingList?.data.id,
+                  containerName: specificShoppingList?.data.name,
                 });
               }}
             />
@@ -85,8 +92,8 @@ const ShoppingListDetails = ({ route, navigation }) => {
                 // Hide bottom sheet and change screen:
                 bottomSheet.current.close();
                 navigation.navigate('EditPermissionsShoppingList', {
-                  containerID: shoppingList.id,
-                  containerName: shoppingList.name,
+                  containerID: specificShoppingList?.data.id,
+                  containerName: specificShoppingList?.data.name,
                 });
               }}
             />
@@ -99,13 +106,29 @@ const ShoppingListDetails = ({ route, navigation }) => {
                 setDeletingDialogVisible(true);
               }}
             />
+            <SheetRow
+              icon={logout}
+              text='Leave Shopping List'
+              onPress={() => {
+                // Show dialog and hide bottom sheet:
+                bottomSheet.current.close();
+                setLeaveShoppingListDialogVisible(true);
+              }}
+            />
           </BottomSheet>
 
           {/* Deleting shopping list */}
           <DeleteShoppingList
             visible={deletingDialogVisible}
             setVisible={setDeletingDialogVisible}
-            shoppingList={shoppingList}
+            shoppingList={specificShoppingList?.data}
+            navigation={navigation}
+          />
+
+          <LeaveShoppingList
+            visible={leaveShoppingListDialogVisible}
+            setVisible={setLeaveShoppingListDialogVisible}
+            shoppingListOwnershipId={specificShoppingList?.data.my_ownership.id}
             navigation={navigation}
           />
         </>
