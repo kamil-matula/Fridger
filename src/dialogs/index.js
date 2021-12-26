@@ -5,3 +5,4 @@ export { default as DeleteFridgeProduct } from './DeleteFridgeProduct';
 export { default as ChangeExpirationDate } from './ChangeExpirationDate';
 export { default as DeleteFriend } from './DeleteFriend';
 export { default as LeaveFridge } from './LeaveFridge';
+export { default as DeleteShoppingListProduct } from './DeleteShoppingListProduct';

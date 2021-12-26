@@ -10,15 +10,14 @@ import {
   BottomSheet,
   SheetRow,
   FloatingActionButton,
-  Dialog,
 } from 'components';
+import { DeleteShoppingListProduct } from 'dialogs';
 import { makeStyles, displayToast } from 'utils';
 import { deleteIcon, expand, check } from 'assets/icons';
 
 import {
   useAddShoppingListProductMutation,
   useEditShoppingListProductMutation,
-  useDeleteShoppingListProductMutation,
 } from 'services/fridger/shoppingListProducts';
 
 const AddShoppingListProduct = ({ route, navigation }) => {
@@ -35,7 +34,6 @@ const AddShoppingListProduct = ({ route, navigation }) => {
 
   const addProductQuery = useAddShoppingListProductMutation()[0];
   const editProductQuery = useEditShoppingListProductMutation()[0];
-  const deleteProductQuery = useDeleteShoppingListProductMutation()[0];
 
   // Form states:
   const { control, handleSubmit, setFocus, setValue, setError, watch } =
@@ -147,18 +145,6 @@ const AddShoppingListProduct = ({ route, navigation }) => {
   // Deleting product:
   const [deleteProductDialogVisible, setDeleteProductDialogVisible] =
     useState(false);
-  const confirmRemoveProduct = () => {
-    deleteProductQuery({ id: product.id })
-      .unwrap()
-      .then(() => {
-        setDeleteProductDialogVisible(false);
-        navigation.goBack();
-      })
-      .catch((error) => {
-        errorHandler(error, 'Unable to delete product');
-      });
-  };
-  const cancelRemoveProduct = () => setDeleteProductDialogVisible(false);
 
   return (
     <View style={styles.container}>
@@ -261,17 +247,12 @@ const AddShoppingListProduct = ({ route, navigation }) => {
       )}
 
       {/* Deleting product */}
-      <Dialog
-        title='Delete product'
-        paragraph={`Are you sure you want to delete ${product?.name} from this shopping list? This action cannot be undone.`}
-        visibilityState={[
-          deleteProductDialogVisible,
-          setDeleteProductDialogVisible,
-        ]}
-        label1='delete'
-        onPressLabel1={confirmRemoveProduct}
-        label2='cancel'
-        onPressLabel2={cancelRemoveProduct}
+      <DeleteShoppingListProduct
+        visible={deleteProductDialogVisible}
+        setVisible={setDeleteProductDialogVisible}
+        productID={product?.id}
+        productName={product?.name}
+        navigation={navigation}
       />
     </View>
   );
