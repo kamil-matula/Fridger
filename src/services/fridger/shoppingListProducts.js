@@ -49,7 +49,7 @@ const shoppingListsApi = fridgerApi.injectEndpoints({
         method: 'POST',
         body: { products },
       }),
-      invalidatesTags: ['ShoppingListProducts'],
+      invalidatesTags: ['ShoppingListProducts', 'Statistics'],
     }),
     deleteShoppingListProduct: builder.mutation({
       query: ({ id }) => ({
