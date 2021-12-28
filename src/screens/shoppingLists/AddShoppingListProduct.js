@@ -210,7 +210,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
           <InputField
             control={control}
             name='note'
-            label='Note'
+            label='Note (optional)'
             variant='data'
             returnKeyType='done'
             placeholder='Enter note'

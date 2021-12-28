@@ -30,7 +30,6 @@ const ListOfShoppingLists = ({
                     unchecked={list.bought_products_count}
                     dips={list.taken_products_count}
                     checked={list.free_products_count}
-                    isShared={list.is_shared}
                     isActive={!list.is_archived}
                     onPress={() => {
                       // Go to specific shopping list:

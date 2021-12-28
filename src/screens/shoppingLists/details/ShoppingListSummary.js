@@ -3,7 +3,7 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import { ActivityIndicator, Separator } from 'components';
+import { ActivityIndicator, Placeholder, Separator } from 'components';
 import { PriceSummary, ShoppingListItem, Chip } from 'components/shoppingLists';
 import { makeStyles } from 'utils';
 
@@ -37,43 +37,49 @@ const ShoppingListSummary = ({ route }) => {
       {shoppingListSummaryQuery.isLoading ? (
         <ActivityIndicator />
       ) : (
-        <ScrollView>
-          <View>
-            {shoppingListSummaryQuery?.data.users.map((user, idx) => {
-              const notBoughtProducts = user.products.filter(
-                (product) =>
-                  product.status === 'unchecked' ||
-                  product.status === 'indeterminate'
-              );
-              const boughtProducts = user.products.filter(
-                (product) => product.status === 'checked'
-              );
+        <>
+          {shoppingListSummaryQuery?.data.users.length > 0 ? (
+            <ScrollView>
+              <View>
+                {shoppingListSummaryQuery?.data.users.map((user, idx) => {
+                  const notBoughtProducts = user.products.filter(
+                    (product) =>
+                      product.status === 'unchecked' ||
+                      product.status === 'indeterminate'
+                  );
+                  const boughtProducts = user.products.filter(
+                    (product) => product.status === 'checked'
+                  );
 
-              return (
-                <View key={idx}>
-                  {/* Sub-list owner */}
-                  <View style={{ paddingHorizontal: 16 }}>
-                    <Separator />
-                    <Chip avatarURI={user.avatar} text={user.username} />
-                    <Separator />
-                  </View>
+                  return (
+                    <View key={idx}>
+                      {/* Sub-list owner */}
+                      <View style={{ paddingHorizontal: 16 }}>
+                        <Separator />
+                        <Chip avatarURI={user.avatar} text={user.username} />
+                        <Separator />
+                      </View>
 
-                  {/* Products */}
-                  {productsList(notBoughtProducts)}
-                  {notBoughtProducts.length > 0 &&
-                    boughtProducts.length > 0 && (
-                      <Divider style={styles.divider} />
-                    )}
-                  {productsList(boughtProducts)}
+                      {/* Products */}
+                      {productsList(notBoughtProducts)}
+                      {notBoughtProducts.length > 0 &&
+                        boughtProducts.length > 0 && (
+                          <Divider style={styles.divider} />
+                        )}
+                      {productsList(boughtProducts)}
 
-                  {/* Total price */}
-                  <PriceSummary value={user.total_price} currency='PLN' />
-                  <Divider style={styles.dividerWide} />
-                </View>
-              );
-            })}
-          </View>
-        </ScrollView>
+                      {/* Total price */}
+                      <PriceSummary value={user.total_price} currency='PLN' />
+                      <Divider style={styles.dividerWide} />
+                    </View>
+                  );
+                })}
+              </View>
+            </ScrollView>
+          ) : (
+            <Placeholder content='No products to display' />
+          )}
+        </>
       )}
     </View>
   );
