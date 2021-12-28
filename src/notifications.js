@@ -1,64 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 
-import { Text, View } from 'react-native';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { displayToast } from 'utils';
 
 const NotificationListener = () => {
-  const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => {
-      setExpoPushToken(token);
-      console.log(token);
+    registerForPushNotificationsAsync().then(async (token) => {
+      if (token) {
+        await AsyncStorage.setItem('expoToken', token);
+      }
     });
-
-    // This listener is fired whenever a notification is received
-    // while the app is foregrounded:
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((not) =>
-        setNotification(not)
-      );
-
-    // This listener is fired whenever a user taps on or interacts
-    // with a notification (works when app is foregrounded, backgrounded or killed):
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) =>
-        console.log(response)
-      );
-
-    return () => {
-      Notifications.removeNotificationSubscription(
-        notificationListener.current
-      );
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
   }, []);
 
-  return (
-    <View
-      style={{
-        alignItems: 'center',
-        justifyContent: 'space-around',
-      }}
-    >
-      <Text>Your expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text>
-          Title: {notification && notification.request.content.title}{' '}
-        </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>
-          Data:{' '}
-          {notification && JSON.stringify(notification.request.content.data)}
-        </Text>
-      </View>
-    </View>
-  );
+  return <></>;
 };
 
 // Configuration for notifications:

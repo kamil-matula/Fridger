@@ -2,9 +2,11 @@ import React from 'react';
 
 import { Text, View } from 'react-native';
 import { useForm } from 'react-hook-form';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { InputField, Button, ScrollViewLayout, Separator } from 'components';
 import { useLoginMutation } from 'services/fridger/auth';
+import { useUpdateExpoTokenMutation } from 'services/fridger/user';
 import { displayToast, makeStyles } from 'utils';
 
 const Login = ({ navigation }) => {
@@ -12,6 +14,7 @@ const Login = ({ navigation }) => {
 
   // Queries:
   const [loginPost, { isLoading }] = useLoginMutation();
+  const [updateTokenQuery] = useUpdateExpoTokenMutation();
 
   // Form states:
   const { control, handleSubmit, setFocus } = useForm({
@@ -37,9 +40,18 @@ const Login = ({ navigation }) => {
   };
 
   // Send data to api:
-  const login = (data) => {
+  const login = async (data) => {
     loginPost(data)
       .unwrap()
+      .then(async () => {
+        // Enable notifications by passing expo token to user:
+        const expoToken = await AsyncStorage.getItem('expoToken');
+        if (expoToken) {
+          updateTokenQuery(expoToken)
+            .unwrap()
+            .catch(() => displayToast('Notifications are disabled'));
+        }
+      })
       .catch((error) =>
         displayToast(error.data?.non_field_errors || 'Unable to login')
       );

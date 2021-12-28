@@ -44,6 +44,13 @@ const usersApi = fridgerApi.injectEndpoints({
       },
       invalidatesTags: ['User'],
     }),
+    updateExpoToken: builder.mutation({
+      query: (expoToken) => ({
+        url: 'auth/users/me',
+        method: 'PATCH',
+        body: { mobile_token: expoToken },
+      }),
+    }),
     findUser: builder.query({
       query: (username) => ({
         url: `users/${username}`,
@@ -59,5 +66,6 @@ export const {
   useUserInfoQuery,
   useLazyUserInfoQuery,
   useUpdateUserInfoMutation,
+  useUpdateExpoTokenMutation,
   useLazyFindUserQuery,
 } = usersApi;
