@@ -34,9 +34,11 @@ const NotificationListener = () => {
         // TODO: Refetch list of friends to make displaying updates
         // faster than it is implemented in polling functionality
         navigation.navigate('Friends');
+      } else if (data.fridge_id) {
+        navigation.navigate('FridgeDetails', {
+          fridgeID: data.fridge_id,
+        });
       }
-
-      // TODO: Handle with Expiration Date Notification (redirect to specific fridge)
     }
   }, [lastNotificationResponse]);
 
