@@ -4,7 +4,10 @@ import { ListOfShoppingLists } from 'components/shoppingLists';
 import { useShoppingListsQuery } from 'services/fridger/shoppingLists';
 
 const ShoppingListsHistory = ({ navigation }) => {
-  const shoppingLists = useShoppingListsQuery({ isArchived: true });
+  const shoppingLists = useShoppingListsQuery(
+    { isArchived: true },
+    { pollingInterval: 5000 }
+  );
 
   return (
     <ListOfShoppingLists
