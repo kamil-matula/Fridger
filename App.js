@@ -18,7 +18,6 @@ import { loadToken, authenticate } from 'services/authSlice';
 import { store } from 'services/store';
 import { useLazyUserInfoQuery } from 'services/fridger/user';
 import { setShoppingListYourProducts } from 'services/ShoppingListYourProductsSlice';
-import NotificationListener from 'notifications';
 
 // Main function:
 const App = () => {
@@ -106,7 +105,6 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
           backgroundColor={CustomTheme.colors.richBlack}
         />
         <Navigation />
-        <NotificationListener />
       </PaperProvider>
     </SafeAreaProvider>
   );
