@@ -18,7 +18,9 @@ import { loadToken, authenticate } from 'services/authSlice';
 import { store } from 'services/store';
 import { useLazyUserInfoQuery } from 'services/fridger/user';
 import { setShoppingListYourProducts } from 'services/ShoppingListYourProductsSlice';
+import NotificationListener from 'notifications';
 
+// Main function:
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -66,7 +68,9 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
       if (token) {
         await AsyncStorage.setItem('token', token);
       } else {
+        // Remove all data from provider (redux store):
         dispatch(setShoppingListYourProducts({ value: {} }));
+        // Remove all data from local storage:
         await AsyncStorage.multiRemove(['token', 'shoppingListsProducts']);
       }
     };
@@ -92,6 +96,7 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
     return unsubscribe;
   }, []);
 
+  // Render only if loaded:
   if (isAppLoading) return null;
   return (
     <SafeAreaProvider>
@@ -101,6 +106,7 @@ const AppContent = ({ isAppLoading, setIsAppLoading }) => {
           backgroundColor={CustomTheme.colors.richBlack}
         />
         <Navigation />
+        <NotificationListener />
       </PaperProvider>
     </SafeAreaProvider>
   );
@@ -110,4 +116,5 @@ AppContent.propTypes = {
   isAppLoading: PropTypes.bool.isRequired,
   setIsAppLoading: PropTypes.func.isRequired,
 };
+
 export default App;
