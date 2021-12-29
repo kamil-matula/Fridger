@@ -18,7 +18,7 @@ const Fridges = ({ navigation }) => {
   const styles = useStyles();
 
   // Queries:
-  const fridges = useFridgesQuery();
+  const fridges = useFridgesQuery(null, { pollingInterval: 5000 });
 
   return (
     <View style={styles.container}>

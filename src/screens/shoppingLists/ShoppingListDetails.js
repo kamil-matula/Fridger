@@ -24,7 +24,8 @@ const ShoppingListDetails = ({ route, navigation }) => {
 
   // Queries:
   const specificShoppingList = useSpecificShoppingListQuery(
-    route.params.shoppingListID
+    route.params.shoppingListID,
+    { pollingInterval: 5000 }
   );
   const editShoppingListName = useEditShoppingListNameMutation()[0];
 

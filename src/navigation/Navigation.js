@@ -34,10 +34,12 @@ import {
 } from 'screens/drawer';
 import NoConnection from 'screens/NoConnection';
 import DrawerNavigator from './DrawerNavigator';
+import NotificationListener from '../notifications';
 
 const Navigation = () => (
   <NavigationContainer>
     <RootStackNavigator />
+    <NotificationListener />
   </NavigationContainer>
 );
 

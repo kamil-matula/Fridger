@@ -28,8 +28,14 @@ const Friends = ({ navigation }) => {
   // Queries:
   const deleteFriendQuery = useDeleteFriendMutation()[0];
   const acceptFriendQuery = useAcceptFriendMutation()[0];
-  const requests = useFriendsQuery({ isAccepted: false });
-  const friends = useFriendsQuery({ isAccepted: true });
+  const requests = useFriendsQuery(
+    { isAccepted: false },
+    { pollingInterval: 5000 }
+  );
+  const friends = useFriendsQuery(
+    { isAccepted: true },
+    { pollingInterval: 5000 }
+  );
 
   // Prepare to remove friend:
   const [relationshipToRemove, setRelationshipToRemove] = useState(null);

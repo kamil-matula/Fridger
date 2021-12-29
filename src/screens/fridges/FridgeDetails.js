@@ -51,13 +51,18 @@ const FridgeDetails = ({ route, navigation }) => {
   };
 
   // Queries:
-  const { data: fridge, isLoading: isFridgeLoading } =
-    useSpecificFridgeQuery(fridgeID);
+  const { data: fridge, isLoading: isFridgeLoading } = useSpecificFridgeQuery(
+    fridgeID,
+    { pollingInterval: 5000 }
+  );
   const { data: fridgeProducts, isLoading: areProductsLoading } =
-    useFridgeProductsQuery({
-      fridge: fridgeID,
-      ordering: sortingDirection + sortingCategoryName,
-    });
+    useFridgeProductsQuery(
+      {
+        fridge: fridgeID,
+        ordering: sortingDirection + sortingCategoryName,
+      },
+      { pollingInterval: 5000 }
+    );
   const [editFridgeNameQuery] = useEditFridgeNameMutation();
 
   // Deleting fridge:
