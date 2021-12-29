@@ -27,8 +27,6 @@ const shoppingListYourProductsSlice = createSlice({
     builder.addMatcher(
       fridgerApi.endpoints.shoppingListYourProducts.matchFulfilled,
       (state, action) => {
-        console.log('here');
-
         const { products: shoppingListYourProducts, id: shoppingListId } =
           action.payload;
 

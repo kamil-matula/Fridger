@@ -57,6 +57,7 @@ const ShoppingListAll = ({ route, navigation }) => {
                 <TouchableRipple
                   key={product.id}
                   onPress={() => {
+                    // TODO: Replace created_by with taken_by
                     if (
                       product.created_by.username ===
                       userInfoQuery.data.username
@@ -80,6 +81,7 @@ const ShoppingListAll = ({ route, navigation }) => {
                         : `${product.quantity} ${product.quantity_type}`
                     }
                     onPressIcon={() => dips(product)}
+                    // TODO: Replace created_by with taken_by
                     showHand={
                       product.status === 'free' ||
                       product.created_by.username ===

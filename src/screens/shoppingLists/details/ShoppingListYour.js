@@ -20,7 +20,7 @@ const ShoppingListYour = ({ route }) => {
   const shoppingListYourProductsQuery = useShoppingListYourProductsQuery({
     id: route.params.shoppingListID,
   });
-  const buyProducts = useBuyProductsMutation()[0];
+  const [buyProducts, { isLoading }] = useBuyProductsMutation();
 
   const shoppingList = useSelector(
     (state) => state.shoppingListYourProducts.value[route.params.shoppingListID]
@@ -91,7 +91,7 @@ const ShoppingListYour = ({ route }) => {
         <ActivityIndicator />
       ) : (
         <>
-          {shoppingListYourProductsQuery?.data.length > 0 ? (
+          {unchecked.length > 0 || indeterminate.length > 0 ? (
             <ScrollView>
               <View>
                 {/* List of products that can be placed in basket */}
@@ -150,6 +150,7 @@ const ShoppingListYour = ({ route }) => {
                         label='confirm'
                         variant='contained'
                         onPress={submit}
+                        isLoading={isLoading}
                       />
                     </View>
                     <Separator height={16} />

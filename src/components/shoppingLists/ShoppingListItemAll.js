@@ -45,6 +45,9 @@ const ShoppingListItemAll = ({
           </TouchableRipple>
         </View>
       )}
+
+      {/* TODO: Add indicator and maybe move request to 'dibs' method here, 
+          to have access to isLoading of separate request */}
     </View>
   );
 };
@@ -55,7 +58,12 @@ ShoppingListItemAll.propTypes = {
   subText: PropTypes.string.isRequired,
   onPressIcon: PropTypes.func,
   showHand: PropTypes.bool,
-  productStatus: PropTypes.oneOf(['free', 'taken', 'bought']).isRequired,
+  productStatus: PropTypes.oneOf([
+    'free',
+    'unchecked',
+    'indeterminate',
+    'checked',
+  ]).isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
