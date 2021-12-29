@@ -4,7 +4,11 @@ import { View, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import { ActivityIndicator, Placeholder, Separator } from 'components';
-import { PriceSummary, ShoppingListItem, Chip } from 'components/shoppingLists';
+import {
+  PriceSummary,
+  ShoppingListItemSummary,
+  Chip,
+} from 'components/shoppingLists';
 import { makeStyles } from 'utils';
 
 import { useShoppingListSummaryQuery } from 'services/fridger/shoppingListProducts';
@@ -18,7 +22,7 @@ const ShoppingListSummary = ({ route }) => {
 
   const productsList = (products) =>
     products.map((product, idx) => (
-      <ShoppingListItem
+      <ShoppingListItemSummary
         key={idx}
         text={product.name}
         subText={
@@ -27,10 +31,14 @@ const ShoppingListSummary = ({ route }) => {
             : `${product.quantity} ${product.quantity_type}`
         }
         boxText={product.price ? `${product.price} PLN` : null}
-        variant='checkbox'
         status={product.status}
       />
     ));
+
+  const validUsers =
+    shoppingListSummaryQuery?.data?.users.filter(
+      (user) => user.products.length > 0
+    ) || [];
 
   return (
     <View style={styles.container}>
@@ -38,10 +46,10 @@ const ShoppingListSummary = ({ route }) => {
         <ActivityIndicator />
       ) : (
         <>
-          {shoppingListSummaryQuery?.data.users.length > 0 ? (
+          {validUsers.length > 0 ? (
             <ScrollView>
               <View>
-                {shoppingListSummaryQuery?.data.users.map((user, idx) => {
+                {validUsers.map((user, idx) => {
                   const notBoughtProducts = user.products.filter(
                     (product) =>
                       product.status === 'unchecked' ||

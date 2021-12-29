@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { View, Text, Image } from 'react-native';
 
 import { makeStyles } from 'utils';
+import { tmpPerson } from 'assets/images';
 
 const Chip = ({ avatarURI, text }) => {
   const styles = useStyles();
@@ -11,7 +12,10 @@ const Chip = ({ avatarURI, text }) => {
   return (
     <View style={{ flexDirection: 'row' }}>
       <View style={styles.container}>
-        <Image style={styles.avatar} source={{ uri: avatarURI }} />
+        <Image
+          style={styles.avatar}
+          source={avatarURI ? { uri: avatarURI } : tmpPerson}
+        />
         <Text style={styles.text}>{text}</Text>
       </View>
     </View>
@@ -19,7 +23,7 @@ const Chip = ({ avatarURI, text }) => {
 };
 
 Chip.propTypes = {
-  avatarURI: PropTypes.string.isRequired,
+  avatarURI: PropTypes.string,
   text: PropTypes.string.isRequired,
 };
 

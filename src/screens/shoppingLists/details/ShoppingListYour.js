@@ -5,12 +5,9 @@ import { Divider } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, ActivityIndicator, Separator, Placeholder } from 'components';
-import {
-  PriceSummary,
-  ShoppingListItemInteractive,
-} from 'components/shoppingLists';
+import { PriceSummary, ShoppingListItemYour } from 'components/shoppingLists';
 import { makeStyles, displayToast } from 'utils';
-import { setPrice, setStatus } from 'services/ShoppingListYourProductsSlice';
+import { setPrice, setStatus } from 'services/shoppingListYourProductsSlice';
 import {
   useShoppingListYourProductsQuery,
   useBuyProductsMutation,
@@ -99,7 +96,7 @@ const ShoppingListYour = ({ route }) => {
               <View>
                 {/* List of products that can be placed in basket */}
                 {unchecked?.map((item) => (
-                  <ShoppingListItemInteractive
+                  <ShoppingListItemYour
                     key={item.id}
                     text={item.name}
                     subText={
@@ -121,7 +118,7 @@ const ShoppingListYour = ({ route }) => {
 
                 {/* List of products that are in basket */}
                 {indeterminate?.map((item) => (
-                  <ShoppingListItemInteractive
+                  <ShoppingListItemYour
                     key={item.id}
                     text={item.name}
                     subText={

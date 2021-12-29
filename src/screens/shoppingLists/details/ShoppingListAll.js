@@ -4,7 +4,7 @@ import { View, ScrollView } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
 import { ActivityIndicator, Placeholder, Separator } from 'components';
-import { ShoppingListItem } from 'components/shoppingLists';
+import { ShoppingListItemAll } from 'components/shoppingLists';
 import { displayToast, makeStyles } from 'utils';
 
 import {
@@ -71,12 +71,8 @@ const ShoppingListAll = ({ route, navigation }) => {
                     }
                   }}
                 >
-                  <ShoppingListItem
-                    avatarURI={
-                      product.status !== 'free'
-                        ? product.created_by.avatar
-                        : null
-                    }
+                  <ShoppingListItemAll
+                    avatarURI={product.created_by.avatar}
                     text={product.name}
                     subText={
                       product.note
@@ -89,6 +85,7 @@ const ShoppingListAll = ({ route, navigation }) => {
                       product.created_by.username ===
                         userInfoQuery.data.username
                     }
+                    productStatus={product.status}
                   />
                 </TouchableRipple>
               ))}
