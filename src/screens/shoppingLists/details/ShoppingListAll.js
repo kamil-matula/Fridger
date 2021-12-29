@@ -84,8 +84,9 @@ const ShoppingListAll = ({ route, navigation }) => {
                     // TODO: Replace created_by with taken_by
                     showHand={
                       product.status === 'free' ||
-                      product.created_by.username ===
-                        userInfoQuery.data.username
+                      (product.status === 'unchecked' &&
+                        product.created_by.username ===
+                          userInfoQuery.data.username)
                     }
                     productStatus={product.status}
                   />
