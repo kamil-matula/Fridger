@@ -3,7 +3,6 @@ import React from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { ActivityIndicator, AppBar, StatsCard, Separator } from 'components';
-// TODO: Use different icons without attributions (these are from flaticon) or add attributions
 import { sad, happy, money } from 'assets/icons/stats';
 import { makeStyles } from 'utils';
 import { useStatisticsQuery } from 'services/fridger/statistics';

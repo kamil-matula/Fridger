@@ -12,8 +12,6 @@ const RadioButtonGroup = ({ items, checkedState }) => {
 
   return (
     <RadioButton.Group onValueChange={(v) => setValue(v)} value={value}>
-      {/* TODO: Replace default component with custom one to 
-          get smaller buttons and 'bolder' labels */}
       {items.map((e) => (
         <RadioButton.Item
           key={e}

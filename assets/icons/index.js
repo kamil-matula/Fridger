@@ -28,3 +28,4 @@ export { default as handFilled } from './hand_filled.png';
 export { default as chat } from './chat.png';
 export { default as mail } from './mail.png';
 export { default as noInternet } from './no_internet.png';
+export { default as photo } from './photo.png';
