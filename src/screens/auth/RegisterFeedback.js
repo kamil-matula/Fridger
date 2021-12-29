@@ -4,7 +4,7 @@ import { Text, View, Image } from 'react-native';
 
 import { Button } from 'components';
 import { makeStyles } from 'utils/makeStyles';
-import { pigeon } from 'assets/images';
+import { mail } from 'assets/icons';
 
 const RegisterFeedback = ({ navigation }) => {
   const styles = useStyles();
@@ -17,8 +17,8 @@ const RegisterFeedback = ({ navigation }) => {
           You have created an account.{'\n'}Please confirm your email.
         </Text>
       </View>
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={pigeon} />
+      <View style={styles.iconContainer}>
+        <Image style={styles.icon} source={mail} />
       </View>
       <Button
         label='OK'
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.background,
   },
   headerContainer: {
-    marginVertical: 64,
+    marginTop: 64,
   },
   header: {
     fontSize: 36,
@@ -50,13 +50,16 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     textAlign: 'center',
   },
-  imageContainer: {
+  iconContainer: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 64,
   },
-  image: {
-    width: null,
-    resizeMode: 'contain',
-    flex: 1,
+  icon: {
+    width: 256,
+    height: 256,
+    tintColor: theme.colors.white,
   },
 }));
 

@@ -88,6 +88,7 @@ const ShoppingListAll = ({ route, navigation }) => {
                         product.created_by.username ===
                           userInfoQuery.data.username)
                     }
+                    isFilled={product.status === 'unchecked'}
                     productStatus={product.status}
                   />
                 </TouchableRipple>
