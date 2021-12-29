@@ -17,9 +17,12 @@ const ShoppingListYour = ({ route }) => {
   const styles = useStyles();
   const dispatch = useDispatch();
 
-  const shoppingListYourProductsQuery = useShoppingListYourProductsQuery({
-    id: route.params.shoppingListID,
-  });
+  const shoppingListYourProductsQuery = useShoppingListYourProductsQuery(
+    {
+      id: route.params.shoppingListID,
+    },
+    { pollingInterval: 5000 }
+  );
   const [buyProducts, { isLoading }] = useBuyProductsMutation();
 
   const shoppingList = useSelector(

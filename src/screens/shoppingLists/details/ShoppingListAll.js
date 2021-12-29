@@ -16,9 +16,12 @@ import { useUserInfoQuery } from 'services/fridger/user';
 const ShoppingListAll = ({ route, navigation }) => {
   const styles = useStyles();
 
-  const shoppingListProductsQuery = useShoppingListAllProductsQuery({
-    id: route.params.shoppingListID,
-  });
+  const shoppingListProductsQuery = useShoppingListAllProductsQuery(
+    {
+      id: route.params.shoppingListID,
+    },
+    { pollingInterval: 5000 }
+  );
   const editShoppingListProductQuery = useEditShoppingListProductMutation()[0];
   const userInfoQuery = useUserInfoQuery();
 
@@ -57,11 +60,7 @@ const ShoppingListAll = ({ route, navigation }) => {
                 <TouchableRipple
                   key={product.id}
                   onPress={() => {
-                    // TODO: Replace created_by with taken_by
-                    if (
-                      product.created_by.username ===
-                      userInfoQuery.data.username
-                    ) {
+                    if (product.status !== 'free') {
                       navigation.navigate('AddShoppingListProduct', {
                         shoppingListID: route.params.shoppingListID,
                         product,
@@ -73,7 +72,7 @@ const ShoppingListAll = ({ route, navigation }) => {
                   }}
                 >
                   <ShoppingListItemAll
-                    avatarURI={product.created_by.avatar}
+                    avatarURI={product.taken_by?.avatar}
                     text={product.name}
                     subText={
                       product.note
@@ -81,11 +80,10 @@ const ShoppingListAll = ({ route, navigation }) => {
                         : `${product.quantity} ${product.quantity_type}`
                     }
                     onPressIcon={() => dips(product)}
-                    // TODO: Replace created_by with taken_by
                     showHand={
                       product.status === 'free' ||
                       (product.status === 'unchecked' &&
-                        product.created_by.username ===
+                        product.taken_by?.username ===
                           userInfoQuery.data.username)
                     }
                     isFilled={product.status === 'unchecked'}

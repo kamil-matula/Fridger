@@ -16,9 +16,12 @@ import { useShoppingListSummaryQuery } from 'services/fridger/shoppingListProduc
 const ShoppingListSummary = ({ route }) => {
   const styles = useStyles();
 
-  const shoppingListSummaryQuery = useShoppingListSummaryQuery({
-    id: route.params.shoppingListID,
-  });
+  const shoppingListSummaryQuery = useShoppingListSummaryQuery(
+    {
+      id: route.params.shoppingListID,
+    },
+    { pollingInterval: 5000 }
+  );
 
   const productsList = (products) =>
     products.map((product, idx) => (
