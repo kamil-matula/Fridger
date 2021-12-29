@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fridgerApi } from 'services/fridger/fridgerApi';
 
-const ShoppingListYourProductsSlice = createSlice({
+const shoppingListYourProductsSlice = createSlice({
   name: 'shoppingListYourProducts',
   initialState: { value: {} },
   reducers: {
@@ -42,8 +42,7 @@ const ShoppingListYourProductsSlice = createSlice({
           (product) => product.id
         );
 
-        // remove ShoppingListYourProductsSlice state products
-        // that are not in shoppingListYourProducts
+        // remove products that are not in shoppingListYourProducts
         state.value[shoppingListId].products = state.value[
           shoppingListId
         ].products.filter((stateProduct) =>
@@ -73,7 +72,7 @@ const ShoppingListYourProductsSlice = createSlice({
   },
 });
 
-export default ShoppingListYourProductsSlice.reducer;
+export default shoppingListYourProductsSlice.reducer;
 
 export const { setStatus, setPrice, setShoppingListYourProducts } =
-  ShoppingListYourProductsSlice.actions;
+  shoppingListYourProductsSlice.actions;

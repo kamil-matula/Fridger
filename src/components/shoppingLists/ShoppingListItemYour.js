@@ -6,8 +6,8 @@ import { Checkbox, useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
 
-// This component is used in second tab of Shopping List Details
-const ShoppingListItemInteractive = ({
+// This component is used in second tab of Shopping List Details:
+const ShoppingListItemYour = ({
   text,
   subText,
   status,
@@ -16,7 +16,6 @@ const ShoppingListItemInteractive = ({
   onChangePrice,
   currency,
 }) => {
-  // Styling:
   const { colors } = useTheme();
   const styles = useStyles({ fieldValue: status });
 
@@ -63,7 +62,7 @@ const ShoppingListItemInteractive = ({
   );
 };
 
-ShoppingListItemInteractive.propTypes = {
+ShoppingListItemYour.propTypes = {
   text: PropTypes.string.isRequired,
   subText: PropTypes.string,
   status: PropTypes.string,
@@ -120,4 +119,4 @@ const useStyles = makeStyles((theme, { fieldValue }) => {
   return obj;
 });
 
-export default ShoppingListItemInteractive;
+export default ShoppingListItemYour;

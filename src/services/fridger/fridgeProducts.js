@@ -94,7 +94,7 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
           })(status),
         },
       }),
-      invalidatesTags: ['Fridges', 'FridgeProducts'],
+      invalidatesTags: ['Fridges', 'FridgeProducts', 'Statistics'],
     }),
   }),
 });

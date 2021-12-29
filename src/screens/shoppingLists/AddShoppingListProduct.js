@@ -32,8 +32,10 @@ const AddShoppingListProduct = ({ route, navigation }) => {
     { short: 'pcs', long: 'pieces' },
   ];
 
-  const addProductQuery = useAddShoppingListProductMutation()[0];
-  const editProductQuery = useEditShoppingListProductMutation()[0];
+  const [addProductQuery, { isLoading: isAddProductLoading }] =
+    useAddShoppingListProductMutation();
+  const [editProductQuery, { isLoading: isEditProductLoading }] =
+    useEditShoppingListProductMutation();
 
   // Form states:
   const { control, handleSubmit, setFocus, setValue, setError, watch } =
@@ -210,7 +212,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
           <InputField
             control={control}
             name='note'
-            label='Note'
+            label='Note (optional)'
             variant='data'
             returnKeyType='done'
             placeholder='Enter note'
@@ -236,6 +238,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
           label='Add product'
           onPress={handleSubmit(addProduct)}
           centered
+          isLoading={isAddProductLoading}
         />
       ) : (
         <FloatingActionButton
@@ -243,6 +246,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
           onPress={handleSubmit(editProduct)}
           centered
           confirm
+          isLoading={isEditProductLoading}
         />
       )}
 

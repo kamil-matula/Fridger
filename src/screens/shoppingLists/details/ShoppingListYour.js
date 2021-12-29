@@ -1,22 +1,13 @@
 import React from 'react';
 
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPrice, setStatus } from 'services/ShoppingListYourProductsSlice';
 
-import {
-  Button,
-  ActivityIndicator,
-  ScrollViewLayout,
-  Separator,
-} from 'components';
-import {
-  PriceSummary,
-  ShoppingListItemInteractive,
-} from 'components/shoppingLists';
+import { Button, ActivityIndicator, Separator, Placeholder } from 'components';
+import { PriceSummary, ShoppingListItemYour } from 'components/shoppingLists';
 import { makeStyles, displayToast } from 'utils';
-
+import { setPrice, setStatus } from 'services/shoppingListYourProductsSlice';
 import {
   useShoppingListYourProductsQuery,
   useBuyProductsMutation,
@@ -29,7 +20,7 @@ const ShoppingListYour = ({ route }) => {
   const shoppingListYourProductsQuery = useShoppingListYourProductsQuery({
     id: route.params.shoppingListID,
   });
-  const buyProducts = useBuyProductsMutation()[0];
+  const [buyProducts, { isLoading }] = useBuyProductsMutation();
 
   const shoppingList = useSelector(
     (state) => state.shoppingListYourProducts.value[route.params.shoppingListID]
@@ -99,71 +90,78 @@ const ShoppingListYour = ({ route }) => {
       {shoppingListYourProductsQuery.isLoading ? (
         <ActivityIndicator />
       ) : (
-        <ScrollViewLayout addPadding={false}>
-          <View>
-            {/* List of products that can be placed in basket */}
-            {unchecked?.map((item) => (
-              <ShoppingListItemInteractive
-                key={item.id}
-                text={item.name}
-                subText={
-                  item.note
-                    ? `${item.quantity} ${item.quantity_type}  •  ${item.note}`
-                    : `${item.quantity} ${item.quantity_type}`
-                }
-                status={item.status}
-                onChangeStatus={() => {
-                  changeStatus(item);
-                }}
-                currency='PLN'
-              />
-            ))}
-
-            {unchecked?.length > 0 && indeterminate?.length > 0 && (
-              <Divider style={styles.divider} />
-            )}
-
-            {/* List of products that are in basket */}
-            {indeterminate?.map((item) => (
-              <ShoppingListItemInteractive
-                key={item.id}
-                text={item.name}
-                subText={
-                  item.note
-                    ? `${item.quantity} ${item.quantity_type}  •  ${item.note}`
-                    : `${item.quantity} ${item.quantity_type}`
-                }
-                status={item.status}
-                price={item.price}
-                onChangeStatus={() => {
-                  changeStatus(item);
-                }}
-                onChangePrice={(newPrice) => changePrice(item.id, newPrice)}
-                currency='PLN'
-              />
-            ))}
-
-            {/* Rendering sum of prices and button only 
-              if there are products in the basket */}
-            {indeterminate.length > 0 && (
-              <>
-                <Separator />
-                <PriceSummary value={sum} currency='PLN' />
-
-                <Separator height={32} />
-
-                <View style={{ alignItems: 'center' }}>
-                  <Button
-                    label='confirm'
-                    variant='contained'
-                    onPress={submit}
+        <>
+          {unchecked.length > 0 || indeterminate.length > 0 ? (
+            <ScrollView>
+              <View>
+                {/* List of products that can be placed in basket */}
+                {unchecked?.map((item) => (
+                  <ShoppingListItemYour
+                    key={item.id}
+                    text={item.name}
+                    subText={
+                      item.note
+                        ? `${item.quantity} ${item.quantity_type}  •  ${item.note}`
+                        : `${item.quantity} ${item.quantity_type}`
+                    }
+                    status={item.status}
+                    onChangeStatus={() => {
+                      changeStatus(item);
+                    }}
+                    currency='PLN'
                   />
-                </View>
-                <Separator height={16} />
-              </>
-            )}
-          </View>
-        </ScrollViewLayout>
+                ))}
+
+                {unchecked?.length > 0 && indeterminate?.length > 0 && (
+                  <Divider style={styles.divider} />
+                )}
+
+                {/* List of products that are in basket */}
+                {indeterminate?.map((item) => (
+                  <ShoppingListItemYour
+                    key={item.id}
+                    text={item.name}
+                    subText={
+                      item.note
+                        ? `${item.quantity} ${item.quantity_type}  •  ${item.note}`
+                        : `${item.quantity} ${item.quantity_type}`
+                    }
+                    status={item.status}
+                    price={item.price}
+                    onChangeStatus={() => {
+                      changeStatus(item);
+                    }}
+                    onChangePrice={(newPrice) => changePrice(item.id, newPrice)}
+                    currency='PLN'
+                  />
+                ))}
+
+                {/* Rendering sum of prices and button only 
+                    if there are products in the basket */}
+                {indeterminate.length > 0 && (
+                  <>
+                    <Separator />
+                    <PriceSummary value={sum} currency='PLN' />
+
+                    <Separator height={32} />
+
+                    <View style={{ alignItems: 'center' }}>
+                      <Button
+                        label='confirm'
+                        variant='contained'
+                        onPress={submit}
+                        isLoading={isLoading}
+                      />
+                    </View>
+                    <Separator height={16} />
+                  </>
+                )}
+              </View>
+            </ScrollView>
+          ) : (
+            <Placeholder content='No products to display' />
+          )}
+        </>
       )}
     </View>
   );

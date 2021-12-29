@@ -14,7 +14,6 @@ const ShoppingListRow = ({
   checked,
   dips,
   onPress,
-  isShared,
   isActive,
 }) => {
   const styles = useStyles();
@@ -26,17 +25,11 @@ const ShoppingListRow = ({
 
         {/* Displaying amounts of bought, unbought and indeterminate products */}
         <View style={styles.iconsContainer}>
-          {/* There are no unbought products in shopping lists that are in history */}
+          {/* There are no unbought products or dibs in shopping lists that are inactive */}
           {isActive && (
             <>
               <IconAndBadge icon={checkBox} number={unchecked} />
               <View style={styles.horizontalSeparator} />
-            </>
-          )}
-
-          {/* There are no dibs in shopping lists that are private or in history */}
-          {isShared && isActive && (
-            <>
               <IconAndBadge icon={hand} number={dips} />
               <View style={styles.horizontalSeparator} />
             </>
@@ -55,7 +48,6 @@ ShoppingListRow.propTypes = {
   checked: PropTypes.number.isRequired,
   dips: PropTypes.number.isRequired,
   onPress: PropTypes.func.isRequired,
-  isShared: PropTypes.bool.isRequired,
   isActive: PropTypes.bool.isRequired,
 };
 

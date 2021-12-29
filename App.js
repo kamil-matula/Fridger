@@ -17,7 +17,7 @@ import { CustomTheme } from 'theme';
 import { loadToken, authenticate } from 'services/authSlice';
 import { store } from 'services/store';
 import { useLazyUserInfoQuery } from 'services/fridger/user';
-import { setShoppingListYourProducts } from 'services/ShoppingListYourProductsSlice';
+import { setShoppingListYourProducts } from 'services/shoppingListYourProductsSlice';
 
 // Main function:
 const App = () => {

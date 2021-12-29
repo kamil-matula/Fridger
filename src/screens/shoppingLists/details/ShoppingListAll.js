@@ -3,8 +3,8 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { ActivityIndicator, Separator } from 'components';
-import { ShoppingListItem } from 'components/shoppingLists';
+import { ActivityIndicator, Placeholder, Separator } from 'components';
+import { ShoppingListItemAll } from 'components/shoppingLists';
 import { displayToast, makeStyles } from 'utils';
 
 import {
@@ -50,46 +50,56 @@ const ShoppingListAll = ({ route, navigation }) => {
       {shoppingListProductsQuery.isLoading || userInfoQuery.isLoading ? (
         <ActivityIndicator />
       ) : (
-        <ScrollView>
-          {shoppingListProductsQuery?.data.map((product) => (
-            <TouchableRipple
-              key={product.id}
-              onPress={() => {
-                if (
-                  product.created_by.username === userInfoQuery.data.username
-                ) {
-                  navigation.navigate('AddShoppingListProduct', {
-                    shoppingListID: route.params.shoppingListID,
-                    product,
-                    mode: 'edit',
-                  });
-                } else {
-                  displayToast('Can not edit. Product is taken');
-                }
-              }}
-            >
-              <ShoppingListItem
-                avatarURI={
-                  product.status !== 'free' ? product.created_by.avatar : null
-                }
-                text={product.name}
-                subText={
-                  product.note
-                    ? `${product.quantity} ${product.quantity_type}  •  ${product.note}`
-                    : `${product.quantity} ${product.quantity_type}`
-                }
-                onPressIcon={() => dips(product)}
-                showHand={
-                  product.status === 'free' ||
-                  product.created_by.username === userInfoQuery.data.username
-                }
-              />
-            </TouchableRipple>
-          ))}
+        <>
+          {shoppingListProductsQuery?.data.length > 0 ? (
+            <ScrollView>
+              {shoppingListProductsQuery?.data.map((product) => (
+                <TouchableRipple
+                  key={product.id}
+                  onPress={() => {
+                    // TODO: Replace created_by with taken_by
+                    if (
+                      product.created_by.username ===
+                      userInfoQuery.data.username
+                    ) {
+                      navigation.navigate('AddShoppingListProduct', {
+                        shoppingListID: route.params.shoppingListID,
+                        product,
+                        mode: 'edit',
+                      });
+                    } else {
+                      displayToast('Can not edit. Product is taken');
+                    }
+                  }}
+                >
+                  <ShoppingListItemAll
+                    avatarURI={product.created_by.avatar}
+                    text={product.name}
+                    subText={
+                      product.note
+                        ? `${product.quantity} ${product.quantity_type}  •  ${product.note}`
+                        : `${product.quantity} ${product.quantity_type}`
+                    }
+                    onPressIcon={() => dips(product)}
+                    // TODO: Replace created_by with taken_by
+                    showHand={
+                      product.status === 'free' ||
+                      (product.status === 'unchecked' &&
+                        product.created_by.username ===
+                          userInfoQuery.data.username)
+                    }
+                    productStatus={product.status}
+                  />
+                </TouchableRipple>
+              ))}
 
-          {/* Space for FAB */}
-          <Separator height={80} />
-        </ScrollView>
+              {/* Space for FAB */}
+              <Separator height={80} />
+            </ScrollView>
+          ) : (
+            <Placeholder content='No products to display' />
+          )}
+        </>
       )}
     </View>
   );
