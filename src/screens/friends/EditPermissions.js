@@ -5,15 +5,8 @@ import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, useTheme, TouchableRipple } from 'react-native-paper';
 
 import { makeStyles, displayToast } from 'utils';
-import {
-  UserInfo,
-  AppBar,
-  BottomSheet,
-  SheetRow,
-  Dialog,
-  ActivityIndicator,
-} from 'components';
-import { forward, deleteIcon, check } from 'assets/icons';
+import { UserInfo, AppBar, Dialog, ActivityIndicator } from 'components';
+import { forward, deleteIcon } from 'assets/icons';
 
 import {
   useFridgeOwnershipsQuery,
@@ -25,6 +18,7 @@ import {
   useUpdateShoppingListPermissionMutation,
   useRemoveShoppingListUserMutation,
 } from 'services/fridger/shoppingListsOwnerships';
+import { Permissions } from 'bottomSheets';
 
 export const EditPermissionsFridge = ({ route, navigation }) => {
   const updatePermission = useUpdateFridgePermissionMutation()[0];
@@ -71,9 +65,8 @@ const EditPermissions = ({
   const styles = useStyles();
   const theme = useTheme();
 
-  const [creator, setCreator] = useState(null);
-
   // Update creator when data is fetched:
+  const [creator, setCreator] = useState(null);
   useEffect(() => {
     if (ownerships.data) {
       const tmp = ownerships.data.find((e) => e.permission === 'CREATOR');
@@ -86,30 +79,12 @@ const EditPermissions = ({
     }
   }, [ownerships.data]);
 
-  // Changing permission - preparation:
+  // Changing permissions:
+  const refBS = useRef(null);
   const [toChange, setToChange] = useState(null);
   const prepareToChangePermission = (friend) => {
-    // Display bottom sheet with appropriate target:
     setToChange(friend);
     refBS.current.open();
-  };
-
-  // Changing permission - main methods:
-  const refBS = useRef(null);
-  const changePermission = (newPermission) => {
-    updatePermission({
-      modelId: toChange.id,
-      permissionName: newPermission,
-    })
-      .unwrap()
-      .catch((error) =>
-        displayToast(
-          error.data?.non_field_errors || 'Unable to update permission'
-        )
-      );
-
-    // Hide Bottom Sheet:
-    refBS.current.close();
   };
 
   // Removing friend from list - preparation:
@@ -203,25 +178,11 @@ const EditPermissions = ({
       )}
 
       {/* Permission actions */}
-      <BottomSheet reference={refBS} title='Change permission'>
-        <SheetRow
-          icon={!!toChange && toChange.permission === 'can view' ? check : null}
-          text='Can view'
-          onPress={() => changePermission('READ')}
-        />
-        <SheetRow
-          icon={!!toChange && toChange.permission === 'can edit' ? check : null}
-          text='Can edit'
-          onPress={() => changePermission('WRITE')}
-        />
-        <SheetRow
-          icon={
-            !!toChange && toChange.permission === 'administrator' ? check : null
-          }
-          text='Administrator'
-          onPress={() => changePermission('ADMIN')}
-        />
-      </BottomSheet>
+      <Permissions
+        reference={refBS}
+        selectedOwnership={toChange}
+        updatePermission={updatePermission}
+      />
 
       {/* Removing friend from fridge / shopping list */}
       <Dialog
