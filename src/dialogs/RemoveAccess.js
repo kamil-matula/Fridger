@@ -14,7 +14,7 @@ const RemoveAccess = ({
 }) => {
   // Actions:
   const confirmRemoveFriend = () => removeFriend();
-  const cancelRemoveFriend = () => setDialogVisible(false);
+  const cancelRemoveFriend = () => setVisible(false);
   const removeFriend = () => {
     removeUser(selectedOwnership.id)
       .unwrap()
