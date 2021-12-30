@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { View, Image, ScrollView, Text } from 'react-native';
 import { Divider, useTheme, TouchableRipple } from 'react-native-paper';
 
-import { makeStyles, displayToast } from 'utils';
-import { UserInfo, AppBar, Dialog, ActivityIndicator } from 'components';
+import { makeStyles } from 'utils';
+import { UserInfo, AppBar, ActivityIndicator } from 'components';
 import { forward, deleteIcon } from 'assets/icons';
 
 import {
@@ -19,6 +19,7 @@ import {
   useRemoveShoppingListUserMutation,
 } from 'services/fridger/shoppingListsOwnerships';
 import { Permissions } from 'bottomSheets';
+import { RemoveAccess } from 'dialogs';
 
 export const EditPermissionsFridge = ({ route, navigation }) => {
   const updatePermission = useUpdateFridgePermissionMutation()[0];
@@ -87,27 +88,13 @@ const EditPermissions = ({
     refBS.current.open();
   };
 
-  // Removing friend from list - preparation:
+  // Removing friend from list:
   const [dialogVisible, setDialogVisible] = useState(false);
   const [toRemove, setToRemove] = useState(null);
   const prepareToRemove = (friend) => {
-    // Display dialog with appropriate data:
     setToRemove(friend);
     setDialogVisible(true);
   };
-
-  // Removing friend from list - main methods:
-  const removeFriend = () => {
-    removeUser(toRemove.id)
-      .unwrap()
-      .catch((error) =>
-        displayToast(error.data?.non_field_errors || 'Unable to remove friend')
-      );
-
-    // Hide dialog:
-    setDialogVisible(false);
-  };
-  const cancelRemoveFriend = () => setDialogVisible(false);
 
   // Navigation:
   const navigateToShare = () => {
@@ -185,14 +172,12 @@ const EditPermissions = ({
       />
 
       {/* Removing friend from fridge / shopping list */}
-      <Dialog
-        title='Remove friend'
-        paragraph={`Are you sure you want to remove ${toRemove?.user.username} from ${route.params.containerName}? This action cannot be undone.`}
-        visibilityState={[dialogVisible, setDialogVisible]}
-        label1='remove'
-        onPressLabel1={removeFriend}
-        label2='cancel'
-        onPressLabel2={cancelRemoveFriend}
+      <RemoveAccess
+        visible={dialogVisible}
+        setVisible={setDialogVisible}
+        selectedOwnership={toRemove}
+        containerName={route.params.containerName}
+        removeUser={removeUser}
       />
     </View>
   );
