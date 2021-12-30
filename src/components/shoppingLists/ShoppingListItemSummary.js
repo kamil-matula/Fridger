@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   priceContainer: {
     flexDirection: 'row',
     height: 32,
-    width: 64,
+    width: 96,
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 16,
