@@ -33,7 +33,7 @@ const FridgeDetailsRow = ({ product, onPressIcon, onPressRow }) => {
           </Text>
           {product.expiration_date && (
             <Text style={styles.expirationDate}>
-              expiration date: {product.expiration_date}
+              Expiration date: {product.expiration_date}
             </Text>
           )}
         </View>

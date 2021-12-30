@@ -94,7 +94,7 @@ const ProductDetails = ({ route, navigation }) => {
         icon1={time}
         onPressIcon1={() => setExpDateDialogVisible(true)}
         icon2={deleteIcon}
-        onPressIcon2={() => setDeleteProductDialogVisible(true)}
+        onPressIcon2={() => setDeletingDialogVisible(true)}
       />
 
       {/* Rendering appropriate content: details for products with barcodes, 
