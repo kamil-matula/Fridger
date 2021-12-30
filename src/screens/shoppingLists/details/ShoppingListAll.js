@@ -60,7 +60,7 @@ const ShoppingListAll = ({ route, navigation }) => {
                 <TouchableRipple
                   key={product.id}
                   onPress={() => {
-                    if (product.status !== 'free') {
+                    if (product.status === 'free') {
                       navigation.navigate('AddShoppingListProduct', {
                         shoppingListID: route.params.shoppingListID,
                         product,

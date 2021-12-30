@@ -35,7 +35,6 @@ const EditProfile = ({ navigation }) => {
       firstName: '',
       lastName: '',
       avatar: '',
-      canUseRealName: false,
     },
   });
 
@@ -45,7 +44,6 @@ const EditProfile = ({ navigation }) => {
     setValue('firstName', userData?.first_name);
     setValue('lastName', userData?.last_name);
     setValue('avatar', userData?.avatar);
-    setValue('canUseRealName', userData?.can_use_real_name);
   }, [userData]);
 
   const avatar = watch('avatar');
