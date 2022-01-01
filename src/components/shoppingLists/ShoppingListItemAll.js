@@ -5,7 +5,7 @@ import { Image, Text, View, StyleSheet } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { hand } from 'assets/icons';
+import { hand, handFilled } from 'assets/icons';
 import { tmpPerson } from 'assets/images';
 
 // This component is used in first tab of Shopping List Details:
@@ -16,6 +16,7 @@ const ShoppingListItemAll = ({
   onPressIcon,
   showHand,
   productStatus,
+  isFilled = false,
 }) => {
   const styles = useStyles();
 
@@ -41,7 +42,7 @@ const ShoppingListItemAll = ({
       {showHand && (
         <View style={styles.iconContainer}>
           <TouchableRipple onPress={onPressIcon}>
-            <Image source={hand} style={styles.icon} />
+            <Image source={isFilled ? handFilled : hand} style={styles.icon} />
           </TouchableRipple>
         </View>
       )}
@@ -64,6 +65,7 @@ ShoppingListItemAll.propTypes = {
     'indeterminate',
     'checked',
   ]).isRequired,
+  isFilled: PropTypes.bool,
 };
 
 const useStyles = makeStyles((theme) => ({

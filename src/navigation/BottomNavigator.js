@@ -6,7 +6,7 @@ import { useTheme } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
 import { Statistics } from 'screens/home';
-import { fridgeTab, listTab, menuTab } from 'assets/icons/navigation';
+import { fridgeTab, listTab, statisticsTab } from 'assets/icons/navigation';
 import FridgeNavigator from './FridgeNavigator';
 import ShoppingListNavigator from './ShoppingListNavigator';
 
@@ -66,8 +66,7 @@ const BottomNavigator = () => {
         <Tab.Screen
           name='Statistics'
           component={Statistics}
-          // TODO: Change icon
-          options={tabOptions(menuTab, 'STATISTICS')}
+          options={tabOptions(statisticsTab, 'STATISTICS')}
         />
       </Tab.Navigator>
     </View>

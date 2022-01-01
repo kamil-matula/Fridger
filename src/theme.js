@@ -10,6 +10,7 @@ export const CustomTheme = {
     accent: '#5DADEC', // snackbar actions
     white: '#E8EAED', // labels
     whiteSemiTransparent: '#E8EAED80',
+    whiteLowOpacity: '#E8EAED11',
     cyberYellow: '#FFD300', // active tab
     silverMetallic: '#9AA0A6', // inactive tab
     silverMetallicSemiTransparent: '#9AA0A680', // disabled text

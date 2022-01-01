@@ -60,7 +60,7 @@ const ShoppingListAll = ({ route, navigation }) => {
                 <TouchableRipple
                   key={product.id}
                   onPress={() => {
-                    if (product.status !== 'free') {
+                    if (product.status === 'free') {
                       navigation.navigate('AddShoppingListProduct', {
                         shoppingListID: route.params.shoppingListID,
                         product,
@@ -86,6 +86,7 @@ const ShoppingListAll = ({ route, navigation }) => {
                         product.taken_by?.username ===
                           userInfoQuery.data.username)
                     }
+                    isFilled={product.status === 'unchecked'}
                     productStatus={product.status}
                   />
                 </TouchableRipple>

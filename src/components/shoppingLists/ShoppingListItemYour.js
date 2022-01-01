@@ -44,16 +44,18 @@ const ShoppingListItemYour = ({
       <View style={styles.priceContainer}>
         {status === 'indeterminate' && (
           <>
-            <TextInput
-              onEndEditing={() => onChangePrice(currentPrice)}
-              onChangeText={setCurrentPrice}
-              value={currentPrice}
-              style={styles.inputField}
-              placeholderTextColor={colors.silverMetallic}
-              placeholder='0'
-              keyboardType='numeric'
-              maxLength={5}
-            />
+            <View style={styles.inputContainer}>
+              <TextInput
+                onEndEditing={() => onChangePrice(currentPrice)}
+                onChangeText={setCurrentPrice}
+                value={currentPrice}
+                style={styles.inputField}
+                placeholderTextColor={colors.silverMetallic}
+                placeholder='0'
+                keyboardType='numeric'
+                maxLength={5}
+              />
+            </View>
             <Text style={styles.text}>{currency}</Text>
           </>
         )}
@@ -101,11 +103,15 @@ const useStyles = makeStyles((theme, { fieldValue }) => {
     priceContainer: {
       flexDirection: 'row',
       height: 32,
-      width: 64,
+      width: 96,
       alignItems: 'center',
-      justifyContent: 'center',
-      marginLeft: 16,
       marginVertical: 4,
+      paddingHorizontal: 8,
+    },
+    inputContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   };
 

@@ -38,9 +38,8 @@ const ShoppingListYour = ({ route }) => {
   };
 
   // Lists with matching states + total price:
-  const unchecked = shoppingList?.products.filter(
-    (e) => e.status === 'unchecked'
-  );
+  const unchecked =
+    shoppingList?.products.filter((e) => e.status === 'unchecked') || [];
   const indeterminate =
     shoppingList?.products.filter((e) => e.status === 'indeterminate') || [];
   const sum = sumList(indeterminate);

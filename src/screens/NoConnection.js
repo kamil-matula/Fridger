@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
-import { BackHandler, View, StyleSheet } from 'react-native';
-import { Text, useTheme } from 'react-native-paper';
 
-export default function NoConnection() {
-  const { colors } = useTheme();
+import { BackHandler, View, Image } from 'react-native';
+import { Text } from 'react-native-paper';
+
+import { makeStyles } from 'utils';
+import { noInternet } from 'assets/icons';
+
+const NoConnection = () => {
+  const styles = useStyles();
 
   // Lock standard back button behaviour:
   useEffect(() => {
@@ -18,26 +22,23 @@ export default function NoConnection() {
   }, []);
 
   return (
-    <View style={[style.container, { backgroundColor: colors.background }]}>
-      {/* TODO: Add nice image */}
-      <Text style={style.offlineText}>You&apos;re offline.</Text>
-      <Text style={style.descriptionText}>
+    <View style={styles.container}>
+      <Image style={styles.icon} source={noInternet} />
+      <Text style={styles.offlineText}>You&apos;re offline.</Text>
+      <Text style={styles.descriptionText}>
         To use this application, you need to connect to the internet.
       </Text>
     </View>
   );
-}
+};
 
-const style = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: '20%',
-  },
-  image: {
-    maxWidth: '150%',
-    borderRadius: 5,
+    backgroundColor: theme.colors.background,
   },
   offlineText: {
     textAlign: 'center',
@@ -46,4 +47,12 @@ const style = StyleSheet.create({
   descriptionText: {
     textAlign: 'center',
   },
-});
+  icon: {
+    width: 196,
+    height: 196,
+    tintColor: theme.colors.white,
+    marginBottom: 32,
+  },
+}));
+
+export default NoConnection;

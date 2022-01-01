@@ -27,9 +27,9 @@ const ListOfShoppingLists = ({
                 <View key={list.id}>
                   <ShoppingListRow
                     label={list.name}
-                    unchecked={list.bought_products_count}
+                    unchecked={list.free_products_count}
                     dips={list.taken_products_count}
-                    checked={list.free_products_count}
+                    checked={list.bought_products_count}
                     isActive={!list.is_archived}
                     onPress={() => {
                       // Go to specific shopping list:

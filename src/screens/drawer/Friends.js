@@ -12,7 +12,7 @@ import {
   Placeholder,
 } from 'components';
 import { displayToast, makeStyles } from 'utils';
-import { done, clear, deleteIcon } from 'assets/icons';
+import { check, clear, deleteIcon } from 'assets/icons';
 
 import {
   useFriendsQuery,
@@ -156,7 +156,7 @@ const Friends = ({ navigation }) => {
                       icon1={clear}
                       onPressIcon1={() => rejectInvitation(relationship.id)}
                       iconTint1={colors.tartOrange}
-                      icon2={done}
+                      icon2={check}
                       onPressIcon2={() => acceptInvitation(relationship.id)}
                       iconTint2={colors.darkGreen}
                     />

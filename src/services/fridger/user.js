@@ -24,17 +24,17 @@ const usersApi = fridgerApi.injectEndpoints({
       providesTags: ['User'],
     }),
     updateUserInfo: builder.mutation({
-      query: ({ username, firstName, lastName, avatar, canUseRealName }) => {
+      query: ({ username, firstName, lastName, avatar }) => {
         const formData = new FormData();
         formData.append('username', username);
         formData.append('first_name', firstName);
         formData.append('last_name', lastName);
-        formData.append('avatar', {
-          type: 'image/png',
-          uri: avatar,
-          name: `${username}.png`,
-        });
-        formData.append('can_use_real_name', canUseRealName);
+        if (avatar)
+          formData.append('avatar', {
+            type: 'image/png',
+            uri: avatar,
+            name: `${username}.png`,
+          });
         return {
           url: 'auth/users/me',
           method: 'PATCH',

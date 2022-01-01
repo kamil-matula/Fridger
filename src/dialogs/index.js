@@ -7,3 +7,4 @@ export { default as DeleteFriend } from './DeleteFriend';
 export { default as LeaveFridge } from './LeaveFridge';
 export { default as DeleteShoppingListProduct } from './DeleteShoppingListProduct';
 export { default as LeaveShoppingList } from './LeaveShoppingList';
+export { default as RemoveAccess } from './RemoveAccess';

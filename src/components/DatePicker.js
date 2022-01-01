@@ -23,7 +23,11 @@ const DatePicker = ({ setExpirationDate, visible, setVisible }) => {
   };
 
   const dateToString = (numDate) =>
-    `${numDate.getDate()}.${numDate.getMonth()}.${numDate.getFullYear()}`;
+    `${setTrailingZero(numDate.getDate())}.${setTrailingZero(
+      numDate.getMonth() + 1
+    )}.${numDate.getFullYear()}`;
+  const setTrailingZero = (number) =>
+    number >= 10 ? number.toString() : `0${number}`;
 
   return visible ? (
     <DateTimePicker value={date} mode='date' onChange={onDateChange} />

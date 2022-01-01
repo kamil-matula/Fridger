@@ -13,17 +13,21 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.matularubelwawro.fridger",
+      "buildNumber": "1.0.0"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/configuration/adaptive-icon.png",
         "backgroundColor": "#202125"
-      }
+      },
+      "package": "com.matularubelwawro.fridger",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/configuration/favicon.png"
