@@ -140,6 +140,7 @@ const AddProductManual = ({ navigation, route }) => {
                 rules={rules.unit}
                 value={watch('unit')}
                 name='unit'
+                label=' '
                 variant='data'
                 editable={false}
                 icon={expand}
