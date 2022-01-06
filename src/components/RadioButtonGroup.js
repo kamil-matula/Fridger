@@ -1,7 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+import { View, Text } from 'react-native';
 import { RadioButton, useTheme } from 'react-native-paper';
+import PropTypes from 'prop-types';
 
 import { makeStyles } from 'utils';
 
@@ -13,16 +14,14 @@ const RadioButtonGroup = ({ items, checkedState }) => {
   return (
     <RadioButton.Group onValueChange={(v) => setValue(v)} value={value}>
       {items.map((e) => (
-        <RadioButton.Item
-          key={e}
-          label={e}
-          value={e}
-          position='leading'
-          labelStyle={styles.label}
-          style={styles.container}
-          color={colors.white}
-          uncheckedColor={colors.silverMetallic}
-        />
+        <View key={e} style={styles.container}>
+          <RadioButton.Android
+            value={e}
+            color={colors.white}
+            uncheckedColor={colors.silverMetallic}
+          />
+          <Text style={styles.label}>{e}</Text>
+        </View>
       ))}
     </RadioButton.Group>
   );
@@ -38,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     height: 36,
     paddingHorizontal: 0,
+    flexDirection: 'row',
   },
   label: {
     fontSize: 14,
