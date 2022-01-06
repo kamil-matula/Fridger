@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     height: 56,
     paddingHorizontal: 16,
-    textAlignVertical: 'center',
+    lineHeight: 56,
     fontSize: 18,
     fontWeight: 'bold',
     color: theme.colors.white,
