@@ -1,4 +1,4 @@
-import { AlertIOS, ToastAndroid, Platform } from 'react-native';
+import Toast from 'react-native-root-toast';
 
 export const displayToast = (value) => {
   if (value) {
@@ -8,10 +8,13 @@ export const displayToast = (value) => {
     } catch (e) {
       message = value;
     }
-    if (Platform.OS === 'android') {
-      ToastAndroid.show(message, ToastAndroid.SHORT);
-    } else {
-      AlertIOS.alert(message);
-    }
+
+    Toast.show(message, {
+      backgroundColor: 'gray',
+      opacity: 1.0,
+      duration: 1000,
+      position: -64,
+      shadow: false,
+    });
   }
 };
