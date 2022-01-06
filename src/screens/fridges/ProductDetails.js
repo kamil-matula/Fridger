@@ -188,15 +188,6 @@ const ProductDetails = ({ route, navigation }) => {
             returnKeyType='next'
             placeholder='Enter producer name'
           />
-
-          {/* Button at the bottom */}
-          <FloatingActionButton
-            label='Confirm'
-            onPress={handleSubmit(editProduct)}
-            centered
-            confirm
-            isLoading={isEditLoading}
-          />
         </View>
       )}
 
@@ -217,6 +208,17 @@ const ProductDetails = ({ route, navigation }) => {
         productID={productID}
         expiration={productExpirationDate}
       />
+
+      {/* Button at the bottom */}
+      {!productBarcode && (
+        <FloatingActionButton
+          label='Confirm'
+          onPress={handleSubmit(editProduct)}
+          centered
+          confirm
+          isLoading={isEditLoading}
+        />
+      )}
     </View>
   );
 };
@@ -286,7 +288,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   // No-barcode variant's container:
-  noBarcodeContainer: { marginHorizontal: 16, flex: 1 },
+  noBarcodeContainer: { marginHorizontal: 16 },
 }));
 
 export default ProductDetails;
