@@ -15,7 +15,7 @@ const ShoppingListItemSummary = ({ text, subText, boxText, status }) => {
       {/* Checkbox variant helps in informing about product state 
           (bought or unbought). It is used in third tab. */}
       <View style={styles.checkbox}>
-        <Checkbox disabled status={status} />
+        <Checkbox.Android disabled status={status} />
       </View>
 
       {/* Name, quantity and note of specific product */}
