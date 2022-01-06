@@ -43,7 +43,7 @@ const AddFriend = ({ navigation }) => {
     if (findUser.isError) {
       displayToast('User not found');
     }
-  }, [findUser.isSuccess, findUser.isError]);
+  }, [findUser.data, findUser.isError]);
 
   // Handle with adding friend action:
   useEffect(() => {
