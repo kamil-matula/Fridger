@@ -11,13 +11,14 @@ import {
   InputField,
   Separator,
   ActivityIndicator,
+  DatePicker,
 } from 'components';
 import { ScoresContainer } from 'components/fridges';
 import { displayToast, makeStyles } from 'utils';
-import { deleteIcon, time } from 'assets/icons';
+import { deleteIcon, calendar, edit, visibilityOn } from 'assets/icons';
 import { useEditFridgeProductMutation } from 'services/fridger/fridgeProducts';
 import { useLazyProductQuery } from 'services/openFoodFacts/openFoodFactsApi';
-import { ChangeExpirationDate, DeleteFridgeProduct } from 'dialogs';
+import { DeleteFridgeProduct } from 'dialogs';
 
 const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
@@ -31,6 +32,9 @@ const ProductDetails = ({ route, navigation }) => {
     productBarcode,
     productExpirationDate,
   } = route.params;
+
+  // Mode (if product has barcode, there will be details by default):
+  const [mode, setMode] = useState(productBarcode ? 'watch' : 'edit');
 
   // Queries:
   const [editProductQuery, { isLoading: isEditLoading }] =
@@ -52,15 +56,22 @@ const ProductDetails = ({ route, navigation }) => {
   }, []);
 
   // Form states:
-  const { control, handleSubmit, setFocus, reset } = useForm({
+  const { control, handleSubmit, setFocus, setValue, reset } = useForm({
     defaultValues: {
       name: productName,
       producer: productProducer,
+      expiration: productExpirationDate,
     },
   });
   const rules = {
     name: {
       required: 'Name is required',
+    },
+    expiration: {
+      pattern: {
+        value: /^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.\d{4}$/,
+        message: 'Invalid date format',
+      },
     },
   };
 
@@ -74,6 +85,7 @@ const ProductDetails = ({ route, navigation }) => {
       id: productID,
       name: data.name,
       producer: data.producer,
+      expiration: data.expiration,
     })
       .unwrap()
       .then(() => {
@@ -88,19 +100,24 @@ const ProductDetails = ({ route, navigation }) => {
       );
   };
 
+  const getAppBarIcon = () => {
+    // Changing modes is available only for products with the barcode
+    if (productBarcode) return mode === 'watch' ? edit : visibilityOn;
+    return null;
+  };
+
   return (
     <View style={styles.container}>
       <AppBar
-        icon1={time}
-        onPressIcon1={() => setExpDateDialogVisible(true)}
+        icon1={getAppBarIcon()}
+        onPressIcon1={() => setMode((m) => (m === 'watch' ? 'edit' : 'watch'))}
         icon2={deleteIcon}
         onPressIcon2={() => setDeletingDialogVisible(true)}
       />
 
-      {/* Rendering appropriate content: details for products with barcodes, 
-          editable input fields for other ones */}
-      {!!productBarcode && productWithBarcode == null && <ActivityIndicator />}
-      {!!productBarcode && productWithBarcode != null && (
+      {/* Rendering product details (for products with barcode in watch mode) */}
+      {mode === 'watch' && productWithBarcode == null && <ActivityIndicator />}
+      {mode === 'watch' && productWithBarcode != null && (
         <ScrollView>
           {/* Basic information */}
           <View style={styles.basicInfoContainer}>
@@ -165,7 +182,8 @@ const ProductDetails = ({ route, navigation }) => {
         </ScrollView>
       )}
 
-      {!productBarcode && (
+      {/* Rendering editable input fields (for products in edit mode) */}
+      {mode === 'edit' && (
         <View style={styles.noBarcodeContainer}>
           {/* Providing data */}
           <InputField
@@ -182,13 +200,37 @@ const ProductDetails = ({ route, navigation }) => {
           <InputField
             control={control}
             rules={rules.producer}
+            onSubmitEditing={() => setFocus('expiration')}
             name='producer'
             label='Producer (optional)'
             variant='data'
             returnKeyType='next'
             placeholder='Enter producer name'
           />
+          <View style={{ width: '50%' }}>
+            <InputField
+              control={control}
+              rules={rules.expiration}
+              name='expiration'
+              label='Expiration date (optional)'
+              variant='data'
+              icon={calendar}
+              onIconPress={() => setExpDateDialogVisible(true)}
+              returnKeyType='done'
+              keyboardType='numeric'
+              placeholder='dd.MM.rrrr'
+            />
+          </View>
         </View>
+      )}
+      {mode === 'edit' && (
+        <FloatingActionButton
+          label='Confirm'
+          onPress={handleSubmit(editProduct)}
+          centered
+          confirm
+          isLoading={isEditLoading}
+        />
       )}
 
       {/* Deleting product from fridge */}
@@ -202,23 +244,11 @@ const ProductDetails = ({ route, navigation }) => {
       />
 
       {/* Changing expiration date */}
-      <ChangeExpirationDate
+      <DatePicker
         visible={expDateDialogVisible}
         setVisible={setExpDateDialogVisible}
-        productID={productID}
-        expiration={productExpirationDate}
+        setExpirationDate={(value) => setValue('expiration', value)}
       />
-
-      {/* Button at the bottom */}
-      {!productBarcode && (
-        <FloatingActionButton
-          label='Confirm'
-          onPress={handleSubmit(editProduct)}
-          centered
-          confirm
-          isLoading={isEditLoading}
-        />
-      )}
     </View>
   );
 };

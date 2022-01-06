@@ -36,6 +36,7 @@
     "react-hook-form": "^7.17.5",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-modal-datetime-picker": "^13.0.1",
     "react-native-pager-view": "5.0.12",
     "react-native-paper": "^4.9.2",
     "react-native-raw-bottom-sheet": "^2.2.0",
