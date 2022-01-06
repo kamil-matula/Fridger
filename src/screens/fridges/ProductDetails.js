@@ -131,6 +131,11 @@ const ProductDetails = ({ route, navigation }) => {
               <Text style={styles.name}>{productWithBarcode.product_name}</Text>
               <Text style={styles.producer}>{productWithBarcode.brands}</Text>
               <Text style={styles.quantity}>{productWithBarcode.quantity}</Text>
+              {productExpirationDate && (
+                <Text style={styles.expirationDate}>
+                  Expiration date: {productExpirationDate}
+                </Text>
+              )}
             </View>
           </View>
           <Divider />
@@ -286,6 +291,11 @@ const useStyles = makeStyles((theme) => ({
   quantity: {
     fontSize: 14,
     color: theme.colors.silverMetallic,
+  },
+  expirationDate: {
+    marginTop: 2,
+    fontSize: 12,
+    color: theme.colors.tartOrange,
   },
 
   // Rating:
