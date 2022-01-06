@@ -47,7 +47,11 @@ const ShoppingListItemYour = ({
             <View style={styles.inputContainer}>
               <TextInput
                 onEndEditing={() => onChangePrice(currentPrice)}
-                onChangeText={setCurrentPrice}
+                onChangeText={(newPrice) => {
+                  const newNewPrice = newPrice.replace(',', '.');
+                  if (!Number.isNaN(Number(newNewPrice)))
+                    setCurrentPrice(newNewPrice);
+                }}
                 value={currentPrice}
                 style={styles.inputField}
                 placeholderTextColor={colors.silverMetallic}
