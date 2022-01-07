@@ -222,20 +222,19 @@ const ProductDetails = ({ route, navigation }) => {
             returnKeyType='next'
             placeholder='Enter producer name'
           />
-          <View style={{ width: '50%' }}>
-            <InputField
-              control={control}
-              rules={rules.expiration}
-              name='expiration'
-              label='Expiration date (optional)'
-              variant='data'
-              icon={calendar}
-              onIconPress={() => setExpDateDialogVisible(true)}
-              returnKeyType='done'
-              keyboardType='numeric'
-              placeholder='dd.MM.rrrr'
-            />
-          </View>
+          <InputField
+            control={control}
+            rules={rules.expiration}
+            name='expiration'
+            label='Expiration date (optional)'
+            variant='data'
+            icon={calendar}
+            onIconPress={() => setExpDateDialogVisible(true)}
+            returnKeyType='done'
+            keyboardType='numeric'
+            placeholder='dd.MM.rrrr'
+            inputFieldWith={140}
+          />
         </View>
       )}
       {mode === 'edit' && (

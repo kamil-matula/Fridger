@@ -172,20 +172,19 @@ const AddProductAutomat = ({ navigation, route }) => {
               onChangeText={ensureItIsNumber}
             />
           </View>
-          <View style={{ width: '50%' }}>
-            <InputField
-              control={control}
-              rules={rules.expiration}
-              name='expiration'
-              label='Expiration date (optional)'
-              variant='data'
-              returnKeyType='done'
-              keyboardType='numeric'
-              placeholder='dd.MM.rrrr'
-              icon={calendar}
-              onIconPress={() => setDatepickerVisible(true)}
-            />
-          </View>
+          <InputField
+            control={control}
+            rules={rules.expiration}
+            name='expiration'
+            label='Expiration date (optional)'
+            variant='data'
+            returnKeyType='done'
+            keyboardType='numeric'
+            placeholder='dd.MM.rrrr'
+            icon={calendar}
+            onIconPress={() => setDatepickerVisible(true)}
+            inputFieldWith={140}
+          />
         </View>
         <Separator height={60} />
       </ScrollViewLayout>
