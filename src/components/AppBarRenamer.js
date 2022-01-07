@@ -67,6 +67,7 @@ const AppBarRenamer = ({
             onChangeText={onChange}
             returnKeyType='done'
             onEndEditing={() => handleSubmit(submit(value))}
+            maxLength={25}
           />
         )}
       />

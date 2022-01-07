@@ -66,6 +66,16 @@ const ProductDetails = ({ route, navigation }) => {
   const rules = {
     name: {
       required: 'Name is required',
+      maxLength: {
+        value: 25,
+        message: 'Name cannot contain more than 25 characters',
+      },
+    },
+    producer: {
+      maxLength: {
+        value: 25,
+        message: 'Producer name cannot contain more than 25 characters',
+      },
     },
     expiration: {
       pattern: {

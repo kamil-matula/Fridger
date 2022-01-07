@@ -29,6 +29,7 @@ const InputField = ({
   textAlign,
   postfix,
   paddings = true,
+  onChangeText,
   ...props
 }) => {
   // Validation:
@@ -65,7 +66,14 @@ const InputField = ({
           name={field.name}
           ref={field.ref}
           value={field.value}
-          onChangeText={field.onChange}
+          onChangeText={(newValue) => {
+            // Additional preparing:
+            let tmp = newValue;
+            if (onChangeText) {
+              tmp = onChangeText(newValue);
+            }
+            field.onChange(tmp);
+          }}
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
           blurOnSubmit={!onSubmitEditing || blurOnSubmit}
@@ -121,6 +129,7 @@ InputField.propTypes = {
   textAlign: PropTypes.oneOf(['left', 'center', 'right', 'justify']),
   postfix: PropTypes.string,
   paddings: PropTypes.bool,
+  onChangeText: PropTypes.func,
 };
 
 const useStyles = makeStyles(

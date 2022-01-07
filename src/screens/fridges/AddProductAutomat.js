@@ -15,7 +15,7 @@ import {
   DatePicker,
 } from 'components';
 import { ProductInfo } from 'components/fridges';
-import { makeStyles, displayToast } from 'utils';
+import { makeStyles, displayToast, ensureItIsNumber } from 'utils';
 import { edit, calendar } from 'assets/icons';
 
 import { useLazyProductQuery } from 'services/openFoodFacts/openFoodFactsApi';
@@ -169,6 +169,7 @@ const AddProductAutomat = ({ navigation, route }) => {
               variant='data'
               returnKeyType='next'
               textAlign='right'
+              onChangeText={ensureItIsNumber}
             />
           </View>
           <View style={{ width: '50%' }}>

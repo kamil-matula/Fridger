@@ -56,7 +56,7 @@ const EditProfile = ({ navigation }) => {
       },
       maxLength: {
         value: 20,
-        message: 'Username cannot contain no more than 20 characters',
+        message: 'Username cannot contain more than 20 characters',
       },
     },
     firstName: {
