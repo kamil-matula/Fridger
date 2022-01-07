@@ -32,7 +32,7 @@ const AddShoppingList = ({ navigation, route }) => {
         onChangeText={setName}
         placeholder='Write name'
         placeholderTextColor={colors.silverMetallic}
-        maxLength={25}
+        maxLength={40}
       />
       <Divider />
 
