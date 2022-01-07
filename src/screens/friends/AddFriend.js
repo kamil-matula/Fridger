@@ -69,6 +69,7 @@ const AddFriend = ({ navigation }) => {
         value={username}
         onChangeText={setUsername}
         onEndEditing={find}
+        maxLength={20}
       />
       <Divider />
 

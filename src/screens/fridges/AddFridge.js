@@ -38,7 +38,8 @@ const AddFridge = ({ navigation }) => {
         placeholder='Write name'
         placeholderTextColor={colors.silverMetallic}
         value={name}
-        onChangeText={(e) => setName(e)}
+        onChangeText={setName}
+        maxLength={25}
       />
       <Divider />
 
