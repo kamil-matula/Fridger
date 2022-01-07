@@ -1,3 +1,4 @@
+import { convertQuantityType } from 'services/dataConverters';
 import { fridgerApi } from './fridgerApi';
 
 const fridgeProductsApi = fridgerApi.injectEndpoints({
@@ -15,9 +16,7 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
       transformResponse: (rawData) =>
         // Convert data for frontend purposes:
         rawData.map((element) => {
-          element.quantity_type = (
-            element.quantity_type === 'PIECE' ? 'pcs' : element.quantity_type
-          ).toLowerCase();
+          element.quantity_type = convertQuantityType(element.quantity_type);
           element.expiration_date = element.expiration_date
             ?.split('-')
             .reverse()
@@ -48,13 +47,13 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
             status: 'UNUSED',
             quantity,
           },
-          // Convert data for backend purposes ('dd.mm.YYYY -> YYYY-mm-dd, ...
+          // Convert data for backend purposes (dd.mm.YYYY -> YYYY-mm-dd, ...
           expiration_date:
             expiration !== ''
               ? expiration?.split('.').reverse().join('-')
               : null,
           // ... pcs -> PIECE, ml -> ML, g -> G, kg -> KG, l - L):
-          quantity_type: (unit === 'pcs' ? 'PIECE' : unit).toUpperCase(),
+          quantity_type: convertQuantityType(unit),
         },
       }),
       invalidatesTags: ['Fridges', 'FridgeProducts'],
@@ -66,7 +65,7 @@ const fridgeProductsApi = fridgerApi.injectEndpoints({
         body: {
           name,
           producer_name: producer,
-          // Convert data for backend purposes ('dd.mm.YYYY -> YYYY-mm-dd):
+          // Convert data for backend purposes (dd.mm.YYYY -> YYYY-mm-dd):
           expiration_date: expiration?.split('.').reverse().join('-'),
         },
       }),

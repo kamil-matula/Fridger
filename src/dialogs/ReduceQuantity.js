@@ -35,7 +35,10 @@ const ReduceQuantity = ({ item, setItem }) => {
   // Actions:
   const confirmReduceQuantity = () => {
     // Validate data on the front:
-    const newQuantity = parseInt(getValues('quantity'), 10);
+    const newQuantity = parseFloat(
+      getValues('quantity').replaceAll(',', '.'),
+      10
+    );
     if (Number.isNaN(newQuantity)) {
       displayToast('Please provide quantity.');
       return;
