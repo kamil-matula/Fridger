@@ -163,7 +163,7 @@ const EditProfile = ({ navigation }) => {
               name='username'
               label='Username'
               returnKeyType='next'
-              placeholder='Enter your nick'
+              placeholder='Enter your username'
               onSubmitEditing={() => setFocus('firstName')}
             />
             <Separator />
