@@ -81,11 +81,9 @@ const AddProductManual = ({ navigation, route }) => {
         });
         navigation.goBack();
       })
-      .catch((error) => {
-        if (error.data?.name) displayToast('Invalid name of fridge');
-        else
-          displayToast(error.data?.non_field_errors || 'Unable to add fridge');
-      });
+      .catch((error) =>
+        displayToast(error.data?.non_field_errors || 'Unable to add product')
+      );
   };
 
   return (

@@ -124,15 +124,17 @@ const AddProductAutomat = ({ navigation, route }) => {
 
   // Submitting form:
   const addProduct = (data) => {
+    if (!product.data) {
+      displayToast('No product to add');
+      return;
+    }
+
     // Combine all data into one object:
     data.name = product.data?.product?.product_name;
     data.producer = product.data?.product?.brands;
     data.barcode = product.data?.code;
     data.image = product.data?.product.image_front_small_url;
     data.fridge = fridgeID;
-    data.unit = 'pcs';
-    // TODO: Replace hardcoded unit with some calculations OR remove displaying
-    // quantity from ProductInfo and add input field with suggested value
 
     // Send request to API:
     addProductQuery(data)
@@ -144,12 +146,9 @@ const AddProductAutomat = ({ navigation, route }) => {
         });
         navigation.goBack();
       })
-      .catch((error) => {
-        console.log(error);
-        if (error.data?.name) displayToast('Invalid name of fridge');
-        else
-          displayToast(error.data?.non_field_errors || 'Unable to add fridge');
-      });
+      .catch((error) =>
+        displayToast(error.data?.non_field_errors || 'Unable to add product')
+      );
   };
 
   return (
