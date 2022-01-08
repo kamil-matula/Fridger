@@ -29,6 +29,8 @@ const InputField = ({
   textAlign,
   postfix,
   paddings = true,
+  onChangeText,
+  inputFieldWith,
   ...props
 }) => {
   // Validation:
@@ -51,7 +53,14 @@ const InputField = ({
 
   // Styling:
   const hasIcon = !!icon || secure;
-  const styles = useStyles({ invalid, isFocused, variant, textAlign, hasIcon });
+  const styles = useStyles({
+    invalid,
+    isFocused,
+    variant,
+    textAlign,
+    hasIcon,
+    inputFieldWith,
+  });
   const theme = useTheme();
 
   return (
@@ -65,7 +74,14 @@ const InputField = ({
           name={field.name}
           ref={field.ref}
           value={field.value}
-          onChangeText={field.onChange}
+          onChangeText={(newValue) => {
+            // Additional preparing:
+            let tmp = newValue;
+            if (onChangeText) {
+              tmp = onChangeText(newValue);
+            }
+            field.onChange(tmp);
+          }}
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
           blurOnSubmit={!onSubmitEditing || blurOnSubmit}
@@ -121,10 +137,15 @@ InputField.propTypes = {
   textAlign: PropTypes.oneOf(['left', 'center', 'right', 'justify']),
   postfix: PropTypes.string,
   paddings: PropTypes.bool,
+  inputFieldWith: PropTypes.number,
+  onChangeText: PropTypes.func,
 };
 
 const useStyles = makeStyles(
-  (theme, { invalid, isFocused, variant, textAlign, hasIcon }) => {
+  (
+    theme,
+    { invalid, isFocused, variant, textAlign, hasIcon, inputFieldWith }
+  ) => {
     const obj = {
       // Text above input field:
       label: {
@@ -210,6 +231,9 @@ const useStyles = makeStyles(
     }
     if (isFocused) {
       obj.inputContainer.borderColor = theme.colors.white;
+    }
+    if (inputFieldWith) {
+      obj.inputContainer.width = inputFieldWith;
     }
 
     return obj;

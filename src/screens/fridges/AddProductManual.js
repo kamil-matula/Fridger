@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import {
   InputField,
@@ -12,7 +13,7 @@ import {
   FloatingActionButton,
   DatePicker,
 } from 'components';
-import { makeStyles, displayToast } from 'utils';
+import { makeStyles, displayToast, ensureItIsNumber } from 'utils';
 import { scanner, calendar, expand, check } from 'assets/icons';
 import { useAddFridgeProductMutation } from 'services/fridger/fridgeProducts';
 
@@ -43,6 +44,16 @@ const AddProductManual = ({ navigation, route }) => {
   const rules = {
     name: {
       required: 'Name is required',
+      maxLength: {
+        value: 25,
+        message: 'Name cannot contain more than 25 characters',
+      },
+    },
+    producer: {
+      maxLength: {
+        value: 25,
+        message: 'Producer name cannot contain more than 25 characters',
+      },
     },
     quantity: {
       required: 'Quantity is required',
@@ -119,7 +130,7 @@ const AddProductManual = ({ navigation, route }) => {
             placeholder='Enter product name'
           />
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ width: '50%' }}>
+            <View style={{ width: 140 }}>
               <InputField
                 control={control}
                 rules={rules.quantity}
@@ -131,15 +142,17 @@ const AddProductManual = ({ navigation, route }) => {
                 variant='data'
                 returnKeyType='next'
                 placeholder='Enter quantity'
+                onChangeText={ensureItIsNumber}
               />
             </View>
             <View style={{ width: 10 }} />
-            <View style={{ width: '30%' }}>
+            <View style={{ width: 80 }}>
               <InputField
                 control={control}
                 rules={rules.unit}
                 value={watch('unit')}
                 name='unit'
+                label=' '
                 variant='data'
                 editable={false}
                 icon={expand}
@@ -156,7 +169,7 @@ const AddProductManual = ({ navigation, route }) => {
             returnKeyType='next'
             placeholder='Enter producer name'
           />
-          <View style={{ width: '50%' }}>
+          <TouchableWithoutFeedback onPress={() => setDatepickerVisible(true)}>
             <InputField
               control={control}
               rules={rules.expiration}
@@ -164,12 +177,11 @@ const AddProductManual = ({ navigation, route }) => {
               label='Expiration date (optional)'
               variant='data'
               icon={calendar}
-              onIconPress={() => setDatepickerVisible(true)}
-              returnKeyType='done'
-              keyboardType='numeric'
               placeholder='dd.MM.rrrr'
+              editable={false}
+              inputFieldWith={140}
             />
-          </View>
+          </TouchableWithoutFeedback>
         </View>
       </ScrollViewLayout>
 

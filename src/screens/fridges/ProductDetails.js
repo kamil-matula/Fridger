@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
-import { ScrollView } from 'react-native-gesture-handler';
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 
 import {
   AppBar,
@@ -11,13 +14,14 @@ import {
   InputField,
   Separator,
   ActivityIndicator,
+  DatePicker,
 } from 'components';
 import { ScoresContainer } from 'components/fridges';
 import { displayToast, makeStyles } from 'utils';
-import { deleteIcon, time } from 'assets/icons';
+import { deleteIcon, calendar, edit, visibilityOn } from 'assets/icons';
 import { useEditFridgeProductMutation } from 'services/fridger/fridgeProducts';
 import { useLazyProductQuery } from 'services/openFoodFacts/openFoodFactsApi';
-import { ChangeExpirationDate, DeleteFridgeProduct } from 'dialogs';
+import { DeleteFridgeProduct } from 'dialogs';
 
 const ProductDetails = ({ route, navigation }) => {
   const styles = useStyles();
@@ -31,6 +35,9 @@ const ProductDetails = ({ route, navigation }) => {
     productBarcode,
     productExpirationDate,
   } = route.params;
+
+  // Mode (if product has barcode, there will be details by default):
+  const [mode, setMode] = useState(productBarcode ? 'watch' : 'edit');
 
   // Queries:
   const [editProductQuery, { isLoading: isEditLoading }] =
@@ -52,15 +59,32 @@ const ProductDetails = ({ route, navigation }) => {
   }, []);
 
   // Form states:
-  const { control, handleSubmit, setFocus, reset } = useForm({
+  const { control, handleSubmit, setFocus, setValue, reset } = useForm({
     defaultValues: {
       name: productName,
       producer: productProducer,
+      expiration: productExpirationDate,
     },
   });
   const rules = {
     name: {
       required: 'Name is required',
+      maxLength: {
+        value: 25,
+        message: 'Name cannot contain more than 25 characters',
+      },
+    },
+    producer: {
+      maxLength: {
+        value: 25,
+        message: 'Producer name cannot contain more than 25 characters',
+      },
+    },
+    expiration: {
+      pattern: {
+        value: /^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.\d{4}$/,
+        message: 'Invalid date format',
+      },
     },
   };
 
@@ -74,6 +98,7 @@ const ProductDetails = ({ route, navigation }) => {
       id: productID,
       name: data.name,
       producer: data.producer,
+      expiration: data.expiration,
     })
       .unwrap()
       .then(() => {
@@ -88,19 +113,24 @@ const ProductDetails = ({ route, navigation }) => {
       );
   };
 
+  const getAppBarIcon = () => {
+    // Changing modes is available only for products with the barcode
+    if (productBarcode) return mode === 'watch' ? edit : visibilityOn;
+    return null;
+  };
+
   return (
     <View style={styles.container}>
       <AppBar
-        icon1={time}
-        onPressIcon1={() => setExpDateDialogVisible(true)}
+        icon1={getAppBarIcon()}
+        onPressIcon1={() => setMode((m) => (m === 'watch' ? 'edit' : 'watch'))}
         icon2={deleteIcon}
         onPressIcon2={() => setDeletingDialogVisible(true)}
       />
 
-      {/* Rendering appropriate content: details for products with barcodes, 
-          editable input fields for other ones */}
-      {!!productBarcode && productWithBarcode == null && <ActivityIndicator />}
-      {!!productBarcode && productWithBarcode != null && (
+      {/* Rendering product details (for products with barcode in watch mode) */}
+      {mode === 'watch' && productWithBarcode == null && <ActivityIndicator />}
+      {mode === 'watch' && productWithBarcode != null && (
         <ScrollView>
           {/* Basic information */}
           <View style={styles.basicInfoContainer}>
@@ -114,6 +144,11 @@ const ProductDetails = ({ route, navigation }) => {
               <Text style={styles.name}>{productWithBarcode.product_name}</Text>
               <Text style={styles.producer}>{productWithBarcode.brands}</Text>
               <Text style={styles.quantity}>{productWithBarcode.quantity}</Text>
+              {productExpirationDate && (
+                <Text style={styles.expirationDate}>
+                  Expiration date: {productExpirationDate}
+                </Text>
+              )}
             </View>
           </View>
           <Divider />
@@ -165,7 +200,8 @@ const ProductDetails = ({ route, navigation }) => {
         </ScrollView>
       )}
 
-      {!productBarcode && (
+      {/* Rendering editable input fields (for products in edit mode) */}
+      {mode === 'edit' && (
         <View style={styles.noBarcodeContainer}>
           {/* Providing data */}
           <InputField
@@ -182,22 +218,38 @@ const ProductDetails = ({ route, navigation }) => {
           <InputField
             control={control}
             rules={rules.producer}
+            onSubmitEditing={() => setFocus('expiration')}
             name='producer'
             label='Producer (optional)'
             variant='data'
             returnKeyType='next'
             placeholder='Enter producer name'
           />
-
-          {/* Button at the bottom */}
-          <FloatingActionButton
-            label='Confirm'
-            onPress={handleSubmit(editProduct)}
-            centered
-            confirm
-            isLoading={isEditLoading}
-          />
+          <TouchableWithoutFeedback
+            onPress={() => setExpDateDialogVisible(true)}
+          >
+            <InputField
+              control={control}
+              rules={rules.expiration}
+              name='expiration'
+              label='Expiration date (optional)'
+              variant='data'
+              icon={calendar}
+              placeholder='dd.MM.rrrr'
+              inputFieldWith={140}
+              editable={false}
+            />
+          </TouchableWithoutFeedback>
         </View>
+      )}
+      {mode === 'edit' && (
+        <FloatingActionButton
+          label='Confirm'
+          onPress={handleSubmit(editProduct)}
+          centered
+          confirm
+          isLoading={isEditLoading}
+        />
       )}
 
       {/* Deleting product from fridge */}
@@ -211,11 +263,10 @@ const ProductDetails = ({ route, navigation }) => {
       />
 
       {/* Changing expiration date */}
-      <ChangeExpirationDate
+      <DatePicker
         visible={expDateDialogVisible}
         setVisible={setExpDateDialogVisible}
-        productID={productID}
-        expiration={productExpirationDate}
+        setExpirationDate={(value) => setValue('expiration', value)}
       />
     </View>
   );
@@ -255,6 +306,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     color: theme.colors.silverMetallic,
   },
+  expirationDate: {
+    marginTop: 2,
+    fontSize: 12,
+    color: theme.colors.tartOrange,
+  },
 
   // Rating:
   ratingContainer: {
@@ -286,7 +342,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   // No-barcode variant's container:
-  noBarcodeContainer: { marginHorizontal: 16, flex: 1 },
+  noBarcodeContainer: { marginHorizontal: 16 },
 }));
 
 export default ProductDetails;

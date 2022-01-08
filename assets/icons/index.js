@@ -24,7 +24,6 @@ export { default as noInternet } from './no_internet.png';
 export { default as photo } from './photo.png';
 export { default as reduce } from './reduce.png';
 export { default as scanner } from './scanner.png';
-export { default as time } from './time.png';
 export { default as up } from './up.png';
 export { default as visibilityOff } from './visibility_off.png';
 export { default as visibilityOn } from './visibility_on.png';

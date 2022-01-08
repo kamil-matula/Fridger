@@ -26,7 +26,7 @@ const ShoppingListItemYour = ({
       <View style={styles.checkbox}>
         {/* Checkbox responsible for changing product state: 
             unchecked or indeterminate */}
-        <Checkbox
+        <Checkbox.Android
           color={colors.silverMetallic}
           uncheckedColor={colors.silverMetallic}
           status={status}

@@ -43,7 +43,7 @@ const AddFriend = ({ navigation }) => {
     if (findUser.isError) {
       displayToast('User not found');
     }
-  }, [findUser.data, findUser.isError]);
+  }, [findUser.data]);
 
   // Handle with adding friend action:
   useEffect(() => {
@@ -69,6 +69,7 @@ const AddFriend = ({ navigation }) => {
         value={username}
         onChangeText={setUsername}
         onEndEditing={find}
+        maxLength={20}
       />
       <Divider />
 

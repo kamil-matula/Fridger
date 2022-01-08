@@ -56,7 +56,7 @@ const EditProfile = ({ navigation }) => {
       },
       maxLength: {
         value: 20,
-        message: 'Username cannot contain no more than 20 characters',
+        message: 'Username cannot contain more than 20 characters',
       },
     },
     firstName: {
@@ -163,7 +163,7 @@ const EditProfile = ({ navigation }) => {
               name='username'
               label='Username'
               returnKeyType='next'
-              placeholder='Enter your nick'
+              placeholder='Enter your username'
               onSubmitEditing={() => setFocus('firstName')}
             />
             <Separator />

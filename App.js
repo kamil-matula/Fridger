@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { RootSiblingParent } from 'react-native-root-siblings';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as PaperProvider } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,10 +25,12 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <ReduxProvider store={store}>
-      {isLoading && <AppLoading />}
-      <AppContent isAppLoading={isLoading} setIsAppLoading={setIsLoading} />
-    </ReduxProvider>
+    <RootSiblingParent>
+      <ReduxProvider store={store}>
+        {isLoading && <AppLoading />}
+        <AppContent isAppLoading={isLoading} setIsAppLoading={setIsLoading} />
+      </ReduxProvider>
+    </RootSiblingParent>
   );
 };
 

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import PropTypes from 'prop-types';
 
 const DatePicker = ({ setExpirationDate, visible, setVisible }) => {
   const [date, setDate] = useState(new Date());
 
-  const onDateChange = (_, selectedDate) => {
+  const saveDate = (selectedDate) => {
     // Hide calendar:
     setVisible(false);
 
@@ -18,8 +18,6 @@ const DatePicker = ({ setExpirationDate, visible, setVisible }) => {
       setDate(new Date());
       setExpirationDate('');
     }
-
-    // TODO: Fix it on iOS devices
   };
 
   const dateToString = (numDate) =>
@@ -29,10 +27,14 @@ const DatePicker = ({ setExpirationDate, visible, setVisible }) => {
   const setTrailingZero = (number) =>
     number >= 10 ? number.toString() : `0${number}`;
 
-  return visible ? (
-    <DateTimePicker value={date} mode='date' onChange={onDateChange} />
-  ) : (
-    <></>
+  return (
+    <DateTimePickerModal
+      isVisible={visible}
+      date={date}
+      mode='date'
+      onCancel={() => setVisible(false)}
+      onConfirm={saveDate}
+    />
   );
 };
 

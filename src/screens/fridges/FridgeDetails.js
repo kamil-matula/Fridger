@@ -111,7 +111,7 @@ const FridgeDetails = ({ route, navigation }) => {
         <ActivityIndicator />
       ) : (
         <>
-          {fridgeProducts.length > 0 ? (
+          {fridgeProducts?.length > 0 ? (
             <FlatList
               data={fridgeProducts}
               renderItem={({ item }) => (

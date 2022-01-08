@@ -4,6 +4,7 @@ import { View, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import {
   InputField,
@@ -15,7 +16,7 @@ import {
   DatePicker,
 } from 'components';
 import { ProductInfo } from 'components/fridges';
-import { makeStyles, displayToast } from 'utils';
+import { makeStyles, displayToast, ensureItIsNumber } from 'utils';
 import { edit, calendar } from 'assets/icons';
 
 import { useLazyProductQuery } from 'services/openFoodFacts/openFoodFactsApi';
@@ -159,7 +160,7 @@ const AddProductAutomat = ({ navigation, route }) => {
       <ScrollViewLayout>
         <View>
           <Separator height={16} />
-          <View style={{ width: '50%' }}>
+          <View style={{ width: 140 }}>
             <InputField
               control={control}
               rules={rules.quantity}
@@ -169,22 +170,22 @@ const AddProductAutomat = ({ navigation, route }) => {
               variant='data'
               returnKeyType='next'
               textAlign='right'
+              onChangeText={ensureItIsNumber}
             />
           </View>
-          <View style={{ width: '50%' }}>
+          <TouchableWithoutFeedback onPress={() => setDatepickerVisible(true)}>
             <InputField
               control={control}
               rules={rules.expiration}
               name='expiration'
               label='Expiration date (optional)'
               variant='data'
-              returnKeyType='done'
-              keyboardType='numeric'
               placeholder='dd.MM.rrrr'
               icon={calendar}
-              onIconPress={() => setDatepickerVisible(true)}
+              inputFieldWith={140}
+              editable={false}
             />
-          </View>
+          </TouchableWithoutFeedback>
         </View>
         <Separator height={60} />
       </ScrollViewLayout>

@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme, { titlePaddingBottom }) => ({
     justifyContent: 'flex-end',
   },
   singleButtonContainer: {
-    width: 75,
+    width: 80,
     marginRight: 8,
     marginTop: 8,
   },

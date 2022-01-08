@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
 import { Dialog, RadioButtonGroup, Separator, InputField } from 'components';
-import { displayToast } from 'utils';
+import { displayToast, ensureItIsNumber } from 'utils';
 import { useUpdateFridgeProductQuantityMutation } from 'services/fridger/fridgeProducts';
 
 const ReduceQuantity = ({ item, setItem }) => {
@@ -35,7 +35,10 @@ const ReduceQuantity = ({ item, setItem }) => {
   // Actions:
   const confirmReduceQuantity = () => {
     // Validate data on the front:
-    const newQuantity = parseInt(getValues('quantity'), 10);
+    const newQuantity = parseFloat(
+      getValues('quantity').replaceAll(',', '.'),
+      10
+    );
     if (Number.isNaN(newQuantity)) {
       displayToast('Please provide quantity.');
       return;
@@ -108,6 +111,8 @@ const ReduceQuantity = ({ item, setItem }) => {
           keyboardType='numeric'
           textAlign='right'
           paddings={false}
+          onChangeText={ensureItIsNumber}
+          maxLength={6}
         />
       </View>
     </Dialog>

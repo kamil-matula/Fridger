@@ -46,6 +46,14 @@ const Register = ({ navigation }) => {
     },
     username: {
       required: 'Username is required',
+      minLength: {
+        value: 5,
+        message: 'Username must contain at least 5 characters',
+      },
+      maxLength: {
+        value: 20,
+        message: 'Username cannot contain more than 20 characters',
+      },
     },
   };
 

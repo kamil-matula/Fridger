@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import {
   ScrollViewLayout,
@@ -12,7 +13,7 @@ import {
   FloatingActionButton,
 } from 'components';
 import { DeleteShoppingListProduct } from 'dialogs';
-import { makeStyles, displayToast } from 'utils';
+import { makeStyles, displayToast, ensureItIsNumber } from 'utils';
 import { deleteIcon, expand, check } from 'assets/icons';
 
 import {
@@ -50,6 +51,10 @@ const AddShoppingListProduct = ({ route, navigation }) => {
   const rules = {
     name: {
       required: 'Name is required',
+      maxLength: {
+        value: 25,
+        message: 'Name cannot contain more than 25 characters',
+      },
     },
     quantity: {
       required: 'Quantity is required',
@@ -178,7 +183,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
             placeholder='Enter product name'
           />
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ width: '50%' }}>
+            <View style={{ width: 140 }}>
               <InputField
                 control={control}
                 rules={rules.quantity}
@@ -190,20 +195,23 @@ const AddShoppingListProduct = ({ route, navigation }) => {
                 variant='data'
                 returnKeyType='next'
                 placeholder='Enter quantity'
+                onChangeText={ensureItIsNumber}
               />
             </View>
             <View style={{ width: 10 }} />
-            <View style={{ width: '30%' }}>
-              <InputField
-                control={control}
-                rules={rules.unit}
-                value={watch('unit')}
-                name='unit'
-                variant='data'
-                editable={false}
-                icon={expand}
-                onIconPress={showBottomSheet}
-              />
+            <View style={{ width: 80 }}>
+              <TouchableWithoutFeedback onPress={showBottomSheet}>
+                <InputField
+                  control={control}
+                  rules={rules.unit}
+                  value={watch('unit')}
+                  name='unit'
+                  label=' '
+                  variant='data'
+                  editable={false}
+                  icon={expand}
+                />
+              </TouchableWithoutFeedback>
             </View>
           </View>
 
