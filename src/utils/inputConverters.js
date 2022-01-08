@@ -1,4 +1,4 @@
-export const ensureItIsNumber = (value) => {
+export const convertToNumber = (value) => {
   const valueAsString = value.toString();
   const tmp = valueAsString.replace(',', '.');
   if (!Number.isNaN(Number(tmp))) return tmp;

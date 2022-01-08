@@ -13,7 +13,7 @@ import {
   FloatingActionButton,
 } from 'components';
 import { DeleteShoppingListProduct } from 'dialogs';
-import { makeStyles, displayToast, ensureItIsNumber } from 'utils';
+import { makeStyles, displayToast, convertToNumber } from 'utils';
 import { deleteIcon, expand, check } from 'assets/icons';
 
 import {
@@ -195,7 +195,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
                 variant='data'
                 returnKeyType='next'
                 placeholder='Enter quantity'
-                onChangeText={ensureItIsNumber}
+                onChangeText={convertToNumber}
               />
             </View>
             <View style={{ width: 10 }} />

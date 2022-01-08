@@ -13,7 +13,7 @@ import {
   FloatingActionButton,
   DatePicker,
 } from 'components';
-import { makeStyles, displayToast, ensureItIsNumber, listOfUnits } from 'utils';
+import { makeStyles, displayToast, convertToNumber, listOfUnits } from 'utils';
 import { scanner, calendar, expand, check } from 'assets/icons';
 import { useAddFridgeProductMutation } from 'services/fridger/fridgeProducts';
 
@@ -135,7 +135,7 @@ const AddProductManual = ({ navigation, route }) => {
                 variant='data'
                 returnKeyType='next'
                 placeholder='Enter quantity'
-                onChangeText={ensureItIsNumber}
+                onChangeText={convertToNumber}
               />
             </View>
             <View style={{ width: 10 }} />
