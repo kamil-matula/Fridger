@@ -13,20 +13,13 @@ import {
   FloatingActionButton,
   DatePicker,
 } from 'components';
-import { makeStyles, displayToast, ensureItIsNumber } from 'utils';
+import { makeStyles, displayToast, ensureItIsNumber, listOfUnits } from 'utils';
 import { scanner, calendar, expand, check } from 'assets/icons';
 import { useAddFridgeProductMutation } from 'services/fridger/fridgeProducts';
 
 const AddProductManual = ({ navigation, route }) => {
   const { fridgeID } = route.params;
   const styles = useStyles();
-  const listOfUnits = [
-    { short: 'kg', long: 'kilograms' },
-    { short: 'g', long: 'grams' },
-    { short: 'l', long: 'liters' },
-    { short: 'ml', long: 'milliliters' },
-    { short: 'pcs', long: 'pieces' },
-  ];
 
   // Queries:
   const [addProductQuery, { isLoading }] = useAddFridgeProductMutation();
