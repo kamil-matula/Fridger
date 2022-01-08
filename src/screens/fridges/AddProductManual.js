@@ -142,7 +142,6 @@ const AddProductManual = ({ navigation, route }) => {
               <InputField
                 control={control}
                 rules={rules.unit}
-                value={watch('unit')}
                 name='unit'
                 label=' '
                 variant='data'
