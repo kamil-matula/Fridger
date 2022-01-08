@@ -22,6 +22,7 @@ const InputField = ({
   rules,
   icon,
   onIconPress,
+  onInputFieldPress,
   variant = 'account',
   secure = false,
   onSubmitEditing,
@@ -68,50 +69,55 @@ const InputField = ({
       {/* Input field title */}
       {paddings && <Text style={styles.label}>{label}</Text>}
 
-      <View style={styles.inputContainer}>
-        {/* Data providing */}
-        <TextInput
-          name={field.name}
-          ref={field.ref}
-          value={field.value}
-          onChangeText={(newValue) => {
-            // Additional preparing:
-            let tmp = newValue;
-            if (onChangeText) {
-              tmp = onChangeText(newValue);
-            }
-            field.onChange(tmp);
-          }}
-          onFocus={handleOnFocus}
-          onBlur={handleOnBlur}
-          blurOnSubmit={!onSubmitEditing || blurOnSubmit}
-          onSubmitEditing={onSubmitEditing}
-          secureTextEntry={secure ? secureTextEntry : false}
-          style={styles.input}
-          placeholderTextColor={theme.colors.silverMetallic}
-          {...props}
-        />
+      <TouchableWithoutFeedback onPress={onInputFieldPress}>
+        <View style={styles.inputContainer}>
+          {/* Data providing */}
+          <TextInput
+            name={field.name}
+            ref={field.ref}
+            value={field.value}
+            onChangeText={(newValue) => {
+              // Additional preparing:
+              let tmp = newValue;
+              if (onChangeText) {
+                tmp = onChangeText(newValue);
+              }
+              field.onChange(tmp);
+            }}
+            onFocus={handleOnFocus}
+            onBlur={handleOnBlur}
+            blurOnSubmit={!onSubmitEditing || blurOnSubmit}
+            onSubmitEditing={onSubmitEditing}
+            secureTextEntry={secure ? secureTextEntry : false}
+            style={styles.input}
+            placeholderTextColor={theme.colors.silverMetallic}
+            {...props}
+          />
 
-        {/* Maximum quantity */}
-        {postfix && <Text style={styles.inputPostfix}>{postfix}</Text>}
+          {/* Maximum quantity */}
+          {postfix && <Text style={styles.inputPostfix}>{postfix}</Text>}
 
-        {/* Password hiding */}
-        {secure && (
-          <TouchableWithoutFeedback onPress={passwordVisibilityOnPress}>
-            <Image
-              source={secureTextEntry ? visibilityOff : visibilityOn}
-              style={styles.icon}
-            />
-          </TouchableWithoutFeedback>
-        )}
+          {/* Password hiding */}
+          {secure && (
+            <TouchableWithoutFeedback onPress={passwordVisibilityOnPress}>
+              <Image
+                source={secureTextEntry ? visibilityOff : visibilityOn}
+                style={styles.icon}
+              />
+            </TouchableWithoutFeedback>
+          )}
 
-        {/* Other icons, eg. calendar */}
-        {icon && (
-          <TouchableWithoutFeedback onPress={onIconPress}>
-            <Image source={icon} style={styles.icon} />
-          </TouchableWithoutFeedback>
-        )}
-      </View>
+          {/* Other icons, eg. calendar */}
+          {icon &&
+            (onIconPress ? (
+              <TouchableWithoutFeedback onPress={onIconPress}>
+                <Image source={icon} style={styles.icon} />
+              </TouchableWithoutFeedback>
+            ) : (
+              <Image source={icon} style={styles.icon} />
+            ))}
+        </View>
+      </TouchableWithoutFeedback>
 
       {/* Current error or space for it (if can occur) */}
       {invalid ? (
@@ -130,6 +136,7 @@ InputField.propTypes = {
   rules: PropTypes.object,
   icon: PropTypes.number,
   onIconPress: PropTypes.func,
+  onInputFieldPress: PropTypes.func,
   variant: PropTypes.oneOf(['account', 'data', 'quantity']),
   secure: PropTypes.bool,
   onSubmitEditing: PropTypes.func,

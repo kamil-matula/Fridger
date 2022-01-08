@@ -237,8 +237,9 @@ const AddProductAutomat = ({ navigation, route }) => {
             variant='data'
             placeholder='dd.MM.rrrr'
             icon={calendar}
-            onIconPress={() => setDatepickerVisible(true)}
+            onInputFieldPress={() => setDatepickerVisible(true)}
             inputFieldWith={140}
+            editable={false}
           />
         </View>
         <Separator height={60} />

@@ -158,9 +158,10 @@ const AddProductManual = ({ navigation, route }) => {
             label='Expiration date (optional)'
             variant='data'
             icon={calendar}
-            onIconPress={() => setDatepickerVisible(true)}
+            onInputFieldPress={() => setDatepickerVisible(true)}
             placeholder='dd.MM.rrrr'
             inputFieldWith={140}
+            editable={false}
           />
         </View>
       </ScrollViewLayout>
