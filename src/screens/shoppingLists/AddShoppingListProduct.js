@@ -215,8 +215,6 @@ const AddShoppingListProduct = ({ route, navigation }) => {
             </View>
           </View>
 
-          {/* TODO: Increase height to 2-3 lines instead of one,
-              text-wrapping and limit of characters */}
           <InputField
             control={control}
             name='note'
