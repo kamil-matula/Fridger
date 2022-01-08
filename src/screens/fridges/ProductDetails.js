@@ -69,16 +69,6 @@ const ProductDetails = ({ route, navigation }) => {
   const rules = {
     name: {
       required: 'Name is required',
-      maxLength: {
-        value: 25,
-        message: 'Name cannot contain more than 25 characters',
-      },
-    },
-    producer: {
-      maxLength: {
-        value: 25,
-        message: 'Producer name cannot contain more than 25 characters',
-      },
     },
     expiration: {
       pattern: {
@@ -213,17 +203,18 @@ const ProductDetails = ({ route, navigation }) => {
             variant='data'
             returnKeyType='next'
             placeholder='Enter product name'
+            maxLength={25}
           />
           <Separator height={8} />
           <InputField
             control={control}
-            rules={rules.producer}
             onSubmitEditing={() => setFocus('expiration')}
             name='producer'
             label='Producer (optional)'
             variant='data'
             returnKeyType='next'
             placeholder='Enter producer name'
+            maxLength={25}
           />
           <TouchableWithoutFeedback
             onPress={() => setExpDateDialogVisible(true)}

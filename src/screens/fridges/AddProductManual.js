@@ -36,16 +36,6 @@ const AddProductManual = ({ navigation, route }) => {
   const rules = {
     name: {
       required: 'Name is required',
-      maxLength: {
-        value: 25,
-        message: 'Name cannot contain more than 25 characters',
-      },
-    },
-    producer: {
-      maxLength: {
-        value: 25,
-        message: 'Producer name cannot contain more than 25 characters',
-      },
     },
     quantity: {
       required: 'Quantity is required',
@@ -120,6 +110,7 @@ const AddProductManual = ({ navigation, route }) => {
             variant='data'
             returnKeyType='next'
             placeholder='Enter product name'
+            maxLength={25}
           />
           <View style={{ flexDirection: 'row' }}>
             <View style={{ width: 140 }}>
@@ -153,12 +144,12 @@ const AddProductManual = ({ navigation, route }) => {
           </View>
           <InputField
             control={control}
-            rules={rules.producer}
             name='producer'
             label='Producer (optional)'
             variant='data'
             returnKeyType='next'
             placeholder='Enter producer name'
+            maxLength={25}
           />
           <InputField
             control={control}

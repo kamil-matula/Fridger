@@ -51,10 +51,6 @@ const AddShoppingListProduct = ({ route, navigation }) => {
   const rules = {
     name: {
       required: 'Name is required',
-      maxLength: {
-        value: 25,
-        message: 'Name cannot contain more than 25 characters',
-      },
     },
     quantity: {
       required: 'Quantity is required',
@@ -181,6 +177,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
             variant='data'
             returnKeyType='next'
             placeholder='Enter product name'
+            maxLength={25}
           />
           <View style={{ flexDirection: 'row' }}>
             <View style={{ width: 140 }}>
@@ -222,6 +219,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
             variant='data'
             returnKeyType='done'
             placeholder='Enter note'
+            maxLength={50}
           />
         </View>
       </ScrollViewLayout>
