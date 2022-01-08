@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import {
   ScrollViewLayout,
@@ -197,18 +196,17 @@ const AddShoppingListProduct = ({ route, navigation }) => {
             </View>
             <View style={{ width: 10 }} />
             <View style={{ width: 80 }}>
-              <TouchableWithoutFeedback onPress={showBottomSheet}>
-                <InputField
-                  control={control}
-                  rules={rules.unit}
-                  value={watch('unit')}
-                  name='unit'
-                  label=' '
-                  variant='data'
-                  editable={false}
-                  icon={expand}
-                />
-              </TouchableWithoutFeedback>
+              <InputField
+                control={control}
+                rules={rules.unit}
+                value={watch('unit')}
+                name='unit'
+                label=' '
+                variant='data'
+                editable={false}
+                icon={expand}
+                onInputFieldPress={showBottomSheet}
+              />
             </View>
           </View>
 

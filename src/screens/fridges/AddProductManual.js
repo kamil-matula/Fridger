@@ -138,7 +138,7 @@ const AddProductManual = ({ navigation, route }) => {
                 variant='data'
                 editable={false}
                 icon={expand}
-                onIconPress={showBottomSheet}
+                onInputFieldPress={showBottomSheet}
               />
             </View>
           </View>
