@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { View, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import {
   InputField,
@@ -14,10 +13,18 @@ import {
   Separator,
   Button,
   DatePicker,
+  BottomSheet,
+  SheetRow,
 } from 'components';
 import { ProductInfo } from 'components/fridges';
-import { makeStyles, displayToast, ensureItIsNumber } from 'utils';
-import { edit, calendar } from 'assets/icons';
+import {
+  makeStyles,
+  displayToast,
+  convertToNumber,
+  listOfUnits,
+  convertQuantity,
+} from 'utils';
+import { edit, calendar, expand, check } from 'assets/icons';
 
 import { useLazyProductQuery } from 'services/openFoodFacts/openFoodFactsApi';
 import { useAddFridgeProductMutation } from 'services/fridger/fridgeProducts';
@@ -37,13 +44,28 @@ const AddProductAutomat = ({ navigation, route }) => {
   const [productQuery, product] = useLazyProductQuery();
   useEffect(() => {
     if (product.isSuccess) {
-      if (!product.data?.product)
+      if (!product.data?.product) {
         displayToast("Sorry! This product doesn't exist in the database");
+      } else if (product.data?.product?.quantity) {
+        const matchUnit = listOfUnits.find((e) =>
+          product.data?.product?.quantity.endsWith(e.short)
+        );
+        if (matchUnit) {
+          setValue('unit', matchUnit.short);
+          setValue(
+            'quantity',
+            product.data?.product?.quantity.slice(0, -matchUnit.short.length)
+          );
+        } else {
+          setValue('unit', 'pcs');
+          setValue('quantity', 1);
+        }
+      }
     }
     if (product.isError) {
       displayToast('Unable to get product details');
     }
-  }, [product.isSuccess, product.isError]);
+  }, [product.isSuccess, product.isError, product.data]);
 
   // Requesting camera permission on launch:
   useEffect(() => {
@@ -60,10 +82,11 @@ const AddProductAutomat = ({ navigation, route }) => {
   };
 
   // Form states:
-  const { control, handleSubmit, setValue, reset } = useForm({
+  const { control, handleSubmit, setValue, getValues, reset, watch } = useForm({
     defaultValues: {
       expiration: '',
       quantity: '1',
+      unit: 'pcs',
     },
   });
   const rules = {
@@ -76,6 +99,24 @@ const AddProductAutomat = ({ navigation, route }) => {
         message: 'Invalid date format',
       },
     },
+    unit: {
+      required: 'Unit is required',
+    },
+  };
+
+  // Bottom sheet with quantity types:
+  const refBS = useRef(null);
+  const showBottomSheet = () => refBS.current.open();
+
+  // Quantity type:
+  const unit = watch('unit');
+  const changeUnit = (newUnit) => {
+    setValue(
+      'quantity',
+      convertQuantity(getValues('quantity'), getValues('unit'), newUnit)
+    );
+    setValue('unit', newUnit);
+    refBS.current.close();
   };
 
   // Calendar states:
@@ -160,32 +201,46 @@ const AddProductAutomat = ({ navigation, route }) => {
       <ScrollViewLayout>
         <View>
           <Separator height={16} />
-          <View style={{ width: 140 }}>
-            <InputField
-              control={control}
-              rules={rules.quantity}
-              name='quantity'
-              label='Quantity'
-              keyboardType='numeric'
-              variant='data'
-              returnKeyType='next'
-              textAlign='right'
-              onChangeText={ensureItIsNumber}
-            />
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ width: 140 }}>
+              <InputField
+                control={control}
+                rules={rules.quantity}
+                name='quantity'
+                label='Quantity'
+                keyboardType='numeric'
+                variant='data'
+                returnKeyType='next'
+                textAlign='right'
+                onChangeText={convertToNumber}
+              />
+            </View>
+            <View style={{ width: 10 }} />
+            <View style={{ width: 80 }}>
+              <InputField
+                control={control}
+                rules={rules.unit}
+                name='unit'
+                label=' '
+                variant='data'
+                editable={false}
+                icon={expand}
+                onInputFieldPress={showBottomSheet}
+              />
+            </View>
           </View>
-          <TouchableWithoutFeedback onPress={() => setDatepickerVisible(true)}>
-            <InputField
-              control={control}
-              rules={rules.expiration}
-              name='expiration'
-              label='Expiration date (optional)'
-              variant='data'
-              placeholder='dd.MM.rrrr'
-              icon={calendar}
-              inputFieldWith={140}
-              editable={false}
-            />
-          </TouchableWithoutFeedback>
+          <InputField
+            control={control}
+            rules={rules.expiration}
+            name='expiration'
+            label='Expiration date (optional)'
+            variant='data'
+            placeholder='dd.MM.rrrr'
+            icon={calendar}
+            onInputFieldPress={() => setDatepickerVisible(true)}
+            inputFieldWith={140}
+            editable={false}
+          />
         </View>
         <Separator height={60} />
       </ScrollViewLayout>
@@ -196,6 +251,18 @@ const AddProductAutomat = ({ navigation, route }) => {
         visible={datepickerVisible}
         setVisible={setDatepickerVisible}
       />
+
+      {/* Quantity types */}
+      <BottomSheet reference={refBS} title='Choose unit'>
+        {listOfUnits.map((element) => (
+          <SheetRow
+            key={element.long}
+            icon={unit === element.short ? check : null}
+            text={element.long}
+            onPress={() => changeUnit(element.short)}
+          />
+        ))}
+      </BottomSheet>
 
       {/* Button at the bottom */}
       <FloatingActionButton

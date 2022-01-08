@@ -54,22 +54,6 @@ const EditProfile = ({ navigation }) => {
         value: 5,
         message: 'Username must contain at least 5 characters',
       },
-      maxLength: {
-        value: 20,
-        message: 'Username cannot contain more than 20 characters',
-      },
-    },
-    firstName: {
-      maxLength: {
-        value: 20,
-        message: 'First name cannot contain more than 20 characters',
-      },
-    },
-    lastName: {
-      maxLength: {
-        value: 20,
-        message: 'Last name cannot contain more than 20 characters',
-      },
     },
   };
 
@@ -169,21 +153,21 @@ const EditProfile = ({ navigation }) => {
             <Separator />
             <InputField
               control={control}
-              rules={rules.firstName}
               name='firstName'
               label='First Name (optional)'
               returnKeyType='next'
               placeholder='Enter your first name'
               onSubmitEditing={() => setFocus('lastName')}
+              maxLength={20}
             />
             <Separator />
             <InputField
               control={control}
-              rules={rules.lastName}
               name='lastName'
               label='Last Name (optional)'
               returnKeyType='done'
               placeholder='Enter your last name'
+              maxLength={20}
             />
             <Separator height={32} />
           </View>

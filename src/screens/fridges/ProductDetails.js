@@ -3,10 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
-import {
-  ScrollView,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import {
   AppBar,
@@ -69,16 +66,6 @@ const ProductDetails = ({ route, navigation }) => {
   const rules = {
     name: {
       required: 'Name is required',
-      maxLength: {
-        value: 25,
-        message: 'Name cannot contain more than 25 characters',
-      },
-    },
-    producer: {
-      maxLength: {
-        value: 25,
-        message: 'Producer name cannot contain more than 25 characters',
-      },
     },
     expiration: {
       pattern: {
@@ -213,33 +200,31 @@ const ProductDetails = ({ route, navigation }) => {
             variant='data'
             returnKeyType='next'
             placeholder='Enter product name'
+            maxLength={25}
           />
           <Separator height={8} />
           <InputField
             control={control}
-            rules={rules.producer}
             onSubmitEditing={() => setFocus('expiration')}
             name='producer'
             label='Producer (optional)'
             variant='data'
             returnKeyType='next'
             placeholder='Enter producer name'
+            maxLength={25}
           />
-          <TouchableWithoutFeedback
-            onPress={() => setExpDateDialogVisible(true)}
-          >
-            <InputField
-              control={control}
-              rules={rules.expiration}
-              name='expiration'
-              label='Expiration date (optional)'
-              variant='data'
-              icon={calendar}
-              placeholder='dd.MM.rrrr'
-              inputFieldWith={140}
-              editable={false}
-            />
-          </TouchableWithoutFeedback>
+          <InputField
+            control={control}
+            rules={rules.expiration}
+            name='expiration'
+            label='Expiration date (optional)'
+            variant='data'
+            icon={calendar}
+            onInputFieldPress={() => setExpDateDialogVisible(true)}
+            placeholder='dd.MM.rrrr'
+            inputFieldWith={140}
+            editable={false}
+          />
         </View>
       )}
       {mode === 'edit' && (

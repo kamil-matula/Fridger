@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import {
   ScrollViewLayout,
@@ -13,7 +12,7 @@ import {
   FloatingActionButton,
 } from 'components';
 import { DeleteShoppingListProduct } from 'dialogs';
-import { makeStyles, displayToast, ensureItIsNumber } from 'utils';
+import { makeStyles, displayToast, convertToNumber } from 'utils';
 import { deleteIcon, expand, check } from 'assets/icons';
 
 import {
@@ -51,10 +50,6 @@ const AddShoppingListProduct = ({ route, navigation }) => {
   const rules = {
     name: {
       required: 'Name is required',
-      maxLength: {
-        value: 25,
-        message: 'Name cannot contain more than 25 characters',
-      },
     },
     quantity: {
       required: 'Quantity is required',
@@ -181,6 +176,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
             variant='data'
             returnKeyType='next'
             placeholder='Enter product name'
+            maxLength={25}
           />
           <View style={{ flexDirection: 'row' }}>
             <View style={{ width: 140 }}>
@@ -195,28 +191,25 @@ const AddShoppingListProduct = ({ route, navigation }) => {
                 variant='data'
                 returnKeyType='next'
                 placeholder='Enter quantity'
-                onChangeText={ensureItIsNumber}
+                onChangeText={convertToNumber}
               />
             </View>
             <View style={{ width: 10 }} />
             <View style={{ width: 80 }}>
-              <TouchableWithoutFeedback onPress={showBottomSheet}>
-                <InputField
-                  control={control}
-                  rules={rules.unit}
-                  value={watch('unit')}
-                  name='unit'
-                  label=' '
-                  variant='data'
-                  editable={false}
-                  icon={expand}
-                />
-              </TouchableWithoutFeedback>
+              <InputField
+                control={control}
+                rules={rules.unit}
+                value={watch('unit')}
+                name='unit'
+                label=' '
+                variant='data'
+                editable={false}
+                icon={expand}
+                onInputFieldPress={showBottomSheet}
+              />
             </View>
           </View>
 
-          {/* TODO: Increase height to 2-3 lines instead of one,
-              text-wrapping and limit of characters */}
           <InputField
             control={control}
             name='note'
@@ -224,6 +217,7 @@ const AddShoppingListProduct = ({ route, navigation }) => {
             variant='data'
             returnKeyType='done'
             placeholder='Enter note'
+            maxLength={50}
           />
         </View>
       </ScrollViewLayout>

@@ -31,8 +31,6 @@ const NotificationListener = () => {
       const { data } = lastNotificationResponse.notification.request.content;
       // Go to Friends:
       if (data.friend_id) {
-        // TODO: Refetch list of friends to make displaying updates
-        // faster than it is implemented in polling functionality
         navigation.navigate('Friends');
       } else if (data.fridge_id) {
         navigation.navigate('FridgeDetails', {

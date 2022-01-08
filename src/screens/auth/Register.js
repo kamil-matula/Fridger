@@ -50,10 +50,6 @@ const Register = ({ navigation }) => {
         value: 5,
         message: 'Username must contain at least 5 characters',
       },
-      maxLength: {
-        value: 20,
-        message: 'Username cannot contain more than 20 characters',
-      },
     },
   };
 
@@ -141,6 +137,7 @@ const Register = ({ navigation }) => {
           name='username'
           returnKeyType='done'
           placeholder='Enter your username'
+          maxLength={20}
         />
         <Separator height={32} />
       </View>

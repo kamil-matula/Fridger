@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
 import { Dialog, RadioButtonGroup, Separator, InputField } from 'components';
-import { displayToast, ensureItIsNumber } from 'utils';
+import { displayToast, convertToNumber } from 'utils';
 import { useUpdateFridgeProductQuantityMutation } from 'services/fridger/fridgeProducts';
 
 const ReduceQuantity = ({ item, setItem }) => {
@@ -111,7 +111,7 @@ const ReduceQuantity = ({ item, setItem }) => {
           keyboardType='numeric'
           textAlign='right'
           paddings={false}
-          onChangeText={ensureItIsNumber}
+          onChangeText={convertToNumber}
           maxLength={6}
         />
       </View>
