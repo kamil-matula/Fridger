@@ -4,7 +4,6 @@ import { View, Text } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import {
   InputField,
@@ -173,19 +172,17 @@ const AddProductAutomat = ({ navigation, route }) => {
               onChangeText={convertToNumber}
             />
           </View>
-          <TouchableWithoutFeedback onPress={() => setDatepickerVisible(true)}>
-            <InputField
-              control={control}
-              rules={rules.expiration}
-              name='expiration'
-              label='Expiration date (optional)'
-              variant='data'
-              placeholder='dd.MM.rrrr'
-              icon={calendar}
-              inputFieldWith={140}
-              editable={false}
-            />
-          </TouchableWithoutFeedback>
+          <InputField
+            control={control}
+            rules={rules.expiration}
+            name='expiration'
+            label='Expiration date (optional)'
+            variant='data'
+            placeholder='dd.MM.rrrr'
+            icon={calendar}
+            onIconPress={() => setDatepickerVisible(true)}
+            inputFieldWith={140}
+          />
         </View>
         <Separator height={60} />
       </ScrollViewLayout>

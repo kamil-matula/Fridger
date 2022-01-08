@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 
 import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import {
   InputField,
@@ -162,19 +161,17 @@ const AddProductManual = ({ navigation, route }) => {
             returnKeyType='next'
             placeholder='Enter producer name'
           />
-          <TouchableWithoutFeedback onPress={() => setDatepickerVisible(true)}>
-            <InputField
-              control={control}
-              rules={rules.expiration}
-              name='expiration'
-              label='Expiration date (optional)'
-              variant='data'
-              icon={calendar}
-              placeholder='dd.MM.rrrr'
-              editable={false}
-              inputFieldWith={140}
-            />
-          </TouchableWithoutFeedback>
+          <InputField
+            control={control}
+            rules={rules.expiration}
+            name='expiration'
+            label='Expiration date (optional)'
+            variant='data'
+            icon={calendar}
+            onIconPress={() => setDatepickerVisible(true)}
+            placeholder='dd.MM.rrrr'
+            inputFieldWith={140}
+          />
         </View>
       </ScrollViewLayout>
 
