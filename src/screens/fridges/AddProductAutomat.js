@@ -47,15 +47,16 @@ const AddProductAutomat = ({ navigation, route }) => {
       if (!product.data?.product) {
         displayToast("Sorry! This product doesn't exist in the database");
       } else if (product.data?.product?.quantity) {
+        const givenQuantity = product.data?.product?.quantity
+          .toString()
+          .replace(' ', '')
+          .toLowerCase();
         const matchUnit = listOfUnits.find((e) =>
-          product.data?.product?.quantity.endsWith(e.short)
+          givenQuantity.endsWith(e.short)
         );
         if (matchUnit) {
           setValue('unit', matchUnit.short);
-          setValue(
-            'quantity',
-            product.data?.product?.quantity.slice(0, -matchUnit.short.length)
-          );
+          setValue('quantity', givenQuantity.slice(0, -matchUnit.short.length));
         } else {
           setValue('unit', 'pcs');
           setValue('quantity', 1);
