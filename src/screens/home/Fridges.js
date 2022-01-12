@@ -50,11 +50,15 @@ const Fridges = ({ navigation }) => {
                 />
               ))}
 
-              {/* Space for NavBar and FAB */}
+              {/* Space for FAB and nav bar */}
               <Separator height={54 + 88} />
             </ScrollView>
           ) : (
-            <Placeholder content='No fridges to display' />
+            <>
+              <Placeholder content='No fridges to display' />
+              {/* Space for nav bar */}
+              <Separator height={54} />
+            </>
           )}
         </>
       )}

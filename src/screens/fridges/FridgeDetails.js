@@ -133,11 +133,15 @@ const FridgeDetails = ({ route, navigation }) => {
                 />
               ))}
 
-              {/* Space for NavBar and FAB */}
+              {/* Space for FAB and nav bar */}
               <Separator height={54 + 88} />
             </ScrollView>
           ) : (
-            <Placeholder content='No products to display' />
+            <>
+              <Placeholder content='No products to display' />
+              {/* Space for nav bar */}
+              <Separator height={54} />
+            </>
           )}
         </>
       )}

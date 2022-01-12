@@ -89,7 +89,11 @@ const ShoppingListSummary = ({ route }) => {
               <Separator height={54 - 16} />
             </ScrollView>
           ) : (
-            <Placeholder content='No products to display' />
+            <>
+              <Placeholder content='No products to display' />
+              {/* Space for nav bar */}
+              <Separator height={54} />
+            </>
           )}
         </>
       )}

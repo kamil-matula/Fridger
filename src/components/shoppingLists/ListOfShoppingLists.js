@@ -47,7 +47,11 @@ const ListOfShoppingLists = ({
               <Separator height={isFAB ? 54 + 88 : 54} />
             </ScrollView>
           ) : (
-            <Placeholder content={placeholderContent} />
+            <>
+              <Placeholder content={placeholderContent} />
+              {/* Space for nav bar */}
+              <Separator height={54} />
+            </>
           )}
         </>
       )}
