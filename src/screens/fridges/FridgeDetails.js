@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import { FlatList, View, Text, Image } from 'react-native';
+import { View, Text, Image, ScrollView } from 'react-native';
 import { Divider, TouchableRipple } from 'react-native-paper';
 
 import {
@@ -112,10 +112,10 @@ const FridgeDetails = ({ route, navigation }) => {
       ) : (
         <>
           {fridgeProducts?.length > 0 ? (
-            <FlatList
-              data={fridgeProducts}
-              renderItem={({ item }) => (
+            <ScrollView>
+              {fridgeProducts.map((item) => (
                 <FridgeDetailsRow
+                  key={item.id}
                   product={item}
                   onPressIcon={() => reduceQuantityOpen(item)}
                   onPressRow={() => {
@@ -131,17 +131,16 @@ const FridgeDetails = ({ route, navigation }) => {
                       });
                   }}
                 />
-              )}
-              keyExtractor={(item) => item.id.toString()}
-            />
+              ))}
+
+              {/* Space for NavBar and FAB */}
+              <Separator height={54 + 88} />
+            </ScrollView>
           ) : (
             <Placeholder content='No products to display' />
           )}
         </>
       )}
-
-      {/* Space for bottom nav bar */}
-      <Separator height={54} />
 
       {/* Adding new product */}
       <FloatingActionButton

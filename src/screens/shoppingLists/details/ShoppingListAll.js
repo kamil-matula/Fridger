@@ -95,8 +95,8 @@ const ShoppingListAll = ({ route, navigation }) => {
                 </TouchableRipple>
               ))}
 
-              {/* Space for FAB */}
-              <Separator height={80} />
+              {/* Space for FAB and nav bar */}
+              <Separator height={54 + 88} />
             </ScrollView>
           ) : (
             <Placeholder content='No products to display' />

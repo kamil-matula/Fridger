@@ -51,41 +51,42 @@ const ShoppingListSummary = ({ route }) => {
         <>
           {validUsers.length > 0 ? (
             <ScrollView>
-              <View>
-                {validUsers.map((user, idx) => {
-                  const notBoughtProducts = user.products.filter(
-                    (product) =>
-                      product.status === 'unchecked' ||
-                      product.status === 'indeterminate'
-                  );
-                  const boughtProducts = user.products.filter(
-                    (product) => product.status === 'checked'
-                  );
+              {validUsers.map((user, idx) => {
+                const notBoughtProducts = user.products.filter(
+                  (product) =>
+                    product.status === 'unchecked' ||
+                    product.status === 'indeterminate'
+                );
+                const boughtProducts = user.products.filter(
+                  (product) => product.status === 'checked'
+                );
 
-                  return (
-                    <View key={idx}>
-                      {/* Sub-list owner */}
-                      <View style={{ paddingHorizontal: 16 }}>
-                        <Separator />
-                        <Chip avatarURI={user.avatar} text={user.username} />
-                        <Separator />
-                      </View>
-
-                      {/* Products */}
-                      {productsList(notBoughtProducts)}
-                      {notBoughtProducts.length > 0 &&
-                        boughtProducts.length > 0 && (
-                          <Divider style={styles.divider} />
-                        )}
-                      {productsList(boughtProducts)}
-
-                      {/* Total price */}
-                      <PriceSummary value={user.total_price} currency='PLN' />
-                      <Divider style={styles.dividerWide} />
+                return (
+                  <View key={idx}>
+                    {/* Sub-list owner */}
+                    <View style={{ paddingHorizontal: 16 }}>
+                      <Separator />
+                      <Chip avatarURI={user.avatar} text={user.username} />
+                      <Separator />
                     </View>
-                  );
-                })}
-              </View>
+
+                    {/* Products */}
+                    {productsList(notBoughtProducts)}
+                    {notBoughtProducts.length > 0 &&
+                      boughtProducts.length > 0 && (
+                        <Divider style={styles.divider} />
+                      )}
+                    {productsList(boughtProducts)}
+
+                    {/* Total price */}
+                    <PriceSummary value={user.total_price} currency='PLN' />
+                    <Divider style={styles.dividerWide} />
+                  </View>
+                );
+              })}
+
+              {/* Space for nav bar */}
+              <Separator height={54 - 16} />
             </ScrollView>
           ) : (
             <Placeholder content='No products to display' />

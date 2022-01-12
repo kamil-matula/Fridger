@@ -14,6 +14,7 @@ const ShoppingListsActive = ({ navigation }) => {
       shoppingLists={shoppingLists}
       navigation={navigation}
       placeholderContent={`No active\nshopping lists to display`}
+      isFAB
     />
   );
 };

@@ -5,13 +5,14 @@ import { View, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import { makeStyles } from 'utils';
-import { ActivityIndicator, Placeholder } from 'components';
+import { ActivityIndicator, Placeholder, Separator } from 'components';
 import ShoppingListRow from './ShoppingListRow';
 
 const ListOfShoppingLists = ({
   shoppingLists,
   placeholderContent,
   navigation,
+  isFAB = false,
 }) => {
   const styles = useStyles();
 
@@ -21,7 +22,7 @@ const ListOfShoppingLists = ({
         <ActivityIndicator />
       ) : (
         <>
-          {shoppingLists.data.length > 0 ? (
+          {shoppingLists.data?.length > 0 ? (
             <ScrollView>
               {shoppingLists.data.map((list) => (
                 <View key={list.id}>
@@ -41,6 +42,9 @@ const ListOfShoppingLists = ({
                   <Divider />
                 </View>
               ))}
+
+              {/* Space for FAB and nav bar */}
+              <Separator height={isFAB ? 54 + 88 : 54} />
             </ScrollView>
           ) : (
             <Placeholder content={placeholderContent} />
@@ -54,6 +58,7 @@ const ListOfShoppingLists = ({
 ListOfShoppingLists.propTypes = {
   shoppingLists: PropTypes.object.isRequired,
   placeholderContent: PropTypes.string.isRequired,
+  isFAB: PropTypes.bool,
 };
 
 const useStyles = makeStyles((theme) => ({

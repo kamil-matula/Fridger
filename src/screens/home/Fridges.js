@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FlatList, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import {
@@ -31,10 +31,10 @@ const Fridges = ({ navigation }) => {
       ) : (
         <>
           {fridges.data?.length > 0 ? (
-            <FlatList
-              data={fridges.data}
-              renderItem={({ item }) => (
+            <ScrollView>
+              {fridges.data.map((item) => (
                 <FridgeRow
+                  key={item.id}
                   text={item.name}
                   subText={
                     item.shared_with_count > 0
@@ -48,17 +48,16 @@ const Fridges = ({ navigation }) => {
                     });
                   }}
                 />
-              )}
-              keyExtractor={(item) => item.id.toString()}
-            />
+              ))}
+
+              {/* Space for NavBar and FAB */}
+              <Separator height={54 + 88} />
+            </ScrollView>
           ) : (
             <Placeholder content='No fridges to display' />
           )}
         </>
       )}
-
-      {/* Space for bottom nav bar */}
-      <Separator height={54} />
 
       {/* Adding new fridge */}
       <FloatingActionButton

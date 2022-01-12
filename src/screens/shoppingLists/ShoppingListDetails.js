@@ -6,7 +6,6 @@ import {
   FloatingActionButton,
   BottomSheet,
   SheetRow,
-  Separator,
   ActivityIndicator,
   AppBarRenamer,
 } from 'components';
@@ -56,9 +55,6 @@ const ShoppingListDetails = ({ route, navigation }) => {
             shoppingListID={route.params.shoppingListID}
             setFabVisible={setFabVisible}
           />
-
-          {/* Space for bottom nav bar */}
-          <Separator height={54} />
 
           {/* Adding new product */}
           <FloatingActionButton
