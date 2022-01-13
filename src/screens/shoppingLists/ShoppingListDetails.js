@@ -69,7 +69,11 @@ const ShoppingListDetails = ({ route, navigation }) => {
           />
 
           {/* Shopping list actions */}
-          <BottomSheet reference={bottomSheet}>
+          <BottomSheet
+            reference={bottomSheet}
+            title={specificShoppingList?.data?.fridge?.name}
+            isFridgeName
+          >
             <SheetRow
               icon={groupAdd}
               text='Share'
