@@ -211,7 +211,7 @@ const Friends = ({ navigation }) => {
       {/* Undoing request rejection */}
       <Snackbar
         style={styles.snackbar}
-        duration={5000}
+        duration={2000}
         visible={snackbarVisible}
         onDismiss={onDismissSnackBar}
         action={{
