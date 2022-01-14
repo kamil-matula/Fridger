@@ -1,18 +1,17 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 
-import { View, Text, ScrollView } from 'react-native';
-import { useTheme, Snackbar, Divider } from 'react-native-paper';
+import { View, Text, ScrollView, Animated } from 'react-native';
+import { FAB, useTheme, Snackbar, Divider } from 'react-native-paper';
 
 import {
   AppBar,
   UserInfo,
   Separator,
-  FloatingActionButton,
   ActivityIndicator,
   Placeholder,
 } from 'components';
 import { displayToast, makeStyles } from 'utils';
-import { check, clear, deleteIcon } from 'assets/icons';
+import { check, clear, deleteIcon, add } from 'assets/icons';
 
 import {
   useFriendsQuery,
@@ -78,10 +77,12 @@ const Friends = ({ navigation }) => {
     // Hide snackbar:
     setRejectCanceled(false);
     setSnackbarVisible(false);
+    moveFabDown();
   };
 
   const rejectInvitation = (relationshipID) => {
     setRejectedInvitationID(relationshipID);
+    moveFabUp();
     setSnackbarVisible(true);
   };
 
@@ -89,6 +90,7 @@ const Friends = ({ navigation }) => {
     setRejectCanceled(true);
     setRejectedInvitationID(null);
     setSnackbarVisible(false);
+    moveFabDown();
   };
 
   const deleteInvitation = (relationshipID) => {
@@ -127,6 +129,27 @@ const Friends = ({ navigation }) => {
           !relationship.is_my_request
       )
     : [];
+
+  // Animation variable
+  const bottomValue = useRef(new Animated.Value(16)).current;
+
+  // Move fab above snackbar
+  const moveFabUp = () => {
+    Animated.timing(bottomValue, {
+      useNativeDriver: false,
+      toValue: 64,
+      duration: 300,
+    }).start();
+  };
+
+  // Move fab to origin position
+  const moveFabDown = () => {
+    Animated.timing(bottomValue, {
+      useNativeDriver: false,
+      toValue: 16,
+      duration: 300,
+    }).start();
+  };
 
   return (
     <View style={styles.container}>
@@ -211,7 +234,7 @@ const Friends = ({ navigation }) => {
       {/* Undoing request rejection */}
       <Snackbar
         style={styles.snackbar}
-        duration={2000}
+        duration={3000}
         visible={snackbarVisible}
         onDismiss={onDismissSnackBar}
         action={{
@@ -223,9 +246,21 @@ const Friends = ({ navigation }) => {
       </Snackbar>
 
       {/* Adding new friend */}
-      {!snackbarVisible && (
-        <FloatingActionButton onPress={navigateToAddFriend} />
-      )}
+      <Animated.View
+        style={[
+          styles.animatedContainer,
+          {
+            bottom: bottomValue,
+          },
+        ]}
+      >
+        <FAB
+          style={styles.fab}
+          icon={add}
+          onPress={navigateToAddFriend}
+          color={colors.richBlack}
+        />
+      </Animated.View>
     </View>
   );
 };
@@ -265,6 +300,14 @@ const useStyles = makeStyles((theme) => ({
   },
   snackbarText: {
     color: theme.colors.white,
+  },
+  animatedContainer: {
+    right: 16,
+    borderRadius: 28,
+    position: 'absolute',
+  },
+  fab: {
+    backgroundColor: theme.colors.blueJeans,
   },
 }));
 
