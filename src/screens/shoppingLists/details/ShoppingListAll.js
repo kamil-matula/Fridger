@@ -32,12 +32,12 @@ const ShoppingListAll = ({ route, navigation }) => {
     })
       .unwrap()
       .catch((error) => {
-        const notFoundError = error.data?.detail;
+        const otherError = error.data?.detail;
         const statusError = error.data?.status;
         const nonFieldErrors = error.data?.non_field_errors;
 
-        if (notFoundError) {
-          displayToast('Product not found');
+        if (otherError) {
+          displayToast(otherError);
         }
         if (statusError) {
           displayToast(statusError);
