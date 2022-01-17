@@ -38,11 +38,9 @@ const ShoppingListAll = ({ route, navigation }) => {
 
         if (otherError) {
           displayToast(otherError);
-        }
-        if (statusError) {
+        } else if (statusError) {
           displayToast(statusError);
-        }
-        if (nonFieldErrors) {
+        } else if (nonFieldErrors) {
           displayToast(nonFieldErrors);
         }
       });
