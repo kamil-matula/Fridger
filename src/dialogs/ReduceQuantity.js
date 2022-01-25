@@ -61,7 +61,7 @@ const ReduceQuantity = ({ item, setItem }) => {
     editFridgeQuantityQuery({
       product: item.id,
       status: reason,
-      quantity: item.quantity_left - newQuantity,
+      quantity: Math.round((item.quantity_left - newQuantity) * 100) / 100,
     })
       .unwrap()
       .then(() => {
